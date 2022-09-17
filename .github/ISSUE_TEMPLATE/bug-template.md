@@ -1,7 +1,7 @@
 ---
 name: Bug Template
 about: "\U0001F6A8 오류 및 버그 수정에 대한 내용을 작성해주세요."
-title: "[FIX] 오류 및 버그 내용"
+title: "[Fix] 오류 및 버그 내용"
 labels: ''
 assignees: ''
 
