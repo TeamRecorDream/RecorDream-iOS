@@ -23,3 +23,16 @@ platform :ios do
     upload_to_testflight
   end
 end
+
+# fastlane으로 새로운 deviceID를 등록합니다. -> Profile은 Match를 이용하여 따로 갱신 필요
+
+lane :register_new_device do  |options|
+    device_name = prompt(text: "Enter the device name: ")
+    device_udid = prompt(text: "Enter the device UDID: ")
+    device_hash = {}
+    device_hash[device_name] = device_udid
+    register_devices(
+                     devices: device_hash
+                     )
+  refresh_profiles
+end
