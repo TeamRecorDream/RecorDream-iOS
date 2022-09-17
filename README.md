@@ -1,1 +1,3 @@
-# LEGO-Dream-iOS
+## RecorDream-iOS
+
+🌌☁️ Record Your Dream, Play Your Dream 🎤📓
