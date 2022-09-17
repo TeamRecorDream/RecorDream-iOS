@@ -26,13 +26,35 @@ end
 
 # fastlane으로 새로운 deviceID를 등록합니다. -> Profile은 Match를 이용하여 따로 갱신 필요
 
-lane :register_new_device do  |options|
-    device_name = prompt(text: "Enter the device name: ")
-    device_udid = prompt(text: "Enter the device UDID: ")
-    device_hash = {}
-    device_hash[device_name] = device_udid
-    register_devices(
-                     devices: device_hash
-                     )
-  refresh_profiles
+platform :ios do
+  desc "Register new Device"
+  lane :register_new_device do  |options|
+      device_name = prompt(text: "Enter the device name: ")
+      device_udid = prompt(text: "Enter the device UDID: ")
+      device_hash = {}
+      device_hash[device_name] = device_udid
+      register_devices(
+                       devices: device_hash
+                       )
+  end
+end
+
+# 새로운 deviceID 추가 및 인증서 재생성
+
+platform :ios do
+  desc "Register new Device With Cert"
+  lane :register_new_device_WithCert do
+    register_new_device
+    Generate_Certificate
+  end
+end
+
+# 인증서 재생성
+
+platform :ios do
+  desc "Generate Certificate"
+  lane :Generate_Certificate do
+    match(type: "appstore", force_for_new_devices: true)
+    match(type: "development", force_for_new_devices: true)
+  end
 end

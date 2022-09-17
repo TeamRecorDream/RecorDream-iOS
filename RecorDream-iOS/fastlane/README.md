@@ -13,17 +13,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### register_new_device
-
-```sh
-[bundle exec] fastlane register_new_device
-```
-
-
-
-----
-
-
 ## iOS
 
 ### ios beta
@@ -33,6 +22,30 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 ```
 
 Push a new beta build to TestFlight
+
+### ios register_new_device
+
+```sh
+[bundle exec] fastlane ios register_new_device
+```
+
+Register new Device
+
+### ios register_new_device_WithCert
+
+```sh
+[bundle exec] fastlane ios register_new_device_WithCert
+```
+
+Register new Device With Cert
+
+### ios Generate_Certificate
+
+```sh
+[bundle exec] fastlane ios Generate_Certificate
+```
+
+Generate Certificate
 
 ----
 
