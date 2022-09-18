@@ -226,8 +226,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8F306DF292B8BE3C818515E3 /* DataModuleTests */,
 				635838CF12CF39E6BE615A81 /* DataModule */,
+				8F306DF292B8BE3C818515E3 /* DataModuleTests */,
 			);
 		};
 /* End PBXProject section */

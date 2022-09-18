@@ -229,8 +229,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				251DF19BD935AF5510DC7F81 /* RD-DSKit */,
 				604E84CF3E51AD1EB37DF117 /* RD-DSKitTests */,
+				251DF19BD935AF5510DC7F81 /* RD-DSKit */,
 			);
 		};
 /* End PBXProject section */

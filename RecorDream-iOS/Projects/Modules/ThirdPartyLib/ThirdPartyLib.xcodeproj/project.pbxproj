@@ -31,6 +31,7 @@
 		71C7AC3BD70D5F507E63C11B /* KakaoSDKCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBAE327CFE3012B5E8C932AD /* KakaoSDKCommon.framework */; platformFilter = ios; };
 		77266772AD5F224C6C69037B /* GoogleUtilities_AppDelegateSwizzler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD5AF4D66B37EE3F5240E28 /* GoogleUtilities_AppDelegateSwizzler.framework */; platformFilter = ios; };
 		7D8490ED9D146E1361FA76ED /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F9715D6A7F42D2D63E37AFF0 /* libz.tbd */; };
+		88EFE370A52E05315C2C3E71 /* HeeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D74B88426E19ECEDED9DCCC /* HeeKit.framework */; platformFilter = ios; };
 		8924C3260CC2A9890B6E87B1 /* GoogleUtilities_Reachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BC273B2DC05E2DB2F4FE8 /* GoogleUtilities_Reachability.framework */; platformFilter = ios; };
 		8AD03AC39CFACFFBEBBCBA55 /* GoogleUtilities_Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3CA5E45656353D2702C6E10 /* GoogleUtilities_Network.framework */; platformFilter = ios; };
 		A1986614498FDA1EF5EE5B6A /* GoogleUtilities_MethodSwizzler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D335ECF89F4FFDB6E8DEF8D /* GoogleUtilities_MethodSwizzler.framework */; platformFilter = ios; };
@@ -97,6 +98,7 @@
 		47A5E96C642572AF23D15E90 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
 		47C643811772FAFA99ECD321 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B79335C0E70AE82BD3A7C5F /* FirebaseABTesting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FirebaseABTesting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D74B88426E19ECEDED9DCCC /* HeeKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HeeKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FCFE603ED822ED66FE4F448 /* FirebaseAnalytics.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = FirebaseAnalytics.xcframework; sourceTree = "<group>"; };
 		503F791BDB1445AAF4148393 /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53D9827FB1058EAC54D6E903 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
@@ -176,6 +178,7 @@
 				8AD03AC39CFACFFBEBBCBA55 /* GoogleUtilities_Network.framework in Frameworks */,
 				8924C3260CC2A9890B6E87B1 /* GoogleUtilities_Reachability.framework in Frameworks */,
 				F92C7277500A7A624923FE84 /* GoogleUtilities_UserDefaults.framework in Frameworks */,
+				88EFE370A52E05315C2C3E71 /* HeeKit.framework in Frameworks */,
 				CCB758AE6E7F285D2478F02C /* KakaoSDKAuth.framework in Frameworks */,
 				71C7AC3BD70D5F507E63C11B /* KakaoSDKCommon.framework in Frameworks */,
 				C5A5862C387929B2BCB15455 /* KakaoSDKUser.framework in Frameworks */,
@@ -275,6 +278,7 @@
 				FB4516C0DCF376BFA4398891 /* GoogleUtilities_NSData.framework */,
 				C92BC273B2DC05E2DB2F4FE8 /* GoogleUtilities_Reachability.framework */,
 				69D38DEB8C53AF06FF33B715 /* GoogleUtilities_UserDefaults.framework */,
+				4D74B88426E19ECEDED9DCCC /* HeeKit.framework */,
 				053AFE0F8BD8DF691581E8D3 /* KakaoSDKAuth.framework */,
 				CBAE327CFE3012B5E8C932AD /* KakaoSDKCommon.framework */,
 				B4814C86B06FD88A2A9661C6 /* KakaoSDKUser.framework */,

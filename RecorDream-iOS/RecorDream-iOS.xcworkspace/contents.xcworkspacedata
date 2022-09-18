@@ -77,6 +77,9 @@
                      location = "group:GoogleUtilities/GoogleUtilities.xcodeproj">
                   </FileRef>
                   <FileRef
+                     location = "group:HeeKit/HeeKit.xcodeproj">
+                  </FileRef>
+                  <FileRef
                      location = "group:RxSwift/RxSwift.xcodeproj">
                   </FileRef>
                   <FileRef

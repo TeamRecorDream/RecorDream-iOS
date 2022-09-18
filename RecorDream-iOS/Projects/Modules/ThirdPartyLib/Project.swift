@@ -20,6 +20,7 @@ let project = Project.makeModule(
         .external(name: "FirebaseCrashlytics"),
         .external(name: "FirebaseRemoteConfig"),
         .external(name: "KakaoSDKUser"),
-        .external(name: "KakaoSDKAuth")
+        .external(name: "KakaoSDKAuth"),
+        .external(name: "HeeKit")
     ]
 )

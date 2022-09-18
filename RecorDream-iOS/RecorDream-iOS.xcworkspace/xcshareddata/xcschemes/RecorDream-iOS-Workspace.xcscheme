@@ -392,6 +392,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "044594BFE2B291FE7EB48B94"
+               BuildableName = "HeeKit.framework"
+               BlueprintName = "HeeKit"
+               ReferencedContainer = "container:Tuist/Dependencies/SwiftPackageManager/.build/checkouts/HeeKit/HeeKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "7C14AC27021FF442200B3853"
                BuildableName = "KakaoSDKAuth.framework"
                BlueprintName = "KakaoSDKAuth"

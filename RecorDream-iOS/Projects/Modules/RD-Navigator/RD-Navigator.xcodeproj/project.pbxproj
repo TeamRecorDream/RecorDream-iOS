@@ -220,8 +220,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6C9E648E8457F7FC26D41A07 /* RD-Navigator */,
 				8896896F09293E53E507B041 /* RD-NavigatorTests */,
+				6C9E648E8457F7FC26D41A07 /* RD-Navigator */,
 			);
 		};
 /* End PBXProject section */
