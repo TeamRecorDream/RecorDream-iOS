@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		50EF9DAC0F7CDDFAE5F8AE8C /* Feature_Feature.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E7D044A66CA291A3D7B25D39 /* Feature_Feature.bundle */; };
+		5303E50146FF48A7360AF259 /* RD_Navigator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E2B2E63B640FCA36F78514 /* RD_Navigator.framework */; platformFilter = ios; };
 		5A3DF7B9C7ECC1C50DAFA831 /* DataModule.framework in Dependencies */ = {isa = PBXBuildFile; fileRef = 86A22AD8AB1C7D00A312E246 /* DataModule.framework */; platformFilter = ios; };
 		5FC11D4B2EBFB551B0283661 /* RD_DSKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CB1420DE307D848BEA2E2EE /* RD_DSKit.framework */; platformFilter = ios; };
 		65D1BB8F08906021416F2531 /* Feature_Feature.bundle in Dependencies */ = {isa = PBXBuildFile; fileRef = E7D044A66CA291A3D7B25D39 /* Feature_Feature.bundle */; platformFilter = ios; };
 		67330FD77A79785B470725F2 /* RD_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1EFD64C7CF30CE3F03882E7 /* RD_Core.framework */; platformFilter = ios; };
 		698CE0405DACBC8A2CDAFE94 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C295C3FA831E428CE4DA6977 /* Images.xcassets */; };
+		6C0FBE8F0742F21911799E05 /* RD_Navigator.framework in Dependencies */ = {isa = PBXBuildFile; fileRef = 81E2B2E63B640FCA36F78514 /* RD_Navigator.framework */; platformFilter = ios; };
+		73052180A3BD42017E209142 /* RD_User.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E3D32BEE7866A1ACFF17FF0 /* RD_User.framework */; platformFilter = ios; };
+		792E93807E260A4B6B098EF0 /* RD_User.framework in Dependencies */ = {isa = PBXBuildFile; fileRef = 3E3D32BEE7866A1ACFF17FF0 /* RD_User.framework */; platformFilter = ios; };
 		7B8C31346AE93C3A87733FE6 /* ThirdPartyLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBB472E9437018D61EEFC0F1 /* ThirdPartyLib.framework */; platformFilter = ios; };
 		7F8A8188CD9951235099F6EB /* DataModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86A22AD8AB1C7D00A312E246 /* DataModule.framework */; platformFilter = ios; };
 		8004D8457A39BA704BCEEFF1 /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CC234541A523A090E51715 /* Feature.swift */; };
@@ -50,6 +54,8 @@
 				5A3DF7B9C7ECC1C50DAFA831 /* DataModule.framework in Dependencies */,
 				BC32952B1D6DC78D406B7CFB /* RD_Core.framework in Dependencies */,
 				951359E08A81D9E2E69FFBDA /* RD_DSKit.framework in Dependencies */,
+				6C0FBE8F0742F21911799E05 /* RD_Navigator.framework in Dependencies */,
+				792E93807E260A4B6B098EF0 /* RD_User.framework in Dependencies */,
 			);
 			name = Dependencies;
 			runOnlyForDeploymentPostprocessing = 1;
@@ -100,6 +106,8 @@
 		0CB1420DE307D848BEA2E2EE /* RD_DSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_DSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FCF902DF7D9CA7A6F12E920 /* FeatureTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "FeatureTests-Info.plist"; sourceTree = "<group>"; };
 		37CC234541A523A090E51715 /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
+		3E3D32BEE7866A1ACFF17FF0 /* RD_User.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_User.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		81E2B2E63B640FCA36F78514 /* RD_Navigator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_Navigator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		86A22AD8AB1C7D00A312E246 /* DataModule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataModule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A611D1693834F821CBD6EAD /* Feature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Feature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A215FBB13B09E45FD00ED57C /* Feature-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Feature-Info.plist"; sourceTree = "<group>"; };
@@ -130,6 +138,8 @@
 				F4123BA0D3124D4C0497F69D /* Feature.framework in Frameworks */,
 				67330FD77A79785B470725F2 /* RD_Core.framework in Frameworks */,
 				5FC11D4B2EBFB551B0283661 /* RD_DSKit.framework in Frameworks */,
+				5303E50146FF48A7360AF259 /* RD_Navigator.framework in Frameworks */,
+				73052180A3BD42017E209142 /* RD_User.framework in Frameworks */,
 				7B8C31346AE93C3A87733FE6 /* ThirdPartyLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,6 +227,8 @@
 				D2E966455637831DC7FA52A6 /* FeatureTests.xctest */,
 				E1EFD64C7CF30CE3F03882E7 /* RD_Core.framework */,
 				0CB1420DE307D848BEA2E2EE /* RD_DSKit.framework */,
+				81E2B2E63B640FCA36F78514 /* RD_Navigator.framework */,
+				3E3D32BEE7866A1ACFF17FF0 /* RD_User.framework */,
 				FBB472E9437018D61EEFC0F1 /* ThirdPartyLib.framework */,
 			);
 			name = Products;
@@ -312,9 +324,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B80BEDE90B5E77851A6B8979 /* FeatureTests */,
 				889701595646A30881D30ED8 /* Feature */,
 				21DED0AB4888403505862EC1 /* Feature_Feature */,
+				B80BEDE90B5E77851A6B8979 /* FeatureTests */,
 			);
 		};
 /* End PBXProject section */

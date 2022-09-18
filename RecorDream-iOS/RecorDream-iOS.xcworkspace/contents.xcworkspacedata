@@ -32,6 +32,12 @@
          location = "group:Modules"
          name = "Modules">
          <FileRef
+            location = "group:RD-Navigator/RD-Navigator.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:RD-User/RD-User.xcodeproj">
+         </FileRef>
+         <FileRef
             location = "group:ThirdPartyLib/ThirdPartyLib.xcodeproj">
          </FileRef>
       </Group>

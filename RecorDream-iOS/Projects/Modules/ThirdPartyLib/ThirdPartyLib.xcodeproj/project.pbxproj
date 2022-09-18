@@ -403,8 +403,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F01E11161170C8F2E81DBA6D /* ThirdPartyLib */,
 				72EC3D2839A998BE00FC4228 /* ThirdPartyLibTests */,
+				F01E11161170C8F2E81DBA6D /* ThirdPartyLib */,
 			);
 		};
 /* End PBXProject section */

@@ -490,6 +490,62 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6C9E648E8457F7FC26D41A07"
+               BuildableName = "RD_Navigator.framework"
+               BlueprintName = "RD-Navigator"
+               ReferencedContainer = "container:Projects/Modules/RD-Navigator/RD-Navigator.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8896896F09293E53E507B041"
+               BuildableName = "RD_NavigatorTests.xctest"
+               BlueprintName = "RD-NavigatorTests"
+               ReferencedContainer = "container:Projects/Modules/RD-Navigator/RD-Navigator.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "01E5A015AAD8D3C2E0635E3E"
+               BuildableName = "RD_User.framework"
+               BlueprintName = "RD-User"
+               ReferencedContainer = "container:Projects/Modules/RD-User/RD-User.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9E09F6195AC4AA79395732A8"
+               BuildableName = "RD_UserTests.xctest"
+               BlueprintName = "RD-UserTests"
+               ReferencedContainer = "container:Projects/Modules/RD-User/RD-User.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "AE83B7D072900D2ED8EA0046"
                BuildableName = "RecorDream_iOS.app"
                BlueprintName = "RecorDream-iOS"
@@ -668,6 +724,26 @@
                BuildableName = "RD_DSKitTests.xctest"
                BlueprintName = "RD-DSKitTests"
                ReferencedContainer = "container:Projects/UI/RD-DSKit/RD-DSKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8896896F09293E53E507B041"
+               BuildableName = "RD_NavigatorTests.xctest"
+               BlueprintName = "RD-NavigatorTests"
+               ReferencedContainer = "container:Projects/Modules/RD-Navigator/RD-Navigator.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9E09F6195AC4AA79395732A8"
+               BuildableName = "RD_UserTests.xctest"
+               BlueprintName = "RD-UserTests"
+               ReferencedContainer = "container:Projects/Modules/RD-User/RD-User.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
