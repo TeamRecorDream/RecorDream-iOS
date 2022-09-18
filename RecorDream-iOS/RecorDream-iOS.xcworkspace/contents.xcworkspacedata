@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:Projects"
+      name = "Projects">
+      <FileRef
+         location = "group:RecorDream-iOS/RecorDream-iOS.xcodeproj">
+      </FileRef>
+      <Group
+         location = "group:Core"
+         name = "Core">
+         <FileRef
+            location = "group:RD-Core/RD-Core.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Data"
+         name = "Data">
+         <FileRef
+            location = "group:DataModule/DataModule.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Features"
+         name = "Features">
+         <FileRef
+            location = "group:Feature/Feature.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Modules"
+         name = "Modules">
+         <FileRef
+            location = "group:ThirdPartyLib/ThirdPartyLib.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:UI"
+         name = "UI">
+         <FileRef
+            location = "group:RD-DSKit/RD-DSKit.xcodeproj">
+         </FileRef>
+      </Group>
+   </Group>
+   <Group
+      location = "group:Tuist"
+      name = "Tuist">
+      <Group
+         location = "group:Dependencies"
+         name = "Dependencies">
+         <Group
+            location = "group:SwiftPackageManager"
+            name = "SwiftPackageManager">
+            <Group
+               location = "group:.build"
+               name = ".build">
+               <Group
+                  location = "group:checkouts"
+                  name = "checkouts">
+                  <FileRef
+                     location = "group:RxSwift/RxSwift.xcodeproj">
+                  </FileRef>
+               </Group>
+            </Group>
+         </Group>
+      </Group>
+   </Group>
+</Workspace>
