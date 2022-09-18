@@ -14,6 +14,12 @@ let project = Project.makeModule(
     packages: [],
     dependencies: [
         .external(name: "RxSwift"),
-        .external(name: "RxCocoa")
+        .external(name: "RxCocoa"),
+        .external(name: "SnapKit"),
+        .external(name: "FirebaseAnalytics"),
+        .external(name: "FirebaseCrashlytics"),
+        .external(name: "FirebaseRemoteConfig"),
+        .external(name: "KakaoSDKUser"),
+        .external(name: "KakaoSDKAuth")
     ]
 )

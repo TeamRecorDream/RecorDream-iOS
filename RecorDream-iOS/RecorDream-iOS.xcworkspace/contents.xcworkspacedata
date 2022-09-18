@@ -59,7 +59,34 @@
                   location = "group:checkouts"
                   name = "checkouts">
                   <FileRef
+                     location = "group:Alamofire/Alamofire.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:GoogleAppMeasurement/GoogleAppMeasurement.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:GoogleDataTransport/GoogleDataTransport.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:GoogleUtilities/GoogleUtilities.xcodeproj">
+                  </FileRef>
+                  <FileRef
                      location = "group:RxSwift/RxSwift.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:SnapKit/SnapKit.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:firebase-ios-sdk/Firebase.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:kakao-ios-sdk/KakaoOpenSDK.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:nanopb/nanopb.xcodeproj">
+                  </FileRef>
+                  <FileRef
+                     location = "group:promises/Promises.xcodeproj">
                   </FileRef>
                </Group>
             </Group>
