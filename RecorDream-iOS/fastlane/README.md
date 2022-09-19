@@ -47,6 +47,22 @@ Register new Device With Cert
 
 Generate Certificate
 
+### ios matchByTeam
+
+```sh
+[bundle exec] fastlane ios matchByTeam
+```
+
+
+
+### ios matchReadOnly
+
+```sh
+[bundle exec] fastlane ios matchReadOnly
+```
+
+
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

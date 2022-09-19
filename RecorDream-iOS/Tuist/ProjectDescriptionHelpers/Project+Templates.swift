@@ -5,7 +5,7 @@ public extension Project {
         name: String,
         platform: Platform = .iOS,
         product: Product,
-        organizationName: String = "seolagirTuist",
+        organizationName: String = "RecorDream",
         packages: [Package] = [],
         deploymentTarget: DeploymentTarget? = .iOS(targetVersion: "15.0", devices: [.iphone]),
         dependencies: [TargetDependency] = [],
@@ -60,6 +60,7 @@ public extension Project {
     static let baseinfoPlist: [String: InfoPlist.Value] = [
         "CFBundleShortVersionString": "1.0",
         "CFBundleVersion": "1",
+        "CFBundleIdentifier": "com.RecorDream.Release",
         "UILaunchStoryboardName": "LaunchScreen",
         "LSApplicationQueriesSchemes": ["kakaokompassauth", "kakaolink"],
         "CFBundleURLTypes": ["CFBundleURLSchemes": ["kakao$(KAKAO_APP_KEY)"]],
