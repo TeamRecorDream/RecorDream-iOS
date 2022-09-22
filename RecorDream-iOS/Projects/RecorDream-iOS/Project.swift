@@ -7,13 +7,14 @@
 
 import ProjectDescription
 import ProjectDescriptionHelpers
+import UtilityPlugin
 
 let project = Project.makeModule(
     name: "RecorDream-iOS",
     platform: .iOS,
     product: .app,
     dependencies: [
-        .project(target: "Feature", path: .relativeToRoot("Projects/Features/Feature"))
+        .Project.RDNavigator
     ],
     resources: ["Resources/**"],
     infoPlist: .extendingDefault(with: Project.baseinfoPlist)

@@ -1,4 +1,5 @@
 import ProjectDescription
+import UtilityPlugin
 
 public extension Project {
     static func makeModule(

@@ -12,6 +12,8 @@ let project = Project.makeModule(
     name: "RD-Navigator",
     product: .staticFramework,
     dependencies: [
-        .project(target: "RD-Core", path: .relativeToRoot("Projects/Core/RD-Core"))
+        .Project.RDPresentation,
+        .Project.RDData,
+        .Project.RDUtilKit
     ]
 )

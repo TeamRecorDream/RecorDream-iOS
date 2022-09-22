@@ -28,10 +28,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "635838CF12CF39E6BE615A81"
-               BuildableName = "DataModule.framework"
-               BlueprintName = "DataModule"
-               ReferencedContainer = "container:Projects/Data/DataModule/DataModule.xcodeproj">
+               BlueprintIdentifier = "372E276F143AFFAD2448C971"
+               BuildableName = "Data.framework"
+               BlueprintName = "Data"
+               ReferencedContainer = "container:Projects/Data/Data/Data.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -42,10 +42,38 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8F306DF292B8BE3C818515E3"
-               BuildableName = "DataModuleTests.xctest"
-               BlueprintName = "DataModuleTests"
-               ReferencedContainer = "container:Projects/Data/DataModule/DataModule.xcodeproj">
+               BlueprintIdentifier = "59D7D2F02BF6A0D0E7F83454"
+               BuildableName = "DataTests.xctest"
+               BlueprintName = "DataTests"
+               ReferencedContainer = "container:Projects/Data/Data/Data.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C538ACB2975E6B55AFA02B19"
+               BuildableName = "Domain.framework"
+               BlueprintName = "Domain"
+               ReferencedContainer = "container:Projects/Domain/Domain/Domain.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7FBD2F22544C231784C1A4D5"
+               BuildableName = "DomainTests.xctest"
+               BlueprintName = "DomainTests"
+               ReferencedContainer = "container:Projects/Domain/Domain/Domain.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -60,48 +88,6 @@
                BuildableName = "FBLPromises.framework"
                BlueprintName = "FBLPromises"
                ReferencedContainer = "container:Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Promises.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "889701595646A30881D30ED8"
-               BuildableName = "Feature.framework"
-               BlueprintName = "Feature"
-               ReferencedContainer = "container:Projects/Features/Feature/Feature.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B80BEDE90B5E77851A6B8979"
-               BuildableName = "FeatureTests.xctest"
-               BlueprintName = "FeatureTests"
-               ReferencedContainer = "container:Projects/Features/Feature/Feature.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "21DED0AB4888403505862EC1"
-               BuildableName = "Feature_Feature.bundle"
-               BlueprintName = "Feature_Feature"
-               ReferencedContainer = "container:Projects/Features/Feature/Feature.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -448,6 +434,76 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3F31459B2DA9E5BB7B7E73E2"
+               BuildableName = "Presentation.framework"
+               BlueprintName = "Presentation"
+               ReferencedContainer = "container:Projects/Presentation/Presentation/Presentation.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4F649FDB9C5521442A78DE10"
+               BuildableName = "PresentationTests.xctest"
+               BlueprintName = "PresentationTests"
+               ReferencedContainer = "container:Projects/Presentation/Presentation/Presentation.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "77CAB1885910A1DF357B27D5"
+               BuildableName = "Presentation_Presentation.bundle"
+               BlueprintName = "Presentation_Presentation"
+               ReferencedContainer = "container:Projects/Presentation/Presentation/Presentation.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6DB034878C41B104AF399202"
+               BuildableName = "RD_Analytics.framework"
+               BlueprintName = "RD-Analytics"
+               ReferencedContainer = "container:Projects/Modules/RD-Analytics/RD-Analytics.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D7FF4FE0C16E6BBDF618A857"
+               BuildableName = "RD_AnalyticsTests.xctest"
+               BlueprintName = "RD-AnalyticsTests"
+               ReferencedContainer = "container:Projects/Modules/RD-Analytics/RD-Analytics.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "1612B4979D37C20F1E92F32F"
                BuildableName = "RD_Core.framework"
                BlueprintName = "RD-Core"
@@ -479,7 +535,7 @@
                BlueprintIdentifier = "251DF19BD935AF5510DC7F81"
                BuildableName = "RD_DSKit.framework"
                BlueprintName = "RD-DSKit"
-               ReferencedContainer = "container:Projects/UI/RD-DSKit/RD-DSKit.xcodeproj">
+               ReferencedContainer = "container:Projects/Modules/RD-DSKit/RD-DSKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -493,7 +549,7 @@
                BlueprintIdentifier = "604E84CF3E51AD1EB37DF117"
                BuildableName = "RD_DSKitTests.xctest"
                BlueprintName = "RD-DSKitTests"
-               ReferencedContainer = "container:Projects/UI/RD-DSKit/RD-DSKit.xcodeproj">
+               ReferencedContainer = "container:Projects/Modules/RD-DSKit/RD-DSKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -532,6 +588,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E5231AE051F67C4C7E4F7CF4"
+               BuildableName = "RD_Network.framework"
+               BlueprintName = "RD-Network"
+               ReferencedContainer = "container:Projects/Modules/RD-Network/RD-Network.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EE95C03E46E6EB21FC22FE87"
+               BuildableName = "RD_NetworkTests.xctest"
+               BlueprintName = "RD-NetworkTests"
+               ReferencedContainer = "container:Projects/Modules/RD-Network/RD-Network.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "01E5A015AAD8D3C2E0635E3E"
                BuildableName = "RD_User.framework"
                BlueprintName = "RD-User"
@@ -550,6 +634,34 @@
                BuildableName = "RD_UserTests.xctest"
                BlueprintName = "RD-UserTests"
                ReferencedContainer = "container:Projects/Modules/RD-User/RD-User.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7A358AE6A1513AA155F218CD"
+               BuildableName = "RD_UtilKit.framework"
+               BlueprintName = "RD-UtilKit"
+               ReferencedContainer = "container:Projects/Modules/RD-UtilKit/RD-UtilKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DF8D029F4B0EE79523EF2AA3"
+               BuildableName = "RD_UtilKitTests.xctest"
+               BlueprintName = "RD-UtilKitTests"
+               ReferencedContainer = "container:Projects/Modules/RD-UtilKit/RD-UtilKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -704,20 +816,40 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8F306DF292B8BE3C818515E3"
-               BuildableName = "DataModuleTests.xctest"
-               BlueprintName = "DataModuleTests"
-               ReferencedContainer = "container:Projects/Data/DataModule/DataModule.xcodeproj">
+               BlueprintIdentifier = "59D7D2F02BF6A0D0E7F83454"
+               BuildableName = "DataTests.xctest"
+               BlueprintName = "DataTests"
+               ReferencedContainer = "container:Projects/Data/Data/Data.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B80BEDE90B5E77851A6B8979"
-               BuildableName = "FeatureTests.xctest"
-               BlueprintName = "FeatureTests"
-               ReferencedContainer = "container:Projects/Features/Feature/Feature.xcodeproj">
+               BlueprintIdentifier = "7FBD2F22544C231784C1A4D5"
+               BuildableName = "DomainTests.xctest"
+               BlueprintName = "DomainTests"
+               ReferencedContainer = "container:Projects/Domain/Domain/Domain.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4F649FDB9C5521442A78DE10"
+               BuildableName = "PresentationTests.xctest"
+               BlueprintName = "PresentationTests"
+               ReferencedContainer = "container:Projects/Presentation/Presentation/Presentation.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D7FF4FE0C16E6BBDF618A857"
+               BuildableName = "RD_AnalyticsTests.xctest"
+               BlueprintName = "RD-AnalyticsTests"
+               ReferencedContainer = "container:Projects/Modules/RD-Analytics/RD-Analytics.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -737,7 +869,7 @@
                BlueprintIdentifier = "604E84CF3E51AD1EB37DF117"
                BuildableName = "RD_DSKitTests.xctest"
                BlueprintName = "RD-DSKitTests"
-               ReferencedContainer = "container:Projects/UI/RD-DSKit/RD-DSKit.xcodeproj">
+               ReferencedContainer = "container:Projects/Modules/RD-DSKit/RD-DSKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -754,10 +886,30 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EE95C03E46E6EB21FC22FE87"
+               BuildableName = "RD_NetworkTests.xctest"
+               BlueprintName = "RD-NetworkTests"
+               ReferencedContainer = "container:Projects/Modules/RD-Network/RD-Network.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "9E09F6195AC4AA79395732A8"
                BuildableName = "RD_UserTests.xctest"
                BlueprintName = "RD-UserTests"
                ReferencedContainer = "container:Projects/Modules/RD-User/RD-User.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DF8D029F4B0EE79523EF2AA3"
+               BuildableName = "RD_UtilKitTests.xctest"
+               BlueprintName = "RD-UtilKitTests"
+               ReferencedContainer = "container:Projects/Modules/RD-UtilKit/RD-UtilKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference

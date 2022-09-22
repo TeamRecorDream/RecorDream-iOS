@@ -390,7 +390,7 @@
 		6AB1D2D9B77394C894B54FC7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				ORGANIZATIONNAME = seolagirTuist;
+				ORGANIZATIONNAME = RecorDream;
 				TargetAttributes = {
 				};
 			};
@@ -407,8 +407,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				72EC3D2839A998BE00FC4228 /* ThirdPartyLibTests */,
 				F01E11161170C8F2E81DBA6D /* ThirdPartyLib */,
+				72EC3D2839A998BE00FC4228 /* ThirdPartyLibTests */,
 			);
 		};
 /* End PBXProject section */
@@ -530,7 +530,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = seolagirTuist.ThirdPartyLib;
+				PRODUCT_BUNDLE_IDENTIFIER = RecorDream.ThirdPartyLib;
 				PRODUCT_NAME = ThirdPartyLib;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -607,7 +607,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = seolagirTuist.ThirdPartyLibTests;
+				PRODUCT_BUNDLE_IDENTIFIER = RecorDream.ThirdPartyLibTests;
 				PRODUCT_NAME = ThirdPartyLibTests;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -680,7 +680,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = seolagirTuist.ThirdPartyLibTests;
+				PRODUCT_BUNDLE_IDENTIFIER = RecorDream.ThirdPartyLibTests;
 				PRODUCT_NAME = ThirdPartyLibTests;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -877,7 +877,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = seolagirTuist.ThirdPartyLib;
+				PRODUCT_BUNDLE_IDENTIFIER = RecorDream.ThirdPartyLib;
 				PRODUCT_NAME = ThirdPartyLib;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

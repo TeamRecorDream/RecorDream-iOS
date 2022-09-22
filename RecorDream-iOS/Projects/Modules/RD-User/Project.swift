@@ -12,6 +12,6 @@ let project = Project.makeModule(
     name: "RD-User",
     product: .staticFramework,
     dependencies: [
-        .project(target: "RD-Core", path: .relativeToRoot("Projects/Core/RD-Core"))
+        .Project.RDCore
     ]
 )

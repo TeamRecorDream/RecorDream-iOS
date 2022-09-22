@@ -8,25 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		063CCD525580B94BFA475D3E /* RD_Navigator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 613B966C92370238292602FA /* RD_Navigator.framework */; platformFilter = ios; };
-		0C1F5B5FF1E11A71289D5A30 /* DataModule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F20DBF840B6DC5F57DDB93A4 /* DataModule.framework */; platformFilter = ios; };
+		0A60E02F808D9DAF8A1EBF4A /* RD_UtilKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35818CFFF55430683CBCD762 /* RD_UtilKit.framework */; platformFilter = ios; };
+		13D24858464E62E5BF313276 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8A2804F7C6197E19CBF4DFD /* Domain.framework */; platformFilter = ios; };
 		14A6682523B47ED9A39FBAFB /* RD_User.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE19EE6AC1195D4E4AFF4C90 /* RD_User.framework */; platformFilter = ios; };
 		14D8E852B79CD79932646B23 /* TuistAssets+RecorDreamIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8672046F5198C6DC05F4C8 /* TuistAssets+RecorDreamIOS.swift */; };
 		1C378BAE9790C70B8213B477 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54A4B4B65839C7763CCC5400 /* Assets.xcassets */; };
 		337AAFD2743BE4D959F7CF16 /* TuistBundle+RecorDreamIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA129BA083253692201EFD3 /* TuistBundle+RecorDreamIOS.swift */; };
-		359C584E19C6D90DA4D4AE5E /* Feature_Feature.bundle in Dependencies */ = {isa = PBXBuildFile; fileRef = 28CAAE21F0FB1E48903B341F /* Feature_Feature.bundle */; platformFilter = ios; };
+		3CFF58AB150A655F9EEA5999 /* Presentation_Presentation.bundle in Dependencies */ = {isa = PBXBuildFile; fileRef = D60B4A2DE819B7CCBCAD2CE6 /* Presentation_Presentation.bundle */; platformFilter = ios; };
 		42C3284555C83110D6520FCB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A234358187F61BD8A2AA007A /* LaunchScreen.storyboard */; };
 		6F5A77EB9CC5A80A33E46702 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C1124965301AA151373006 /* AppDelegate.swift */; };
 		7316CD282E53E3D7159900AA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C36D6B79DD49D472BB4431B /* SceneDelegate.swift */; };
 		7670DFEC837427FDE4CC4E71 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8360735407FB805F25A3D100 /* RxSwift.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7CAFEF788F24A01240707FDC /* RD_DSKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26F3950E75E572CF28A5FAFB /* RD_DSKit.framework */; platformFilter = ios; };
 		86A98D5F70CD3FCD0783C635 /* ThirdPartyLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6CA090AB99D72BEF4D1B1244 /* ThirdPartyLib.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		881AF58A0C6041939944008D /* Feature.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E28E93FBB0F0AB630D5D9AC /* Feature.framework */; platformFilter = ios; };
-		9A14C88389FD39DD25ED443D /* Feature_Feature.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 28CAAE21F0FB1E48903B341F /* Feature_Feature.bundle */; };
 		9BADB6F22F21C168D3FF099D /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D6D67D99DB17F890A64F9AB6 /* RxCocoa.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B2B5AA38AE2A181D3E71B76A /* ThirdPartyLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CA090AB99D72BEF4D1B1244 /* ThirdPartyLib.framework */; platformFilter = ios; };
+		BF3DAF6E79247C7344C8B8E9 /* Presentation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FFA031D121ABB14889327A0 /* Presentation.framework */; platformFilter = ios; };
+		C8B6C89D3780BE7D035CF89B /* Presentation_Presentation.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D60B4A2DE819B7CCBCAD2CE6 /* Presentation_Presentation.bundle */; };
 		CFDFBD3BCD522AD7CB018E63 /* RD_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59266FB679205B890A3B6ADD /* RD_Core.framework */; platformFilter = ios; };
 		E06EF397A55079457144BBC9 /* RxCocoaRuntime.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F5324CE1FE774F203CE0BCC1 /* RxCocoaRuntime.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E9FDCB341FD57431A29523D8 /* RD_Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57DD2E8AA5B828E04EA4C96B /* RD_Analytics.framework */; platformFilter = ios; };
+		F7A06F51F3458656420F9756 /* RD_Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F725E94CEA1EBAB62480213C /* RD_Network.framework */; platformFilter = ios; };
 		FC646C38EBC46D7A831E7257 /* RxRelay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F57E08F8C1A5E7D9A60A4736 /* RxRelay.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FD762DE6B929573F6261B166 /* Data.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FB6ABBD9A94F0D6A236032 /* Data.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,7 +49,7 @@
 			buildActionMask = 8;
 			dstSubfolderSpec = 16;
 			files = (
-				359C584E19C6D90DA4D4AE5E /* Feature_Feature.bundle in Dependencies */,
+				3CFF58AB150A655F9EEA5999 /* Presentation_Presentation.bundle in Dependencies */,
 			);
 			name = Dependencies;
 			runOnlyForDeploymentPostprocessing = 1;
@@ -78,28 +82,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0FFA031D121ABB14889327A0 /* Presentation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Presentation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		26F3950E75E572CF28A5FAFB /* RD_DSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_DSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		28CAAE21F0FB1E48903B341F /* Feature_Feature.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Feature_Feature.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		28FB6ABBD9A94F0D6A236032 /* Data.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Data.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		35818CFFF55430683CBCD762 /* RD_UtilKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_UtilKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EA129BA083253692201EFD3 /* TuistBundle+RecorDreamIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+RecorDreamIOS.swift"; sourceTree = "<group>"; };
 		54A4B4B65839C7763CCC5400 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		57DD2E8AA5B828E04EA4C96B /* RD_Analytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_Analytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		59266FB679205B890A3B6ADD /* RD_Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		613B966C92370238292602FA /* RD_Navigator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_Navigator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CA090AB99D72BEF4D1B1244 /* ThirdPartyLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ThirdPartyLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E26065A9B6FBB87A4D3F422 /* RecorDream-iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "RecorDream-iOSTests-Info.plist"; sourceTree = "<group>"; };
-		6E28E93FBB0F0AB630D5D9AC /* Feature.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Feature.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8360735407FB805F25A3D100 /* RxSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C36D6B79DD49D472BB4431B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A234358187F61BD8A2AA007A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B8A2804F7C6197E19CBF4DFD /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8C1124965301AA151373006 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BA8672046F5198C6DC05F4C8 /* TuistAssets+RecorDreamIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+RecorDreamIOS.swift"; sourceTree = "<group>"; };
 		D022B2A4B6B74F6F28E2D8E8 /* RecorDream-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "RecorDream-iOS-Info.plist"; sourceTree = "<group>"; };
+		D60B4A2DE819B7CCBCAD2CE6 /* Presentation_Presentation.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Presentation_Presentation.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6D67D99DB17F890A64F9AB6 /* RxCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD2ED74C8B9BD067D175EF13 /* RecorDream_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecorDream_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE19EE6AC1195D4E4AFF4C90 /* RD_User.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_User.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F20DBF840B6DC5F57DDB93A4 /* DataModule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataModule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F52015026737F26A4A4373A9 /* RecorDream_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecorDream_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5324CE1FE774F203CE0BCC1 /* RxCocoaRuntime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxCocoaRuntime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F57E08F8C1A5E7D9A60A4736 /* RxRelay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxRelay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F725E94CEA1EBAB62480213C /* RD_Network.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_Network.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,12 +122,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C1F5B5FF1E11A71289D5A30 /* DataModule.framework in Frameworks */,
-				881AF58A0C6041939944008D /* Feature.framework in Frameworks */,
+				FD762DE6B929573F6261B166 /* Data.framework in Frameworks */,
+				13D24858464E62E5BF313276 /* Domain.framework in Frameworks */,
+				BF3DAF6E79247C7344C8B8E9 /* Presentation.framework in Frameworks */,
+				E9FDCB341FD57431A29523D8 /* RD_Analytics.framework in Frameworks */,
 				CFDFBD3BCD522AD7CB018E63 /* RD_Core.framework in Frameworks */,
 				7CAFEF788F24A01240707FDC /* RD_DSKit.framework in Frameworks */,
 				063CCD525580B94BFA475D3E /* RD_Navigator.framework in Frameworks */,
+				F7A06F51F3458656420F9756 /* RD_Network.framework in Frameworks */,
 				14A6682523B47ED9A39FBAFB /* RD_User.framework in Frameworks */,
+				0A60E02F808D9DAF8A1EBF4A /* RD_UtilKit.framework in Frameworks */,
 				B2B5AA38AE2A181D3E71B76A /* ThirdPartyLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,13 +142,17 @@
 		0C7C47875E554BFC9A6BA684 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F20DBF840B6DC5F57DDB93A4 /* DataModule.framework */,
-				28CAAE21F0FB1E48903B341F /* Feature_Feature.bundle */,
-				6E28E93FBB0F0AB630D5D9AC /* Feature.framework */,
+				28FB6ABBD9A94F0D6A236032 /* Data.framework */,
+				B8A2804F7C6197E19CBF4DFD /* Domain.framework */,
+				D60B4A2DE819B7CCBCAD2CE6 /* Presentation_Presentation.bundle */,
+				0FFA031D121ABB14889327A0 /* Presentation.framework */,
+				57DD2E8AA5B828E04EA4C96B /* RD_Analytics.framework */,
 				59266FB679205B890A3B6ADD /* RD_Core.framework */,
 				26F3950E75E572CF28A5FAFB /* RD_DSKit.framework */,
 				613B966C92370238292602FA /* RD_Navigator.framework */,
+				F725E94CEA1EBAB62480213C /* RD_Network.framework */,
 				DE19EE6AC1195D4E4AFF4C90 /* RD_User.framework */,
+				35818CFFF55430683CBCD762 /* RD_UtilKit.framework */,
 				DD2ED74C8B9BD067D175EF13 /* RecorDream_iOS.app */,
 				F52015026737F26A4A4373A9 /* RecorDream_iOSTests.xctest */,
 				D6D67D99DB17F890A64F9AB6 /* RxCocoa.framework */,
@@ -274,7 +290,7 @@
 		694D2FBB6114E19695E10547 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				ORGANIZATIONNAME = seolagirTuist;
+				ORGANIZATIONNAME = RecorDream;
 				TargetAttributes = {
 					29F724B1F02D684A71B7C28E = {
 						TestTargetID = AE83B7D072900D2ED8EA0046;
@@ -314,7 +330,7 @@
 			files = (
 				1C378BAE9790C70B8213B477 /* Assets.xcassets in Resources */,
 				42C3284555C83110D6520FCB /* LaunchScreen.storyboard in Resources */,
-				9A14C88389FD39DD25ED443D /* Feature_Feature.bundle in Resources */,
+				C8B6C89D3780BE7D035CF89B /* Presentation_Presentation.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,7 +430,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "seolagirTuist.RecorDream-iOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "RecorDream.RecorDream-iOSTests";
 				PRODUCT_NAME = RecorDream_iOSTests;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -490,7 +506,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "seolagirTuist.RecorDream-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "RecorDream.RecorDream-iOS";
 				PRODUCT_NAME = RecorDream_iOS;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -565,7 +581,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "seolagirTuist.RecorDream-iOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "RecorDream.RecorDream-iOSTests";
 				PRODUCT_NAME = RecorDream_iOSTests;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -701,7 +717,7 @@
 					"-Xcc",
 					"-fmodule-map-file=$(SRCROOT)/../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/promises/Sources/FBLPromises/include/module.modulemap",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "seolagirTuist.RecorDream-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "RecorDream.RecorDream-iOS";
 				PRODUCT_NAME = RecorDream_iOS;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;

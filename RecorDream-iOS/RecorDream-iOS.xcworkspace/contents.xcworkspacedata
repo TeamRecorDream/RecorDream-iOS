@@ -18,34 +18,46 @@
          location = "group:Data"
          name = "Data">
          <FileRef
-            location = "group:DataModule/DataModule.xcodeproj">
+            location = "group:Data/Data.xcodeproj">
          </FileRef>
       </Group>
       <Group
-         location = "group:Features"
-         name = "Features">
+         location = "group:Domain"
+         name = "Domain">
          <FileRef
-            location = "group:Feature/Feature.xcodeproj">
+            location = "group:Domain/Domain.xcodeproj">
          </FileRef>
       </Group>
       <Group
          location = "group:Modules"
          name = "Modules">
          <FileRef
+            location = "group:RD-Analytics/RD-Analytics.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:RD-DSKit/RD-DSKit.xcodeproj">
+         </FileRef>
+         <FileRef
             location = "group:RD-Navigator/RD-Navigator.xcodeproj">
          </FileRef>
          <FileRef
+            location = "group:RD-Network/RD-Network.xcodeproj">
+         </FileRef>
+         <FileRef
             location = "group:RD-User/RD-User.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:RD-UtilKit/RD-UtilKit.xcodeproj">
          </FileRef>
          <FileRef
             location = "group:ThirdPartyLib/ThirdPartyLib.xcodeproj">
          </FileRef>
       </Group>
       <Group
-         location = "group:UI"
-         name = "UI">
+         location = "group:Presentation"
+         name = "Presentation">
          <FileRef
-            location = "group:RD-DSKit/RD-DSKit.xcodeproj">
+            location = "group:Presentation/Presentation.xcodeproj">
          </FileRef>
       </Group>
    </Group>
