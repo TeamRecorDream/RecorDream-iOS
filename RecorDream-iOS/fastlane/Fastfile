@@ -58,3 +58,21 @@ platform :ios do
     match(type: "development", force_for_new_devices: true)
   end
 end
+
+# match 인증서 파일 생성 -> 관리자용
+
+platform :ios do
+  lane :matchByTeam do
+      match(git_branch: "master", type: "appstore", username: "ckrgkswnsgh@icloud.com")
+      match(git_branch: "master", type: "development", username: "ckrgkswnsgh@icloud.com")
+  end
+end
+
+# match 인증서 받아오기 -> 팀원용
+
+platform :ios do
+  lane :matchReadOnly do
+      match(git_branch: "master", type: "appstore", username: "ckrgkswnsgh@icloud.com", readonly: true)
+      match(git_branch: "master", type: "development", username: "ckrgkswnsgh@icloud.com", readonly: true)
+  end
+end
