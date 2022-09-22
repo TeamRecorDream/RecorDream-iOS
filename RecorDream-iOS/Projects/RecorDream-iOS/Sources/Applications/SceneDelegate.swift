@@ -7,7 +7,7 @@
 
 import UIKit
 
-import Feature
+import RD_Navigator
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let rootViewController = StartViewController()
+        rootViewController.hello()
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
         self.window = window
