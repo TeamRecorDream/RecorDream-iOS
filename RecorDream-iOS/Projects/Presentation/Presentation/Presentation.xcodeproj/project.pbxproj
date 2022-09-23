@@ -35,6 +35,7 @@
 		F6ECBC8828DD77E1000ED3DD /* TypoStyle+.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ECBC8728DD77E1000ED3DD /* TypoStyle+.swift */; };
 		F6ECBC8B28DD77F6000ED3DD /* ImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ECBC8A28DD77F6000ED3DD /* ImageList.swift */; };
 		F6ECBC8D28DD77FE000ED3DD /* ImageList+.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ECBC8C28DD77FE000ED3DD /* ImageList+.swift */; };
+		F6ECBC9728DD7A0A000ED3DD /* SampleSceneDICoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ECBC9628DD7A0A000ED3DD /* SampleSceneDICoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +137,7 @@
 		F6ECBC8728DD77E1000ED3DD /* TypoStyle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypoStyle+.swift"; sourceTree = "<group>"; };
 		F6ECBC8A28DD77F6000ED3DD /* ImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageList.swift; sourceTree = "<group>"; };
 		F6ECBC8C28DD77FE000ED3DD /* ImageList+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageList+.swift"; sourceTree = "<group>"; };
+		F6ECBC9628DD7A0A000ED3DD /* SampleSceneDICoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleSceneDICoordinator.swift; sourceTree = "<group>"; };
 		F95093D9D1B9E2FB9E5ECCCC /* Presentation_Presentation-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Presentation_Presentation-Info.plist"; sourceTree = "<group>"; };
 		FCD9E964AF98E2894CABDE41 /* ThirdPartyLib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ThirdPartyLib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -265,8 +267,7 @@
 		F6ECBC6728DD6B93000ED3DD /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				6EE20F94669685E797C28A9A /* Feature.swift */,
-				B02DA3390DB0F4509D795BFC /* StartViewController.swift */,
+				F6ECBC9528DD79DD000ED3DD /* SampleScene */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -323,6 +324,40 @@
 			children = (
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		F6ECBC9528DD79DD000ED3DD /* SampleScene */ = {
+			isa = PBXGroup;
+			children = (
+				F6ECBC9828DD7A23000ED3DD /* Sample */,
+				F6ECBC9628DD7A0A000ED3DD /* SampleSceneDICoordinator.swift */,
+			);
+			path = SampleScene;
+			sourceTree = "<group>";
+		};
+		F6ECBC9828DD7A23000ED3DD /* Sample */ = {
+			isa = PBXGroup;
+			children = (
+				F6ECBC9A28DD7A38000ED3DD /* ViewModel */,
+				F6ECBC9928DD7A2B000ED3DD /* View */,
+			);
+			path = Sample;
+			sourceTree = "<group>";
+		};
+		F6ECBC9928DD7A2B000ED3DD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B02DA3390DB0F4509D795BFC /* StartViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		F6ECBC9A28DD7A38000ED3DD /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6EE20F94669685E797C28A9A /* Feature.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		FB16DD150B16F59498923414 = {
@@ -482,6 +517,7 @@
 				BE1C96F586291D0D02157D57 /* TuistBundle+Presentation.swift in Sources */,
 				F6ECBC8628DD77D5000ED3DD /* TypeStyle.swift in Sources */,
 				F6ECBC8828DD77E1000ED3DD /* TypoStyle+.swift in Sources */,
+				F6ECBC9728DD7A0A000ED3DD /* SampleSceneDICoordinator.swift in Sources */,
 				F6ECBC8D28DD77FE000ED3DD /* ImageList+.swift in Sources */,
 				B23B8EBED364E08601BF0233 /* Feature.swift in Sources */,
 				D196DE66B4C9DFA9142A8C31 /* StartViewController.swift in Sources */,
