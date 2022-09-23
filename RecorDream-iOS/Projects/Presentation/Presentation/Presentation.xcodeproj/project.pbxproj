@@ -274,6 +274,7 @@
 		F6ECBC7B28DD7727000ED3DD /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				F6ECBC8E28DD7822000ED3DD /* Protocols */,
 				F6ECBC7C28DD7778000ED3DD /* Factory */,
 			);
 			path = Common;
@@ -315,6 +316,13 @@
 				F6ECBC8C28DD77FE000ED3DD /* ImageList+.swift */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		F6ECBC8E28DD7822000ED3DD /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		FB16DD150B16F59498923414 = {
