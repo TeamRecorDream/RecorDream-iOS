@@ -76,6 +76,17 @@ public extension Project {
                 ]
             ]
         ],
+        "UIAppFonts": [
+            "Item 0": "Pretendard-Black.otf",
+            "Item 1": "Pretendard-Bold.otf",
+            "Item 2": "Pretendard-ExtraBold.otf",
+            "Item 3": "Pretendard-ExtraLight.otf",
+            "Item 4": "Pretendard-Light.otf",
+            "Item 5": "Pretendard-Medium.otf",
+            "Item 6": "Pretendard-Regular.otf",
+            "Item 7": "Pretendard-SemiBold.otf",
+            "Item 8": "Pretendard-Thin.otf"
+        ],
         "App Transport Security Settings": ["Allow Arbitrary Loads": true],
         "NSAppTransportSecurity": ["NSAllowsArbitraryLoads": true]
     ]
