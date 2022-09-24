@@ -12,7 +12,6 @@
 		7DD60D9631353E3B8CBE1ADF /* RD-UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10187A1B199490E020610E46 /* RD-UserTests.swift */; };
 		A7DF3153EA1B67A6ABA8A429 /* RD_Core.framework in Dependencies */ = {isa = PBXBuildFile; fileRef = 62C9928EFE8603494F4EAB0B /* RD_Core.framework */; platformFilter = ios; };
 		AB93FB380287B5F240AD6E28 /* RD_Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCAAACEC2DB201B6378D7785 /* RD_Network.framework */; platformFilter = ios; };
-		C488655498D7E4BB401A6A4C /* RD-User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C684FB6698584E8C3E66ED /* RD-User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +58,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		00C684FB6698584E8C3E66ED /* RD-User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RD-User.swift"; sourceTree = "<group>"; };
 		0DC942BDF1F4648E6E90F2E8 /* RD-Network-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "RD-Network-Info.plist"; sourceTree = "<group>"; };
 		10187A1B199490E020610E46 /* RD-UserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RD-UserTests.swift"; sourceTree = "<group>"; };
 		62C9928EFE8603494F4EAB0B /* RD_Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RD_Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,7 +154,6 @@
 			isa = PBXGroup;
 			children = (
 				F63E89CC28DED29A007E6E54 /* API */,
-				00C684FB6698584E8C3E66ED /* RD-User.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -258,7 +255,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C488655498D7E4BB401A6A4C /* RD-User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

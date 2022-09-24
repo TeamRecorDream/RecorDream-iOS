@@ -153,25 +153,9 @@
 			path = InfoPlists;
 			sourceTree = "<group>";
 		};
-		F63E89CD28DED2FD007E6E54 /* DTO */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DTO;
-			sourceTree = "<group>";
-		};
-		F63E89CE28DED301007E6E54 /* Mock */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Mock;
-			sourceTree = "<group>";
-		};
 		F6ECBC9228DD797A000ED3DD /* Entities */ = {
 			isa = PBXGroup;
 			children = (
-				F63E89CE28DED301007E6E54 /* Mock */,
-				F63E89CD28DED2FD007E6E54 /* DTO */,
 			);
 			path = Entities;
 			sourceTree = "<group>";

@@ -184,9 +184,25 @@
 			name = Project;
 			sourceTree = "<group>";
 		};
+		F63E89D428DEF005007E6E54 /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DTO;
+			sourceTree = "<group>";
+		};
+		F63E89D528DEF026007E6E54 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		F6ECBC8F28DD78E3000ED3DD /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				F63E89D528DEF026007E6E54 /* Mock */,
+				F63E89D428DEF005007E6E54 /* DTO */,
 			);
 			path = Network;
 			sourceTree = "<group>";
