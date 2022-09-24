@@ -111,7 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				F6ECBC9428DD7982000ED3DD /* UseCases */,
-				F6ECBC9328DD797E000ED3DD /* Interfaces */,
+				F6ECBC9328DD797E000ED3DD /* RepositoryInterfaces */,
 				F6ECBC9228DD797A000ED3DD /* Entities */,
 			);
 			path = Sources;
@@ -153,18 +153,34 @@
 			path = InfoPlists;
 			sourceTree = "<group>";
 		};
+		F63E89CD28DED2FD007E6E54 /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = DTO;
+			sourceTree = "<group>";
+		};
+		F63E89CE28DED301007E6E54 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		F6ECBC9228DD797A000ED3DD /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				F63E89CE28DED301007E6E54 /* Mock */,
+				F63E89CD28DED2FD007E6E54 /* DTO */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
 		};
-		F6ECBC9328DD797E000ED3DD /* Interfaces */ = {
+		F6ECBC9328DD797E000ED3DD /* RepositoryInterfaces */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = Interfaces;
+			path = RepositoryInterfaces;
 			sourceTree = "<group>";
 		};
 		F6ECBC9428DD7982000ED3DD /* UseCases */ = {
