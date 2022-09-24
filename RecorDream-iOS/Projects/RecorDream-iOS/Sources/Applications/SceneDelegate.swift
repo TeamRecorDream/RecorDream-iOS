@@ -8,6 +8,7 @@
 import UIKit
 
 import RD_Navigator
+import Presentation
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -19,8 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let rootViewController = StartViewController()
-        rootViewController.hello()
+        let rootViewController = MainTabBarController()
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
         self.window = window

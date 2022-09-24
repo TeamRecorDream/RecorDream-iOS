@@ -14,7 +14,7 @@ protocol RDTabBarDelegate: AnyObject {
     func rdTabBar(_ sender: RDTabBar, didSelectItemAt index: Int)
 }
 
-final class RDTabBar: UIView {
+open class RDTabBar: UIView {
     
     // MARK: - Properties
     
@@ -24,11 +24,11 @@ final class RDTabBar: UIView {
     
     private var shapeLayer: CALayer?
     
-    override func draw(_ rect: CGRect) {
+    public override func draw(_ rect: CGRect) {
         self.addShape()
     }
     
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard !clipsToBounds && !isHidden && alpha > 0 else { return nil }
         for member in subviews.reversed() {
             let subPoint = member.convert(point, from: self)
@@ -38,7 +38,7 @@ final class RDTabBar: UIView {
         return nil
     }
     
-    override func tintColorDidChange() {
+    public override func tintColorDidChange() {
         super.tintColorDidChange()
         
         reloadAppearance()
@@ -69,7 +69,7 @@ final class RDTabBar: UIView {
         setLayout()
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -89,7 +89,7 @@ final class RDTabBar: UIView {
         }
     }
     
-    func add(items tabBarItems: [UITabBarItem]) {
+    public func add(items tabBarItems: [UITabBarItem]) {
         for tabBarItem in tabBarItems {
             self.itemsArray.append(tabBarItem)
             self.addItem(with: tabBarItem)
@@ -122,7 +122,7 @@ final class RDTabBar: UIView {
         }
         
         if notifyDelegate {
-            self.delegate?.customTabBar(self, didSelectItemAt: selectedIndex)
+            self.delegate?.rdTabBar(self, didSelectItemAt: selectedIndex)
         }
     }
     

@@ -8,10 +8,10 @@
          location = "group:RecorDream-iOS/RecorDream-iOS.xcodeproj">
       </FileRef>
       <Group
-         location = "group:Presentation"
-         name = "Presentation">
+         location = "group:Core"
+         name = "Core">
          <FileRef
-            location = "group:Presentation/Presentation.xcodeproj">
+            location = "group:RD-Core/RD-Core.xcodeproj">
          </FileRef>
       </Group>
       <Group
@@ -26,13 +26,6 @@
          name = "Domain">
          <FileRef
             location = "group:Domain/Domain.xcodeproj">
-         </FileRef>
-      </Group>
-      <Group
-         location = "group:Core"
-         name = "Core">
-         <FileRef
-            location = "group:RD-Core/RD-Core.xcodeproj">
          </FileRef>
       </Group>
       <Group
@@ -58,6 +51,13 @@
          </FileRef>
          <FileRef
             location = "group:ThirdPartyLib/ThirdPartyLib.xcodeproj">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:Presentation"
+         name = "Presentation">
+         <FileRef
+            location = "group:Presentation/Presentation.xcodeproj">
          </FileRef>
       </Group>
    </Group>

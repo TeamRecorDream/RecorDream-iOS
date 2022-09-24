@@ -7,15 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		256F1A480B5D1255D3E93D7F /* RD_Analytics.framework in Dependencies */ = {isa = PBXBuildFile; fileRef = 5D01890D799B1C7C37D7FFA2 /* RD_Analytics.framework */; platformFilter = ios; };
-		2B36626E032D247E7692321F /* RD_Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D01890D799B1C7C37D7FFA2 /* RD_Analytics.framework */; platformFilter = ios; };
-		2F63AA94ACB7659277B3DE6C /* RD_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA2014C827D8F275337042F8 /* RD_Core.framework */; platformFilter = ios; };
-		3D5A784550F527A4CCC6E0CE /* RD_User.framework in Dependencies */ = {isa = PBXBuildFile; fileRef = 0B8FDC877DF6F63098EBF8C5 /* RD_User.framework */; platformFilter = ios; };
+		2C95A8C1222C0912A30698A3 /* RD_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA2014C827D8F275337042F8 /* RD_Core.framework */; platformFilter = ios; };
 		4721A2BC45744E9F3D6DA862 /* RD-UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB88D4EB3DD2A82CDBE87C8 /* RD-UserTests.swift */; };
 		5E0986359074576D6894B445 /* RD_UtilKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 172310F362BE481E731C9802 /* RD_UtilKit.framework */; platformFilter = ios; };
-		8EA10DA1B2397A84DCA8F2D2 /* ThirdPartyLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF6C16E2CCF016636DE14CE /* ThirdPartyLib.framework */; platformFilter = ios; };
+		64560D89E66E4813CF583D2A /* RD_Analytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D01890D799B1C7C37D7FFA2 /* RD_Analytics.framework */; platformFilter = ios; };
 		9F332798893CF4517A6C0AF5 /* RD-User.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62C489C471D8BE0B205B15 /* RD-User.swift */; };
-		E28AB628976D29FEF4177631 /* RD_User.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8FDC877DF6F63098EBF8C5 /* RD_User.framework */; platformFilter = ios; };
+		DC0E73E609DD0B22530CAFD7 /* ThirdPartyLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF6C16E2CCF016636DE14CE /* ThirdPartyLib.framework */; platformFilter = ios; };
+		FA381F954B227B74040ED285 /* RD_User.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8FDC877DF6F63098EBF8C5 /* RD_User.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,17 +47,6 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		7B638E5038C051987C3AEBA8 /* Dependencies */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstSubfolderSpec = 16;
-			files = (
-				256F1A480B5D1255D3E93D7F /* RD_Analytics.framework in Dependencies */,
-				3D5A784550F527A4CCC6E0CE /* RD_User.framework in Dependencies */,
-			);
-			name = Dependencies;
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +67,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64560D89E66E4813CF583D2A /* RD_Analytics.framework in Frameworks */,
+				2C95A8C1222C0912A30698A3 /* RD_Core.framework in Frameworks */,
+				FA381F954B227B74040ED285 /* RD_User.framework in Frameworks */,
+				DC0E73E609DD0B22530CAFD7 /* ThirdPartyLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,11 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B36626E032D247E7692321F /* RD_Analytics.framework in Frameworks */,
-				2F63AA94ACB7659277B3DE6C /* RD_Core.framework in Frameworks */,
-				E28AB628976D29FEF4177631 /* RD_User.framework in Frameworks */,
 				5E0986359074576D6894B445 /* RD_UtilKit.framework in Frameworks */,
-				8EA10DA1B2397A84DCA8F2D2 /* ThirdPartyLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,7 +168,6 @@
 				62BEFD51A29B5610D038E173 /* Resources */,
 				45CC6F4FC05BD25F41E31AA5 /* Embed Frameworks */,
 				91B308AC80BB19796D7590AB /* Frameworks */,
-				7B638E5038C051987C3AEBA8 /* Dependencies */,
 			);
 			buildRules = (
 			);
@@ -377,7 +363,6 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = staticlib;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-fmodule-map-file=$(SRCROOT)/../../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/GoogleAppMeasurement/GoogleAppMeasurementWrapper/include/GoogleAppMeasurementTarget.modulemap",
@@ -533,7 +518,6 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = staticlib;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-fmodule-map-file=$(SRCROOT)/../../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/GoogleAppMeasurement/GoogleAppMeasurementWrapper/include/GoogleAppMeasurementTarget.modulemap",

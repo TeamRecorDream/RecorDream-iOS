@@ -8,20 +8,20 @@
 
 import UIKit
 
-class RDTabBarController: UITabBarController {
+open class RDTabBarController: UITabBarController {
 
     private let bottomSafeArea: CGFloat = 34.0
     private let tabBarHeight: CGFloat = 70.0
     
     public let rdTabBar = RDTabBar()
     
-    override var selectedIndex: Int {
+    open override var selectedIndex: Int {
         didSet {
             self.rdTabBar.select(at: selectedIndex, notifyDelegate: false)
         }
     }
     
-    override var selectedViewController: UIViewController? {
+    open override var selectedViewController: UIViewController? {
         didSet {
             self.rdTabBar.select(at: selectedIndex, notifyDelegate: false)
         }
@@ -29,7 +29,7 @@ class RDTabBarController: UITabBarController {
     
     // MARK: - View Life Cycle
     
-    override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         
         setUI()
