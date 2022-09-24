@@ -122,11 +122,16 @@ iOSInjectionProject/
 /*.gcno
 
 ## Xcode Patch
+**/*.xcodeproj
+*.xcworkspace
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+
+Gemfile
+Gemfile.lock
 
 # LEGO-Dream-iOS/RecorDream-iOS/Source/Application/SceneDelegate.swift
 # LEGO-Dream-iOS/RecorDream-iOS/GoogleService-Info.plist

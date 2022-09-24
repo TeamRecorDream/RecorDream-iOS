@@ -8,9 +8,9 @@ import Foundation
 private class BundleFinder {}
 
 extension Foundation.Bundle {
-    /// Since Presentation is a staticFramework, the bundle containing the resources is copied into the final product.
+    /// Since RD-DSKit is a staticFramework, the bundle containing the resources is copied into the final product.
     static var module: Bundle = {
-        let bundleName = "Presentation_Presentation"
+        let bundleName = "RD_DSKit_RD_DSKit"
 
         let candidates = [
             Bundle.main.resourceURL,
@@ -24,14 +24,14 @@ extension Foundation.Bundle {
                 return bundle
             }
         }
-        fatalError("unable to find bundle named Presentation_Presentation")
+        fatalError("unable to find bundle named RD_DSKit_RD_DSKit")
     }()
 }
 
 // MARK: - Objective-C Bundle Accessor
 
 @objc
-public class PresentationResources: NSObject {
+public class RDDSKitResources: NSObject {
    @objc public class var bundle: Bundle {
          return .module
    }

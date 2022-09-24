@@ -15,20 +15,20 @@
 // MARK: - Fonts
 
 // swiftlint:disable identifier_name line_length type_body_length
-public enum PresentationFontFamily {
+public enum RDDSKitFontFamily {
   public enum Pretendard {
-    public static let black = PresentationFontConvertible(name: "Pretendard-Black", family: "Pretendard", path: "Pretendard-Black.otf")
-    public static let bold = PresentationFontConvertible(name: "Pretendard-Bold", family: "Pretendard", path: "Pretendard-Bold.otf")
-    public static let extraBold = PresentationFontConvertible(name: "Pretendard-ExtraBold", family: "Pretendard", path: "Pretendard-ExtraBold.otf")
-    public static let extraLight = PresentationFontConvertible(name: "Pretendard-ExtraLight", family: "Pretendard", path: "Pretendard-ExtraLight.otf")
-    public static let light = PresentationFontConvertible(name: "Pretendard-Light", family: "Pretendard", path: "Pretendard-Light.otf")
-    public static let medium = PresentationFontConvertible(name: "Pretendard-Medium", family: "Pretendard", path: "Pretendard-Medium.otf")
-    public static let regular = PresentationFontConvertible(name: "Pretendard-Regular", family: "Pretendard", path: "Pretendard-Regular.otf")
-    public static let semiBold = PresentationFontConvertible(name: "Pretendard-SemiBold", family: "Pretendard", path: "Pretendard-SemiBold.otf")
-    public static let thin = PresentationFontConvertible(name: "Pretendard-Thin", family: "Pretendard", path: "Pretendard-Thin.otf")
-    public static let all: [PresentationFontConvertible] = [black, bold, extraBold, extraLight, light, medium, regular, semiBold, thin]
+    public static let black = RDDSKitFontConvertible(name: "Pretendard-Black", family: "Pretendard", path: "Pretendard-Black.otf")
+    public static let bold = RDDSKitFontConvertible(name: "Pretendard-Bold", family: "Pretendard", path: "Pretendard-Bold.otf")
+    public static let extraBold = RDDSKitFontConvertible(name: "Pretendard-ExtraBold", family: "Pretendard", path: "Pretendard-ExtraBold.otf")
+    public static let extraLight = RDDSKitFontConvertible(name: "Pretendard-ExtraLight", family: "Pretendard", path: "Pretendard-ExtraLight.otf")
+    public static let light = RDDSKitFontConvertible(name: "Pretendard-Light", family: "Pretendard", path: "Pretendard-Light.otf")
+    public static let medium = RDDSKitFontConvertible(name: "Pretendard-Medium", family: "Pretendard", path: "Pretendard-Medium.otf")
+    public static let regular = RDDSKitFontConvertible(name: "Pretendard-Regular", family: "Pretendard", path: "Pretendard-Regular.otf")
+    public static let semiBold = RDDSKitFontConvertible(name: "Pretendard-SemiBold", family: "Pretendard", path: "Pretendard-SemiBold.otf")
+    public static let thin = RDDSKitFontConvertible(name: "Pretendard-Thin", family: "Pretendard", path: "Pretendard-Thin.otf")
+    public static let all: [RDDSKitFontConvertible] = [black, bold, extraBold, extraLight, light, medium, regular, semiBold, thin]
   }
-  public static let allCustomFonts: [PresentationFontConvertible] = [Pretendard.all].flatMap { $0 }
+  public static let allCustomFonts: [RDDSKitFontConvertible] = [Pretendard.all].flatMap { $0 }
   public static func registerAllCustomFonts() {
     allCustomFonts.forEach { $0.register() }
   }
@@ -37,7 +37,7 @@ public enum PresentationFontFamily {
 
 // MARK: - Implementation Details
 
-public struct PresentationFontConvertible {
+public struct RDDSKitFontConvertible {
   public let name: String
   public let family: String
   public let path: String
@@ -67,8 +67,8 @@ public struct PresentationFontConvertible {
   }
 }
 
-public extension PresentationFontConvertible.Font {
-  convenience init?(font: PresentationFontConvertible, size: CGFloat) {
+public extension RDDSKitFontConvertible.Font {
+  convenience init?(font: RDDSKitFontConvertible, size: CGFloat) {
     #if os(iOS) || os(tvOS) || os(watchOS)
     if !UIFont.fontNames(forFamilyName: font.family).contains(font.name) {
       font.register()
