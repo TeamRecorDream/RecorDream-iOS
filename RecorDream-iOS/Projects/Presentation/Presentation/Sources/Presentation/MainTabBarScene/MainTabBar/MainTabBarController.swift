@@ -27,31 +27,31 @@ public class MainTabBarController: RDTabBarController {
 
 extension MainTabBarController {
     private func setTabBar() {
-        let feedVC = UIViewController()
-        feedVC.view.backgroundColor = .gray
         let homeVC = UIViewController()
-        homeVC.view.backgroundColor = .cyan
+        homeVC.view.backgroundColor = .gray
+        let storageVC = UIViewController()
+        storageVC.view.backgroundColor = .cyan
         let plusVC = UIViewController()
         plusVC.view.backgroundColor = .red
         
-        feedVC.tabBarItem = UITabBarItem(title: "피드", image: UIImage(systemName: "heart"), selectedImage: UIImage(systemName: "heart.fill"))
-        homeVC.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "circle"), selectedImage: UIImage(systemName: "circle.fill"))
-        
-        let feedNVC = UINavigationController(rootViewController: feedVC)
-        feedNVC.isNavigationBarHidden = true
-        feedNVC.view.backgroundColor = .gray
-        
         let homeNVC = UINavigationController(rootViewController: homeVC)
         homeNVC.isNavigationBarHidden = true
-        homeNVC.view.backgroundColor = .cyan
+        homeNVC.view.backgroundColor = .gray
         
-        setViewControllers([feedNVC, plusVC, homeNVC], animated: false)
+        let storageNVC = UINavigationController(rootViewController: storageVC)
+        storageNVC.isNavigationBarHidden = true
+        storageNVC.view.backgroundColor = .cyan
+        
+        homeNVC.tabBarItem = UITabBarItem(title: "홈", image: RDDSKitAsset.Images.icnHome.image, selectedImage: RDDSKitAsset.Images.icnHome.image)
+        storageNVC.tabBarItem = UITabBarItem(title: "보관함", image: RDDSKitAsset.Images.icnStorage.image, selectedImage: RDDSKitAsset.Images.icnStorage.image)
+        
+        setViewControllers([homeNVC, plusVC, storageNVC], animated: false)
         
         // set customTabBar.
         if let items = self.tabBar.items {
             self.rdTabBar.add(items: items)
         }
-        self.rdTabBar.tintColor = .blue
+        self.rdTabBar.tintColor = .white
         
         self.selectedIndex = 1
     }

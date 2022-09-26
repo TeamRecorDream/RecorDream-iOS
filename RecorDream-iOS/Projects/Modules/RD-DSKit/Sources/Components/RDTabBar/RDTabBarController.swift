@@ -8,6 +8,8 @@
 
 import UIKit
 
+import SnapKit
+
 open class RDTabBarController: UITabBarController {
 
     private let bottomSafeArea: CGFloat = 34.0
@@ -68,13 +70,31 @@ extension RDTabBarController {
     func setMiddleButton() {
 
         let middleBtn = UIButton(frame: CGRect(x: (self.view.bounds.width / 2)-28, y: -28-8, width: 56, height: 56))
-        middleBtn.backgroundColor = .blue
+        middleBtn.backgroundColor = .black
         middleBtn.layer.cornerRadius = 28
+        
+        let shadowLayer = CAShapeLayer()
+        shadowLayer.frame = middleBtn.bounds
+        shadowLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.2, x: 0, y: -5, blur: 20, spread: 0)
+        middleBtn.layer.insertSublayer(shadowLayer, at: 0)
+        
+        let shadowLayer2 = CAShapeLayer()
+        shadowLayer2.frame = middleBtn.bounds
+        shadowLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.2, x: 0, y: 0, blur: 15, spread: 0)
+        middleBtn.layer.insertSublayer(shadowLayer2, at: 0)
         
         self.rdTabBar.addSubview(middleBtn)
         middleBtn.addTarget(self, action: #selector(self.menuButtonAction), for: .touchUpInside)
 
         self.view.layoutIfNeeded()
+        middleBtn.layoutSubviews()
+        
+        shadowLayer.shadowPath = UIBezierPath(roundedRect: middleBtn.bounds, cornerRadius: 28).cgPath
+        shadowLayer2.shadowPath = UIBezierPath(roundedRect: middleBtn.bounds, cornerRadius: 28).cgPath
+        
+        let plusImage = UIImageView(frame: CGRect(x: 28-12, y: 28-12, width: 24, height: 24))
+        plusImage.image = RDDSKitAsset.Images.icnRecord.image
+        middleBtn.addSubview(plusImage)
     }
 
     // Menu Button Touch Action

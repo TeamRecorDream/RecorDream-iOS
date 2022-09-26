@@ -23,13 +23,13 @@ final class RDTabBarItem: UIView {
         }
     }
     
-    var selectedColor: UIColor = .black {
+    var selectedColor: UIColor = .white {
         didSet {
             reloadAppearnce()
         }
     }
     
-    var deselectedColor: UIColor = .black {
+    var deselectedColor: UIColor = .white {
         didSet {
             reloadAppearnce()
         }
@@ -42,7 +42,7 @@ final class RDTabBarItem: UIView {
     // MARK: - Initializer
     
     init(forItem item: UITabBarItem) {
-        super.init(frame: CGRect(x: 0, y: 0, width: 28, height: 48))
+        super.init(frame: CGRect(x: 0, y: 0, width: 28, height: 58))
     
         setUI()
         setItem(image: item.image, title: item.title, selectedImage: item.selectedImage)
@@ -59,7 +59,7 @@ final class RDTabBarItem: UIView {
         self.backgroundColor = .clear
         self.imageView.contentMode = .scaleAspectFill
         
-        titleLable.font = UIFont.systemFont(ofSize: 12)
+        titleLable.font = RDDSKitFontFamily.Pretendard.medium.font(size: 10)
     }
     
     private func setItem(image: UIImage?, title: String?, selectedImage: UIImage?) {
@@ -94,7 +94,7 @@ final class RDTabBarItem: UIView {
         }
         
         titleLable.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(1)
+            $0.top.equalTo(imageView.snp.bottom).offset(8)
             $0.bottom.equalToSuperview()
             $0.centerX.equalTo(imageView.snp.centerX)
         }

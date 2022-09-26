@@ -63,6 +63,9 @@ public enum RDDSKitAsset {
     public static let listWhite = RDDSKitImages(name: "list_white")
     public static let listYellow = RDDSKitImages(name: "list_yellow")
     public static let splashBackground = RDDSKitImages(name: "splash_background")
+    public static let icnHome = RDDSKitImages(name: "icn-home")
+    public static let icnRecord = RDDSKitImages(name: "icn-record")
+    public static let icnStorage = RDDSKitImages(name: "icn-storage")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
