@@ -19,6 +19,7 @@ public class MainTabBarController: RDTabBarController {
         
         DispatchQueue.main.async {
             self.setTabBar()
+            self.setMiddleButtonAction()
         }
     }
 }
@@ -27,34 +28,37 @@ public class MainTabBarController: RDTabBarController {
 
 extension MainTabBarController {
     private func setTabBar() {
-        let homeVC = UIViewController()
-        homeVC.view.backgroundColor = .gray
-        let storageVC = UIViewController()
-        storageVC.view.backgroundColor = .cyan
-        let plusVC = UIViewController()
-        plusVC.view.backgroundColor = .red
-        
-        let homeNVC = UINavigationController(rootViewController: homeVC)
-        homeNVC.isNavigationBarHidden = true
+        let homeNVC = makeNavigationController(with: UIViewController())
+        let storageNVC = makeNavigationController(with: UIViewController())
         homeNVC.view.backgroundColor = .gray
-        
-        let storageNVC = UINavigationController(rootViewController: storageVC)
-        storageNVC.isNavigationBarHidden = true
         storageNVC.view.backgroundColor = .cyan
         
-        homeNVC.tabBarItem = UITabBarItem(title: "홈", image: RDDSKitAsset.Images.icnHome.image, selectedImage: RDDSKitAsset.Images.icnHome.image)
-        storageNVC.tabBarItem = UITabBarItem(title: "보관함", image: RDDSKitAsset.Images.icnStorage.image, selectedImage: RDDSKitAsset.Images.icnStorage.image)
+        homeNVC.tabBarItem = UITabBarItem(title: "홈",
+                                          image: RDDSKitAsset.Images.icnHome.image,
+                                          selectedImage: RDDSKitAsset.Images.icnHome.image)
+        storageNVC.tabBarItem = UITabBarItem(title: "보관함",
+                                             image: RDDSKitAsset.Images.icnStorage.image,
+                                             selectedImage: RDDSKitAsset.Images.icnStorage.image)
         
-        setViewControllers([homeNVC, plusVC, storageNVC], animated: false)
+        setViewControllers([homeNVC, storageNVC], animated: false)
         
-        // set customTabBar.
         if let items = self.tabBar.items {
             self.rdTabBar.add(items: items)
         }
         self.rdTabBar.tintColor = .white
-        
-        self.selectedIndex = 1
+    }
+    
+    private func makeNavigationController(with vc: UIViewController) -> UINavigationController {
+        let nav = UINavigationController(rootViewController: vc)
+        nav.isNavigationBarHidden = true
+        return nav
+    }
+    
+    private func setMiddleButtonAction() {
+        self.middleButtonAction = {
+            let vc = UIViewController()
+            vc.view.backgroundColor = .blue
+            self.present(vc, animated: true)
+        }
     }
 }
-
-

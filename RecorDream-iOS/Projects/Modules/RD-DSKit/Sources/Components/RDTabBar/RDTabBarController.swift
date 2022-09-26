@@ -15,6 +15,8 @@ open class RDTabBarController: UITabBarController {
     private let bottomSafeArea: CGFloat = 34.0
     private let tabBarHeight: CGFloat = 70.0
     
+    public var middleButtonAction: (()->Void)?
+    
     public let rdTabBar = RDTabBar()
     
     open override var selectedIndex: Int {
@@ -106,9 +108,8 @@ extension RDTabBarController {
         shadowLayer2.shadowPath = innerPath.cgPath
     }
 
-    // Menu Button Touch Action
     @objc func menuButtonAction(sender: UIButton) {
-        self.selectedIndex = 1   //to select the middle tab. use "1" if you have only 3 tabs.
+        self.middleButtonAction?()
     }
 }
 
