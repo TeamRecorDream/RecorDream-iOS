@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RD_Core
 
 import SnapKit
 
@@ -26,6 +27,7 @@ open class RDTabBar: UIView {
     
     public override func draw(_ rect: CGRect) {
         self.addShape()
+        self.addShadowLayer()
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -73,6 +75,14 @@ open class RDTabBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        for (index, sublayer) in layer.sublayers!.enumerated() {
+            sublayer.shadowPath = (index == 0 ? createPath() : createLine())
+        }
+    }
+    
+    // clear해야 bazzierPath의 곡선이 보임
     private func setUI() {
         self.backgroundColor = .clear
     }
@@ -138,14 +148,7 @@ extension RDTabBar {
     private func addShape() {
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = createPath()
-        shapeLayer.strokeColor = UIColor.lightGray.cgColor
-        shapeLayer.fillColor = UIColor.white.cgColor
-        shapeLayer.lineWidth = 1.0
-        
-        shapeLayer.shadowOffset = CGSize(width:0, height:0)
-        shapeLayer.shadowRadius = 10
-        shapeLayer.shadowColor = UIColor.gray.cgColor
-        shapeLayer.shadowOpacity = 0.3
+        shapeLayer.fillColor = UIColor(rgb: 0x000000).cgColor
 
         if let oldShapeLayer = self.shapeLayer {
             self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
@@ -153,6 +156,20 @@ extension RDTabBar {
             self.layer.insertSublayer(shapeLayer, at: 0)
         }
         self.shapeLayer = shapeLayer
+    }
+    
+    private func addShadowLayer() {
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = createLine()
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
+        self.layer.insertSublayer(shapeLayer, at: 1)
+        
+        let shapeLayer2 = CAShapeLayer()
+        shapeLayer2.path = createLine()
+        shapeLayer2.fillColor = UIColor.clear.cgColor
+        shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.6, x: 0, y: 1.5, blur: 20, spread: 0)
+        self.layer.insertSublayer(shapeLayer2, at: 2)
     }
 
     func createPath() -> CGPath {
@@ -173,6 +190,41 @@ extension RDTabBar {
         path.addLine(to: CGPoint(x: 0, y: self.frame.height))
         path.close()
 
+        return path.cgPath
+    }
+    
+    func createLine() -> CGPath {
+        let height: CGFloat = 37.0
+        let path = UIBezierPath()
+        let centerWidth = self.frame.width / 2
+        let lineHeight: CGFloat = 5
+        
+        path.move(to: CGPoint(x: 0, y: 0)) // top left에서 시작하여 그린다
+        
+        path.addLine(to: CGPoint(x: (centerWidth - height * 2), y: 0))
+        path.addCurve(to: CGPoint(x: centerWidth, y: height),
+                      controlPoint1: CGPoint(x: (centerWidth - 30), y: 0),
+                      controlPoint2: CGPoint(x: centerWidth - 40, y: height))
+        path.addCurve(to: CGPoint(x: (centerWidth + height * 2), y: 0),
+                      controlPoint1: CGPoint(x: centerWidth + 40, y: height),
+                      controlPoint2: CGPoint(x: (centerWidth + 30), y: 0))
+        path.addLine(to: CGPoint(x: self.frame.width, y: 0))
+        
+        path.addLine(to: CGPoint(x: self.frame.width, y: lineHeight))
+        
+        path.addLine(to: CGPoint(x: (centerWidth + height * 2), y: lineHeight))
+        path.addCurve(to: CGPoint(x: centerWidth, y: height + lineHeight),
+                      controlPoint1: CGPoint(x: (centerWidth + 30), y: lineHeight),
+                      controlPoint2: CGPoint(x: centerWidth + 40, y: height + lineHeight))
+        
+        path.addCurve(to: CGPoint(x: centerWidth - height * 2, y: lineHeight),
+                      controlPoint1: CGPoint(x: centerWidth - 40, y: height + lineHeight),
+                      controlPoint2: CGPoint(x: (centerWidth - 30), y: lineHeight))
+        path.addLine(to: CGPoint(x: 0, y: lineHeight))
+        path.addLine(to: CGPoint(x: 0, y: 0))
+        
+        path.close()
+        
         return path.cgPath
     }
 }

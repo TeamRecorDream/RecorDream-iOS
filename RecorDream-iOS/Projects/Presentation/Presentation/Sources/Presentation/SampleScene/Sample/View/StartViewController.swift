@@ -14,8 +14,6 @@ public class StartViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        let vc = CustomViewController()
-        vc.hello()
 
         // Do any additional setup after loading the view.
     }
