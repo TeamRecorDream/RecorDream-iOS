@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum FontType: String {
+public enum FontType: String {
     case pretendardBold = "Pretendard-Bold"
     case pretendardSemibold = "Pretendard-SemiBold"
     case pretendardLight = "Pretendard-Light"
@@ -22,7 +22,7 @@ enum FontType: String {
     }
 }
 
-struct FontDescription {
+public struct FontDescription {
     let font: FontType
     let size: CGFloat
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension ColorType {
+public extension ColorType {
     var color: UIColor {
         guard let color = UIColor(named: self.name) else { return UIColor() }
         return color

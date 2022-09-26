@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum TypoStyle: Int, CaseIterable {
+public enum TypoStyle: Int, CaseIterable {
     case tittle01           // semibold, 18
     case title02            // bold, 16
     case title03            // semibold, 16

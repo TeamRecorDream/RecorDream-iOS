@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension ImageList {
+public extension ImageList {
     var image: UIImage {
         guard let image = UIImage(named: self.name) else { return UIImage() }
         return image

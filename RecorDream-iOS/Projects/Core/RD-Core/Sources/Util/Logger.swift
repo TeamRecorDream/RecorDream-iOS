@@ -16,7 +16,7 @@
 
 import Foundation
 
-class Logger {
+public class Logger {
     enum LogLevel: Int {
         case none
         case error

@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Result {
+public extension Result {
     @discardableResult
     func success(_ successHandler: (Success) -> Void) -> Result<Success, Failure> {
         if case .success(let value) = self {

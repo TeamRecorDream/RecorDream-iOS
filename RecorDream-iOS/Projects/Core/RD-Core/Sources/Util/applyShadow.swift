@@ -17,7 +17,7 @@ import UIKit
  
  */
 
-extension CALayer {
+public extension CALayer {
     func applyShadow(
         color: UIColor = .black,
         alpha: Float = 0.5,

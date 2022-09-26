@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-extension ObservableType {
+public extension ObservableType {
     internal func doOnNext(_ onNext: @escaping (Element) throws -> Void) -> Observable<Element> {
         return `do`(onNext: onNext)
     }
@@ -19,7 +19,7 @@ extension ObservableType {
     }
 }
 
-extension ObservableType {
+public extension ObservableType {
     public func observeOnMain() -> Observable<Element> {
         observe(on: MainScheduler.instance)
     }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UILabel {
+public extension UILabel {
     
     /// 행간 조정 메서드
       func setLineSpacing(lineSpacing: CGFloat) {

@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol UITableViewRegisterable {
+public protocol UITableViewRegisterable {
     static var isFromNib: Bool { get }
     static func register(target: UITableView)
 }
 
-extension UITableViewRegisterable where Self: UITableViewCell {
+public extension UITableViewRegisterable where Self: UITableViewCell {
     static func register(target: UITableView) {
         if self.isFromNib {
           target.register(UINib(nibName: Self.className, bundle: nil), forCellReuseIdentifier: Self.className)
@@ -22,12 +22,12 @@ extension UITableViewRegisterable where Self: UITableViewCell {
     }
 }
 
-protocol UITableViewHeaderFooterRegisterable {
+public protocol UITableViewHeaderFooterRegisterable {
     static var isFromNib: Bool { get }
     static func register(target: UITableView)
 }
 
-extension UITableViewHeaderFooterRegisterable where Self: UITableViewHeaderFooterView {
+public extension UITableViewHeaderFooterRegisterable where Self: UITableViewHeaderFooterView {
     static func register(target: UITableView) {
         if self.isFromNib {
           target.register(UINib(nibName: Self.className, bundle: nil), forHeaderFooterViewReuseIdentifier: Self.className)

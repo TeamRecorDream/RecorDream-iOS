@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct AppFontName {
+public struct AppFontName {
     static let pretendardBold = "Pretendard-Bold"
     static let pretendardMedium = "Pretendard-Medium"
     static let pretendardRegular = "Pretendard-Regular"
@@ -23,11 +23,11 @@ struct AppFontName {
     static let appleSDGothicNeoMedium = "AppleSDGothicNeo-Medium"
 }
 
-extension UIFontDescriptor.AttributeName {
+public extension UIFontDescriptor.AttributeName {
     static let nsctFontUIUsage = UIFontDescriptor.AttributeName(rawValue: "NSCTFontUIUsageAttribute")
 }
 
-extension UIFont {
+public extension UIFont {
 
     // MARK: Pretendard Font
     @nonobjc class func PopBold(size: CGFloat) -> UIFont {

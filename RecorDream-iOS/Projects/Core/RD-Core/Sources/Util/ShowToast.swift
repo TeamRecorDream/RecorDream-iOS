@@ -8,13 +8,13 @@
 import UIKit
 import SnapKit
 
-extension UIViewController {
+public extension UIViewController {
   func showToast(message: String) {
     Toast.show(message: message, controller: self)
   }
 }
 
-final class Toast {
+public class Toast {
   static func show(message: String, controller: UIViewController) {
     
     let toastContainer = UIView()

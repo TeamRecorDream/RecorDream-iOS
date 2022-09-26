@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum ColorType: String, CaseIterable {
+public enum ColorType: String, CaseIterable {
     case dark = "dark"
     case grey01 = "grey01"
     case grey02 = "grey02"

@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIViewController {
+public extension UIViewController {
     
     /**
      - Description: 화면 터치시 작성 종료
@@ -23,25 +23,5 @@ extension UIViewController {
     @objc
     func dismissKeyboard() {
         view.endEditing(true)
-    }
-    
-    func makeAlert(alertType: AlertType = .logoutAlert,
-                   title: String?,
-                   subtitle: String?,
-                   okAction: (() -> Void)?) {
-        
-        let alertVC = ModuleFactory.resolve().makeHelfmeAlertVC(type: alertType)
-        
-        alertVC.alertType = alertType
-        if let title = title {
-            alertVC.alertTitle = title
-        }
-        if let subtitle = subtitle {
-            alertVC.alertContent = subtitle
-        }
-        alertVC.okAction = okAction
-        alertVC.modalTransitionStyle = .crossDissolve
-        alertVC.modalPresentationStyle = .overCurrentContext
-        present(alertVC, animated: true)
     }
 }

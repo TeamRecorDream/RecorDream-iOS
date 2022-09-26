@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UITabBar {
+public extension UITabBar {
     
     static func clearShadow() {
         UITabBar.appearance().shadowImage = UIImage()

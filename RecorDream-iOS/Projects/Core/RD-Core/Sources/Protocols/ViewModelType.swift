@@ -9,7 +9,7 @@ import Foundation
 
 import RxSwift
 
-protocol ViewModelType {
+public protocol ViewModelType {
     associatedtype Input
     associatedtype Output
     

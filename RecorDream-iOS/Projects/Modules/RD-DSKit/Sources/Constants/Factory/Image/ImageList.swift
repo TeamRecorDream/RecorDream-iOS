@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum ImageList: String, CaseIterable {
+public enum ImageList: String, CaseIterable {
     // MARK: - Components
     case backgroundBlue = "background_blue"
     case backgroundPink = "background_pink"

@@ -16,7 +16,7 @@ import UIKit
  노치가 없는 경우에는 -44로 고정값을 부여합니다
  */
 
-extension UIViewController {
+public extension UIViewController {
     func calculateTopInset() -> CGFloat {
         let windows = UIApplication.shared.windows[0]
         let topInset = windows.safeAreaInsets.top
@@ -47,7 +47,7 @@ extension UIViewController {
  
  */
 
-extension UIDevice {
+public extension UIDevice {
     var hasNotch: Bool {
         UIScreen.main.bounds.height > 736 ? true : false
     }

@@ -16,7 +16,7 @@
 import Foundation
 import UIKit
 
-enum ViewControllerUtils {
+public enum ViewControllerUtils {
     static func setRootViewController(window: UIWindow, viewController: UIViewController, withAnimation: Bool) {
         if !withAnimation {
             window.rootViewController = viewController

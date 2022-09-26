@@ -16,7 +16,7 @@ import Foundation
           
 */
 
-enum Json {
+public enum Json {
     static let encoder: JSONEncoder = {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted

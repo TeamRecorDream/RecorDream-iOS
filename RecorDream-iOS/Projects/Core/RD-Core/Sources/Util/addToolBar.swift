@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-extension UIViewController {
+public extension UIViewController {
     
     public func addToolbar(textfields: [UITextField]) {
         let toolBarKeyboard = UIToolbar()
@@ -27,7 +27,7 @@ extension UIViewController {
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let btnDoneBar = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(self.dismissKeyBoard))
         toolBarKeyboard.items = [flexSpace, btnDoneBar]
-        toolBarKeyboard.tintColor = UIColor.mainRed
+        toolBarKeyboard.tintColor = UIColor.red
         textView.inputAccessoryView = toolBarKeyboard
     }
     

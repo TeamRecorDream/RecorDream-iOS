@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension String {
+public extension String {
     
     /// String을 UIImage로 반환하는 메서드
     func makeImage() -> UIImage? {

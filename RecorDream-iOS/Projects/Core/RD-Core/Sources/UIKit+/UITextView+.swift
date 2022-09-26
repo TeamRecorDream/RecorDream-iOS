@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UITextView {
+public extension UITextView {
     
     /// 자간 설정 메서드
     func setCharacterSpacing(_ spacing: CGFloat) {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension TypoStyle {
+public extension TypoStyle {
     private var fontDescription: FontDescription {
         switch self {
         case .tittle01:

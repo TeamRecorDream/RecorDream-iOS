@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIButton {
+public extension UIButton {
     
     /// 버튼 Background Color를 상태별로 지정하는 메서드
     func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
@@ -38,7 +38,7 @@ extension UIButton {
     }
 }
 
-extension UIButton {
+public extension UIButton {
     
     /**
      button에 대해 addTarget해서 일일이 처리안하고, closure 형태로 동작을 처리하기 위해 다음과 같은 extension을 활용합니다

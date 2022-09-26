@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIImage {
+public extension UIImage {
     /// 이미지의 용량을 줄이기 위해서 리사이즈.
     /// - 가로, 세로 중 짧은 것이 720 보다 작다면 그대로 반환.
     /// - 가로, 세로 중 짧은 것이 720 보다 크다면 720 으로 리사이즈해서 반환.

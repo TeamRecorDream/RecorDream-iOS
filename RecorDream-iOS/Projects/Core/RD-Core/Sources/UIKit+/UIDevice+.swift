@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIDevice {
+public extension UIDevice {
     static let iOSVersion = "\(current.systemName) \(current.systemVersion)"
     
     private static var hardwareString: String {
