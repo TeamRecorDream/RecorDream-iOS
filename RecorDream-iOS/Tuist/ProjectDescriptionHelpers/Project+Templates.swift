@@ -15,17 +15,21 @@ public extension Project {
         infoPlist: InfoPlist = .default
     ) -> Project {
         let settings: Settings = .settings(
-            base: [:],
-            configurations: [
-                .debug(name: .debug),
-                .release(name: .release)
-            ], defaultSettings: .recommended)
+            base: .init()
+                .setCodeSignManual(),
+            debug: .init()
+                .setProvisioningDevelopment(),
+            release: .init()
+                .setProvisioningAppstore(),
+            defaultSettings: .recommended)
+        
+        let bundleId = (name == "RecorDream-iOS") ? "com.RecorDream.Release" : "\(organizationName).\(name)"
 
         let appTarget = Target(
             name: name,
             platform: platform,
             product: product,
-            bundleId: "\(organizationName).\(name)",
+            bundleId: bundleId,
             deploymentTarget: deploymentTarget,
             infoPlist: infoPlist,
             sources: sources,
