@@ -25,6 +25,15 @@ open class RDTabBar: UIView {
     
     private var shapeLayer: CALayer?
     
+    private let writeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "기록하기"
+        label.font = RDDSKitFontFamily.Pretendard.medium.font(size: 10)
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+    }()
+    
     public override func draw(_ rect: CGRect) {
         self.addShape()
         self.addShadowLayer()
@@ -88,14 +97,19 @@ open class RDTabBar: UIView {
     }
     
     private func setLayout() {
-        self.addSubview(self.stackView)
+        self.addSubviews(stackView, writeLabel)
         
         let stackWidth: CGFloat = 375 - 156 + 28
         self.stackView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview().inset(6)
             $0.width.equalTo(stackWidth / 375 * UIScreen.main.bounds.width)
-            $0.height.equalTo(48)
+            $0.height.equalTo(58)
+        }
+        
+        writeLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(50)
         }
     }
     
@@ -168,7 +182,7 @@ extension RDTabBar {
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.path = createLine()
         shapeLayer2.fillColor = UIColor.clear.cgColor
-        shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.6, x: 0, y: 1.5, blur: 20, spread: 0)
+        shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.4, x: 0, y: 0.5, blur: 10, spread: 0)
         self.layer.insertSublayer(shapeLayer2, at: 2)
     }
 
