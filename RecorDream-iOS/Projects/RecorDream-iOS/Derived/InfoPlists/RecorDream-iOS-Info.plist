@@ -42,6 +42,27 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>UIAppFonts</key>
+	<dict>
+		<key>Item 0</key>
+		<string>Pretendard-Black.otf</string>
+		<key>Item 1</key>
+		<string>Pretendard-Bold.otf</string>
+		<key>Item 2</key>
+		<string>Pretendard-ExtraBold.otf</string>
+		<key>Item 3</key>
+		<string>Pretendard-ExtraLight.otf</string>
+		<key>Item 4</key>
+		<string>Pretendard-Light.otf</string>
+		<key>Item 5</key>
+		<string>Pretendard-Medium.otf</string>
+		<key>Item 6</key>
+		<string>Pretendard-Regular.otf</string>
+		<key>Item 7</key>
+		<string>Pretendard-SemiBold.otf</string>
+		<key>Item 8</key>
+		<string>Pretendard-Thin.otf</string>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
