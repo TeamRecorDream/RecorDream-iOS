@@ -8,15 +8,13 @@
 
 import RxSwift
 
-protocol DreamWriteRepository {
-  
-}
+import Domain
 
-final class DefaultDreamWriteRepository {
+public class DefaultDreamWriteRepository {
   
     private let disposeBag = DisposeBag()
 
-    init() {
+    public init() {
     
     }
 }

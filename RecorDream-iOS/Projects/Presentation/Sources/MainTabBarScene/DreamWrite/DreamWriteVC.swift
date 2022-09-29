@@ -10,29 +10,34 @@ import UIKit
 
 import RxSwift
 
-class DreamWriteVC: UIViewController {
+public class DreamWriteVC: UIViewController {
     
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
-    var viewModel: DreamWriteViewModel!
+    public var viewModel: DreamWriteViewModel!
   
     // MARK: - UI Components
   
     // MARK: - View Life Cycle
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         self.bindViewModels()
+        self.setUI()
     }
 }
 
 // MARK: - Methods
 
 extension DreamWriteVC {
+    
+    private func setUI() {
+        self.view.backgroundColor = .brown
+    }
   
     private func bindViewModels() {
-        let input = DreamWriteViewModel.Input()
+        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.methodInvoked(#selector(UIViewController.viewDidDisappear(_:))).map { _ in })
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
     }
 

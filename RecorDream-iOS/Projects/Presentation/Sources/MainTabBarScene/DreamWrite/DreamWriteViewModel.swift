@@ -6,35 +6,50 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
+import Domain
+import RD_Core
+
 import RxSwift
+import RxRelay
 
-final class DreamWriteViewModel: ViewModelType {
+public protocol DreamWriteControllable {
+    var viewDidDisappearEvent: PublishRelay<Void> { get }
+}
 
+public class DreamWriteViewModel: ViewModelType, DreamWriteControllable {
+    
     private let useCase: DreamWriteUseCase
     private let disposeBag = DisposeBag()
-  
+      
     // MARK: - Inputs
     
-    struct Input {
-    
+    public struct Input {
+        let viewDidDisappearEvent: Observable<Void>
     }
   
+    // MARK: - Coordinator Protocol
+    
+    public let viewDidDisappearEvent = PublishRelay<Void>()
+    
     // MARK: - Outputs
     
-    struct Output {
+    public struct Output {
     
     }
   
-    init(useCase: DreamWriteUseCase) {
+    public init(useCase: DreamWriteUseCase) {
         self.useCase = useCase
     }
 }
 
 extension DreamWriteViewModel {
-    func transform(from input: Input, disposeBag: DisposeBag) -> Output {
+    public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
+        input.viewDidDisappearEvent.subscribe(onNext: {
+            self.viewDidDisappearEvent.accept(())
+        }).disposed(by: disposeBag)
+        
         self.bindOutput(output: output, disposeBag: disposeBag)
-        // input,output 상관관계 작성
     
         return output
     }

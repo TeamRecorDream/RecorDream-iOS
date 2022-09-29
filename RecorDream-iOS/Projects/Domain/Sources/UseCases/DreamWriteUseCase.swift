@@ -8,16 +8,16 @@
 
 import RxSwift
 
-protocol DreamWriteUseCase {
+public protocol DreamWriteUseCase {
 
 }
 
-final class DefaultDreamWriteUseCase {
+public class DefaultDreamWriteUseCase {
   
     private let repository: DreamWriteRepository
     private let disposeBag = DisposeBag()
   
-    init(repository: DreamWriteRepository) {
+    public init(repository: DreamWriteRepository) {
         self.repository = repository
     }
 }

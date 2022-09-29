@@ -10,7 +10,16 @@ import UIKit
 
 import RD_DSKit
 
+import RxSwift
+import RxRelay
+
 public class MainTabBarController: RDTabBarController {
+    
+    // MARK: - Properties
+    
+    private let disposeBag = DisposeBag()
+    public var viewModel: MainTabBarViewModel!
+    private let middleButtonTapped = PublishRelay<Void>()
     
     // MARK: - View Life Cycle
     
@@ -20,6 +29,7 @@ public class MainTabBarController: RDTabBarController {
         DispatchQueue.main.async {
             self.setTabBar()
             self.setMiddleButtonAction()
+            self.bindViewModels()
         }
     }
 }
@@ -56,9 +66,12 @@ extension MainTabBarController {
     
     private func setMiddleButtonAction() {
         self.middleButtonAction = {
-            let vc = UIViewController()
-            vc.view.backgroundColor = .blue
-            self.present(vc, animated: true)
+            self.middleButtonTapped.accept(())
         }
+    }
+    
+    private func bindViewModels() {
+        let input = MainTabBarViewModel.Input(middleButtonTapped: middleButtonTapped.asObservable())
+        let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
     }
 }
