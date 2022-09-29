@@ -32,6 +32,7 @@ final class AppCoordinator: BaseCoordinator {
     
     // MARK: - Private methods
     
+    /// App의 Auth Flow로 가는 분기입니다. LoginVC로 전환됩니다.
     private func runAuthFlow() {
         let coordinator = self.factory.instantiateAuthCoordinator(router: self.router)
         coordinator.finishFlow = { [unowned self, unowned coordinator] in
@@ -42,7 +43,8 @@ final class AppCoordinator: BaseCoordinator {
         self.addDependency(coordinator)
         coordinator.start()
     }
-
+    
+    /// App의 Onboarding Flow로 가는 분기입니다. OnboardingVC로 전환됩니다.
     private func runOnboardingFlow() {
         let coordinator = self.factory.instantiateMainTabBarCoordinator(router: self.router)
         coordinator.finishFlow = { [unowned self, unowned coordinator] in
