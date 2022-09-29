@@ -13,7 +13,7 @@ let project = Project.makeModule(
     product: .staticFramework,
     dependencies: [
         .Project.RDNetwork,
-        .Project.RDDomain,
+        .Project.Domain,
         .Project.RDUtilKit
     ]
 )
