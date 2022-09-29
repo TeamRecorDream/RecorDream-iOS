@@ -9,7 +9,10 @@ import Foundation
 
 import Presentation
 
-final class MainTabBarCoordinator: BaseCoordinator, CoordinatorFinishOutput {
+import RxSwift
+
+/// MainTabBar의 코디네이터입니다. 시작점은 홈VC 입니다.
+final class MainTabBarCoordinator: DefaultCoordinator {
     
     // MARK: - CoordinatorFinishOutput
     
@@ -19,18 +22,28 @@ final class MainTabBarCoordinator: BaseCoordinator, CoordinatorFinishOutput {
     
     private let router: RouterProtocol
     private let factory: Factory
+    private let disposeBag = DisposeBag()
     
     // MARK: - Private metods
     
+    /// 탭바를 push 형식으로 띄웁니다. 탭바의 middleButtonAction을 구독하여 눌린 경우 DreamWriteVC를 띄웁니다.
     private func showHomeViewController() {
-        let MainTabBarController = self.factory.instantiateMainTabBarController()
-        MainTabBarController.onFinishWalktrough = { [unowned self] in
-            if $0 {
-                self.router.popModule()
-            }
-            self.finishFlow?()
-        }
-        self.router.push(MainTabBarController)
+        let mainTabBarController = self.factory.instantiateMainTabBarController()
+        mainTabBarController.viewModel.middleButtonTapped
+            .subscribe(onNext: { [unowned self] in
+                self.showDreamWriteViewController()
+            }).disposed(by: disposeBag)
+        self.router.push(mainTabBarController)
+    }
+    
+    /// DreamWriteVC를 present 형식으로 띄웁니다. DreamWriteVC가 화면에서 해제된 경우를 구독합니다.
+    private func showDreamWriteViewController() {
+        let dreamWriteVC = self.factory.instantiateDreamWriteVC()
+        dreamWriteVC.viewModel.viewDidDisappearEvent
+            .subscribe(onNext: { [unowned self] in
+                print("뷰 닫힘")
+            }).disposed(by: disposeBag)
+        self.router.present(dreamWriteVC)
     }
     
     // MARK: - Coordinator

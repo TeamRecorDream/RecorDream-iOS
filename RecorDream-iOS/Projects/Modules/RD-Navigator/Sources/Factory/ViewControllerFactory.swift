@@ -16,4 +16,5 @@ protocol AuthViewControllerFactory {
 
 protocol MainTabBarCoordinatorFactory {
     func instantiateMainTabBarController() -> MainTabBarController
+    func instantiateDreamWriteVC() -> DreamWriteVC 
 }

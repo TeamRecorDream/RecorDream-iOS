@@ -8,6 +8,7 @@
 import Foundation
 
 /// App의 시작 시에 사용되는 코디네이터입니다. 자동로그인 등의 기능에서 분기를 결정합니다.
+/// 현재 start() 메서드가 실행되면 runMainFlow()가 실행됩니다. 탭바로 이동합니다.
 final class AppCoordinator: BaseCoordinator {
     
     // MARK: - Vars & Lets

@@ -88,7 +88,7 @@ open class CoordinatorNavigationController: UINavigationController {
     private func setupCustomBackButton(viewController: UIViewController) {
         if self.backButtonImage != nil || self.backButtonTitle != nil {
             viewController.navigationItem.hidesBackButton = true
-            let backButtonTitle = self.shouldUseViewControllerTitles ? self.viewControllers[self.viewControllers.count - 2].title : self.backButtonTitle
+            let backButtonTitle = self.shouldUseViewControllerTitles ? self.viewControllers[self.viewControllers.count - 1].title : self.backButtonTitle
             let button = CoordinatorNaviBackButton.initCustomBackButton(backButtonImage: self.backButtonImage,
                                                                         backButtonTitle: backButtonTitle,
                                                                         backButtonfont: self.backButtonfont,
@@ -114,7 +114,7 @@ open class CoordinatorNavigationController: UINavigationController {
     
     // MARK: - Initialization
     
-    override init(rootViewController: UIViewController) {
+    public override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
     }
     
