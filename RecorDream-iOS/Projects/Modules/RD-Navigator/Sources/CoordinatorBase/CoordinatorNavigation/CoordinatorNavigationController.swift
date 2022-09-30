@@ -8,7 +8,7 @@
 /*
  CoordinatorNavigationController : Coordinator에서도 SwipeBack Gesture와 BackButton action을 인지할 수 있도록 하는 클래스입니다.
  - 기본 NaivgationController를 사용하면 backButton을 터치시 Coordinator가 알 수 없습니다. 이를 위해 custom Back Button을 이용합니다.
- - 
+ - Swipe Back 액션의 경우에서도 CoordinatorNavigationControllerDelegate를 채택하여 코디네이터에 알릴 수 있도록 합니다.
  */
 
 import UIKit
