@@ -9,11 +9,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeModule(
-    name: "RD-Navigator",
+    name: "Data",
     product: .staticFramework,
     dependencies: [
-        .Project.Presentation,
-        .Project.Data,
+        .Project.RDNetwork,
+        .Project.Domain,
         .Project.RDUtilKit
     ]
 )
