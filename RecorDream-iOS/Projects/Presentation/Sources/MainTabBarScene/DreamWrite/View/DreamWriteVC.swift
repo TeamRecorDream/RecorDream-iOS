@@ -31,6 +31,7 @@ public class DreamWriteVC: UIViewController {
     }
     
     private let disposeBag = DisposeBag()
+    
     public var viewModel: DreamWriteViewModel!
     
     let sections: [Section] = [
@@ -46,6 +47,7 @@ public class DreamWriteVC: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         cv.showsHorizontalScrollIndicator = false
         cv.backgroundColor = RDDSKitColors.Color.white
+        cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return cv
     }()
     
@@ -84,6 +86,7 @@ extension DreamWriteVC {
     
     private func setCollectionView() {
         DreamWriteMainCVC.register(target: dreamWriteCollectionView)
+        DreamWriteGenreCVC.register(target: dreamWriteCollectionView)
     }
     
     private func bindViewModels() {
@@ -126,9 +129,12 @@ extension DreamWriteVC: UICollectionViewDataSource {
             mainCell.backgroundColor = colors[indexPath.row]
             return mainCell
         case .genres:
-            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
+            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
             let colors: [UIColor] = [.blue, .black, .orange, .brown, .yellow, .purple, .red, .green, .darkGray, .systemCyan]
+            let strings = ["코미디", "로맨스", "판타지", "가족", "친구", "공포", "동물", "음식", "일", "기타"].map { "# " + $0 }
             mainCell.backgroundColor = colors[indexPath.row]
+            mainCell.setData(text: strings[indexPath.row])
+            self.dreamWriteCollectionView.setNeedsLayout()
             return mainCell
         case .note:
             guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
