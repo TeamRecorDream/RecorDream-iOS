@@ -24,12 +24,6 @@ public class DreamWriteVC: UIViewController {
         case note
     }
     
-    enum SupplementaryViewKind {
-        static let header = "header"
-        static let bottomLine = "bottomLine"
-        static let bottomLabel = "bottomLabel"
-    }
-    
     private let disposeBag = DisposeBag()
     
     public var viewModel: DreamWriteViewModel!
@@ -46,7 +40,7 @@ public class DreamWriteVC: UIViewController {
     private lazy var dreamWriteCollectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         cv.showsHorizontalScrollIndicator = false
-        cv.backgroundColor = RDDSKitColors.Color.white
+        cv.backgroundColor = RDDSKitAsset.Colors.dark.color
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return cv
     }()
@@ -68,7 +62,7 @@ public class DreamWriteVC: UIViewController {
 extension DreamWriteVC {
     
     private func setUI() {
-        self.view.backgroundColor = .brown
+        
     }
     
     private func setDelegate() {
@@ -87,6 +81,7 @@ extension DreamWriteVC {
     private func setCollectionView() {
         DreamWriteMainCVC.register(target: dreamWriteCollectionView)
         DreamWriteGenreCVC.register(target: dreamWriteCollectionView)
+        DreamWriteHeader.register(target: dreamWriteCollectionView)
     }
     
     private func bindViewModels() {
@@ -114,23 +109,22 @@ extension DreamWriteVC: UICollectionViewDataSource {
         }
     }
     
-    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let sectionType = sections[indexPath.section]
         switch sectionType {
         case .main:
             guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-            let colors: [UIColor] = [.blue, .black, .orange, .brown, .yellow, .purple, .red, .green]
+            let colors: [UIColor] = [RDDSKitAsset.Colors.dark.color, .systemPink, .orange, .brown, .yellow, .purple, .red, .green]
             mainCell.backgroundColor = colors[indexPath.row]
             return mainCell
         case .emotions:
             guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-            let colors: [UIColor] = [.blue, .black, .orange, .brown, .yellow, .purple, .red, .green]
+            let colors: [UIColor] = [.blue, .systemPink, .orange, .brown, .yellow, .purple, .red, .green]
             mainCell.backgroundColor = colors[indexPath.row]
             return mainCell
         case .genres:
             guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
-            let colors: [UIColor] = [.blue, .black, .orange, .brown, .yellow, .purple, .red, .green, .darkGray, .systemCyan]
+            let colors: [UIColor] = [.blue, .systemPink, .orange, .brown, .yellow, .purple, .red, .green, .darkGray, .systemCyan]
             let strings = ["코미디", "로맨스", "판타지", "가족", "친구", "공포", "동물", "음식", "일", "기타"].map { "# " + $0 }
             mainCell.backgroundColor = colors[indexPath.row]
             mainCell.setData(text: strings[indexPath.row])
@@ -138,9 +132,27 @@ extension DreamWriteVC: UICollectionViewDataSource {
             return mainCell
         case .note:
             guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-            let colors: [UIColor] = [.blue, .black, .orange, .brown, .yellow, .purple, .red, .green]
+            let colors: [UIColor] = [RDDSKitAsset.Colors.dark.color, .black, .orange, .brown, .yellow, .purple, .red, .green]
             mainCell.backgroundColor = colors[indexPath.row]
             return mainCell
         }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == DreamWriteHeader.className {
+            guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteHeader.className, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
+            let section = sections[indexPath.section]
+            switch section {
+            case .main:
+                view.title = "나의 감정"
+            case .emotions:
+                view.title = "나의 감정"
+            case .genres:
+                view.title = "꿈의 장르"
+            case .note:
+                view.title = "노트"
+            }
+            return view
+        } else { return UICollectionReusableView() }
     }
 }
