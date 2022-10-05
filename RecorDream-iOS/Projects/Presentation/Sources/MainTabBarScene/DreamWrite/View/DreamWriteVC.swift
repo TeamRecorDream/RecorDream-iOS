@@ -80,6 +80,7 @@ extension DreamWriteVC {
     
     private func setCollectionView() {
         DreamWriteMainCVC.register(target: dreamWriteCollectionView)
+        DreamWriteEmotionCVC.register(target: dreamWriteCollectionView)
         DreamWriteGenreCVC.register(target: dreamWriteCollectionView)
         DreamWriteHeader.register(target: dreamWriteCollectionView)
     }
@@ -118,9 +119,10 @@ extension DreamWriteVC: UICollectionViewDataSource {
             mainCell.backgroundColor = colors[indexPath.row]
             return mainCell
         case .emotions:
-            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-            let colors: [UIColor] = [.blue, .systemPink, .orange, .brown, .yellow, .purple, .red, .green]
-            mainCell.backgroundColor = colors[indexPath.row]
+            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
+            let images = [RDDSKitAsset.Images.feelingSad.image, RDDSKitAsset.Images.feelingBright.image, RDDSKitAsset.Images.feelingFright.image, RDDSKitAsset.Images.feelingWeird.image, RDDSKitAsset.Images.feelingShy.image]
+            let titles = ["기쁜", "슬픈", "무서운", "이상한", "민망한"]
+            mainCell.setData(image: images[indexPath.row], text: titles[indexPath.row])
             return mainCell
         case .genres:
             guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }

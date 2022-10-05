@@ -55,7 +55,7 @@ extension DreamWriteVC {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(32/375), heightDimension: .fractionalWidth(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(UIScreen.main.bounds.width), heightDimension: .estimated(UIScreen.main.bounds.height * 52 / 812))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(UIScreen.main.bounds.width), heightDimension: .absolute(52.adjusted))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 5)
         group.interItemSpacing = .fixed(40)
         group.contentInsets = .init(top: 0, leading: 28, bottom: 0, trailing: 28)
