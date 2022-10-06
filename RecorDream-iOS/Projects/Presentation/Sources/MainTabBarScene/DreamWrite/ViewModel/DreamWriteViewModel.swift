@@ -25,7 +25,7 @@ public class DreamWriteViewModel: ViewModelType, DreamWriteControllable {
     // MARK: - Inputs
     
     public struct Input {
-        let viewDidDisappearEvent: Observable<Void>
+        let viewDidDisappearEvent: Observable<Bool>
         let closeButtonTapped: Observable<Void>
     }
   
@@ -48,7 +48,7 @@ public class DreamWriteViewModel: ViewModelType, DreamWriteControllable {
 extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
-        input.viewDidDisappearEvent.subscribe(onNext: {
+        input.viewDidDisappearEvent.subscribe(onNext: { _ in
             self.viewDidDisappearEvent.accept(())
         }).disposed(by: disposeBag)
         

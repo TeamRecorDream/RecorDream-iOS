@@ -55,6 +55,7 @@ public class DreamWriteVC: UIViewController {
         self.setUI()
         self.setCollectionView()
         self.setDelegate()
+        self.setGesture()
         self.setLayout()
         self.bindViewModels()
     }
@@ -65,7 +66,7 @@ public class DreamWriteVC: UIViewController {
 extension DreamWriteVC {
     
     private func setUI() {
-        
+        self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
     }
     
     private func setDelegate() {
@@ -75,9 +76,10 @@ extension DreamWriteVC {
     
     private func setLayout() {
         self.view.addSubviews(dreamWriteCollectionView, naviBar)
-    
+        
         dreamWriteCollectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(naviBar.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
         }
         
         naviBar.snp.makeConstraints { make in
@@ -95,9 +97,20 @@ extension DreamWriteVC {
     }
     
     private func bindViewModels() {
-        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.methodInvoked(#selector(UIViewController.viewDidDisappear(_:))).map { _ in },
+        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.viewDidDisappear,
                                               closeButtonTapped: naviBar.rightButtonTapped.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+    }
+    
+    private func setGesture() {
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:))))
+    }
+
+    @objc func handleTap(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            view.endEditing(true)
+        }
+        sender.cancelsTouchesInView = false
     }
 }
 

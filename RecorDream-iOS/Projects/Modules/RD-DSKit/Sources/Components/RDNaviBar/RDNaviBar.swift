@@ -40,6 +40,12 @@ public class RDNaviBar: UIView {
         return bt
     }()
     
+    private let bottomLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white.withAlphaComponent(0.1)
+        return view
+    }()
+    
     // MARK: - Life Cycles
     
     public override init(frame: CGRect) {
@@ -63,7 +69,7 @@ public class RDNaviBar: UIView {
     }
     
     private func setLayout() {
-        self.addSubviews(rightButton, titleLabel)
+        self.addSubviews(rightButton, titleLabel, bottomLine)
         
         rightButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
@@ -72,6 +78,11 @@ public class RDNaviBar: UIView {
         
         titleLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
+        }
+        
+        bottomLine.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(1)
         }
     }
     
