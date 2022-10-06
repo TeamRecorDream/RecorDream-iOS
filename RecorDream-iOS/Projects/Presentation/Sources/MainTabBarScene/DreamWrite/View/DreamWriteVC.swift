@@ -37,6 +37,9 @@ public class DreamWriteVC: UIViewController {
     
     // MARK: - UI Components
     
+    private lazy var naviBar = RDNaviBar()
+        .title("기록하기")
+    
     private lazy var dreamWriteCollectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         cv.showsHorizontalScrollIndicator = false
@@ -71,10 +74,16 @@ extension DreamWriteVC {
     }
     
     private func setLayout() {
-        self.view.addSubviews(dreamWriteCollectionView)
-        
+        self.view.addSubviews(dreamWriteCollectionView, naviBar)
+    
         dreamWriteCollectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        
+        naviBar.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(44)
         }
     }
     
@@ -86,7 +95,8 @@ extension DreamWriteVC {
     }
     
     private func bindViewModels() {
-        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.methodInvoked(#selector(UIViewController.viewDidDisappear(_:))).map { _ in })
+        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.methodInvoked(#selector(UIViewController.viewDidDisappear(_:))).map { _ in },
+                                              closeButtonTapped: naviBar.rightButtonTapped.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
     }
 }
