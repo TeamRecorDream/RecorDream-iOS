@@ -98,6 +98,7 @@ extension DreamWriteVC {
         DreamWriteGenreCVC.register(target: dreamWriteCollectionView)
         DreamWriteNoteCVC.register(target: dreamWriteCollectionView)
         DreamWriteHeader.register(target: dreamWriteCollectionView)
+        DreamWriteWarningFooter.register(target: dreamWriteCollectionView)
     }
     
     private func setGesture() {
@@ -158,12 +159,17 @@ extension DreamWriteVC {
         })
         
         dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
-            if kind == DreamWriteHeader.className {
+            switch kind {
+            case DreamWriteHeader.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteHeader.className, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
-                let sectionType =  Section.type(indexPath.section)
+                let sectionType = Section.type(indexPath.section)
                 view.title = sectionType.title
                 return view
-            } else { return UICollectionReusableView() }
+            case DreamWriteWarningFooter.className:
+                guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
+                return view
+            default: return UICollectionReusableView()
+            }
         }
     }
     
@@ -175,7 +181,7 @@ extension DreamWriteVC {
         snapshot.appendItems([1],toSection: .main)
         snapshot.appendItems([3,4,5,6,7],toSection: .emotions)
         snapshot.appendItems([8,9,10,11,12,13,14,15,16,17],toSection: .genres)
-        snapshot.appendItems([8],toSection: .note)
+        snapshot.appendItems([18],toSection: .note)
         dataSource.apply(snapshot, animatingDifferences: false)
         self.view.setNeedsLayout()
     }

@@ -9,15 +9,14 @@
 import UIKit
 
 import RD_Core
-import RD_DSKit
 
-final class DreamWriteHeader: UICollectionReusableView, UICollectionReusableViewRegisterable {
+public class DreamWriteHeader: UICollectionReusableView, UICollectionReusableViewRegisterable {
     
     // MARK: - Properties
     
-    static var isFromNib: Bool = false
+    public static var isFromNib: Bool = false
     
-    lazy var title = "" {
+    public lazy var title = "" {
         didSet {
             self.titleLabel.text = self.title
         }
@@ -36,7 +35,7 @@ final class DreamWriteHeader: UICollectionReusableView, UICollectionReusableView
     
     // MARK: - View Life Cycles
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setLayout()
     }
