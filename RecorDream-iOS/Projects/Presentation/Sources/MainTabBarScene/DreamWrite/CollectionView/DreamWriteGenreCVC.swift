@@ -15,7 +15,14 @@ final class DreamWriteGenreCVC: UICollectionViewCell, UICollectionViewRegisterab
     
     // MARK: - Properties
     
+    override var isSelected: Bool {
+        didSet { self.updateColor() }
+    }
+    
     static var isFromNib: Bool = false
+    
+    private let selectedColor = RDDSKitAsset.Colors.purple.color
+    private let deselectedColor = UIColor.white.withAlphaComponent(0.2)
     
     // MARK: - UI Components
     
@@ -24,6 +31,7 @@ final class DreamWriteGenreCVC: UICollectionViewCell, UICollectionViewRegisterab
         lb.textAlignment = .center
         lb.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         lb.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 14.adjusted)
+        lb.textColor = .white.withAlphaComponent(0.2)
         return lb
     }()
     
@@ -31,6 +39,7 @@ final class DreamWriteGenreCVC: UICollectionViewCell, UICollectionViewRegisterab
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.setUI()
         self.setLayout()
     }
     
@@ -40,6 +49,17 @@ final class DreamWriteGenreCVC: UICollectionViewCell, UICollectionViewRegisterab
 }
 
 extension DreamWriteGenreCVC {
+    private func setUI() {
+        self.layer.cornerRadius = 3
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+    }
+    
+    private func updateColor() {
+        genreLabel.textColor = self.isSelected ? self.selectedColor : self.deselectedColor
+        self.layer.borderColor = self.isSelected ? self.selectedColor.cgColor : self.deselectedColor.cgColor
+    }
+    
     func setLayout() {
         self.addSubviews(genreLabel)
         

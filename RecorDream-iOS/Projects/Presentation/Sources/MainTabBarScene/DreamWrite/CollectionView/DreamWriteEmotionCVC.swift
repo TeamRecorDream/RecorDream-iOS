@@ -30,6 +30,7 @@ final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegister
         let lb = UILabel()
         lb.textAlignment = .center
         lb.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        lb.textColor = .white
         lb.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 10.adjusted)
         return lb
     }()

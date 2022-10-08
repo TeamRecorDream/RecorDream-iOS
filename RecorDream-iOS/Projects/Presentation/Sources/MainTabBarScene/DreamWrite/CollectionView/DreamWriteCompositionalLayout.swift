@@ -28,9 +28,7 @@ extension DreamWriteVC {
             bottomLabelItem.contentInsets = supplementaryItemContentInsets
             bottomLineItem.contentInsets = supplementaryItemContentInsets
             
-            
-            let section = self.sections[sectionIndex]
-            switch section {
+            switch Section.type(sectionIndex) {
             case .main: return self.createMainSection()
             case .emotions: return self.createEmojiSection(headerItem)
             case .genres: return self.createGenreSection(headerItem)
