@@ -21,6 +21,8 @@ public class DreamWriteVC: UIViewController {
     
     public var viewModel: DreamWriteViewModel!
     
+    // TODO: - dataType 프로토콜로 구현하고 수정하기
+    
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
     
     // MARK: - UI Components
@@ -136,28 +138,23 @@ extension DreamWriteVC {
             switch Section.type(indexPath.section) {
             case .main:
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-                mainCell.backgroundColor = RDDSKitAsset.Colors.dark.color
                 mainCell.endEditing.subscribe(onNext: {
                     self.view.endEditing(true)
                 }).disposed(by: self.disposeBag)
                 return mainCell
             case .emotions:
-                guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
-                let images = [RDDSKitAsset.Images.feelingBright.image, RDDSKitAsset.Images.feelingSad.image, RDDSKitAsset.Images.feelingFright.image, RDDSKitAsset.Images.feelingWeird.image, RDDSKitAsset.Images.feelingShy.image]
-                let dimages = [RDDSKitAsset.Images.feelingXsBright.image, RDDSKitAsset.Images.feelingXsSad.image, RDDSKitAsset.Images.feelingXsFright.image, RDDSKitAsset.Images.feelingXsWeird.image, RDDSKitAsset.Images.feelingXsShy.image]
-                let titles = ["기쁜", "슬픈", "무서운", "이상한", "민망한"]
-                mainCell.setData(selectedImage: images[indexPath.row], deselectedImage: dimages[indexPath.row], text: titles[indexPath.row])
-                return mainCell
+                guard let emotionsCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
+                emotionsCell.setData(selectedImage: Section.emotionImages[indexPath.row],
+                                 deselectedImage: Section.emotionDeselectedImages[indexPath.row],
+                                 text: Section.emotionTitles[indexPath.row])
+                return emotionsCell
             case .genres:
-                guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
-                let strings = ["코미디", "로맨스", "판타지", "가족", "친구", "공포", "동물", "음식", "일", "기타"].map { "# " + $0 }
-                mainCell.setData(text: strings[indexPath.row])
-                self.dreamWriteCollectionView.setNeedsLayout()
-                return mainCell
+                guard let genresCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
+                genresCell.setData(text: Section.genreTitles[indexPath.row])
+                return genresCell
             case .note:
-                guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteNoteCVC.className, for: indexPath) as? DreamWriteNoteCVC else { return UICollectionViewCell() }
-                mainCell.backgroundColor = RDDSKitAsset.Colors.dark.color
-                return mainCell
+                guard let noteCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteNoteCVC.className, for: indexPath) as? DreamWriteNoteCVC else { return UICollectionViewCell() }
+                return noteCell
             }
         })
         

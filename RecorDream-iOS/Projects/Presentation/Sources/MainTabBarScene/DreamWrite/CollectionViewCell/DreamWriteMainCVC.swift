@@ -42,6 +42,7 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.setUI()
         self.setLayout()
     }
     
@@ -51,6 +52,11 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
 }
 
 extension DreamWriteMainCVC {
+    
+    private func setUI() {
+        self.backgroundColor = RDDSKitAsset.Colors.dark.color
+    }
+    
     private func setLayout() {
         self.addSubviews(dateInteractionView, voiceRecordInteractionView, titleTextView,
                          contentTextView)

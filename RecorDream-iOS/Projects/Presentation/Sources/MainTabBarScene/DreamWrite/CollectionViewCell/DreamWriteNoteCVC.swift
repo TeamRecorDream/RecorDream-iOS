@@ -38,6 +38,10 @@ final class DreamWriteNoteCVC: UICollectionViewCell, UICollectionViewRegisterabl
 }
 
 extension DreamWriteNoteCVC {
+    private func setUI() {
+        self.backgroundColor = RDDSKitAsset.Colors.dark.color
+    }
+    
     private func setLayout() {
         self.addSubviews(noteTextView)
         
