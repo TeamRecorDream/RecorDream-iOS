@@ -17,24 +17,11 @@ public class DreamWriteVC: UIViewController {
     
     // MARK: - Properties
     
-    enum Section: CaseIterable {
-        case main
-        case emotions
-        case genres
-        case note
-        
-        static func type(_ index: Int) -> Section {
-            return self.allCases[index]
-        }
-    }
-    
     private let disposeBag = DisposeBag()
     
     public var viewModel: DreamWriteViewModel!
     
-    let sections = {
-        return Section.allCases
-    }
+    lazy var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
     
     // MARK: - UI Components
     
@@ -54,25 +41,22 @@ public class DreamWriteVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
-        self.setCollectionView()
-        self.setDelegate()
-        self.setGesture()
         self.setLayout()
+        self.setDelegate()
+        self.registerReusables()
+        self.setGesture()
         self.bindViewModels()
+        self.setDataSource()
+        self.applySnapshot()
     }
 }
 
-// MARK: - Methods
+// MARK: - UI & Layout
 
 extension DreamWriteVC {
     
     private func setUI() {
         self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
-    }
-    
-    private func setDelegate() {
-        dreamWriteCollectionView.delegate = self
-        dreamWriteCollectionView.dataSource = self
     }
     
     private func setLayout() {
@@ -89,18 +73,22 @@ extension DreamWriteVC {
             make.height.equalTo(44)
         }
     }
+}
+
+// MARK: - Methods
+
+extension DreamWriteVC {
     
-    private func setCollectionView() {
+    private func setDelegate() {
+        dreamWriteCollectionView.delegate = self
+    }
+    
+    private func registerReusables() {
         DreamWriteMainCVC.register(target: dreamWriteCollectionView)
         DreamWriteEmotionCVC.register(target: dreamWriteCollectionView)
         DreamWriteGenreCVC.register(target: dreamWriteCollectionView)
+        DreamWriteNoteCVC.register(target: dreamWriteCollectionView)
         DreamWriteHeader.register(target: dreamWriteCollectionView)
-    }
-    
-    private func bindViewModels() {
-        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.viewDidDisappear,
-                                              closeButtonTapped: naviBar.rightButtonTapped.asObservable())
-        let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
     }
     
     private func setGesture() {
@@ -115,68 +103,77 @@ extension DreamWriteVC {
     }
 }
 
-extension DreamWriteVC: UICollectionViewDelegate {
+// MARK: - Bind
+
+extension DreamWriteVC {
+    
+    private func bindViewModels() {
+        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.viewDidDisappear,
+                                              closeButtonTapped: naviBar.rightButtonTapped.asObservable())
+        let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+    }
     
 }
 
-extension DreamWriteVC: UICollectionViewDataSource {
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 4
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section.type(section) {
-        case .main: return 1
-        case .emotions: return 5
-        case .genres: return 10
-        case .note: return 1
-        }
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section.type(indexPath.section) {
-        case .main:
-            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-            let colors: [UIColor] = [RDDSKitAsset.Colors.dark.color, .systemPink, .orange, .brown, .yellow, .purple, .red, .green]
-            mainCell.backgroundColor = colors[indexPath.row]
-            mainCell.endEditing.subscribe(onNext: {
-                self.view.endEditing(true)
-            }).disposed(by: disposeBag)
-            return mainCell
-        case .emotions:
-            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
-            let images = [RDDSKitAsset.Images.feelingSad.image, RDDSKitAsset.Images.feelingBright.image, RDDSKitAsset.Images.feelingFright.image, RDDSKitAsset.Images.feelingWeird.image, RDDSKitAsset.Images.feelingShy.image]
-            let titles = ["기쁜", "슬픈", "무서운", "이상한", "민망한"]
-            mainCell.setData(image: images[indexPath.row], text: titles[indexPath.row])
-            return mainCell
-        case .genres:
-            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
-            let strings = ["코미디", "로맨스", "판타지", "가족", "친구", "공포", "동물", "음식", "일", "기타"].map { "# " + $0 }
-            mainCell.setData(text: strings[indexPath.row])
-            self.dreamWriteCollectionView.setNeedsLayout()
-            return mainCell
-        case .note:
-            guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-            let colors: [UIColor] = [RDDSKitAsset.Colors.dark.color, .black, .orange, .brown, .yellow, .purple, .red, .green]
-            mainCell.backgroundColor = colors[indexPath.row]
-            return mainCell
-        }
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == DreamWriteHeader.className {
-            guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteHeader.className, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
+
+// MARK: - DiffableDataSource
+
+extension DreamWriteVC {
+    private func setDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<Section, Int>(collectionView: dreamWriteCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             switch Section.type(indexPath.section) {
             case .main:
-                view.title = "나의 감정"
+                guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
+                mainCell.backgroundColor = RDDSKitAsset.Colors.dark.color
+                mainCell.endEditing.subscribe(onNext: {
+                    self.view.endEditing(true)
+                }).disposed(by: self.disposeBag)
+                return mainCell
             case .emotions:
-                view.title = "나의 감정"
+                guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
+                let images = [RDDSKitAsset.Images.feelingSad.image, RDDSKitAsset.Images.feelingBright.image, RDDSKitAsset.Images.feelingFright.image, RDDSKitAsset.Images.feelingWeird.image, RDDSKitAsset.Images.feelingShy.image]
+                let titles = ["기쁜", "슬픈", "무서운", "이상한", "민망한"]
+                mainCell.setData(image: images[indexPath.row], text: titles[indexPath.row])
+                return mainCell
             case .genres:
-                view.title = "꿈의 장르"
+                guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
+                let strings = ["코미디", "로맨스", "판타지", "가족", "친구", "공포", "동물", "음식", "일", "기타"].map { "# " + $0 }
+                mainCell.setData(text: strings[indexPath.row])
+                self.dreamWriteCollectionView.setNeedsLayout()
+                return mainCell
             case .note:
-                view.title = "노트"
+                guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteNoteCVC.className, for: indexPath) as? DreamWriteNoteCVC else { return UICollectionViewCell() }
+                mainCell.backgroundColor = RDDSKitAsset.Colors.dark.color
+                return mainCell
             }
-            return view
-        } else { return UICollectionReusableView() }
+        })
+        
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            if kind == DreamWriteHeader.className {
+                guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteHeader.className, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
+                let sectionType =  Section.type(indexPath.section)
+                view.title = sectionType.title
+                return view
+            } else { return UICollectionReusableView() }
+        }
     }
+    
+    // TODO: - 기록하기용 SnapShot과 수정하기용 SnapShot 구분하기
+    
+    func applySnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
+        snapshot.appendSections([.main, .emotions, .genres, .note])
+        snapshot.appendItems([1],toSection: .main)
+        snapshot.appendItems([3,4,5,6,7],toSection: .emotions)
+        snapshot.appendItems([8,9,10,11,12,13,14,15,16,17],toSection: .genres)
+        snapshot.appendItems([8],toSection: .note)
+        dataSource.apply(snapshot, animatingDifferences: false)
+        self.view.setNeedsLayout()
+    }
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension DreamWriteVC: UICollectionViewDelegate {
+    
 }
