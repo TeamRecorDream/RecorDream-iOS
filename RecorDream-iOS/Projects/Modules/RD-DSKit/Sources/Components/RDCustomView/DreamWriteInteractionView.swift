@@ -16,7 +16,7 @@ public class DreamWriteInteractionView: UIView {
     
     // MARK: - Properties
     
-    public enum InteractioType {
+    public enum InteractionType {
         case date
         case voiceRecord
     }
@@ -114,7 +114,7 @@ extension DreamWriteInteractionView {
 
 extension DreamWriteInteractionView {
     @discardableResult
-    public func viewType(_ type: InteractioType) -> Self {
+    public func viewType(_ type: InteractionType) -> Self {
         switch type {
         case .date:
             self.iconImageView.image = RDDSKitAsset.Images.icnCalendar.image
