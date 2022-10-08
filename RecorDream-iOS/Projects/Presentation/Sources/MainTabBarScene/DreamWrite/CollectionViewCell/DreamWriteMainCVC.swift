@@ -26,6 +26,12 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     // MARK: - UI Components
     
+    private let dateInteractionView = DreamWriteInteractionView()
+        .viewType(.date)
+    
+    private let voiceRecordInteractionView = DreamWriteInteractionView()
+        .viewType(.voiceRecord)
+    
     private let titleTextView = DreamWriteTextView()
         .placeHolder("꿈의 제목을 남겨주세요")
     
@@ -46,10 +52,23 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
 
 extension DreamWriteMainCVC {
     private func setLayout() {
-        self.addSubviews(titleTextView, contentTextView)
+        self.addSubviews(dateInteractionView, voiceRecordInteractionView, titleTextView,
+                         contentTextView)
+        
+        dateInteractionView.snp.makeConstraints { make in
+            make.top.equalToSuperview().inset(30)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(54)
+        }
+        
+        voiceRecordInteractionView.snp.makeConstraints { make in
+            make.top.equalTo(dateInteractionView.snp.bottom).offset(14)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(54)
+        }
         
         titleTextView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(30)
+            make.top.equalTo(voiceRecordInteractionView.snp.bottom).offset(14)
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(54)
         }
@@ -57,6 +76,7 @@ extension DreamWriteMainCVC {
         contentTextView.snp.makeConstraints { make in
             make.top.equalTo(titleTextView.snp.bottom).offset(14)
             make.leading.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(360)
             make.bottom.equalToSuperview().inset(30)
         }
     }
