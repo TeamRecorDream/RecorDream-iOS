@@ -14,6 +14,7 @@ import RxRelay
 
 public protocol DreamWriteControllable {
     var viewDidDisappearEvent: PublishRelay<Void> { get }
+    var closeButtonTapped: PublishRelay<Void> { get }
 }
 
 public class DreamWriteViewModel: ViewModelType, DreamWriteControllable {
@@ -24,12 +25,14 @@ public class DreamWriteViewModel: ViewModelType, DreamWriteControllable {
     // MARK: - Inputs
     
     public struct Input {
-        let viewDidDisappearEvent: Observable<Void>
+        let viewDidDisappearEvent: Observable<Bool>
+        let closeButtonTapped: Observable<Void>
     }
   
     // MARK: - Coordinator Protocol
     
     public let viewDidDisappearEvent = PublishRelay<Void>()
+    public let closeButtonTapped = PublishRelay<Void>()
     
     // MARK: - Outputs
     
@@ -45,8 +48,12 @@ public class DreamWriteViewModel: ViewModelType, DreamWriteControllable {
 extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
-        input.viewDidDisappearEvent.subscribe(onNext: {
+        input.viewDidDisappearEvent.subscribe(onNext: { _ in
             self.viewDidDisappearEvent.accept(())
+        }).disposed(by: disposeBag)
+        
+        input.closeButtonTapped.subscribe(onNext: {
+            self.closeButtonTapped.accept(())
         }).disposed(by: disposeBag)
         
         self.bindOutput(output: output, disposeBag: disposeBag)

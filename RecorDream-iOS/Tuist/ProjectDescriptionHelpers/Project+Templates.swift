@@ -80,6 +80,8 @@ public extension Project {
                 ]
             ]
         ],
+        "UIStatusBarStyle": "UIStatusBarStyleLightContent",
+        "UIViewControllerBasedStatusBarAppearance": false,
         "UIAppFonts": [
             "Item 0": "Pretendard-Black.otf",
             "Item 1": "Pretendard-Bold.otf",
