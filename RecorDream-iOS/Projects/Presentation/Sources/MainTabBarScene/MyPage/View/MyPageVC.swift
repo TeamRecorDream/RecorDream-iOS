@@ -57,6 +57,12 @@ public class MyPageVC: UIViewController {
         label.sizeToFit()
         return label
     }()
+    
+    private let pushSettingView = MyPageInteractionView()
+        .viewType(.pushOnOff)
+    
+    private let timeSettingView = MyPageInteractionView()
+        .viewType(.timeSetting)
   
     // MARK: - View Life Cycle
     
@@ -78,7 +84,8 @@ extension MyPageVC {
     
     private func setLayout() {
         self.view.addSubviews(naviBar, profileImageView, nickNameLabel,
-                              editButton, emailLabel)
+                              editButton, emailLabel, pushSettingView,
+                              timeSettingView)
         
         naviBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -87,24 +94,36 @@ extension MyPageVC {
         }
         
         profileImageView.snp.makeConstraints { make in
-            make.top.equalTo(naviBar.snp.bottom).offset(36)
+            make.top.equalTo(naviBar.snp.bottom).offset(36.adjustedH)
             make.width.height.equalTo(90.adjusted)
             make.centerX.equalToSuperview()
         }
         
         nickNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(profileImageView.snp.bottom).offset(8)
+            make.top.equalTo(profileImageView.snp.bottom).offset(8.adjustedH)
             make.centerX.equalToSuperview()
         }
         
         editButton.snp.makeConstraints { make in
-            make.leading.equalTo(nickNameLabel.snp.trailing).offset(3)
+            make.leading.equalTo(nickNameLabel.snp.trailing).offset(3.adjusted)
             make.centerY.equalTo(nickNameLabel.snp.centerY)
         }
         
         emailLabel.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(5)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(5.adjustedH)
             make.centerX.equalToSuperview()
+        }
+        
+        pushSettingView.snp.makeConstraints { make in
+            make.top.equalTo(emailLabel.snp.bottom).offset(26.adjustedH)
+            make.height.equalTo(64.adjustedH)
+            make.leading.trailing.equalToSuperview().inset(16.adjusted)
+        }
+        
+        timeSettingView.snp.makeConstraints { make in
+            make.top.equalTo(pushSettingView.snp.bottom).offset(18.adjustedH)
+            make.height.equalTo(64.adjustedH)
+            make.leading.trailing.equalToSuperview().inset(16.adjusted)
         }
     }
 }
