@@ -82,6 +82,8 @@ public enum RDDSKitAsset {
     public static let icnHome = RDDSKitImages(name: "icn-home")
     public static let icnRecord = RDDSKitImages(name: "icn-record")
     public static let icnStorage = RDDSKitImages(name: "icn-storage")
+    public static let icnEdit = RDDSKitImages(name: "icn_edit")
+    public static let icnMypage = RDDSKitImages(name: "icn_mypage")
     public static let icnBack = RDDSKitImages(name: "icn_back")
     public static let icnClose = RDDSKitImages(name: "icn_close")
   }

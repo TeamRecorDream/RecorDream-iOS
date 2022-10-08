@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct DreamWriteEntity {
+public struct DreamWriteEntity {
 
 }
