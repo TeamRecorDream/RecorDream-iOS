@@ -33,6 +33,7 @@ public class DreamWriteVC: UIViewController {
         cv.showsHorizontalScrollIndicator = false
         cv.backgroundColor = RDDSKitAsset.Colors.dark.color
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cv.allowsMultipleSelection = true
         return cv
     }()
     
@@ -79,7 +80,7 @@ extension DreamWriteVC {
         saveButton.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(88)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalToSuperview()
         }
     }
 }
@@ -142,9 +143,10 @@ extension DreamWriteVC {
                 return mainCell
             case .emotions:
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
-                let images = [RDDSKitAsset.Images.feelingSad.image, RDDSKitAsset.Images.feelingBright.image, RDDSKitAsset.Images.feelingFright.image, RDDSKitAsset.Images.feelingWeird.image, RDDSKitAsset.Images.feelingShy.image]
+                let images = [RDDSKitAsset.Images.feelingBright.image, RDDSKitAsset.Images.feelingSad.image, RDDSKitAsset.Images.feelingFright.image, RDDSKitAsset.Images.feelingWeird.image, RDDSKitAsset.Images.feelingShy.image]
+                let dimages = [RDDSKitAsset.Images.feelingXsBright.image, RDDSKitAsset.Images.feelingXsSad.image, RDDSKitAsset.Images.feelingXsFright.image, RDDSKitAsset.Images.feelingXsWeird.image, RDDSKitAsset.Images.feelingXsShy.image]
                 let titles = ["기쁜", "슬픈", "무서운", "이상한", "민망한"]
-                mainCell.setData(image: images[indexPath.row], text: titles[indexPath.row])
+                mainCell.setData(selectedImage: images[indexPath.row], deselectedImage: dimages[indexPath.row], text: titles[indexPath.row])
                 return mainCell
             case .genres:
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
@@ -194,5 +196,31 @@ extension DreamWriteVC {
 // MARK: - UICollectionViewDelegate
 
 extension DreamWriteVC: UICollectionViewDelegate {
-    
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        switch Section.type(indexPath.section) {
+        case .emotions:
+            var selectedIndexPath: IndexPath? = nil
+            collectionView.indexPathsForSelectedItems?.forEach {
+                if $0.section == indexPath.section {
+                    selectedIndexPath = $0
+                }
+            }
+            guard let selected = selectedIndexPath else { return true }
+            collectionView.deselectItem(at: selected, animated: false)
+            return true
+        case .genres:
+            var selectedCount = 0
+            collectionView.indexPathsForSelectedItems?.forEach {
+                if $0.section == indexPath.section {
+                    selectedCount += 1
+                }
+            }
+            if selectedCount == 3 {
+                collectionView.deselectItem(at: indexPath, animated: false)
+                return false
+            } else { return true }
+        default:
+            return false
+        }
+    }
 }

@@ -42,10 +42,10 @@ extension DreamWriteNoteCVC {
         self.addSubviews(noteTextView)
         
         noteTextView.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(30)
+            make.top.equalToSuperview().inset(10)
             make.leading.trailing.equalToSuperview().inset(16)
-            make.height.equalTo(54)
-            make.bottom.equalToSuperview().inset(30)
+            make.height.equalTo(240)
+            make.bottom.equalToSuperview().inset(78)
         }
     }
 }

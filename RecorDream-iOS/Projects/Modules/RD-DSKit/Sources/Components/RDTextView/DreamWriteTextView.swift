@@ -52,7 +52,7 @@ extension DreamWriteTextView {
         self.layer.cornerRadius = 10
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.white.withAlphaComponent(0.1).cgColor
-        self.textContainerInset = UIEdgeInsets(top: 16.0, left: 16.0, bottom: 16.0, right: 16.0)
+        self.textContainerInset = UIEdgeInsets(top: 18.0, left: 16.0, bottom: 16.0, right: 16.0)
         self.font = RDDSKitFontFamily.Pretendard.medium.font(size: 14)
         self.text = placeHolderText
         self.textColor = .white.withAlphaComponent(0.4)

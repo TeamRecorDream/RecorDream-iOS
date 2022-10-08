@@ -17,11 +17,23 @@ final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegister
     
     static var isFromNib: Bool = false
     
+    override var isSelected: Bool {
+        didSet {
+            self.updateUI()
+        }
+    }
+    
+    private let selectedColor = UIColor.white
+    private let deselectedColor = UIColor.white.withAlphaComponent(0.4)
+    
+    private var selectedImage = UIImage()
+    private var deselectedImage = UIImage()
+    
     // MARK: - UI Components
     
     private let emotionImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleAspectFit
         iv.image = RDDSKitAsset.Images.feelingSad.image
         return iv
     }()
@@ -30,7 +42,7 @@ final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegister
         let lb = UILabel()
         lb.textAlignment = .center
         lb.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        lb.textColor = .white
+        lb.textColor = UIColor.white.withAlphaComponent(0.4)
         lb.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 10.adjusted)
         return lb
     }()
@@ -48,11 +60,12 @@ final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegister
 }
 
 extension DreamWriteEmotionCVC {
-    func setLayout() {
+    private func setLayout() {
         self.addSubviews(emotionImageView, emotionLabel)
         
         emotionImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
+            make.width.height.equalTo(32)
         }
         
         emotionLabel.snp.makeConstraints { make in
@@ -62,10 +75,23 @@ extension DreamWriteEmotionCVC {
         }
     }
     
-    func setData(image: UIImage, text: String) {
-        emotionImageView.image = image
+    private func updateUI() {
+        emotionLabel.textColor = isSelected
+        ? selectedColor
+        : deselectedColor
+        
+        emotionImageView.image = isSelected
+        ? selectedImage
+        : deselectedImage
+    }
+    
+    func setData(selectedImage: UIImage, deselectedImage: UIImage, text: String) {
+        emotionImageView.image = deselectedImage
         emotionLabel.text = text
         emotionLabel.sizeToFit()
+        
+        self.selectedImage = selectedImage
+        self.deselectedImage = deselectedImage
     }
 }
 
