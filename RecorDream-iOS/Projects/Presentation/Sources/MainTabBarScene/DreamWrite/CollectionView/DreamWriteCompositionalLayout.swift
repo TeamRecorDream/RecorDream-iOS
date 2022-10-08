@@ -62,6 +62,7 @@ extension DreamWriteVC {
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
         section.orthogonalScrollingBehavior = .none
+        section.contentInsets = .init(top: 18, leading: 0, bottom: 24, trailing: 24)
         return section
     }
     
@@ -74,11 +75,11 @@ extension DreamWriteVC {
         group.interItemSpacing = .fixed(12)
         
         let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = [header]
         section.orthogonalScrollingBehavior = .none
         section.interGroupSpacing = 12
-        section.contentInsets = .init(top: 0, leading: 25, bottom: 0, trailing: 25)
+        section.contentInsets = .init(top: 18, leading: 25, bottom: 9, trailing: 25)
         header.contentInsets = .init(top: 0, leading: -20, bottom: 0, trailing: 4)
-        section.boundarySupplementaryItems = [header]
         return section
     }
     
@@ -90,8 +91,9 @@ extension DreamWriteVC {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .none
         section.boundarySupplementaryItems = [header]
+        section.orthogonalScrollingBehavior = .none
+        section.contentInsets = .init(top: 18, leading: 0, bottom: 88, trailing: 0)
         return section
     }
 }
