@@ -99,6 +99,7 @@ extension DreamWriteVC {
         DreamWriteNoteCVC.register(target: dreamWriteCollectionView)
         DreamWriteHeader.register(target: dreamWriteCollectionView)
         DreamWriteWarningFooter.register(target: dreamWriteCollectionView)
+        DreamWriteDividerView.register(target: dreamWriteCollectionView)
     }
     
     private func setGesture() {
@@ -167,6 +168,9 @@ extension DreamWriteVC {
                 return view
             case DreamWriteWarningFooter.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
+                return view
+            case DreamWriteDividerView.className:
+                guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteDividerView.className, for: indexPath) as? DreamWriteDividerView else { return UICollectionReusableView() }
                 return view
             default: return UICollectionReusableView()
             }

@@ -58,6 +58,7 @@ extension DreamWriteEmotionCVC {
         emotionLabel.snp.makeConstraints { make in
             make.top.equalTo(emotionImageView.snp.bottom).offset(7)
             make.centerX.equalToSuperview()
+            make.height.equalTo(15)
         }
     }
     

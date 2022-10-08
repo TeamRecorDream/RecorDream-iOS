@@ -20,18 +20,13 @@ extension DreamWriteVC {
             let labelItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(24))
             let bottomLabelItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: labelItemSize, elementKind: DreamWriteWarningFooter.className, alignment: .bottom)
             
-            let lineItemHeight = 1 / layoutEnvironment.traitCollection.displayScale
+            let lineItemHeight: CGFloat = 26
             let lineItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.92), heightDimension: .absolute(lineItemHeight))
-            let bottomLineItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: lineItemSize, elementKind: "SupplementaryViewKind.bottomLine", alignment: .bottom)
-            
-            let supplementaryItemContentInsets = NSDirectionalEdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 4)
-            headerItem.contentInsets = supplementaryItemContentInsets
-            bottomLabelItem.contentInsets = supplementaryItemContentInsets
-            bottomLineItem.contentInsets = supplementaryItemContentInsets
+            let bottomLineItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: lineItemSize, elementKind: DreamWriteDividerView.className, alignment: .bottom)
             
             switch Section.type(sectionIndex) {
             case .main: return self.createMainSection()
-            case .emotions: return self.createEmojiSection(headerItem)
+            case .emotions: return self.createEmotionSection(headerItem, bottomLineItem)
             case .genres: return self.createGenreSection(headerItem,  bottomLabelItem)
             case .note: return self.createNoteSection(headerItem)
             }
@@ -50,8 +45,8 @@ extension DreamWriteVC {
         return section
     }
     
-    private func createEmojiSection(_ header: NSCollectionLayoutBoundarySupplementaryItem) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(32/375), heightDimension: .fractionalWidth(1))
+    private func createEmotionSection(_ header: NSCollectionLayoutBoundarySupplementaryItem, _ footer: NSCollectionLayoutBoundarySupplementaryItem) -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(32/375), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(UIScreen.main.bounds.width), heightDimension: .absolute(52.adjusted))
@@ -60,9 +55,9 @@ extension DreamWriteVC {
         group.contentInsets = .init(top: 0, leading: 28, bottom: 0, trailing: 28)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.boundarySupplementaryItems = [header]
+        section.boundarySupplementaryItems = [header, footer]
         section.orthogonalScrollingBehavior = .none
-        section.contentInsets = .init(top: 18, leading: 0, bottom: 24, trailing: 24)
+        section.contentInsets = .init(top: 18, leading: 0, bottom: 14, trailing: 0)
         return section
     }
     
@@ -78,7 +73,7 @@ extension DreamWriteVC {
         section.boundarySupplementaryItems = [header, footer]
         section.orthogonalScrollingBehavior = .none
         section.interGroupSpacing = 12
-        header.contentInsets = .init(top: 0, leading: -20, bottom: 0, trailing: 4)
+        header.contentInsets = .init(top: 0, leading: -24, bottom: 0, trailing: 0)
         section.contentInsets = .init(top: 18, leading: 25, bottom: 9, trailing: 25)
         footer.contentInsets = .init(top: 0, leading: -1, bottom: 0, trailing: 0)
         return section
