@@ -9,6 +9,7 @@
 import UIKit
 
 import RD_Core
+import RD_DSKit
 
 extension DreamWriteVC {
     func createLayout() -> UICollectionViewLayout {

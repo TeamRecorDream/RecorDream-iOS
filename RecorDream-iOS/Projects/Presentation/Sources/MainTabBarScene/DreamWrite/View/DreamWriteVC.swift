@@ -36,6 +36,9 @@ public class DreamWriteVC: UIViewController {
         return cv
     }()
     
+    private lazy var saveButton = DreamWriteSaveButton()
+        .title("저장하기")
+    
     // MARK: - View Life Cycle
     
     public override func viewDidLoad() {
@@ -60,7 +63,7 @@ extension DreamWriteVC {
     }
     
     private func setLayout() {
-        self.view.addSubviews(dreamWriteCollectionView, naviBar)
+        self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton)
         
         dreamWriteCollectionView.snp.makeConstraints { make in
             make.top.equalTo(naviBar.snp.bottom)
@@ -71,6 +74,12 @@ extension DreamWriteVC {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(44)
+        }
+        
+        saveButton.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(88)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
     }
 }
