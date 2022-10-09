@@ -41,6 +41,9 @@ public class MyPageInteractionView: UIView {
         let sw = UISwitch()
         sw.onTintColor = RDDSKitAsset.Colors.purple.color
         sw.isSelected = false
+        sw.thumbSize(scaleX: 0.6.adjusted, scaleY: 0.75.adjustedH)
+        sw.totalSize(width: 51.adjusted, height: 24.adjustedH)
+        sw.backgroundCornerRadius(cornerRadius: 13.adjusted)
         return sw
     }()
     
