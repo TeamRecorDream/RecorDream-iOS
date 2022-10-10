@@ -14,6 +14,5 @@ let project = Project.makeModule(
     dependencies: [
         .Project.RDDSKit,
         .Project.Domain
-    ],
-    resources: ["Resources/**"]
+    ]
 )
