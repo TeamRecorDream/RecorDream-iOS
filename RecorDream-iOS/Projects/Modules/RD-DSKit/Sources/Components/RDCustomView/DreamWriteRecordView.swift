@@ -19,6 +19,15 @@ public class DreamWriteRecordView: UIView {
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
+    
+    enum RecordStatus {
+        case notStarted
+        case recording
+        case completed
+    }
+    
+    var recordStatus = RecordStatus.notStarted
+    
     // MARK: - UI Components
     
     private let grabberView: UIView = {
@@ -135,5 +144,43 @@ extension DreamWriteRecordView {
             make.width.height.equalTo(54.adjusted)
             make.trailing.equalToSuperview().inset(23.adjusted)
         }
+    }
+}
+
+// MARK: - Methods
+
+extension DreamWriteRecordView {
+    private func bind() {
+        recordButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                guard let self = self else { return }
+                switch self.recordStatus {
+                case .notStarted:
+                    self.tappedStart()
+                case .recording:
+                    self.tappedStop()
+                case .completed:
+                    self.tappedReset()
+                }
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
+    private func tappedStart() {
+        self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
+        self.recordStatus = RecordStatus.recording
+    }
+    
+    private func tappedStop() {
+        self.recordButton.setImage(RDDSKitAsset.Images.icnMicReset.image, for: .normal)
+        self.recordStatus = RecordStatus.completed
+        [closeButton, saveButton].forEach { $0.isHidden = false }
+    }
+    
+    private func tappedReset() {
+        self.recordButton.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
+        self.recordStatus = RecordStatus.notStarted
+        [closeButton, saveButton].forEach { $0.isHidden = true }
     }
 }
