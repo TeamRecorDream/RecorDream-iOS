@@ -6,6 +6,7 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
+import AVFoundation
 import UIKit
 
 import RD_Core
@@ -19,14 +20,23 @@ public class DreamWriteRecordView: UIView {
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
-    
-    enum RecordStatus {
+
+    private enum RecordStatus {
         case notStarted
         case recording
         case completed
     }
     
-    var recordStatus = RecordStatus.notStarted
+    private var recordStatus = RecordStatus.notStarted
+    
+    var audioRecorder: AVAudioRecorder?
+    var audioPlayer: AVAudioPlayer?
+    
+    public var audioFileURL: URL {
+        let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let audioFileName = UUID().uuidString + ".m4a"
+        return documentURL.appendingPathComponent(audioFileName)
+    }
     
     // MARK: - UI Components
     
@@ -81,6 +91,8 @@ public class DreamWriteRecordView: UIView {
         setUI()
         setLayout()
         bind()
+        setAudio()
+//        checkMicrophoneAccess()
     }
     
     required init?(coder: NSCoder) {
@@ -170,17 +182,131 @@ extension DreamWriteRecordView {
     private func tappedStart() {
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
         self.recordStatus = RecordStatus.recording
+        
+        self.stopPlayer()
+        self.startRecording()
     }
     
     private func tappedStop() {
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicReset.image, for: .normal)
         self.recordStatus = RecordStatus.completed
         [closeButton, saveButton].forEach { $0.isHidden = false }
+        
+        self.stopRecording()
+        self.stopPlayer()
     }
     
     private func tappedReset() {
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
         self.recordStatus = RecordStatus.notStarted
         [closeButton, saveButton].forEach { $0.isHidden = true }
+        
+        self.startPlayer()
     }
+    
+    private func stopPlayer() {
+        if let player = audioPlayer {
+            if player.isPlaying { player.stop() }
+        }
+    }
+    
+    private func startPlayer() {
+        guard let recorder = audioRecorder else { return }
+        if !recorder.isRecording {
+            audioPlayer = try? AVAudioPlayer(contentsOf: recorder.url)
+            audioPlayer?.delegate = self
+            audioPlayer?.volume = 100
+            audioPlayer?.play()
+        }
+    }
+    
+    private func stopRecording() {
+        guard let recorder = audioRecorder else { return }
+        if recorder.isRecording {
+            audioRecorder?.stop()
+            let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.setActive(false)
+            } catch let error {
+                print("audioSession error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func startRecording() {
+        guard let recorder = audioRecorder else { return }
+        if !recorder.isRecording {
+            let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.setActive(true)
+            } catch let error {
+                print("audioSession error: \(error.localizedDescription)")
+            }
+            recorder.record()
+        } else {
+            recorder.pause()
+        }
+    }
+}
+
+// MARK: - AVFoundation
+
+extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
+    
+    private func setAudio() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playAndRecord, mode: .default)
+        } catch {
+            print("audioSession error: \(error.localizedDescription)")
+        }
+        
+        let recorderSetting: [String : Any] = [ AVFormatIDKey : kAudioFormatAppleLossless,
+                                       AVEncoderAudioQualityKey : AVAudioQuality.max.rawValue,
+                                       AVEncoderBitRateKey: 320000,
+                                       AVNumberOfChannelsKey : 2,
+                                       AVSampleRateKey : 44100.0 ]
+        do {
+            audioRecorder = try AVAudioRecorder(url: audioFileURL, settings: recorderSetting)
+            audioRecorder?.delegate = self
+            audioRecorder?.isMeteringEnabled = true
+            audioRecorder?.prepareToRecord()
+        } catch {
+            print("audioRecorder error: \(error.localizedDescription)")
+        }
+    }
+    
+    func checkMicrophoneAccess() {
+        // Check Microphone Authorization
+        switch AVAudioSession.sharedInstance().recordPermission {
+            
+        case AVAudioSession.RecordPermission.granted:
+            print(#function, " Microphone Permission Granted")
+            break
+            
+        case AVAudioSession.RecordPermission.denied:
+            // Dismiss Keyboard (on UIView level, without reference to a specific text field)
+            UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
+            
+            return
+            
+        case AVAudioSession.RecordPermission.undetermined:
+            print("Request permission here")
+            // Dismiss Keyboard (on UIView level, without reference to a specific text field)
+            UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
+            
+            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
+                // Handle granted
+                if granted {
+                    print(#function, " Now Granted")
+                } else {
+                    print("Pemission Not Granted")
+                    
+                } // end else
+            })
+        @unknown default:
+            print("ERROR! Unknown Default. Check!")
+        } // end switch
+        
+    } // end func checkMicrophoneAccess
 }
