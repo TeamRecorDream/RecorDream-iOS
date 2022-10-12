@@ -7,8 +7,10 @@
 
 import UIKit
 
+import RD_DSKit
+
 typealias Factory = CoordinatorFactoryProtocol & ViewControllerFactory
-typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBarCoordinatorFactory
+typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBarControllerFactory
 
 /**
  각종 인스턴스의 의존성을 보유하는 Container Class 입니다.
@@ -50,24 +52,21 @@ open class DependencyContainer {
     
     public init(rootController: CoordinatorNavigationController) {
         self.rootController = rootController
-        self.customoizeNavigationController()
+        self.customizeNavigationController()
     }
 }
 
 // MARK: - Private methods
 
 extension DependencyContainer {
-    private func customoizeNavigationController() {
+    private func customizeNavigationController() {
         self.rootController.enableSwipeBack()
-        self.rootController.customizeTitle(titleColor: UIColor.red,
-                                           largeTextFont: UIFont(name: "Menlo-Bold", size: 22)!,
-                                           smallTextFont: UIFont(name: "Menlo-Bold", size: 18)!,
+        self.rootController.customizeTitle(titleColor: UIColor.white,
+                                           largeTextFont: RDDSKitFontFamily.Pretendard.semiBold.font(size: 16),
+                                           smallTextFont: RDDSKitFontFamily.Pretendard.semiBold.font(size: 16),
                                            isTranslucent: true,
-                                           barTintColor: UIColor.purple)
-        self.rootController.customizeBackButton(backButtonImage: UIImage(named: "GoBack"),
-                                      backButtonTitle: "Back3",
-                                      backButtonfont: UIFont(name: "Menlo-Bold", size: 15),
-                                      backButtonTitleColor: .black,
+                                           barTintColor: RDDSKitAsset.Colors.dark.color)
+        self.rootController.customizeBackButton(backButtonImage: RDDSKitAsset.Images.icnBack.image, backButtonTitleColor: .white,
                                       shouldUseViewControllerTitles: true)
     }
 }

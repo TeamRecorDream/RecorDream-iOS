@@ -34,7 +34,7 @@ final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegister
     private let emotionImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.image = RDDSKitAsset.Images.feelingSad.image
+        iv.image = RDDSKitAsset.Images.feelingXsSad.image
         return iv
     }()
     

@@ -14,7 +14,8 @@ protocol AuthViewControllerFactory {
 //    func instantiateSpalshViewController() -> SplashViewController
 }
 
-protocol MainTabBarCoordinatorFactory {
+protocol MainTabBarControllerFactory {
     func instantiateMainTabBarController() -> MainTabBarController
-    func instantiateDreamWriteVC() -> DreamWriteVC 
+    func instantiateDreamWriteVC() -> DreamWriteVC
+    func instantiateMyPageVC() -> MyPageVC
 }

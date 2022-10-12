@@ -51,6 +51,11 @@ final class MainTabBarCoordinator: DefaultCoordinator {
         self.router.present(dreamWriteVC)
     }
     
+    private func showMyPageViewController() {
+        let myPageVC = self.factory.instantiateMyPageVC()
+        self.router.push(myPageVC)
+    }
+    
     // MARK: - Coordinator
     
     override func start() {

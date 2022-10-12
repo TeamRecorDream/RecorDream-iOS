@@ -19,7 +19,7 @@ extension DependencyContainer: AuthViewControllerFactory {
     
 }
 
-extension DependencyContainer: MainTabBarCoordinatorFactory {
+extension DependencyContainer: MainTabBarControllerFactory {
     func instantiateMainTabBarController() -> MainTabBarController {
         let mainTabBar = MainTabBarController()
         mainTabBar.viewModel = MainTabBarViewModel()
@@ -35,6 +35,16 @@ extension DependencyContainer: MainTabBarCoordinatorFactory {
         dreamWriteVC.viewModel = viewModel
         
         return dreamWriteVC
+    }
+    
+    func instantiateMyPageVC() -> MyPageVC {
+        let repository = DefaultMyPageRepository()
+        let useCase = DefaultMyPageUseCase(repository: repository)
+        let viewModel = MyPageViewModel(useCase: useCase)
+        let myPageVC = MyPageVC()
+        myPageVC.viewModel = viewModel
+        
+        return myPageVC
     }
     
     // MARK: - Examples
