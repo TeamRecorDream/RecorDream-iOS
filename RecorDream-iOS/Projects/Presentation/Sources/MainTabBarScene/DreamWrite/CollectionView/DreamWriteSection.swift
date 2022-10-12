@@ -28,16 +28,16 @@ enum Section: String, CaseIterable {
     
     static let emotionTitles = ["기쁜", "슬픈", "무서운", "이상한", "민망한"]
     
-    static let emotionImages = [RDDSKitAsset.Images.feelingBright.image,
-                                RDDSKitAsset.Images.feelingSad.image,
-                                RDDSKitAsset.Images.feelingFright.image,
-                                RDDSKitAsset.Images.feelingWeird.image,
-                                RDDSKitAsset.Images.feelingShy.image]
+    static let emotionImages = [RDDSKitAsset.Images.feelingXsJoySelected.image,
+                                RDDSKitAsset.Images.feelingXsSadSelected.image,
+                                RDDSKitAsset.Images.feelingXsScarySelected.image,
+                                RDDSKitAsset.Images.feelingXsStrangeSelected.image,
+                                RDDSKitAsset.Images.feelingXsShySelected.image]
     
-    static let emotionDeselectedImages = [RDDSKitAsset.Images.feelingXsBright.image,
+    static let emotionDeselectedImages = [RDDSKitAsset.Images.feelingXsJoy.image,
                                           RDDSKitAsset.Images.feelingXsSad.image,
-                                          RDDSKitAsset.Images.feelingXsFright.image,
-                                          RDDSKitAsset.Images.feelingXsWeird.image,
+                                          RDDSKitAsset.Images.feelingXsScary.image,
+                                          RDDSKitAsset.Images.feelingXsStrange.image,
                                           RDDSKitAsset.Images.feelingXsShy.image]
     
     // MARK: - Genres

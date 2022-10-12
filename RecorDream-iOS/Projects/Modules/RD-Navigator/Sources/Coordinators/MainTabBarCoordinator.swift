@@ -31,7 +31,7 @@ final class MainTabBarCoordinator: DefaultCoordinator {
         let mainTabBarController = self.factory.instantiateMainTabBarController()
         mainTabBarController.viewModel.middleButtonTapped
             .subscribe(onNext: { [unowned self] in
-                self.showMyPageViewController()
+                self.showDreamWriteViewController()
             }).disposed(by: disposeBag)
         self.router.push(mainTabBarController)
     }

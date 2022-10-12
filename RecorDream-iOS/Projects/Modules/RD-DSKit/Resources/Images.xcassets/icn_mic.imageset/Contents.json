@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Frame 351.png",
+      "filename" : "icn_mic.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Frame 351@2x.png",
+      "filename" : "icn_mic@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Frame 351@3x.png",
+      "filename" : "icn_mic@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

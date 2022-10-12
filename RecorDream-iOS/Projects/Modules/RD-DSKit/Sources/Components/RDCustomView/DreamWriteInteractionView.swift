@@ -140,8 +140,8 @@ extension DreamWriteInteractionView {
         dataLabel.textColor = isEnabled ? enabledColor : disabledColor
         
         let recordImage = isEnabled
-        ? RDDSKitAsset.Images.icnRdVoiceS.image
-        : RDDSKitAsset.Images.icnRdVoice.image
+        ? RDDSKitAsset.Images.icnRdVoice.image
+        : RDDSKitAsset.Images.icnRdVoiceDisabled.image
         buttonImageView.image = recordImage
     }
 }

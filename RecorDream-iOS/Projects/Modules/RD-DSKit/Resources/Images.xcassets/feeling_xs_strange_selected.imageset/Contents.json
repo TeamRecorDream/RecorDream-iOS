@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Frame 351.png",
+      "filename" : "feeling_xs_strange.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Frame 351@2x.png",
+      "filename" : "feeling_xs_strange@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Frame 351@3x.png",
+      "filename" : "feeling_xs_strange@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
