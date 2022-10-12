@@ -92,7 +92,6 @@ public class DreamWriteRecordView: UIView {
         setLayout()
         bind()
         setAudio()
-//        checkMicrophoneAccess()
     }
     
     required init?(coder: NSCoder) {
@@ -180,11 +179,17 @@ extension DreamWriteRecordView {
     }
     
     private func tappedStart() {
-        self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
-        self.recordStatus = RecordStatus.recording
-        
-        self.stopPlayer()
-        self.startRecording()
+        checkMicrophoneAccess { granted in
+            if granted {
+                self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
+                self.recordStatus = RecordStatus.recording
+                
+                self.stopPlayer()
+                self.startRecording()
+            } else {
+                self.showNeedsGrantAlert()
+            }
+        }
     }
     
     private func tappedStop() {
@@ -276,37 +281,39 @@ extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
         }
     }
     
-    func checkMicrophoneAccess() {
-        // Check Microphone Authorization
+    private func checkMicrophoneAccess(completion: @escaping ((Bool)->Void)) {
         switch AVAudioSession.sharedInstance().recordPermission {
             
         case AVAudioSession.RecordPermission.granted:
             print(#function, " Microphone Permission Granted")
+            completion(true)
             break
             
         case AVAudioSession.RecordPermission.denied:
-            // Dismiss Keyboard (on UIView level, without reference to a specific text field)
             UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
-            
+            completion(false)
             return
             
         case AVAudioSession.RecordPermission.undetermined:
-            print("Request permission here")
-            // Dismiss Keyboard (on UIView level, without reference to a specific text field)
             UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
             
             AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
-                // Handle granted
                 if granted {
                     print(#function, " Now Granted")
+                    completion(true)
                 } else {
                     print("Pemission Not Granted")
-                    
-                } // end else
+                    completion(false)
+                }
             })
         @unknown default:
             print("ERROR! Unknown Default. Check!")
-        } // end switch
-        
-    } // end func checkMicrophoneAccess
+        }
+    }
+    
+    private func showNeedsGrantAlert() {
+        let topVC = UIApplication.getMostTopViewController()
+        topVC?.makeAlert(title: "마이크 사용 권한이 필요합니다",
+                         message: "음성 녹음 통해 꿈을 기록하기 위해 마이크 사용 권한에 동의해주세요.")
+    }
 }
