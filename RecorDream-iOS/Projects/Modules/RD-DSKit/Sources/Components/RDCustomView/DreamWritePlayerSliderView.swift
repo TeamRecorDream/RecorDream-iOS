@@ -11,6 +11,8 @@ import UIKit
 import RD_Core
 
 import SnapKit
+import RxSwift
+import RxCocoa
 
 public class DreamWritePlayerSliderView: UIView {
     
@@ -86,7 +88,7 @@ extension DreamWritePlayerSliderView {
         
         currentTimeLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.trailing.equalTo(playSlider.snp.leading).offset(-11.adjusted)
+            make.leading.equalToSuperview().inset(24.adjusted)
         }
         
         playSlider.snp.makeConstraints { make in
@@ -97,7 +99,17 @@ extension DreamWritePlayerSliderView {
         
         totalTimeLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(playSlider.snp.trailing).offset(11.adjusted)
+            make.trailing.equalToSuperview().inset(24.adjusted)
+        }
+    }
+}
+
+// MARK: - Reactive Extension
+
+extension Reactive where Base: DreamWritePlayerSliderView {
+    public var elapsedTime: Binder<Double> {
+        return Binder(base) { view, elapsedTime in
+            view.elapsedTimeSecondsFloat = elapsedTime
         }
     }
 }

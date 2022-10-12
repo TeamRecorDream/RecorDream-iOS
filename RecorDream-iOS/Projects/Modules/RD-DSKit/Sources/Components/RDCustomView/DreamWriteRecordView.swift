@@ -29,6 +29,7 @@ public class DreamWriteRecordView: UIView {
     
     private var recordStatus = RecordStatus.notStarted
     
+    var soundURL: String!
     var audioRecorder: AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
     
@@ -133,7 +134,7 @@ extension DreamWriteRecordView {
         playSliderView.snp.makeConstraints { make in
             make.top.equalTo(mainMicImageView.snp.bottom).offset(21.adjustedH)
             make.height.equalTo(23.adjustedH)
-            make.centerX.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
         }
         
         playSliderView.elapsedTimeSecondsFloat = 130
@@ -176,6 +177,12 @@ extension DreamWriteRecordView {
                 }
             })
             .disposed(by: self.disposeBag)
+        
+        Observable<Int>
+          .interval(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
+          .compactMap { [weak self] _ in self?.audioRecorder?.currentTime }
+          .bind(to: self.playSliderView.rx.elapsedTime )
+          .disposed(by: self.disposeBag)
     }
     
     private func tappedStart() {
