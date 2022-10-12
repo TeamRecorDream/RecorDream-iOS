@@ -16,7 +16,7 @@ public class DreamWriteInteractionView: UIView {
     
     // MARK: - Properties
     
-    public enum InteractioType {
+    public enum InteractionType {
         case date
         case voiceRecord
     }
@@ -114,7 +114,7 @@ extension DreamWriteInteractionView {
 
 extension DreamWriteInteractionView {
     @discardableResult
-    public func viewType(_ type: InteractioType) -> Self {
+    public func viewType(_ type: InteractionType) -> Self {
         switch type {
         case .date:
             self.iconImageView.image = RDDSKitAsset.Images.icnCalendar.image
@@ -140,8 +140,8 @@ extension DreamWriteInteractionView {
         dataLabel.textColor = isEnabled ? enabledColor : disabledColor
         
         let recordImage = isEnabled
-        ? RDDSKitAsset.Images.icnRdVoiceS.image
-        : RDDSKitAsset.Images.icnRdVoice.image
+        ? RDDSKitAsset.Images.icnRdVoice.image
+        : RDDSKitAsset.Images.icnRdVoiceDisabled.image
         buttonImageView.image = recordImage
     }
 }
