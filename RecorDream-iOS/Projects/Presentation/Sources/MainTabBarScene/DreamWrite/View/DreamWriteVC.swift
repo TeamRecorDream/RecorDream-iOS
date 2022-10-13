@@ -239,6 +239,7 @@ extension DreamWriteVC {
     }
     
     private func showVoiceRecordView() {
+        recordView.transform = CGAffineTransform.identity
         recordView.snp.updateConstraints { make in
             make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 327.adjustedH)
         }

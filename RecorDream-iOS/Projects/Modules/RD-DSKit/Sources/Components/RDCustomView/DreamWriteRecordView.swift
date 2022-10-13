@@ -96,6 +96,7 @@ public class DreamWriteRecordView: UIView {
         setLayout()
         bind()
         setAudio()
+        setPanGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -229,7 +230,7 @@ extension DreamWriteRecordView {
         [closeButton, saveButton].forEach { $0.isHidden = false }
         
         self.stopRecording()
-//        self.stopPlayer()
+        //        self.stopPlayer()
     }
     
     private func tappedReset() {
@@ -238,13 +239,39 @@ extension DreamWriteRecordView {
         [closeButton, saveButton].forEach { $0.isHidden = true }
         
         self.playSliderView.elapsedTimeSecondsFloat = 0.0
-//        self.startPlayer()
+        //        self.startPlayer()
     }
     
     private func showNeedsGrantAlert() {
         let topVC = UIApplication.getMostTopViewController()
         topVC?.makeAlert(title: "마이크 사용 권한이 필요합니다",
                          message: "음성 녹음 통해 꿈을 기록하기 위해 마이크 사용 권한에 동의해주세요.")
+    }
+    
+    private func setPanGesture() {
+        let panGesture = UIPanGestureRecognizer()
+        self.addGestureRecognizer(panGesture)
+        panGesture.rx.event.asDriver { _ in .never() }
+            .drive(onNext: { [weak self] sender in
+                guard let self = self else { return }
+                let translation = sender.translation(in: self)
+                switch sender.state {
+                case .changed:
+                    if translation.y >= 0 {
+                            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+                    }
+                case .ended:
+                    if translation.y >= 200 {
+                        self.recordOutput.onNext(nil)
+                    } else {
+                        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseIn) {
+                            self.transform = CGAffineTransform.identity
+                        }
+                    }
+                default:
+                    break
+                }
+            }).disposed(by: self.disposeBag)
     }
 }
 
