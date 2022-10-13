@@ -24,6 +24,8 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
         return Observable<Void>.merge([titleTextView.endEditing.asObservable(), contentTextView.endEditing.asObservable()])
     }
     
+    var interactionViewTapped = PublishRelay<DreamWriteInteractionView.InteractionType>()
+    
     // MARK: - UI Components
     
     private let dateInteractionView = DreamWriteInteractionView()
@@ -44,6 +46,7 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
         super.init(frame: frame)
         self.setUI()
         self.setLayout()
+        self.setGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -84,6 +87,32 @@ extension DreamWriteMainCVC {
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(360)
             make.bottom.equalToSuperview().inset(30)
+        }
+    }
+}
+
+// MARK: - Methods
+
+extension DreamWriteMainCVC {
+    
+    private func setGesture() {
+        let interactionViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
+        dateInteractionView.addGestureRecognizer(interactionViewTapGesture)
+        voiceRecordInteractionView.addGestureRecognizer(interactionViewTapGesture)
+    }
+    
+    @objc
+    private func interactionViewTapped(_ sender: UITapGestureRecognizer) {
+        guard let senderView = sender.view as? DreamWriteInteractionView else { return }
+        switch senderView.viewType {
+        case .date:
+            if dateInteractionView.isEnabled {
+                self.interactionViewTapped.accept(.date)
+            }
+        case .voiceRecord:
+            if dateInteractionView.isEnabled {
+                self.interactionViewTapped.accept(.voiceRecord)
+            }
         }
     }
 }
