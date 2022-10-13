@@ -193,7 +193,7 @@ extension DreamWriteRecordView {
             .drive(onNext: { [weak self] in
                 guard let self = self,
                       let recorderURL = self.audioRecorder?.url else { return }
-                let audioAsset = AVURLAsset.init(url: self.audioRecorder!.url, options: nil)
+                let audioAsset = AVURLAsset.init(url: recorderURL, options: nil)
                 let duration = audioAsset.duration
                 let durationInSeconds = CGFloat(CMTimeGetSeconds(duration))
                 self.recordOutput.onNext((self.audioFileURL, durationInSeconds))
@@ -204,7 +204,13 @@ extension DreamWriteRecordView {
             .interval(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
             .compactMap { [weak self] _ in self?.audioRecorder?.currentTime }
             .filter { !$0.isZero }
-            .bind(to: self.playSliderView.rx.elapsedTime )
+            .subscribe { timeEvent in
+                guard let time = timeEvent.element else { return }
+                if time > 180.1 { self.tappedStop() }
+                else {
+                    self.playSliderView.rx.elapsedTime.onNext(time)
+                }
+            }
             .disposed(by: self.disposeBag)
     }
     
