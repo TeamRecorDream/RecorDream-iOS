@@ -15,12 +15,14 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+// TODO: - 회의에서 RecordView의 재생 기능 필요성이 결정된 이후 주석 처리하기
+
 public class DreamWriteRecordView: UIView {
     
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
-
+    
     private enum RecordStatus {
         case notStarted
         case recording
@@ -29,7 +31,8 @@ public class DreamWriteRecordView: UIView {
     
     private var recordStatus = RecordStatus.notStarted
     
-    var soundURL: String!
+    public let recordOutput = PublishSubject<(URL, CGFloat)?>()
+    
     var audioRecorder: AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
     
@@ -137,8 +140,6 @@ extension DreamWriteRecordView {
             make.leading.trailing.equalToSuperview()
         }
         
-        playSliderView.elapsedTimeSecondsFloat = 130
-        
         recordButton.snp.makeConstraints { make in
             make.top.equalTo(playSliderView.snp.bottom).offset(36.adjustedH)
             make.centerX.equalToSuperview()
@@ -178,23 +179,46 @@ extension DreamWriteRecordView {
             })
             .disposed(by: self.disposeBag)
         
+        closeButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.recordOutput.onNext(nil)
+            })
+            .disposed(by: self.disposeBag)
+        
+        saveButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                guard let self = self,
+                      let recorderURL = self.audioRecorder?.url else { return }
+                let audioAsset = AVURLAsset.init(url: self.audioRecorder!.url, options: nil)
+                let duration = audioAsset.duration
+                let durationInSeconds = CGFloat(CMTimeGetSeconds(duration))
+                self.recordOutput.onNext((self.audioFileURL, durationInSeconds))
+            })
+            .disposed(by: self.disposeBag)
+        
         Observable<Int>
-          .interval(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
-          .compactMap { [weak self] _ in self?.audioRecorder?.currentTime }
-          .bind(to: self.playSliderView.rx.elapsedTime )
-          .disposed(by: self.disposeBag)
+            .interval(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
+            .compactMap { [weak self] _ in self?.audioRecorder?.currentTime }
+            .filter { !$0.isZero }
+            .bind(to: self.playSliderView.rx.elapsedTime )
+            .disposed(by: self.disposeBag)
     }
     
     private func tappedStart() {
         checkMicrophoneAccess { granted in
-            if granted {
-                self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
-                self.recordStatus = RecordStatus.recording
-                
-                self.stopPlayer()
-                self.startRecording()
-            } else {
-                self.showNeedsGrantAlert()
+            DispatchQueue.main.async {
+                if granted {
+                    self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
+                    self.recordStatus = RecordStatus.recording
+                    
+                    self.stopPlayer()
+                    self.startRecording()
+                } else {
+                    self.showNeedsGrantAlert()
+                }
             }
         }
     }
@@ -205,7 +229,7 @@ extension DreamWriteRecordView {
         [closeButton, saveButton].forEach { $0.isHidden = false }
         
         self.stopRecording()
-        self.stopPlayer()
+//        self.stopPlayer()
     }
     
     private func tappedReset() {
@@ -213,7 +237,72 @@ extension DreamWriteRecordView {
         self.recordStatus = RecordStatus.notStarted
         [closeButton, saveButton].forEach { $0.isHidden = true }
         
-        self.startPlayer()
+        self.playSliderView.elapsedTimeSecondsFloat = 0.0
+//        self.startPlayer()
+    }
+    
+    private func showNeedsGrantAlert() {
+        let topVC = UIApplication.getMostTopViewController()
+        topVC?.makeAlert(title: "마이크 사용 권한이 필요합니다",
+                         message: "음성 녹음 통해 꿈을 기록하기 위해 마이크 사용 권한에 동의해주세요.")
+    }
+}
+
+// MARK: - AVFoundation
+
+extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
+    
+    private func setAudio() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playAndRecord, mode: .default)
+        } catch {
+            print("audioSession error: \(error.localizedDescription)")
+        }
+        
+        let recorderSetting: [String : Any] = [ AVFormatIDKey : kAudioFormatAppleLossless,
+                                     AVEncoderAudioQualityKey : AVAudioQuality.max.rawValue,
+                                           AVEncoderBitRateKey: 320000,
+                                        AVNumberOfChannelsKey : 2,
+                                              AVSampleRateKey : 44100.0 ]
+        do {
+            audioRecorder = try AVAudioRecorder(url: audioFileURL, settings: recorderSetting)
+            audioRecorder?.delegate = self
+            audioRecorder?.isMeteringEnabled = true
+            audioRecorder?.prepareToRecord()
+        } catch {
+            print("audioRecorder error: \(error.localizedDescription)")
+        }
+    }
+    
+    private func checkMicrophoneAccess(completion: @escaping ((Bool)->Void)) {
+        switch AVAudioSession.sharedInstance().recordPermission {
+            
+        case AVAudioSession.RecordPermission.granted:
+            print(#function, " Microphone Permission Granted")
+            completion(true)
+            break
+            
+        case AVAudioSession.RecordPermission.denied:
+            UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
+            completion(false)
+            return
+            
+        case AVAudioSession.RecordPermission.undetermined:
+            UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
+            
+            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
+                if granted {
+                    print(#function, " Now Granted")
+                    completion(true)
+                } else {
+                    print("Pemission Not Granted")
+                    completion(false)
+                }
+            })
+        @unknown default:
+            print("ERROR! Unknown Default. Check!")
+        }
     }
     
     private func stopPlayer() {
@@ -258,69 +347,5 @@ extension DreamWriteRecordView {
         } else {
             recorder.pause()
         }
-    }
-}
-
-// MARK: - AVFoundation
-
-extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
-    
-    private func setAudio() {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(AVAudioSession.Category.playAndRecord, mode: .default)
-        } catch {
-            print("audioSession error: \(error.localizedDescription)")
-        }
-        
-        let recorderSetting: [String : Any] = [ AVFormatIDKey : kAudioFormatAppleLossless,
-                                       AVEncoderAudioQualityKey : AVAudioQuality.max.rawValue,
-                                       AVEncoderBitRateKey: 320000,
-                                       AVNumberOfChannelsKey : 2,
-                                       AVSampleRateKey : 44100.0 ]
-        do {
-            audioRecorder = try AVAudioRecorder(url: audioFileURL, settings: recorderSetting)
-            audioRecorder?.delegate = self
-            audioRecorder?.isMeteringEnabled = true
-            audioRecorder?.prepareToRecord()
-        } catch {
-            print("audioRecorder error: \(error.localizedDescription)")
-        }
-    }
-    
-    private func checkMicrophoneAccess(completion: @escaping ((Bool)->Void)) {
-        switch AVAudioSession.sharedInstance().recordPermission {
-            
-        case AVAudioSession.RecordPermission.granted:
-            print(#function, " Microphone Permission Granted")
-            completion(true)
-            break
-            
-        case AVAudioSession.RecordPermission.denied:
-            UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
-            completion(false)
-            return
-            
-        case AVAudioSession.RecordPermission.undetermined:
-            UIApplication.shared.sendAction(#selector(UIView.endEditing(_:)), to:nil, from:nil, for:nil)
-            
-            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
-                if granted {
-                    print(#function, " Now Granted")
-                    completion(true)
-                } else {
-                    print("Pemission Not Granted")
-                    completion(false)
-                }
-            })
-        @unknown default:
-            print("ERROR! Unknown Default. Check!")
-        }
-    }
-    
-    private func showNeedsGrantAlert() {
-        let topVC = UIApplication.getMostTopViewController()
-        topVC?.makeAlert(title: "마이크 사용 권한이 필요합니다",
-                         message: "음성 녹음 통해 꿈을 기록하기 위해 마이크 사용 권한에 동의해주세요.")
     }
 }
