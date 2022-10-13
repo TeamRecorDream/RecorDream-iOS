@@ -24,15 +24,11 @@ public class DreamWritePlayerSliderView: UIView {
             let elapsedSecondsInt = Int(self.elapsedTimeSecondsFloat)
             let elapsedTimeText = String(format: "%02d:%02d", elapsedSecondsInt.miniuteDigitInt, elapsedSecondsInt.secondsDigitInt)
             self.currentTimeLabel.text = elapsedTimeText
-            self.progressValue = self.elapsedTimeSecondsFloat / self.totalTimeSecondsFloat
+            self.playSlider.setProgress(Float(self.elapsedTimeSecondsFloat / self.totalTimeSecondsFloat), animated: false)
         }
     }
     
     var totalTimeSecondsFloat: Float64 = 180
-    
-    var progressValue: Float64? {
-        didSet { self.playSlider.value = Float(self.elapsedTimeSecondsFloat / self.totalTimeSecondsFloat) }
-    }
     
     // MARK: - UI Components
     
@@ -44,14 +40,12 @@ public class DreamWritePlayerSliderView: UIView {
         return label
     }()
     
-    private lazy var playSlider: DreamWriteSlider = {
-        let slider = DreamWriteSlider()
-        slider.tintColor = RDDSKitAsset.Colors.purple.color
-        slider.maximumTrackTintColor = RDDSKitAsset.Colors.dark.color
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.setThumbImage(UIImage(), for: .normal)
-        slider.isUserInteractionEnabled = false
-        return slider
+    private lazy var playSlider: UIProgressView = {
+        let pg = UIProgressView()
+        pg.tintColor = RDDSKitAsset.Colors.purple.color
+        pg.trackTintColor = RDDSKitAsset.Colors.dark.color
+        pg.translatesAutoresizingMaskIntoConstraints = false
+        return pg
     }()
     
     private let totalTimeLabel: UILabel = {
@@ -93,7 +87,7 @@ extension DreamWritePlayerSliderView {
         
         playSlider.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.height.equalTo(15.adjustedH)
+            make.height.equalTo(6.adjustedH)
             make.width.equalTo(228.adjusted)
         }
         
