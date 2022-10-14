@@ -17,11 +17,11 @@ import Foundation
 */
 
 public enum Json {
-    static let encoder: JSONEncoder = {
+    public static let encoder: JSONEncoder = {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         return encoder
     }()
     
-    static let decoder = JSONDecoder()
+    public static let decoder = JSONDecoder()
 }

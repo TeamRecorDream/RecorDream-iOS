@@ -1,0 +1,28 @@
+//
+//  AFManager.swift
+//  RD-NetworkTests
+//
+//  Created by Junho Lee on 2022/10/14.
+//  Copyright © 2022 RecorDream. All rights reserved.
+//
+
+import Foundation
+
+import Alamofire
+
+class Managers {
+    
+    static let `default`: Session = {
+        var session = AF
+        let configuration = URLSessionConfiguration.af.default
+        configuration.timeoutIntervalForRequest = NetworkEnvironment.requestTimeOut
+        configuration.timeoutIntervalForResource = NetworkEnvironment.resourceTimeOut
+        let eventLogger = APIEventLogger()
+        let interceptor = AlamoInterceptor()
+        session = Session(configuration: configuration, interceptor: interceptor, eventMonitors: [eventLogger])
+        return session
+    }()
+
+    private init() { }
+}
+

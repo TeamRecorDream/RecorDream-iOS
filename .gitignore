@@ -130,6 +130,8 @@ iOSInjectionProject/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+RecorDream-iOS/Projects/Modules/RD-Network/Sources/Environment/config.swift
+
 Gemfile
 Gemfile.lock
 
