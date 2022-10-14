@@ -18,13 +18,15 @@ enum HeaderType {
 
 enum HTTPHeaderField: String {
     case contentType = "Content-Type"
-    case accesstoken = "token"
-    case refreshtoken = "refreshtoken"
+    case authorization = "Authorization"
+    
+    case access
+    case refresh = "refreshtoken"
 }
 
 enum HeaderContent: String {
     case json = "application/json"
     case multiPart = "multipart/form-data"
-    case accessTokenSerial = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDRlODRmMGZmMmY5MDBlYTg4YmVjMyIsImlhdCI6MTY1ODMyNTUwOCwiZXhwIjoxNjU4NTg0NzA4fQ.ND6-ZIthGE4LRjYtZnWyqc0pJluiUYO_Vb_9gkmETLw"
-    case refreshTokenSerial = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZDRlODRmMGZmMmY5MDBlYTg4YmVjMyIsImlhdCI6MTY1ODMyNTUwOCwiZXhwIjoxNjU4NTg0NzA4fQ.ND6-ZIthGE4LRjYtZnWyqc0pJluiUYO_Vb_9gkmETLw"
+    case accessTokenSerial = "액세스 토큰 스트링"
+    case refreshTokenSerial = "리프레시 토큰 스트링"
 }

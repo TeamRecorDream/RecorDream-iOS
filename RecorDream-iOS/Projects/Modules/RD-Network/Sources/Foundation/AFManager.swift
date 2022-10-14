@@ -26,3 +26,8 @@ class Managers {
     private init() { }
 }
 
+public extension Session {
+    func uploadMultipart(target: BaseRouter) -> UploadRequest {
+        return self.upload(multipartFormData: target.multipart, with: target)
+    }
+}
