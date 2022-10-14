@@ -8,12 +8,12 @@
 
 import Alamofire
 
-protocol RecordService {
+public protocol RecordService {
     
 }
 
-class DefaultRecordService: BaseService {
-    static let shared = DefaultRecordService()
+public class DefaultRecordService: BaseService {
+    public static let shared = DefaultRecordService()
     
     private override init() {}
 }

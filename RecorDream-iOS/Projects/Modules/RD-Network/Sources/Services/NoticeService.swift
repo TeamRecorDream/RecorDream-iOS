@@ -8,12 +8,12 @@
 
 import Alamofire
 
-protocol NoticeService {
+public protocol NoticeService {
     
 }
 
-class DefaultNoticeService: BaseService {
-    static let shared = DefaultNoticeService()
+public class DefaultNoticeService: BaseService {
+    public static let shared = DefaultNoticeService()
     
     private override init() {}
 }

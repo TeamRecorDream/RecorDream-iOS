@@ -13,7 +13,7 @@ import RD_Core
 import Alamofire
 import RxSwift
 
-class BaseService {
+public class BaseService {
     
     let disposeBag = DisposeBag()
     
@@ -23,7 +23,7 @@ class BaseService {
         case general
     }
     
-    var AFManager: Session {
+    public var AFManager: Session {
         return Managers.default
     }
     

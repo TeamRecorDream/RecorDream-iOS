@@ -8,12 +8,12 @@
 
 import Alamofire
 
-protocol AuthService {
+public protocol AuthService {
     
 }
 
-class DefaultAuthService: BaseService {
-    static let shared = DefaultAuthService()
+public class DefaultAuthService: BaseService {
+    public static let shared = DefaultAuthService()
     
     private override init() {}
 }

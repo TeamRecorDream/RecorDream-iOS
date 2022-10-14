@@ -8,12 +8,12 @@
 
 import Alamofire
 
-protocol VoiceService {
+public protocol VoiceService {
     
 }
 
-class DefaultVoiceService: BaseService {
-    static let shared = DefaultVoiceService()
+public class DefaultVoiceService: BaseService {
+    public static let shared = DefaultVoiceService()
     
     private override init() {}
 }
