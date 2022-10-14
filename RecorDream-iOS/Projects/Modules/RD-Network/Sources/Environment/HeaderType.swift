@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum HeaderType {
+public enum HeaderType {
     case `default`
     case withToken
     case multiPart

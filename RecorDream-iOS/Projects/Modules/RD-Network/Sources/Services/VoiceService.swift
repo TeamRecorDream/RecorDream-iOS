@@ -18,7 +18,7 @@ public class DefaultVoiceService: BaseService {
     private override init() {}
 }
 
-extension DefaultVocieService: VoiceService {
+extension DefaultVoiceService: VoiceService {
     
 }
 

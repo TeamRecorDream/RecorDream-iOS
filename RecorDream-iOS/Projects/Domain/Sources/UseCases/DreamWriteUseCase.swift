@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 
 public protocol DreamWriteUseCase {
-    func writeDreamRecord(title: String, date: String, content: String, emotion: Int, genre: [Int], note: String?, voice: URL?)
+    func writeDreamRecord(request: DreamWriteRequestEntity)
     var writeData: PublishSubject<DreamWriteEntity> { get set }
     var writeFail: PublishSubject<Error> { get set }
 }
@@ -30,8 +30,8 @@ public class DefaultDreamWriteUseCase {
 }
 
 extension DefaultDreamWriteUseCase: DreamWriteUseCase {
-    public func writeDreamRecord(title: String, date: String, content: String, emotion: Int, genre: [Int], note: String?, voice: URL?) {
-        self.repository.writeDreamRecord(title: title, date: date, content: content, emotion: emotion, genre: genre, note: note, voice: voice)
+    public func writeDreamRecord(request: DreamWriteRequestEntity) {
+        self.repository.writeDreamRecord(request: request)
             .compactMap { $0 }
             .subscribe(onNext: { [weak self] entity in
             guard let self = self else { return }

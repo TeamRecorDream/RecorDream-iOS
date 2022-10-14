@@ -25,9 +25,9 @@ public class DefaultDreamWriteRepository {
 }
 
 extension DefaultDreamWriteRepository: DreamWriteRepository {
-    public func writeDreamRecord(title: String, date: String, content: String, emotion: Int, genre: [Int], note: String?, voice: URL?) -> Observable<DreamWriteEntity?> {
+    public func writeDreamRecord(request: DreamWriteRequestEntity) -> Observable<DreamWriteEntity?> {
         return Observable.create { observer in
-            self.recordService.writeDreamRecord(title: title, date: date, content: content, emotion: emotion, genre: genre, note: note, voice: voice)
+            self.recordService.writeDreamRecord(title: request.title, date: request.date, content: request.content, emotion: request.emotion, genre: request.genre, note: request.note, voice: request.voice)
                 .subscribe(onNext: { entity in
                     guard let entity = entity else { return observer.onCompleted() }
                     observer.onNext(entity.toDomain())
