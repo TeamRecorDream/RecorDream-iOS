@@ -7,9 +7,12 @@
 //
 
 import Domain
+import RD_Network
 
 import Foundation
 
-struct MyPageDTO {
-
+extension DreamWriteDTO {
+    func toDomain() -> DreamWriteEntity {
+        return .init(userId: self.userId)
+    }
 }

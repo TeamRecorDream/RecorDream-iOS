@@ -8,6 +8,7 @@
 
 import Foundation
 
-struct DreamWriteDTO {
-
+public struct DreamWriteDTO: Codable {
+    public let userId: Int
+    public let content: String
 }
