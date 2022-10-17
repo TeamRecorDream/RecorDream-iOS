@@ -8,16 +8,25 @@
 import UIKit
 
 public extension UITextField {
-     func setLeftPadding(amount: CGFloat) {
-         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-         self.leftView = paddingView
-         self.leftViewMode = .always
-     }
-     func setRightPadding(amount: CGFloat) {
-         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
-         self.rightView = paddingView
-         self.rightViewMode = .always
-     }
+    func setLeftPadding(amount: CGFloat) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.leftView = paddingView
+        self.leftViewMode = .always
+    }
+    func setRightPadding(amount: CGFloat) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.rightView = paddingView
+        self.rightViewMode = .always
+    }
+    func setPlaceholderColor(_ placeholderColor: UIColor) {
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder ?? "",
+            attributes: [
+                .foregroundColor: placeholderColor,
+                .font: font
+            ].compactMapValues { $0 }
+        )
+    }
     
     /// UITextField의 상태를 리턴함
     var isEmpty: Bool {
@@ -32,5 +41,5 @@ public extension UITextField {
         let attributedStr = NSMutableAttributedString(string: self.text ?? "")
         attributedStr.addAttribute(NSAttributedString.Key.kern, value: spacing, range: NSMakeRange(0, attributedStr.length))
         self.attributedText = attributedStr
-     }
- }
+    }
+}

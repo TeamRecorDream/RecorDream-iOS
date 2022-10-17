@@ -111,9 +111,9 @@ public enum RDDSKitAsset {
     public static let listRed = RDDSKitImages(name: "list_red")
     public static let listWhite = RDDSKitImages(name: "list_white")
     public static let listyellow = RDDSKitImages(name: "list_yellow")
-    public static let reHomeRogo = RDDSKitImages(name: "rd_home_rogo")
-    public static let reSplashRogo = RDDSKitImages(name: "rd_splash_rogo")
-    public static let reRogoMark = RDDSKitImages(name: "rdgoro_mark")
+    public static let rdHomeRogo = RDDSKitImages(name: "rd_home_rogo")
+    public static let rdSplashRogo = RDDSKitImages(name: "rd_splash_rogo")
+    public static let rdRogoMark = RDDSKitImages(name: "rdgoro_mark")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
