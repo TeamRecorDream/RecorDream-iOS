@@ -21,8 +21,12 @@ public class DreamWriteInteractionView: UIView {
         case voiceRecord
     }
     
+    public var viewType = InteractionType.date
+    
     private var enabledColor = UIColor.white
     private var disabledColor = UIColor.white.withAlphaComponent(0.4)
+    
+    public var isEnabled = true
     
     // MARK: - UI Components
     
@@ -115,6 +119,7 @@ extension DreamWriteInteractionView {
 extension DreamWriteInteractionView {
     @discardableResult
     public func viewType(_ type: InteractionType) -> Self {
+        self.viewType = type
         switch type {
         case .date:
             self.iconImageView.image = RDDSKitAsset.Images.icnCalendar.image
@@ -131,6 +136,8 @@ extension DreamWriteInteractionView {
     }
     
     public func updateEnabledStatus(_ isEnabled: Bool) {
+        self.isEnabled = isEnabled
+        
         let micImage = isEnabled
         ? RDDSKitAsset.Images.icnMicS.image
         : RDDSKitAsset.Images.icnMic.image

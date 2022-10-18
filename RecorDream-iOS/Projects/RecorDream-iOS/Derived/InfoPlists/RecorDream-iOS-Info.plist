@@ -7,8 +7,12 @@
 		<key>Allow Arbitrary Loads</key>
 		<true/>
 	</dict>
+	<key>Application supports iTunes file sharing</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>레코드림</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -30,6 +34,8 @@
 	</dict>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>kakaokompassauth</string>
@@ -42,6 +48,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>음성을 통해 꿈을 기록하기 위해서는 마이크 이용 권한이 필요합니다.</string>
+	<key>Supports opening documents in place</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<dict>
 		<key>Item 0</key>

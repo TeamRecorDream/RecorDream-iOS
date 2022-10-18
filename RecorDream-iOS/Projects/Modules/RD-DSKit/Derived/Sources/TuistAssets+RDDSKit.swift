@@ -31,6 +31,7 @@ public enum RDDSKitAsset {
     public static let white06 = RDDSKitColors(name: "white06")
   }
   public enum Images {
+    public static let icnMicTitle = RDDSKitImages(name: "icn_mic_title")
     public static let icnEdit = RDDSKitImages(name: "icn_edit")
     public static let icnMypage = RDDSKitImages(name: "icn_mypage")
     public static let backgroundBlue = RDDSKitImages(name: "background_blue")

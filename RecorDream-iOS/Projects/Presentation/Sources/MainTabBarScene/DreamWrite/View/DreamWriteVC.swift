@@ -42,6 +42,16 @@ public class DreamWriteVC: UIViewController {
     private lazy var saveButton = DreamWriteSaveButton()
         .title("저장하기")
     
+    private let backGroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black.withAlphaComponent(0.4)
+        view.isUserInteractionEnabled = false
+        view.alpha = 0
+        return view
+    }()
+    
+    private let recordView = DreamWriteRecordView()
+    
     // MARK: - View Life Cycle
     
     public override func viewDidLoad() {
@@ -52,6 +62,7 @@ public class DreamWriteVC: UIViewController {
         self.registerReusables()
         self.setGesture()
         self.bindViewModels()
+        self.bindViews()
         self.setDataSource()
         self.applySnapshot()
     }
@@ -66,7 +77,8 @@ extension DreamWriteVC {
     }
     
     private func setLayout() {
-        self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton)
+        self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton,
+                              backGroundView, recordView)
         
         dreamWriteCollectionView.snp.makeConstraints { make in
             make.top.equalTo(naviBar.snp.bottom)
@@ -83,6 +95,16 @@ extension DreamWriteVC {
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(88)
             make.bottom.equalToSuperview()
+        }
+        
+        backGroundView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        recordView.snp.updateConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(327.adjustedH)
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
         }
     }
 }
@@ -127,6 +149,14 @@ extension DreamWriteVC {
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
     }
     
+    private func bindViews() {
+        recordView.recordOutput.subscribe(onNext: { [weak self] urlTimeTuple in
+            guard let self = self else { return }
+            self.dismissVoiceRecordView()
+            guard let fileURL = urlTimeTuple?.0,
+                  let totalTime = urlTimeTuple?.1 else { return }
+        }).disposed(by: self.disposeBag)
+    }
 }
 
 
@@ -140,6 +170,16 @@ extension DreamWriteVC {
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
                 mainCell.endEditing.subscribe(onNext: {
                     self.view.endEditing(true)
+                }).disposed(by: self.disposeBag)
+                mainCell.interactionViewTapped.subscribe(onNext: { [weak self] viewType in
+                    guard let self = self else { return }
+                    switch viewType {
+                    case .date:
+                        // TODO: - 날짜 선택 기능 구현
+                        print("구현 예정")
+                    case .voiceRecord:
+                        self.voiceRecordInteractionViewTapped()
+                    }
                 }).disposed(by: self.disposeBag)
                 return mainCell
             case .emotions:
@@ -187,6 +227,43 @@ extension DreamWriteVC {
         snapshot.appendItems([18],toSection: .note)
         dataSource.apply(snapshot, animatingDifferences: false)
         self.view.setNeedsLayout()
+    }
+}
+
+// MARK: - BindCellActions
+
+extension DreamWriteVC {
+    private func voiceRecordInteractionViewTapped() {
+        self.makeTransParentBackground()
+        self.showVoiceRecordView()
+    }
+    
+    private func showVoiceRecordView() {
+        recordView.transform = CGAffineTransform.identity
+        recordView.snp.updateConstraints { make in
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 327.adjustedH)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func makeTransParentBackground() {
+        self.backGroundView.isUserInteractionEnabled = true
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.backGroundView.alpha = 1
+        }
+    }
+    
+    private func dismissVoiceRecordView() {
+        self.backGroundView.isUserInteractionEnabled = false
+        recordView.snp.updateConstraints { make in
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.backGroundView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
     }
 }
 
