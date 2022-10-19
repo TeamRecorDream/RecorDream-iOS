@@ -13,7 +13,7 @@ let spm = SwiftPackageManagerDependencies([
     .remote(url: "https://github.com/ReactiveX/RxSwift.git", requirement: .upToNextMinor(from: "6.5.0")),
     .remote(url: "https://github.com/kakao/kakao-ios-sdk", requirement: .upToNextMinor(from: "2.11.1")),
     .remote(url: "https://github.com/firebase/firebase-ios-sdk.git", requirement: .upToNextMinor(from: "9.6.0")),
-    .remote(url: "https://github.com/EunHee-Jeong/HeeKit.git", requirement:  .revision("main"))
+    .remote(url: "https://github.com/EunHee-Jeong/HeeKit.git", requirement: .revision("304a95e"))
 ])
 
 let dependencies = Dependencies(
