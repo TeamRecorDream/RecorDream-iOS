@@ -145,8 +145,21 @@ extension DreamWriteVC {
     
     private func bindViewModels() {
         let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.viewDidDisappear,
-                                              closeButtonTapped: naviBar.rightButtonTapped.asObservable())
+                                              closeButtonTapped: naviBar.rightButtonTapped.asObservable(),
+                                              saveButtonTapped: saveButton.rx.tap.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        
+        output.showNetworkError
+            .asDriver(onErrorJustReturn: ())
+            .drive(onNext: {
+                // 네트워크 에러 팝업 띄우기
+            }).disposed(by: self.disposeBag)
+        
+        output.writeRequestSuccess
+            .asDriver(onErrorJustReturn: -1)
+            .drive(onNext: {
+                print("레코드를 작성한 유저의 ID는 \($0)입니다.")
+            }).disposed(by: self.disposeBag)
     }
     
     private func bindViews() {

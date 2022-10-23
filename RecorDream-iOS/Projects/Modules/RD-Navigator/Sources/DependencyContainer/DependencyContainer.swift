@@ -8,6 +8,7 @@
 import UIKit
 
 import RD_DSKit
+import RD_Network
 
 typealias Factory = CoordinatorFactoryProtocol & ViewControllerFactory
 typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBarControllerFactory
@@ -40,7 +41,11 @@ open class DependencyContainer {
     
     // MARK: Network services
     
-//    internal lazy var authNetworkServices = AuthNetworkServices(apiManager: self.apiManager)
+    internal lazy var authService = DefaultAuthService.shared
+    internal lazy var recordService = DefaultRecordService.shared
+    internal lazy var noticeService = DefaultNoticeService.shared
+    internal lazy var userService = DefaultUserService.shared
+    internal lazy var voiceService = DefaultVoiceService.shared
     
     // MARK: - Public func
     
