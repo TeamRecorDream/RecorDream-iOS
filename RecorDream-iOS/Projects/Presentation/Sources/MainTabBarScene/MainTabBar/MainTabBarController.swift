@@ -38,9 +38,8 @@ public class MainTabBarController: RDTabBarController {
 
 extension MainTabBarController {
     private func setTabBar() {
-        let homeNVC = makeNavigationController(with: UIViewController())
+        let homeNVC = makeNavigationController(with: HomeVC())
         let storageNVC = makeNavigationController(with: UIViewController())
-        homeNVC.view.backgroundColor = .gray
         storageNVC.view.backgroundColor = .cyan
         
         homeNVC.tabBarItem = UITabBarItem(title: "홈",
@@ -56,6 +55,7 @@ extension MainTabBarController {
             self.rdTabBar.add(items: items)
         }
         self.rdTabBar.tintColor = .white
+        self.navigationController?.isNavigationBarHidden = true
     }
     
     private func makeNavigationController(with vc: UIViewController) -> UINavigationController {
