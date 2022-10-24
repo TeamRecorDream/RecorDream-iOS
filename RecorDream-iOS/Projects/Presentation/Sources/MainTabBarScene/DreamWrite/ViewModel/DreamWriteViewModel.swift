@@ -6,58 +6,76 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
+import Foundation
+
 import Domain
 import RD_Core
 
 import RxSwift
 import RxRelay
 
-public protocol DreamWriteControllable {
-    var viewDidDisappearEvent: PublishRelay<Void> { get }
-    var closeButtonTapped: PublishRelay<Void> { get }
-}
-
-public class DreamWriteViewModel: ViewModelType, DreamWriteControllable {
-    
-    private let useCase: DreamWriteUseCase
-    private let disposeBag = DisposeBag()
+public class DreamWriteViewModel: ViewModelType {
     
     // MARK: - Inputs
     
     public struct Input {
-        let viewDidDisappearEvent: Observable<Bool>
+        let viewDidLoad: Observable<Void>
         let closeButtonTapped: Observable<Void>
-        var saveButtonTapped: Observable<Void>
+        let datePicked: Observable<Void>
+        let voiceRecorded: Observable<URL>
+        let titleTextChanged: Observable<String>
+        let contentTextChanged: Observable<String>
+        let emotionChagned: Observable<Int>
+        let genreListChagned: Observable<[Int]>
+        let noteTextChanged: Observable<String>
+        let saveButtonTapped: Observable<Void>
     }
     
-    // MARK: - Coordinator Protocol
+    // MARK: - Coordinator
     
-    public let viewDidDisappearEvent = PublishRelay<Void>()
     public let closeButtonTapped = PublishRelay<Void>()
+    public let writeRequestSuccess = PublishRelay<Void>()
     
     // MARK: - Outputs
     
     public struct Output {
-        var writeRequestSuccess = PublishRelay<Int>()
-        var showNetworkError = PublishRelay<Void>()
+        var writeButtonEnabled = PublishRelay<Bool>()
+        var showGenreCountCaution = PublishRelay<Bool>()
+        var writeRequestSuccess = PublishRelay<Void>()
     }
     
     // MARK: - Properties
     
-    // mockData입니다
-    let writeRequestEntity = BehaviorRelay<DreamWriteRequestEntity>(value: .init(title: "", date: "", content: "", emotion: 1, genre: [1], note: nil, voice: nil))
+    private let useCase: DreamWriteUseCase
+    private let disposeBag = DisposeBag()
     
-    public init(useCase: DreamWriteUseCase) {
+    public enum DreamWriteViewModelType {
+        case write
+        case modify(postId: String)
+    }
+    
+    private var viewModelType = DreamWriteViewModelType.write
+    
+    // mockData입니다
+    let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: "", date: "", content: "", emotion: 1, genre: [1], note: nil, voice: nil))
+    
+    // MARK: - Initializer
+    
+    public init(useCase: DreamWriteUseCase, viewModelType: DreamWriteViewModelType) {
         self.useCase = useCase
+        self.viewModelType = viewModelType
     }
 }
 
 extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
-        input.viewDidDisappearEvent.subscribe(onNext: { _ in
-            self.viewDidDisappearEvent.accept(())
-        }).disposed(by: disposeBag)
+        
+        if case let .modify(postId) = self.viewModelType {
+            input.viewDidLoad.subscribe(onNext: { _ in
+                self.useCase.fetchDreamRecord(postId: postId)
+            }).disposed(by: disposeBag)
+        }
         
         input.closeButtonTapped.subscribe(onNext: {
             self.closeButtonTapped.accept(())
@@ -65,8 +83,7 @@ extension DreamWriteViewModel {
         
         input.saveButtonTapped.subscribe(onNext: { _ in
             self.useCase.writeDreamRecord(request: self.writeRequestEntity.value)
-        })
-        .disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
         
         self.bindOutput(output: output, disposeBag: disposeBag)
         
@@ -74,17 +91,11 @@ extension DreamWriteViewModel {
     }
     
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
-        let writeRelay = useCase.writeData
-        let writeError = useCase.writeFail
+        let writeRelay = useCase.writeSuccess
         
         writeRelay.subscribe(onNext: { entity in
-            output.writeRequestSuccess.accept(entity.userId)
-        })
-        .disposed(by: self.disposeBag)
-        
-        writeError.subscribe(onNext: { _ in
-            output.showNetworkError.accept(())
-        })
-        .disposed(by: self.disposeBag)
+            self.writeRequestSuccess.accept(())
+            output.writeRequestSuccess.accept(())
+        }).disposed(by: disposeBag)
     }
 }
