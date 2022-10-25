@@ -40,10 +40,6 @@ final class MainTabBarCoordinator: DefaultCoordinator {
     private func showDreamWriteViewController() {
         let dreamWriteVC = self.factory.instantiateDreamWriteVC()
         dreamWriteVC.modalPresentationStyle = .fullScreen
-        dreamWriteVC.viewModel.viewDidDisappearEvent
-            .subscribe(onNext: { [unowned self] in
-                print("뷰 닫힘")
-            }).disposed(by: disposeBag)
         dreamWriteVC.viewModel.closeButtonTapped
             .subscribe(onNext: { [unowned self] in
                 dreamWriteVC.dismiss(animated: true)

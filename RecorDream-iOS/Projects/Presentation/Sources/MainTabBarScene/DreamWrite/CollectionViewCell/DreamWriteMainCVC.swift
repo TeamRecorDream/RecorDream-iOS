@@ -26,6 +26,14 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     var interactionViewTapped = PublishRelay<DreamWriteInteractionView.InteractionType>()
     
+    var titleTextChanged: Observable<String> {
+        return titleTextView.rx.text.orEmpty.asObservable()
+    }
+    
+    var contentTextChanged: Observable<String> {
+        return contentTextView.rx.text.orEmpty.asObservable()
+    }
+    
     // MARK: - UI Components
     
     private let dateInteractionView = DreamWriteInteractionView()

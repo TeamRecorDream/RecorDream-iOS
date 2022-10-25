@@ -12,6 +12,7 @@ import RD_Core
 import RD_DSKit
 
 import RxSwift
+import RxCocoa
 
 public class DreamWriteVC: UIViewController {
     
@@ -21,9 +22,15 @@ public class DreamWriteVC: UIViewController {
     
     public var viewModel: DreamWriteViewModel!
     
-    // TODO: - dataType 프로토콜로 구현하고 수정하기
-    
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
+    
+    private let datePicked = PublishRelay<Void>()
+    private let voiceRecorded = PublishRelay<(URL, CGFloat)>()
+    private let titleTextChanged = PublishRelay<String>()
+    private let contentTextChanged = PublishRelay<String>()
+    private let emotionChagned = PublishRelay<Int?>()
+    private let genreListChagned = PublishRelay<[Int]>()
+    private let noteTextChanged = PublishRelay<String>()
     
     // MARK: - UI Components
     
@@ -144,22 +151,18 @@ extension DreamWriteVC {
 extension DreamWriteVC {
     
     private func bindViewModels() {
-        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.viewDidDisappear,
-                                              closeButtonTapped: naviBar.rightButtonTapped.asObservable(),
-                                              saveButtonTapped: saveButton.rx.tap.asObservable())
+        let input = DreamWriteViewModel.Input(viewDidLoad: self.rx.viewDidLoad.asObservable(),
+                                              closeButtonTapped: self.naviBar.rightButtonTapped.asObservable(),
+                                              datePicked: self.datePicked.asObservable(),
+                                              voiceRecorded: self.voiceRecorded.asObservable(),
+                                              titleTextChanged: self.titleTextChanged.asObservable(),
+                                              contentTextChanged: self.contentTextChanged.asObservable(),
+                                              emotionChagned: self.emotionChagned.asObservable(),
+                                              genreListChagned: self.genreListChagned.asObservable(),
+                                              noteTextChanged: self.noteTextChanged.asObservable(),
+                                              saveButtonTapped: self.saveButton.rx.tap.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
-        output.showNetworkError
-            .asDriver(onErrorJustReturn: ())
-            .drive(onNext: {
-                // 네트워크 에러 팝업 띄우기
-            }).disposed(by: self.disposeBag)
-        
-        output.writeRequestSuccess
-            .asDriver(onErrorJustReturn: -1)
-            .drive(onNext: {
-                print("레코드를 작성한 유저의 ID는 \($0)입니다.")
-            }).disposed(by: self.disposeBag)
     }
     
     private func bindViews() {
@@ -168,6 +171,7 @@ extension DreamWriteVC {
             self.dismissVoiceRecordView()
             guard let fileURL = urlTimeTuple?.0,
                   let totalTime = urlTimeTuple?.1 else { return }
+            self.voiceRecorded.accept((fileURL, totalTime))
         }).disposed(by: self.disposeBag)
     }
 }
@@ -181,6 +185,12 @@ extension DreamWriteVC {
             switch Section.type(indexPath.section) {
             case .main:
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
+                mainCell.titleTextChanged
+                    .bind(to: self.titleTextChanged)
+                    .disposed(by: self.disposeBag)
+                mainCell.contentTextChanged
+                    .bind(to: self.contentTextChanged)
+                    .disposed(by: self.disposeBag)
                 mainCell.endEditing.subscribe(onNext: {
                     self.view.endEditing(true)
                 }).disposed(by: self.disposeBag)
@@ -207,6 +217,9 @@ extension DreamWriteVC {
                 return genresCell
             case .note:
                 guard let noteCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteNoteCVC.className, for: indexPath) as? DreamWriteNoteCVC else { return UICollectionViewCell() }
+                noteCell.noteTextChanged
+                    .bind(to: self.titleTextChanged)
+                    .disposed(by: self.disposeBag)
                 return noteCell
             }
         })
@@ -234,10 +247,10 @@ extension DreamWriteVC {
     func applySnapshot() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
         snapshot.appendSections([.main, .emotions, .genres, .note])
-        snapshot.appendItems([1],toSection: .main)
-        snapshot.appendItems([3,4,5,6,7],toSection: .emotions)
-        snapshot.appendItems([8,9,10,11,12,13,14,15,16,17],toSection: .genres)
-        snapshot.appendItems([18],toSection: .note)
+        snapshot.appendItems([1], toSection: .main)
+        snapshot.appendItems([3,4,5,6,7], toSection: .emotions)
+        snapshot.appendItems([8,9,10,11,12,13,14,15,16,17], toSection: .genres)
+        snapshot.appendItems([18], toSection: .note)
         dataSource.apply(snapshot, animatingDifferences: false)
         self.view.setNeedsLayout()
     }
@@ -292,7 +305,10 @@ extension DreamWriteVC: UICollectionViewDelegate {
                     selectedIndexPath = $0
                 }
             }
-            guard let selected = selectedIndexPath else { return true }
+            self.emotionChagned.accept(indexPath.item)
+            guard let selected = selectedIndexPath else {
+                return true
+            }
             collectionView.deselectItem(at: selected, animated: false)
             return true
         case .genres:
@@ -302,10 +318,24 @@ extension DreamWriteVC: UICollectionViewDelegate {
                     selectedCount += 1
                 }
             }
+            var newSelected: [IndexPath] = collectionView.indexPathsForSelectedItems ?? []
+            newSelected.append(indexPath)
+            self.genreListChagned.accept( newSelected.map { $0.item }.sorted() )
             if selectedCount == 3 {
-                collectionView.deselectItem(at: indexPath, animated: false)
                 return false
             } else { return true }
+        default:
+            return false
+        }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        switch Section.type(indexPath.section) {
+        case .emotions:
+            self.emotionChagned.accept(nil)
+            return true
+        case .genres:
+            return true
         default:
             return false
         }

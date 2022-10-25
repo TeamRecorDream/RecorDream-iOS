@@ -22,10 +22,10 @@ public class DreamWriteViewModel: ViewModelType {
         let viewDidLoad: Observable<Void>
         let closeButtonTapped: Observable<Void>
         let datePicked: Observable<Void>
-        let voiceRecorded: Observable<URL>
+        let voiceRecorded: Observable<(URL, CGFloat)>
         let titleTextChanged: Observable<String>
         let contentTextChanged: Observable<String>
-        let emotionChagned: Observable<Int>
+        let emotionChagned: Observable<Int?>
         let genreListChagned: Observable<[Int]>
         let noteTextChanged: Observable<String>
         let saveButtonTapped: Observable<Void>
@@ -70,12 +70,41 @@ public class DreamWriteViewModel: ViewModelType {
 extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
+        self.bindOutput(output: output, disposeBag: disposeBag)
         
         if case let .modify(postId) = self.viewModelType {
             input.viewDidLoad.subscribe(onNext: { _ in
                 self.useCase.fetchDreamRecord(postId: postId)
             }).disposed(by: disposeBag)
         }
+        
+        input.datePicked.subscribe(onNext: { _ in
+            
+        }).disposed(by: disposeBag)
+        
+        input.voiceRecorded.subscribe(onNext: { _ in
+            
+        }).disposed(by: disposeBag)
+        
+        input.titleTextChanged.subscribe(onNext: { _ in
+            
+        }).disposed(by: disposeBag)
+        
+        input.contentTextChanged.subscribe(onNext: { _ in
+            
+        }).disposed(by: disposeBag)
+        
+        input.emotionChagned.subscribe(onNext: {
+            print($0)
+        }).disposed(by: disposeBag)
+        
+        input.genreListChagned.subscribe(onNext: {
+            print($0)
+        }).disposed(by: disposeBag)
+        
+        input.noteTextChanged.subscribe(onNext: { _ in
+            
+        }).disposed(by: disposeBag)
         
         input.closeButtonTapped.subscribe(onNext: {
             self.closeButtonTapped.accept(())
@@ -84,8 +113,6 @@ extension DreamWriteViewModel {
         input.saveButtonTapped.subscribe(onNext: { _ in
             self.useCase.writeDreamRecord(request: self.writeRequestEntity.value)
         }).disposed(by: disposeBag)
-        
-        self.bindOutput(output: output, disposeBag: disposeBag)
         
         return output
     }

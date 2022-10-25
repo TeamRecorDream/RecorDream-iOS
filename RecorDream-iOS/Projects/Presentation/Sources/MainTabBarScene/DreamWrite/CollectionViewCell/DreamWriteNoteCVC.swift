@@ -20,6 +20,10 @@ final class DreamWriteNoteCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     static var isFromNib: Bool = false
     
+    var noteTextChanged: Observable<String> {
+        return noteTextView.rx.text.orEmpty.asObservable()
+    }
+    
     // MARK: - UI Components
     
     private let noteTextView = DreamWriteTextView()
