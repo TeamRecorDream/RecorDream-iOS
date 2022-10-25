@@ -163,6 +163,10 @@ extension DreamWriteVC {
                                               saveButtonTapped: self.saveButton.rx.tap.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
+        output.writeButtonEnabled
+            .skip(1)
+            .bind(to: self.saveButton.rx.isEnabled)
+            .disposed(by: self.disposeBag)
     }
     
     private func bindViews() {

@@ -96,6 +96,8 @@ extension DreamWriteViewModel {
         
         input.emotionChagned.subscribe(onNext: {
             print($0)
+        input.titleTextChanged.subscribe(onNext: {
+            self.useCase.titleTextValidate(text: $0)
         }).disposed(by: disposeBag)
         
         input.genreListChagned.subscribe(onNext: {
@@ -123,6 +125,11 @@ extension DreamWriteViewModel {
         writeRelay.subscribe(onNext: { entity in
             self.writeRequestSuccess.accept(())
             output.writeRequestSuccess.accept(())
+        }).disposed(by: disposeBag)
+        let writeEnabled = useCase.isWriteEnabled
+        
+        writeEnabled.subscribe(onNext: { status in
+            output.writeButtonEnabled.accept(status)
         }).disposed(by: disposeBag)
     }
 }

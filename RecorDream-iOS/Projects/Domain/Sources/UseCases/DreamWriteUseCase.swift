@@ -14,6 +14,8 @@ public protocol DreamWriteUseCase {
     func writeDreamRecord(request: DreamWriteRequestEntity)
     var writeData: PublishSubject<DreamWriteEntity> { get set }
     var writeFail: PublishSubject<Error> { get set }
+    func titleTextValidate(text: String)
+    var isWriteEnabled: PublishSubject<Bool> { get set }
 }
 
 public class DefaultDreamWriteUseCase {
@@ -23,6 +25,7 @@ public class DefaultDreamWriteUseCase {
     
     public var writeData = PublishSubject<DreamWriteEntity>()
     public var writeFail = PublishSubject<Error>()
+    public var isWriteEnabled = PublishSubject<Bool>()
     
     public init(repository: DreamWriteRepository) {
         self.repository = repository
@@ -31,6 +34,9 @@ public class DefaultDreamWriteUseCase {
 
 extension DefaultDreamWriteUseCase: DreamWriteUseCase {
     public func writeDreamRecord(request: DreamWriteRequestEntity) {
+    public func titleTextValidate(text: String) {
+        self.isWriteEnabled.onNext(text.count > 0)
+    }
         self.repository.writeDreamRecord(request: request)
             .compactMap { $0 }
             .subscribe(onNext: { [weak self] entity in
