@@ -25,7 +25,7 @@ public class DreamWriteVC: UIViewController {
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
     
     private let datePicked = PublishRelay<Void>()
-    private let voiceRecorded = PublishRelay<(URL, CGFloat)>()
+    private let voiceRecorded = PublishRelay<(URL, CGFloat)?>()
     private let titleTextChanged = PublishRelay<String>()
     private let contentTextChanged = PublishRelay<String>()
     private let emotionChagned = PublishRelay<Int?>()
@@ -322,8 +322,11 @@ extension DreamWriteVC: UICollectionViewDelegate {
                     selectedCount += 1
                 }
             }
-            var newSelected: [IndexPath] = collectionView.indexPathsForSelectedItems ?? []
-            newSelected.append(indexPath)
+            var newSelected: Set<IndexPath> = {
+                var selectedSet: Set<IndexPath> = .init(collectionView.indexPathsForSelectedItems ?? [])
+                if selectedSet.count < 3 { selectedSet.insert(indexPath) }
+                return selectedSet
+            }()
             self.genreListChagned.accept( newSelected.map { $0.item }.sorted() )
             if selectedCount == 3 {
                 return false

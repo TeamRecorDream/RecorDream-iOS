@@ -22,7 +22,7 @@ public class DreamWriteViewModel: ViewModelType {
         let viewDidLoad: Observable<Void>
         let closeButtonTapped: Observable<Void>
         let datePicked: Observable<Void>
-        let voiceRecorded: Observable<(URL, CGFloat)>
+        let voiceRecorded: Observable<(URL, CGFloat)?>
         let titleTextChanged: Observable<String>
         let contentTextChanged: Observable<String>
         let emotionChagned: Observable<Int?>
@@ -56,8 +56,7 @@ public class DreamWriteViewModel: ViewModelType {
     
     private var viewModelType = DreamWriteViewModelType.write
     
-    // mockData입니다
-    let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: "", date: "", content: "", emotion: 1, genre: [1], note: nil, voice: nil))
+    let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: [], note: nil, voice: nil))
     
     // MARK: - Initializer
     
@@ -78,34 +77,33 @@ extension DreamWriteViewModel {
             }).disposed(by: disposeBag)
         }
         
-        input.datePicked.subscribe(onNext: { _ in
-            
+        Observable.combineLatest(input.datePicked.startWith(()),
+                                 input.voiceRecorded.startWith(nil),
+                                 input.titleTextChanged.startWith(""),
+                                 input.contentTextChanged.startWith(""),
+                                 input.emotionChagned.startWith(nil),
+                                 input.genreListChagned.startWith([]),
+                                 input.noteTextChanged.startWith(""))
+        .subscribe(onNext: { (_, urlTime, title, content, emotion, genreList, note) in
+            self.writeRequestEntity.accept(DreamWriteRequest.init(title: title,
+                                                                  date: "22.03.01",
+                                                                  content: content,
+                                                                  emotion: emotion,
+                                                                  genre: genreList,
+                                                                  note: note,
+                                                                  voice: urlTime?.0))
         }).disposed(by: disposeBag)
         
         input.voiceRecorded.subscribe(onNext: { _ in
             
         }).disposed(by: disposeBag)
         
-        input.titleTextChanged.subscribe(onNext: { _ in
-            
-        }).disposed(by: disposeBag)
-        
-        input.contentTextChanged.subscribe(onNext: { _ in
-            
-        }).disposed(by: disposeBag)
-        
-        input.emotionChagned.subscribe(onNext: {
-            print($0)
         input.titleTextChanged.subscribe(onNext: {
             self.useCase.titleTextValidate(text: $0)
         }).disposed(by: disposeBag)
         
         input.genreListChagned.subscribe(onNext: {
             print($0)
-        }).disposed(by: disposeBag)
-        
-        input.noteTextChanged.subscribe(onNext: { _ in
-            
         }).disposed(by: disposeBag)
         
         input.closeButtonTapped.subscribe(onNext: {
@@ -126,6 +124,7 @@ extension DreamWriteViewModel {
             self.writeRequestSuccess.accept(())
             output.writeRequestSuccess.accept(())
         }).disposed(by: disposeBag)
+        
         let writeEnabled = useCase.isWriteEnabled
         
         writeEnabled.subscribe(onNext: { status in
