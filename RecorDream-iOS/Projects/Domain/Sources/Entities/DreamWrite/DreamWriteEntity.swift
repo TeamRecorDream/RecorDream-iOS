@@ -1,35 +1,71 @@
 //
 //  DreamWriteEntity.swift
-//  RD-Navigator
+//  Domain
 //
-//  Created by Junho Lee on 2022/09/29.
+//  Created by Junho Lee on 2022/10/26.
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
 import Foundation
 
 public struct DreamWriteEntity {
-    public let userId: Int
+    public let main: Main
+    public let emotions: [Emotion]
+    public let genres: [Genre]
+    public let note: Note
     
-    public init(userId: Int) {
-        self.userId = userId
+    public init(main: Main, emotions: [Emotion], genres: [Genre], note: Note) {
+        self.main = main
+        self.emotions = emotions
+        self.genres = genres
+        self.note = note
     }
 }
 
-public struct DreamWriteRequestEntity {
-    public let title: String
-    public let date: String
-    public let content: String
-    public let emotion: Int
-    public let genre: [Int]
-    public let note: String? = nil
-    public let voice: URL? = nil
-    
-    public init(title: String, date: String, content: String, emotion: Int, genre: [Int], note: String?, voice: URL?) {
-        self.title = title
-        self.date = date
-        self.content = content
-        self.emotion = emotion
-        self.genre = genre
+public extension DreamWriteEntity {
+    struct Main: Hashable {
+        public let titleText: String
+        public let contentText: String
+        public let recordTime: CGFloat?
+        public let date: String?
+        
+        public init(titleText: String, contentText: String, recordTime: CGFloat?, date: String?) {
+            self.titleText = titleText
+            self.contentText = contentText
+            self.recordTime = recordTime
+            self.date = date
+        }
+    }
+}
+
+public extension DreamWriteEntity {
+    struct Emotion: Hashable {
+        let id = UUID()
+        public let isSelected: Bool
+        
+        public init(isSelected: Bool) {
+            self.isSelected = isSelected
+        }
+    }
+}
+
+public extension DreamWriteEntity {
+    struct Genre: Hashable {
+        let id = UUID()
+        public let isSelected: Bool
+        
+        public init(isSelected: Bool) {
+            self.isSelected = isSelected
+        }
+    }
+}
+
+public extension DreamWriteEntity {
+    struct Note: Hashable {
+        public let noteText: String
+        
+        public init(noteText: String) {
+            self.noteText = noteText
+        }
     }
 }

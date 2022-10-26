@@ -56,4 +56,8 @@ extension DreamWriteNoteCVC {
             make.bottom.equalToSuperview().inset(78)
         }
     }
+    
+    public func setData(noteText: String) {
+        self.noteTextView.text = noteText
+    }
 }

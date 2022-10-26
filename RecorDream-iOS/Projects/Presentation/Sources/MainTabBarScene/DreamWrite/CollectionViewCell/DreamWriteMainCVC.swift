@@ -8,6 +8,7 @@
 
 import UIKit
 
+import Domain
 import RD_Core
 import RD_DSKit
 
@@ -107,6 +108,11 @@ extension DreamWriteMainCVC {
         let interactionViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
         dateInteractionView.addGestureRecognizer(interactionViewTapGesture)
         voiceRecordInteractionView.addGestureRecognizer(interactionViewTapGesture)
+    }
+    
+    public func setData(model: DreamWriteEntity.Main) {
+        self.titleTextView.text = model.titleText
+        self.contentTextView.text = model.contentText
     }
     
     @objc

@@ -42,6 +42,7 @@ public class DreamWriteViewModel: ViewModelType {
         var writeButtonEnabled = PublishRelay<Bool>()
         var showGenreCountCaution = PublishRelay<Bool>()
         var writeRequestSuccess = PublishRelay<Void>()
+        var dreamWriteModelFetched = BehaviorRelay<DreamWriteEntity?>(value: nil)
     }
     
     // MARK: - Properties
@@ -118,6 +119,12 @@ extension DreamWriteViewModel {
     }
     
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
+        let fetchedModel = useCase.fetchedRecord
+        
+        fetchedModel.subscribe(onNext: { entity in
+            output.dreamWriteModelFetched.accept(entity)
+        }).disposed(by: disposeBag)
+        
         let writeRelay = useCase.writeSuccess
         
         writeRelay.subscribe(onNext: { entity in
