@@ -46,6 +46,7 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
     public func genreListCautionValidate(genreList: [Int]) {
         self.showCaution.onNext(genreList.count >= 3)
     }
+    
     public func fetchDreamRecord(postId: String) {
         self.fetchedRecord.onNext(.init(main: .init(titleText: "안녕하세요", contentText: "내용입니다", recordTime: 35.0, date: "22.04.03"),
                                         emotions: [.init(isSelected: true),
@@ -64,6 +65,7 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
                                                  .init(isSelected: false),
                                                  .init(isSelected: false)],
                                         note: .init(noteText: "여기다")))
+            self.genreListCautionValidate(genreList: entity.genreList)
     }
     
     public func writeDreamRecord(request: DreamWriteRequest) {

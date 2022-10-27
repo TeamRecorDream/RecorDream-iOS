@@ -59,6 +59,8 @@ public class DreamWriteViewModel: ViewModelType {
     
     let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: [], note: nil, voice: nil))
     
+    var shouldShowWarningForInit: Bool?
+    
     // MARK: - Initializer
     
     public init(useCase: DreamWriteUseCase, viewModelType: DreamWriteViewModelType) {
@@ -123,6 +125,7 @@ extension DreamWriteViewModel {
         let fetchedModel = useCase.fetchedRecord
         
         fetchedModel.subscribe(onNext: { entity in
+            self.shouldShowWarningForInit = entity.shouldeShowWarning
             output.dreamWriteModelFetched.accept(entity)
             self.writeRequestEntity.accept(entity.toRequest())
         }).disposed(by: disposeBag)

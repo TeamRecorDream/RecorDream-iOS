@@ -266,6 +266,9 @@ extension DreamWriteVC {
             case DreamWriteWarningFooter.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
                 self.warningFooter = view
+                if let showWarning = self.viewModel.shouldShowWarningForInit {
+                    self.warningFooter?.shouldShowCaution = showWarning
+                }
                 return view
             case DreamWriteDividerView.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteDividerView.className, for: indexPath) as? DreamWriteDividerView else { return UICollectionReusableView() }

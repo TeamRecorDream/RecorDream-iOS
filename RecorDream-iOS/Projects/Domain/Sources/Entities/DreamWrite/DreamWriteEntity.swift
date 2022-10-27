@@ -20,6 +20,18 @@ public struct DreamWriteEntity {
         self.genres = genres
         self.note = note
     }
+    
+    public var genreList: [Int] {
+        return self.genres.enumerated()
+            .map { ($0.offset, $0.element.isSelected) }
+            .filter { $0.1 == true }
+            .map { $0.0 }
+    }
+    
+    public var shouldeShowWarning: Bool {
+        return genreList.count >= 3
+    }
+    
     public func toRequest() -> DreamWriteRequest {
         let emotionIndex = self.emotions.firstIndex(where: { $0.isSelected })
         
