@@ -24,6 +24,13 @@ public class DreamWriteTextView: UITextView {
         didSet { self.text = placeHolderText }
     }
     
+    public var initText: String? {
+        willSet {
+            self.text = newValue
+            self.textColor = .white
+        }
+    }
+    
     public var endEditing: ControlEvent<Void> {
         return self.rx.didEndEditing
     }

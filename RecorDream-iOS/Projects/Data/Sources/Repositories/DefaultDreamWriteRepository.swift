@@ -27,8 +27,8 @@ public class DefaultDreamWriteRepository {
 extension DefaultDreamWriteRepository: DreamWriteRepository {
     public func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity> {
         return Observable.create { observer in
-            observer.onNext(.init(main: .init(titleText: "안녕하세요", contentText: "내용입니다", recordTime: 35.0, date: "22.04.03"),
-                                  emotions: [.init(isSelected: true),
+            observer.onNext(.init(main: .init(titleText: "안녕하세요", contentText: "내용입니다", recordTime: "01:24", date: "2022-04-03"),
+                                  emotions: [.init(isSelected: false),
                                              .init(isSelected: false),
                                              .init(isSelected: false),
                                              .init(isSelected: true),

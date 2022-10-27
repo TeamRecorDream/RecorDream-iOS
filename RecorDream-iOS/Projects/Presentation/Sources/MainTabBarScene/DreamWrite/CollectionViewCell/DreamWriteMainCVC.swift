@@ -111,8 +111,17 @@ extension DreamWriteMainCVC {
     }
     
     public func setData(model: DreamWriteEntity.Main) {
-        self.titleTextView.text = model.titleText
-        self.contentTextView.text = model.contentText
+        self.titleTextView.initText = model.titleText
+        self.contentTextView.initText = model.contentText
+        
+        self.dateInteractionView.rx
+            .dateUpdated
+            .onNext(model.date)
+        
+        guard let recordTime = model.recordTime else { return }
+        self.voiceRecordInteractionView.rx
+            .recordTimeUpdated
+            .onNext(recordTime)
     }
     
     @objc

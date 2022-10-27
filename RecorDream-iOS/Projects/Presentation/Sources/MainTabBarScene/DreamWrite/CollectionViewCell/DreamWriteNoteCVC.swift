@@ -58,6 +58,6 @@ extension DreamWriteNoteCVC {
     }
     
     public func setData(noteText: String) {
-        self.noteTextView.text = noteText
+        self.noteTextView.initText = noteText
     }
 }

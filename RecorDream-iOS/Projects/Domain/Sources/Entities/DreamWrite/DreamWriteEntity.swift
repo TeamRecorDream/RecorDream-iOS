@@ -49,10 +49,10 @@ public extension DreamWriteEntity {
     struct Main: Hashable {
         public let titleText: String
         public let contentText: String
-        public let recordTime: CGFloat?
+        public let recordTime: String?
         public let date: String
         
-        public init(titleText: String, contentText: String, recordTime: CGFloat?, date: String) {
+        public init(titleText: String, contentText: String, recordTime: String?, date: String) {
             self.titleText = titleText
             self.contentText = contentText
             self.recordTime = recordTime
