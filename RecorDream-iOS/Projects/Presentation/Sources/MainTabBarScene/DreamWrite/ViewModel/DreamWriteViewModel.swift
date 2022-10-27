@@ -92,11 +92,11 @@ extension DreamWriteViewModel {
         
         self.bindOutput(output: output, disposeBag: disposeBag)
         
-        if case let .modify(postId) = self.viewModelType {
-            input.viewDidLoad.subscribe(onNext: { _ in
-                self.useCase.fetchDreamRecord(postId: postId)
-            }).disposed(by: disposeBag)
-        }
+        input.viewDidLoad.subscribe(onNext: { _ in
+            if case let .modify(postId) = self.viewModelType {
+                self.useCase.fetchDreamRecord(recordId: postId)
+            }
+        }).disposed(by: disposeBag)
         
         input.voiceRecorded.subscribe(onNext: { _ in
             
