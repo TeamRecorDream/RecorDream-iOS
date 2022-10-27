@@ -177,6 +177,12 @@ extension DreamWriteVC {
             .subscribe { (strongSelf, entity) in
                 strongSelf.applySnapshot(model: entity)
             }.disposed(by: self.disposeBag)
+        
+        output.showGenreCountCaution
+            .withUnretained(self)
+            .bind { (strongSelf, shouldShow) in
+                strongSelf.warningFooter?.shouldShowCaution = shouldShow
+            }.disposed(by: self.disposeBag)
     }
     
     private func bindViews() {
@@ -354,6 +360,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             return true
         case .genres:
             let selectedList = self.getCurrentGenreList(indexPath: indexPath, insert: true)
+            self.genreListChagned.accept(selectedList)
             if selectedList.count >= 4 {
                 return false
             } else { return true }
@@ -374,6 +381,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
         case .emotions:
             self.emotionChagned.accept(nil)
         case .genres:
+            self.genreListChagned.accept(getCurrentGenreList(indexPath: indexPath))
         default: return
         }
     }

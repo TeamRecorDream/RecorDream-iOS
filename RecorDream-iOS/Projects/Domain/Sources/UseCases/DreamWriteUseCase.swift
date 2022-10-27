@@ -14,9 +14,11 @@ public protocol DreamWriteUseCase {
     func writeDreamRecord(request: DreamWriteRequest)
     func fetchDreamRecord(postId: String)
     func titleTextValidate(text: String)
+    func genreListCautionValidate(genreList: [Int])
     
     var writeSuccess: PublishSubject<Void> { get set }
     var isWriteEnabled: PublishSubject<Bool> { get set }
+    var showCaution: PublishSubject<Bool> { get set }
     var fetchedRecord: PublishSubject<DreamWriteEntity> { get set }
 }
 
@@ -28,6 +30,7 @@ public class DefaultDreamWriteUseCase {
     public var writeSuccess = PublishSubject<Void>()
     public var writeFail = PublishSubject<Error>()
     public var isWriteEnabled = PublishSubject<Bool>()
+    public var showCaution = PublishSubject<Bool>()
     public var fetchedRecord = PublishSubject<DreamWriteEntity>()
     
     public init(repository: DreamWriteRepository) {
@@ -40,6 +43,9 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         self.isWriteEnabled.onNext(text.count > 0)
     }
     
+    public func genreListCautionValidate(genreList: [Int]) {
+        self.showCaution.onNext(genreList.count >= 3)
+    }
     public func fetchDreamRecord(postId: String) {
         self.fetchedRecord.onNext(.init(main: .init(titleText: "안녕하세요", contentText: "내용입니다", recordTime: 35.0, date: "22.04.03"),
                                         emotions: [.init(isSelected: true),
