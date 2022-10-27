@@ -47,6 +47,8 @@ public class DreamWriteVC: UIViewController {
         return cv
     }()
     
+    private var warningFooter: DreamWriteWarningFooter?
+    
     private lazy var saveButton = DreamWriteSaveButton()
         .title("저장하기")
     
@@ -138,7 +140,7 @@ extension DreamWriteVC {
     private func setGesture() {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:))))
     }
-
+    
     @objc func handleTap(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             view.endEditing(true)
@@ -223,7 +225,7 @@ extension DreamWriteVC {
             case .emotions:
                 guard let emotionsCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
                 emotionsCell.setData(selectedImage: Section.emotionImages[indexPath.row],
-                                 deselectedImage: Section.emotionDeselectedImages[indexPath.row],
+                                     deselectedImage: Section.emotionDeselectedImages[indexPath.row],
                                      text: Section.emotionTitles[indexPath.row])
                 if let model = itemIdentifier as? DreamWriteEntity.Emotion {
                     if model.isSelected { collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally) }
@@ -257,6 +259,7 @@ extension DreamWriteVC {
                 return view
             case DreamWriteWarningFooter.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
+                self.warningFooter = view
                 return view
             case DreamWriteDividerView.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteDividerView.className, for: indexPath) as? DreamWriteDividerView else { return UICollectionReusableView() }
@@ -286,6 +289,13 @@ extension DreamWriteVC {
         snapshot.appendItems([model.note], toSection: .note)
         dataSource.apply(snapshot, animatingDifferences: false)
         self.view.setNeedsLayout()
+    }
+    
+    private func getSelectedGenresCount() -> Int {
+        guard let currentSnapshot = self.dataSource.snapshot(for: .genres).items as? [DreamWriteEntity.Genre] else { return 0 }
+        return currentSnapshot
+            .filter { $0.isSelected }
+            .count
     }
 }
 
@@ -333,11 +343,9 @@ extension DreamWriteVC: UICollectionViewDelegate {
         switch Section.type(indexPath.section) {
         case .emotions:
             var selectedIndexPath: IndexPath? = nil
-            collectionView.indexPathsForSelectedItems?.forEach {
-                if $0.section == indexPath.section {
-                    selectedIndexPath = $0
-                }
-            }
+            selectedIndexPath = collectionView
+                .indexPathsForSelectedItems?
+                .first { $0.section == indexPath.section }
             self.emotionChagned.accept(indexPath.item)
             guard let selected = selectedIndexPath else {
                 return true
@@ -345,35 +353,38 @@ extension DreamWriteVC: UICollectionViewDelegate {
             collectionView.deselectItem(at: selected, animated: false)
             return true
         case .genres:
-            var selectedCount = 0
-            collectionView.indexPathsForSelectedItems?.forEach {
-                if $0.section == indexPath.section {
-                    selectedCount += 1
-                }
-            }
-            let newSelected: Set<IndexPath> = {
-                var selectedSet: Set<IndexPath> = .init(collectionView.indexPathsForSelectedItems ?? [])
-                if selectedSet.count < 3 { selectedSet.insert(indexPath) }
-                return selectedSet
-            }()
-            self.genreListChagned.accept( newSelected.map { $0.item }.sorted() )
-            if selectedCount == 3 {
+            let selectedList = self.getCurrentGenreList(indexPath: indexPath, insert: true)
+            if selectedList.count >= 4 {
                 return false
             } else { return true }
-        default:
-            return false
+        default: return false
         }
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         switch Section.type(indexPath.section) {
+        case .emotions, .genres:
+            return true
+        default: return false
+        }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        switch Section.type(indexPath.section) {
         case .emotions:
             self.emotionChagned.accept(nil)
-            return true
         case .genres:
-            return true
-        default:
-            return false
+        default: return
         }
+    }
+    
+    private func getCurrentGenreList(indexPath: IndexPath, insert: Bool = false) -> [Int] {
+        var selectedSet: Set<IndexPath> = .init(self.dreamWriteCollectionView
+            .indexPathsForSelectedItems?
+            .filter { $0.section == indexPath.section } ?? [])
+        if insert == true { selectedSet.insert(indexPath) }
+        return selectedSet
+            .map { $0.item }
+            .sorted()
     }
 }

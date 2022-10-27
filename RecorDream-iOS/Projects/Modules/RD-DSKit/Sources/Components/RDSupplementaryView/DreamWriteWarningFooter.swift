@@ -16,6 +16,10 @@ public class DreamWriteWarningFooter: UICollectionReusableView, UICollectionReus
     
     public static var isFromNib: Bool = false
     
+    public var shouldShowCaution = false {
+        willSet { self.warningLabel.isHidden = !newValue }
+    }
+    
     // MARK: - UI Components
     
     private let warningLabel: UILabel = {
@@ -24,6 +28,7 @@ public class DreamWriteWarningFooter: UICollectionReusableView, UICollectionReus
         label.textColor = RDDSKitAsset.Colors.red.color
         label.text = "!꿈의 장르는 최대 3개까지만 선택할 수 있어요"
         label.sizeToFit()
+        label.isHidden = true
         return label
     }()
     
