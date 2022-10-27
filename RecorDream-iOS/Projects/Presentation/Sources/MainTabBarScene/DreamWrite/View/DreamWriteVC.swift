@@ -278,7 +278,6 @@ extension DreamWriteVC {
     }
     
     private func applySnapshot(model: DreamWriteEntity) {
-        print(model, "여기도 보자")
         var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
         snapshot.appendSections([.main, .emotions, .genres, .note])
         snapshot.appendItems([model.main], toSection: .main)

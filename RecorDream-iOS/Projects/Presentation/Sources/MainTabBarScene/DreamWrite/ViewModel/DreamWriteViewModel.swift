@@ -70,13 +70,6 @@ public class DreamWriteViewModel: ViewModelType {
 extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
-        self.bindOutput(output: output, disposeBag: disposeBag)
-        
-        if case let .modify(postId) = self.viewModelType {
-            input.viewDidLoad.subscribe(onNext: { _ in
-                self.useCase.fetchDreamRecord(postId: postId)
-            }).disposed(by: disposeBag)
-        }
         
         Observable.combineLatest(input.datePicked.startWith(()),
                                  input.voiceRecorded.startWith(nil),
@@ -94,6 +87,14 @@ extension DreamWriteViewModel {
                                                                   note: note,
                                                                   voice: urlTime?.0))
         }).disposed(by: disposeBag)
+        
+        self.bindOutput(output: output, disposeBag: disposeBag)
+        
+        if case let .modify(postId) = self.viewModelType {
+            input.viewDidLoad.subscribe(onNext: { _ in
+                self.useCase.fetchDreamRecord(postId: postId)
+            }).disposed(by: disposeBag)
+        }
         
         input.voiceRecorded.subscribe(onNext: { _ in
             
@@ -123,6 +124,7 @@ extension DreamWriteViewModel {
         
         fetchedModel.subscribe(onNext: { entity in
             output.dreamWriteModelFetched.accept(entity)
+            self.writeRequestEntity.accept(entity.toRequest())
         }).disposed(by: disposeBag)
         
         let writeRelay = useCase.writeSuccess

@@ -20,6 +20,17 @@ public struct DreamWriteEntity {
         self.genres = genres
         self.note = note
     }
+    public func toRequest() -> DreamWriteRequest {
+        let emotionIndex = self.emotions.firstIndex(where: { $0.isSelected })
+        
+        return DreamWriteRequest.init(title: self.main.titleText,
+                                      date: self.main.date,
+                                      content: self.main.contentText,
+                                      emotion: emotionIndex,
+                                      genre: self.genreList,
+                                      note: self.note.noteText,
+                                      voice: nil)
+    }
 }
 
 public extension DreamWriteEntity {
@@ -27,9 +38,9 @@ public extension DreamWriteEntity {
         public let titleText: String
         public let contentText: String
         public let recordTime: CGFloat?
-        public let date: String?
+        public let date: String
         
-        public init(titleText: String, contentText: String, recordTime: CGFloat?, date: String?) {
+        public init(titleText: String, contentText: String, recordTime: CGFloat?, date: String) {
             self.titleText = titleText
             self.contentText = contentText
             self.recordTime = recordTime
