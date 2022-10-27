@@ -39,7 +39,8 @@ public class DefaultDreamWriteUseCase {
 
 extension DefaultDreamWriteUseCase: DreamWriteUseCase {
     public func titleTextValidate(text: String) {
-        self.isWriteEnabled.onNext(text.count > 0)
+        let existDistinctTitle = (text.count > 0 && text != "꿈의 제목을 남겨주세요")
+        self.isWriteEnabled.onNext(existDistinctTitle)
     }
     
     public func genreListCautionValidate(genreList: [Int]) {

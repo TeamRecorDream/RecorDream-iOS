@@ -21,10 +21,6 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     static var isFromNib: Bool = false
     
-    var endEditing: Observable<Void> {
-        return Observable<Void>.merge([titleTextView.endEditing.asObservable(), contentTextView.endEditing.asObservable()])
-    }
-    
     var interactionViewTapped = PublishRelay<DreamWriteInteractionView.InteractionType>()
     
     var titleTextChanged: Observable<String> {

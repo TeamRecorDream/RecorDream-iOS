@@ -38,7 +38,7 @@ final class MainTabBarCoordinator: DefaultCoordinator {
     
     /// DreamWriteVC를 present 형식으로 띄웁니다. DreamWriteVC가 화면에서 해제된 경우를 구독합니다.
     private func showDreamWriteViewController() {
-        let dreamWriteVC = self.factory.instantiateDreamWriteVC(.modify(postId: ""))
+        let dreamWriteVC = self.factory.instantiateDreamWriteVC(.write)
         dreamWriteVC.modalPresentationStyle = .fullScreen
         dreamWriteVC.viewModel.closeButtonTapped
             .subscribe(onNext: { [unowned self] in

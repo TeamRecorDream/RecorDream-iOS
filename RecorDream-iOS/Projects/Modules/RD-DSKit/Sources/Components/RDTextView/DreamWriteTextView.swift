@@ -31,10 +31,6 @@ public class DreamWriteTextView: UITextView {
         }
     }
     
-    public var endEditing: ControlEvent<Void> {
-        return self.rx.didEndEditing
-    }
-    
     // MARK: - Life Cycles
     
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
@@ -82,7 +78,6 @@ extension DreamWriteTextView {
                     self.text = self.placeHolderText
                     self.textColor = .white.withAlphaComponent(0.4)
                 }
-                self.endEditing(true)
             }).disposed(by: disposeBag)
     }
     

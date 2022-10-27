@@ -214,9 +214,6 @@ extension DreamWriteVC {
                 mainCell.contentTextChanged
                     .bind(to: self.contentTextChanged)
                     .disposed(by: self.disposeBag)
-                mainCell.endEditing.subscribe(onNext: {
-                    self.view.endEditing(true)
-                }).disposed(by: self.disposeBag)
                 mainCell.interactionViewTapped.subscribe(onNext: { [weak self] viewType in
                     guard let self = self else { return }
                     switch viewType {
