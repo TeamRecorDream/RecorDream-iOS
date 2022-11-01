@@ -47,6 +47,7 @@ public extension SettingsDictionary {
     func setCodeSignManual() -> SettingsDictionary {
         merging(["CODE_SIGN_STYLE": SettingValue(stringLiteral: "Manual")])
             .merging(["DEVELOPMENT_TEAM": SettingValue(stringLiteral: "FY8N9XTH66")])
+            .merging(["CODE_SIGN_ENTITLEMENTS": SettingValue(stringLiteral: "RecorDream-iOS.entitlements")])
     }
     
     func setProvisioningDevelopment() -> SettingsDictionary {

@@ -99,7 +99,8 @@ public extension Project {
         "NSMicrophoneUsageDescription": "음성을 통해 꿈을 기록하기 위해서는 마이크 이용 권한이 필요합니다.",
         "Supports opening documents in place": true,
         "Application supports iTunes file sharing": true,
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": ["fetch", "remote-notification"]
     ]
 }
 
