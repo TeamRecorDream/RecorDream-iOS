@@ -12,7 +12,7 @@ import RD_Network
 import Foundation
 
 extension DreamWriteResponse {
-    func toDomain() -> DreamWriteEntity {
-        return .init(userId: self.userId)
+    func toDomain() -> DreamWriteRequest? {
+        return nil
     }
 }

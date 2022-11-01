@@ -24,8 +24,11 @@ public class DreamWriteTextView: UITextView {
         didSet { self.text = placeHolderText }
     }
     
-    public var endEditing: ControlEvent<Void> {
-        return self.rx.didEndEditing
+    public var initText: String? {
+        willSet {
+            self.text = newValue
+            self.textColor = .white
+        }
     }
     
     // MARK: - Life Cycles
@@ -75,7 +78,6 @@ extension DreamWriteTextView {
                     self.text = self.placeHolderText
                     self.textColor = .white.withAlphaComponent(0.4)
                 }
-                self.endEditing(true)
             }).disposed(by: disposeBag)
     }
     

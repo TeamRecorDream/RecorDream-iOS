@@ -151,12 +151,29 @@ extension DreamWriteInteractionView {
         : RDDSKitAsset.Images.icnRdVoiceDisabled.image
         buttonImageView.image = recordImage
     }
+    
+    public func updateDataLabel(data: String) {
+        self.dataLabel.text = data
+    }
 }
 
 extension Reactive where Base: DreamWriteInteractionView {
     public var isInteractionEnabled: Binder<Bool> {
         return Binder(base) { view, isEnabled in
             view.updateEnabledStatus(isEnabled)
+        }
+    }
+    
+    public var recordTimeUpdated: Binder<String> {
+        return Binder(base) { view, recordTime in
+            view.updateEnabledStatus(false)
+            view.updateDataLabel(data: recordTime)
+        }
+    }
+    
+    public var dateUpdated: Binder<String> {
+        return Binder(base) { view, date in
+            view.updateDataLabel(data: date)
         }
     }
 }

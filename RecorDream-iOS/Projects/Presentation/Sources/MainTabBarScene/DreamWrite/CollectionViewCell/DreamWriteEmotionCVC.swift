@@ -18,9 +18,7 @@ final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegister
     static var isFromNib: Bool = false
     
     override var isSelected: Bool {
-        didSet {
-            self.updateUI()
-        }
+        didSet { self.updateUI() }
     }
     
     private let selectedColor = UIColor.white

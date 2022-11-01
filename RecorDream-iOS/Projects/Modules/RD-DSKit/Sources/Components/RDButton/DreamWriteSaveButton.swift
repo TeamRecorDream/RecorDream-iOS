@@ -8,6 +8,8 @@
 
 import UIKit
 
+import RxSwift
+import RxCocoa
 import SnapKit
 
 public class DreamWriteSaveButton: UIButton {
@@ -86,5 +88,13 @@ extension DreamWriteSaveButton {
     public func title(_ title: String) -> Self {
         self.customTitleLabel.text = title
         return self
+    }
+}
+
+extension Reactive where Base: DreamWriteSaveButton {
+    public var isEnabled: Binder<Bool> {
+        return Binder(base) { bt, isEnabled in
+            bt.isEnabled = isEnabled
+        }
     }
 }

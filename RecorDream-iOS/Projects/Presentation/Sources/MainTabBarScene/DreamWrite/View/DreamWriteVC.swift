@@ -8,10 +8,12 @@
 
 import UIKit
 
+import Domain
 import RD_Core
 import RD_DSKit
 
 import RxSwift
+import RxCocoa
 
 public class DreamWriteVC: UIViewController {
     
@@ -21,9 +23,15 @@ public class DreamWriteVC: UIViewController {
     
     public var viewModel: DreamWriteViewModel!
     
-    // TODO: - dataType 프로토콜로 구현하고 수정하기
+    lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
-    lazy var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
+    private let datePicked = PublishRelay<Void>()
+    private let voiceRecorded = PublishRelay<(URL, CGFloat)?>()
+    private let titleTextChanged = PublishRelay<String>()
+    private let contentTextChanged = PublishRelay<String>()
+    private let emotionChagned = PublishRelay<Int?>()
+    private let genreListChagned = PublishRelay<[Int]>()
+    private let noteTextChanged = PublishRelay<String>()
     
     // MARK: - UI Components
     
@@ -38,6 +46,8 @@ public class DreamWriteVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
+    
+    private var warningFooter: DreamWriteWarningFooter?
     
     private lazy var saveButton = DreamWriteSaveButton()
         .title("저장하기")
@@ -61,10 +71,10 @@ public class DreamWriteVC: UIViewController {
         self.setDelegate()
         self.registerReusables()
         self.setGesture()
-        self.bindViewModels()
-        self.bindViews()
         self.setDataSource()
         self.applySnapshot()
+        self.bindViewModels()
+        self.bindViews()
     }
 }
 
@@ -130,7 +140,7 @@ extension DreamWriteVC {
     private func setGesture() {
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:))))
     }
-
+    
     @objc func handleTap(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             view.endEditing(true)
@@ -144,22 +154,35 @@ extension DreamWriteVC {
 extension DreamWriteVC {
     
     private func bindViewModels() {
-        let input = DreamWriteViewModel.Input(viewDidDisappearEvent: self.rx.viewDidDisappear,
-                                              closeButtonTapped: naviBar.rightButtonTapped.asObservable(),
-                                              saveButtonTapped: saveButton.rx.tap.asObservable())
+        let input = DreamWriteViewModel.Input(viewDidLoad: Observable.just(()),
+                                              closeButtonTapped: self.naviBar.rightButtonTapped.asObservable(),
+                                              datePicked: self.datePicked.asObservable(),
+                                              voiceRecorded: self.voiceRecorded.asObservable(),
+                                              titleTextChanged: self.titleTextChanged.asObservable(),
+                                              contentTextChanged: self.contentTextChanged.asObservable(),
+                                              emotionChagned: self.emotionChagned.asObservable(),
+                                              genreListChagned: self.genreListChagned.asObservable(),
+                                              noteTextChanged: self.noteTextChanged.asObservable(),
+                                              saveButtonTapped: self.saveButton.rx.tap.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
-        output.showNetworkError
-            .asDriver(onErrorJustReturn: ())
-            .drive(onNext: {
-                // 네트워크 에러 팝업 띄우기
-            }).disposed(by: self.disposeBag)
+        output.writeButtonEnabled
+            .skip(1)
+            .bind(to: self.saveButton.rx.isEnabled)
+            .disposed(by: self.disposeBag)
         
-        output.writeRequestSuccess
-            .asDriver(onErrorJustReturn: -1)
-            .drive(onNext: {
-                print("레코드를 작성한 유저의 ID는 \($0)입니다.")
-            }).disposed(by: self.disposeBag)
+        output.dreamWriteModelFetched
+            .compactMap { $0 }
+            .withUnretained(self)
+            .subscribe { (strongSelf, entity) in
+                strongSelf.applySnapshot(model: entity)
+            }.disposed(by: self.disposeBag)
+        
+        output.showGenreCountCaution
+            .withUnretained(self)
+            .bind { (strongSelf, shouldShow) in
+                strongSelf.warningFooter?.shouldShowCaution = shouldShow
+            }.disposed(by: self.disposeBag)
     }
     
     private func bindViews() {
@@ -168,6 +191,7 @@ extension DreamWriteVC {
             self.dismissVoiceRecordView()
             guard let fileURL = urlTimeTuple?.0,
                   let totalTime = urlTimeTuple?.1 else { return }
+            self.voiceRecorded.accept((fileURL, totalTime))
         }).disposed(by: self.disposeBag)
     }
 }
@@ -177,13 +201,19 @@ extension DreamWriteVC {
 
 extension DreamWriteVC {
     private func setDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Int>(collectionView: dreamWriteCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(collectionView: dreamWriteCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             switch Section.type(indexPath.section) {
             case .main:
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
-                mainCell.endEditing.subscribe(onNext: {
-                    self.view.endEditing(true)
-                }).disposed(by: self.disposeBag)
+                if let model = itemIdentifier as? DreamWriteEntity.Main {
+                    mainCell.setData(model: model)
+                }
+                mainCell.titleTextChanged
+                    .bind(to: self.titleTextChanged)
+                    .disposed(by: self.disposeBag)
+                mainCell.contentTextChanged
+                    .bind(to: self.contentTextChanged)
+                    .disposed(by: self.disposeBag)
                 mainCell.interactionViewTapped.subscribe(onNext: { [weak self] viewType in
                     guard let self = self else { return }
                     switch viewType {
@@ -198,15 +228,27 @@ extension DreamWriteVC {
             case .emotions:
                 guard let emotionsCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.className, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
                 emotionsCell.setData(selectedImage: Section.emotionImages[indexPath.row],
-                                 deselectedImage: Section.emotionDeselectedImages[indexPath.row],
-                                 text: Section.emotionTitles[indexPath.row])
+                                     deselectedImage: Section.emotionDeselectedImages[indexPath.row],
+                                     text: Section.emotionTitles[indexPath.row])
+                if let model = itemIdentifier as? DreamWriteEntity.Emotion {
+                    if model.isSelected { collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally) }
+                }
                 return emotionsCell
             case .genres:
                 guard let genresCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteGenreCVC.className, for: indexPath) as? DreamWriteGenreCVC else { return UICollectionViewCell() }
                 genresCell.setData(text: Section.genreTitles[indexPath.row])
+                if let model = itemIdentifier as? DreamWriteEntity.Genre {
+                    if model.isSelected { collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally) }
+                }
                 return genresCell
             case .note:
                 guard let noteCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteNoteCVC.className, for: indexPath) as? DreamWriteNoteCVC else { return UICollectionViewCell() }
+                if let model = itemIdentifier as? DreamWriteEntity.Note {
+                    noteCell.setData(noteText: model.noteText)
+                }
+                noteCell.noteTextChanged
+                    .bind(to: self.titleTextChanged)
+                    .disposed(by: self.disposeBag)
                 return noteCell
             }
         })
@@ -220,6 +262,10 @@ extension DreamWriteVC {
                 return view
             case DreamWriteWarningFooter.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
+                self.warningFooter = view
+                if let showWarning = self.viewModel.shouldShowWarningForInit {
+                    self.warningFooter?.shouldShowCaution = showWarning
+                }
                 return view
             case DreamWriteDividerView.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteDividerView.className, for: indexPath) as? DreamWriteDividerView else { return UICollectionReusableView() }
@@ -229,17 +275,33 @@ extension DreamWriteVC {
         }
     }
     
-    // TODO: - 기록하기용 SnapShot과 수정하기용 SnapShot 구분하기
-    
-    func applySnapshot() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
+    private func applySnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
         snapshot.appendSections([.main, .emotions, .genres, .note])
-        snapshot.appendItems([1],toSection: .main)
-        snapshot.appendItems([3,4,5,6,7],toSection: .emotions)
-        snapshot.appendItems([8,9,10,11,12,13,14,15,16,17],toSection: .genres)
-        snapshot.appendItems([18],toSection: .note)
+        snapshot.appendItems([1], toSection: .main)
+        snapshot.appendItems([3,4,5,6,7], toSection: .emotions)
+        snapshot.appendItems([8,9,10,11,12,13,14,15,16,17], toSection: .genres)
+        snapshot.appendItems([18], toSection: .note)
         dataSource.apply(snapshot, animatingDifferences: false)
         self.view.setNeedsLayout()
+    }
+    
+    private func applySnapshot(model: DreamWriteEntity) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
+        snapshot.appendSections([.main, .emotions, .genres, .note])
+        snapshot.appendItems([model.main], toSection: .main)
+        snapshot.appendItems(model.emotions, toSection: .emotions)
+        snapshot.appendItems(model.genres, toSection: .genres)
+        snapshot.appendItems([model.note], toSection: .note)
+        dataSource.apply(snapshot, animatingDifferences: false)
+        self.view.setNeedsLayout()
+    }
+    
+    private func getSelectedGenresCount() -> Int {
+        guard let currentSnapshot = self.dataSource.snapshot(for: .genres).items as? [DreamWriteEntity.Genre] else { return 0 }
+        return currentSnapshot
+            .filter { $0.isSelected }
+            .count
     }
 }
 
@@ -287,27 +349,50 @@ extension DreamWriteVC: UICollectionViewDelegate {
         switch Section.type(indexPath.section) {
         case .emotions:
             var selectedIndexPath: IndexPath? = nil
-            collectionView.indexPathsForSelectedItems?.forEach {
-                if $0.section == indexPath.section {
-                    selectedIndexPath = $0
-                }
+            selectedIndexPath = collectionView
+                .indexPathsForSelectedItems?
+                .first { $0.section == indexPath.section }
+            self.emotionChagned.accept(indexPath.item)
+            guard let selected = selectedIndexPath else {
+                return true
             }
-            guard let selected = selectedIndexPath else { return true }
             collectionView.deselectItem(at: selected, animated: false)
             return true
         case .genres:
-            var selectedCount = 0
-            collectionView.indexPathsForSelectedItems?.forEach {
-                if $0.section == indexPath.section {
-                    selectedCount += 1
-                }
-            }
-            if selectedCount == 3 {
-                collectionView.deselectItem(at: indexPath, animated: false)
+            let selectedList = self.getCurrentGenreList(indexPath: indexPath, insert: true)
+            self.genreListChagned.accept(selectedList)
+            if selectedList.count >= 4 {
                 return false
             } else { return true }
-        default:
-            return false
+        default: return false
         }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        switch Section.type(indexPath.section) {
+        case .emotions, .genres:
+            return true
+        default: return false
+        }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        switch Section.type(indexPath.section) {
+        case .emotions:
+            self.emotionChagned.accept(nil)
+        case .genres:
+            self.genreListChagned.accept(getCurrentGenreList(indexPath: indexPath))
+        default: return
+        }
+    }
+    
+    private func getCurrentGenreList(indexPath: IndexPath, insert: Bool = false) -> [Int] {
+        var selectedSet: Set<IndexPath> = .init(self.dreamWriteCollectionView
+            .indexPathsForSelectedItems?
+            .filter { $0.section == indexPath.section } ?? [])
+        if insert == true { selectedSet.insert(indexPath) }
+        return selectedSet
+            .map { $0.item }
+            .sorted()
     }
 }

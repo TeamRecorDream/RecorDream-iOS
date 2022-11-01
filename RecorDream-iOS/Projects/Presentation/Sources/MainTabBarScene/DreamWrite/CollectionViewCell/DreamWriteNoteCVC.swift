@@ -20,6 +20,10 @@ final class DreamWriteNoteCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     static var isFromNib: Bool = false
     
+    var noteTextChanged: Observable<String> {
+        return noteTextView.rx.text.orEmpty.asObservable()
+    }
+    
     // MARK: - UI Components
     
     private let noteTextView = DreamWriteTextView()
@@ -51,5 +55,9 @@ extension DreamWriteNoteCVC {
             make.height.equalTo(240)
             make.bottom.equalToSuperview().inset(78)
         }
+    }
+    
+    public func setData(noteText: String) {
+        self.noteTextView.initText = noteText
     }
 }

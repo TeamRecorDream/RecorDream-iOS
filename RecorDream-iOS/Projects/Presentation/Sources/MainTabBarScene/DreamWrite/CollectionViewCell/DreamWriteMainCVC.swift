@@ -8,6 +8,7 @@
 
 import UIKit
 
+import Domain
 import RD_Core
 import RD_DSKit
 
@@ -20,11 +21,15 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     static var isFromNib: Bool = false
     
-    var endEditing: Observable<Void> {
-        return Observable<Void>.merge([titleTextView.endEditing.asObservable(), contentTextView.endEditing.asObservable()])
+    var interactionViewTapped = PublishRelay<DreamWriteInteractionView.InteractionType>()
+    
+    var titleTextChanged: Observable<String> {
+        return titleTextView.rx.text.orEmpty.asObservable()
     }
     
-    var interactionViewTapped = PublishRelay<DreamWriteInteractionView.InteractionType>()
+    var contentTextChanged: Observable<String> {
+        return contentTextView.rx.text.orEmpty.asObservable()
+    }
     
     // MARK: - UI Components
     
@@ -99,6 +104,20 @@ extension DreamWriteMainCVC {
         let interactionViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
         dateInteractionView.addGestureRecognizer(interactionViewTapGesture)
         voiceRecordInteractionView.addGestureRecognizer(interactionViewTapGesture)
+    }
+    
+    public func setData(model: DreamWriteEntity.Main) {
+        self.titleTextView.initText = model.titleText
+        self.contentTextView.initText = model.contentText
+        
+        self.dateInteractionView.rx
+            .dateUpdated
+            .onNext(model.date)
+        
+        guard let recordTime = model.recordTime else { return }
+        self.voiceRecordInteractionView.rx
+            .recordTimeUpdated
+            .onNext(recordTime)
     }
     
     @objc

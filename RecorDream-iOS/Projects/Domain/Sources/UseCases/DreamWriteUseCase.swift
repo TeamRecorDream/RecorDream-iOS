@@ -11,9 +11,15 @@ import Foundation
 import RxSwift
 
 public protocol DreamWriteUseCase {
-    func writeDreamRecord(request: DreamWriteRequestEntity)
-    var writeData: PublishSubject<DreamWriteEntity> { get set }
-    var writeFail: PublishSubject<Error> { get set }
+    func writeDreamRecord(request: DreamWriteRequest)
+    func fetchDreamRecord(recordId: String)
+    func titleTextValidate(text: String)
+    func genreListCautionValidate(genreList: [Int])
+    
+    var writeSuccess: PublishSubject<Void> { get set }
+    var isWriteEnabled: PublishSubject<Bool> { get set }
+    var showCaution: PublishSubject<Bool> { get set }
+    var fetchedRecord: PublishSubject<DreamWriteEntity> { get set }
 }
 
 public class DefaultDreamWriteUseCase {
@@ -21,8 +27,10 @@ public class DefaultDreamWriteUseCase {
     private let repository: DreamWriteRepository
     private let disposeBag = DisposeBag()
     
-    public var writeData = PublishSubject<DreamWriteEntity>()
-    public var writeFail = PublishSubject<Error>()
+    public var writeSuccess = PublishSubject<Void>()
+    public var isWriteEnabled = PublishSubject<Bool>()
+    public var showCaution = PublishSubject<Bool>()
+    public var fetchedRecord = PublishSubject<DreamWriteEntity>()
     
     public init(repository: DreamWriteRepository) {
         self.repository = repository
@@ -30,15 +38,29 @@ public class DefaultDreamWriteUseCase {
 }
 
 extension DefaultDreamWriteUseCase: DreamWriteUseCase {
-    public func writeDreamRecord(request: DreamWriteRequestEntity) {
+    public func titleTextValidate(text: String) {
+        let existDistinctTitle = (text.count > 0 && text != "꿈의 제목을 남겨주세요")
+        self.isWriteEnabled.onNext(existDistinctTitle)
+    }
+    
+    public func genreListCautionValidate(genreList: [Int]) {
+        self.showCaution.onNext(genreList.count >= 3)
+    }
+    
+    public func fetchDreamRecord(recordId: String) {
+        self.repository.fetchDreamRecord(recordId: recordId)
+            .withUnretained(self)
+            .subscribe(onNext: { strongSelf, entity in
+                strongSelf.fetchedRecord.onNext(entity)
+                strongSelf.genreListCautionValidate(genreList: entity.genreList)
+            }).disposed(by: self.disposeBag)
+    }
+    
+    public func writeDreamRecord(request: DreamWriteRequest) {
         self.repository.writeDreamRecord(request: request)
-            .compactMap { $0 }
-            .subscribe(onNext: { [weak self] entity in
-            guard let self = self else { return }
-            self.writeData.onNext(entity)
-        }, onError: { err in
-            self.writeFail.onNext(err)
-        })
-        .disposed(by: self.disposeBag)
+            .withUnretained(self)
+            .subscribe(onNext: { strongSelf, entity in
+            strongSelf.writeSuccess.onNext(())
+        }).disposed(by: self.disposeBag)
     }
 }
