@@ -20,15 +20,26 @@ public class MyPageViewModel: ViewModelType {
     // MARK: - Inputs
     
     public struct Input {
-    
+        let viewDidLoad: Observable<Void>
+        let editButtonTapped: Observable<Void>
+        let usernameTextFieldChanged: Observable<Void>
+        let keyboardReturnTapped: Observable<Void>
+        let pushSwitchChagned: Observable<Bool>
+        let pushTimePicked: Observable<String>
+        let logoutButtonTapped: Observable<Void>
+        let withdrawlButtonTapped: Observable<Void>
     }
     
     // MARK: - CoordinatorInput
+    
+    var logoutCompleted = PublishRelay<Void>()
+    var withdrawlCompleted = PublishRelay<Void>()
   
     // MARK: - Outputs
     
     public struct Output {
-    
+        var myPageDataFetched = PublishRelay<String>()
+        var usernameEditCompleted = PublishRelay<Bool>()
     }
     
     // MARK: - Coordination
