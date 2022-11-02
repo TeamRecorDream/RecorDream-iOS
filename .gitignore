@@ -131,6 +131,8 @@ iOSInjectionProject/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 RecorDream-iOS/Projects/Modules/RD-Network/Sources/Environment/config.swift
+RecorDream-iOS/Projects/RecorDream-iOS/Derived/Sources/TuistPlists+RecorDreamIOS.swift
+RecorDream-iOS/Projects/RecorDream-iOS/Resources/GoogleService-Info.plist
 
 Gemfile
 Gemfile.lock

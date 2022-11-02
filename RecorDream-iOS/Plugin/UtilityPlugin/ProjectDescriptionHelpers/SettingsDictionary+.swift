@@ -44,6 +44,10 @@ public extension SettingsDictionary {
         merging(["SKIP_INSTALL": SettingValue(stringLiteral: value ? "YES" : "NO")])
     }
     
+    func setFirebaseDependency() -> SettingsDictionary {
+        merging(["OTHER_LDFLAGS": ["-ObjC", "$(OTHER_LDFLAGS)"]])
+    }
+    
     func setCodeSignManual() -> SettingsDictionary {
         merging(["CODE_SIGN_STYLE": SettingValue(stringLiteral: "Manual")])
             .merging(["DEVELOPMENT_TEAM": SettingValue(stringLiteral: "FY8N9XTH66")])
