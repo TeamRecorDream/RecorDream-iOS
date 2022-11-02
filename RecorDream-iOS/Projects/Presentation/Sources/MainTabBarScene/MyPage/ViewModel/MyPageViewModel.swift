@@ -39,6 +39,7 @@ public class MyPageViewModel: ViewModelType {
     
     public struct Output {
         var myPageDataFetched = PublishRelay<String>()
+        var startUsernameEdit = PublishRelay<Void>()
         var usernameEditCompleted = PublishRelay<Bool>()
     }
     

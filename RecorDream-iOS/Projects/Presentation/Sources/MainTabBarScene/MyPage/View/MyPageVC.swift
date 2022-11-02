@@ -11,7 +11,10 @@ import UIKit
 import RD_DSKit
 
 import RxSwift
+import RxCocoa
 import SnapKit
+
+// TODO: Loading Extension 만들기, Loading Event 바인딩하기
 
 public class MyPageVC: UIViewController {
     
@@ -182,8 +185,17 @@ extension MyPageVC {
 
 extension MyPageVC {
   
+    // TODO: usernameTextField와 keyboardReturn의 Merge, UIDatePicker 뷰 작성 및 이벤트 바인딩
+    
     private func bindViewModels() {
-        let input = MyPageViewModel.Input()
+        let input = MyPageViewModel.Input(viewDidLoad: Observable.just(()),
+                                          editButtonTapped: editButton.rx.tap.asObservable(),
+                                          usernameTextFieldChanged: Observable.just(()),
+                                          keyboardReturnTapped: Observable.just(()),
+                                          pushSwitchChagned: pushSettingView.rx.pushSwitchIsOn.asObservable(),
+                                          pushTimePicked: Observable.just(""),
+                                          logoutButtonTapped: logoutButton.rx.tap.asObservable(),
+                                          withdrawlButtonTapped: withdrawlButton.rx.tap.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
     }
 
