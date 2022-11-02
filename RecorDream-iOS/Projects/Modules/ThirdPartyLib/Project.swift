@@ -7,6 +7,7 @@
 
 import ProjectDescription
 import ProjectDescriptionHelpers
+import UtilityPlugin
 
 let project = Project.makeModule(
     name: "ThirdPartyLib",
@@ -16,9 +17,6 @@ let project = Project.makeModule(
         .external(name: "RxSwift"),
         .external(name: "RxCocoa"),
         .external(name: "SnapKit"),
-        .external(name: "FirebaseAnalytics"),
-        .external(name: "FirebaseCrashlytics"),
-        .external(name: "FirebaseRemoteConfig"),
         .external(name: "KakaoSDKUser"),
         .external(name: "KakaoSDKAuth"),
         .external(name: "HeeKit")

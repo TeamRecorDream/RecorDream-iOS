@@ -14,7 +14,8 @@ let project = Project.makeModule(
     platform: .iOS,
     product: .app,
     dependencies: [
-        .Project.RDNavigator
+        .Project.RDNavigator,
+        .SPM.FirebaseMessaging
     ],
     resources: ["Resources/**"],
     infoPlist: .extendingDefault(with: Project.baseinfoPlist)
