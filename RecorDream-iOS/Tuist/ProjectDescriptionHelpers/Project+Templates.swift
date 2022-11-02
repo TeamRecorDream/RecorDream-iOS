@@ -14,7 +14,18 @@ public extension Project {
         resources: ResourceFileElements? = nil,
         infoPlist: InfoPlist = .default
     ) -> Project {
-        let settings: Settings = .settings(
+        
+        let defaultSettings: Settings = .settings(
+            base: .init()
+                .setFirebaseDependency()
+                .setCodeSignManual(),
+            debug: .init()
+                .setProvisioningDevelopment(),
+            release: .init()
+                .setProvisioningAppstore(),
+            defaultSettings: .recommended)
+        
+        let thirdPartySettings: Settings = .settings(
             base: .init()
                 .setCodeSignManual(),
             debug: .init()
@@ -22,6 +33,8 @@ public extension Project {
             release: .init()
                 .setProvisioningAppstore(),
             defaultSettings: .recommended)
+        
+        let settings = (name == "ThirdPartyLib") ? thirdPartySettings : defaultSettings
         
         let bundleId = (name == "RecorDream-iOS") ? "com.RecorDream.Release" : "\(organizationName).\(name)"
 
@@ -99,7 +112,8 @@ public extension Project {
         "NSMicrophoneUsageDescription": "음성을 통해 꿈을 기록하기 위해서는 마이크 이용 권한이 필요합니다.",
         "Supports opening documents in place": true,
         "Application supports iTunes file sharing": true,
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": ["fetch", "remote-notification"]
     ]
 }
 
