@@ -7,11 +7,16 @@
 
 import UIKit
 
+import FirebaseCore
+import FirebaseMessaging
+import UserNotifications
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application( _ application: UIApplication,
                       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        self.configureFirebase()
         self.registerAPNs(to: application)
         return true
     }
@@ -72,5 +77,31 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         completionHandler()
+    }
+}
+
+// MARK: - Firebase
+
+extension AppDelegate: MessagingDelegate {
+    func configureFirebase() {
+        FirebaseApp.configure()
+        self.configureFirebaseMessaging()
+    }
+    
+    func configureFirebaseMessaging() {
+        Messaging.messaging().delegate = self
+
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("FCM 등록토큰 가져오기 오류: \(error)")
+            } else if let token = token {
+                print("FCM 등록토큰 : \(token)")
+            }
+        }
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        guard let token = fcmToken else { return }
+        print("FCM 등록토큰 갱신: \(token)")
     }
 }
