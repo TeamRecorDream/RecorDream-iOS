@@ -58,6 +58,11 @@ extension MyPageViewModel {
         let output = Output()
         
         self.bindOutput(output: output, disposeBag: disposeBag)
+        
+        input.viewDidLoad.subscribe(onNext: { _ in
+            self.useCase.fetchMyPageData()
+        }).disposed(by: disposeBag)
+        
         input.editButtonTapped.subscribe(onNext: { _ in
             self.useCase.validateUsernameEdit()
         }).disposed(by: disposeBag)
@@ -75,11 +80,24 @@ extension MyPageViewModel {
         input.usernameAlertDismissed.subscribe { _ in
             self.useCase.startUsernameEdit()
         }.disposed(by: disposeBag)
+        input.logoutButtonTapped.subscribe(onNext: { _ in
+            self.useCase.userLogout()
+        }).disposed(by: disposeBag)
+        
+        input.withdrawlButtonTapped.subscribe(onNext: { _ in
+            self.useCase.userWithdrawl()
+        }).disposed(by: disposeBag)
+        
         return output
     }
-  
-    private func bindOutput(output: Output, disposeBag: DisposeBag) {
     
+    private func bindOutput(output: Output, disposeBag: DisposeBag) {
+        let myPageData = self.useCase.myPageFetched
+        myPageData
+            .compactMap { $0 }
+            .subscribe(onNext: { entity in
+                output.myPageDataFetched.accept(entity)
+            }).disposed(by: disposeBag)
         
         let startUsernameEdit = self.useCase.usernameEditStatus
         startUsernameEdit
@@ -93,5 +111,19 @@ extension MyPageViewModel {
             .subscribe(onNext: { entity in
                 output.showAlert.accept(())
             }).disposed(by: disposeBag)
+                
+        let logoutSuccessed = self.useCase.logoutSuccess
+        logoutSuccessed
+            .bind {
+                output.loadingStatus.accept(false)
+                self.logoutCompleted.accept(())
+            }.disposed(by: disposeBag)
+        
+        let withdrawlSuccessed = self.useCase.withdrawlSuccess
+        withdrawlSuccessed
+            .bind {
+                output.loadingStatus.accept(false)
+                self.withdrawlCompleted.accept(())
+            }.disposed(by: disposeBag)
     }
 }

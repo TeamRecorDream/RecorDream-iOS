@@ -8,6 +8,7 @@
 
 import UIKit
 
+import Domain
 import RD_Core
 import RD_DSKit
 
@@ -195,6 +196,13 @@ extension MyPageVC {
         
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
+        output.myPageDataFetched
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { strongSelf, entity in
+                strongSelf.fetchMyPageData(model: entity)
+            }.disposed(by: self.disposeBag)
+        
         output.startUsernameEdit
             .bind(to: self.myPageEditableView.rx.isEditing)
             .disposed(by: self.disposeBag)
@@ -202,6 +210,11 @@ extension MyPageVC {
         output.showAlert
             .bind { self.showUsernameWarningAlert() }
             .disposed(by: self.disposeBag)
+    }
+    
+    private func fetchMyPageData(model: MyPageEntity) {
+        self.myPageEditableView.initText = model.userName
+        self.emailLabel.text = model.email
     }
 
     private func showUsernameWarningAlert() {

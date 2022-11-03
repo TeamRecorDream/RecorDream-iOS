@@ -9,5 +9,7 @@
 import RxSwift
 
 public protocol MyPageRepository {
-  
+    func fetchUserInformation() -> Observable<MyPageEntity>
+    func userLogout() -> Observable<Bool>
+    func userWithdrawl() -> Observable<Bool>
 }

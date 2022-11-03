@@ -27,6 +27,12 @@ public class MyPageEditableView: UIView {
     
     public var endEditingWithText = PublishRelay<EndEditOutput>()
     
+    public var initText = " " {
+        willSet {
+            self.resultLabel.text = newValue
+        }
+    }
+    
     // MARK: - UI Components
     
     private let resultLabel: UILabel = {
