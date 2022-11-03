@@ -33,13 +33,13 @@ public class MyPageViewModel: ViewModelType {
     
     // MARK: - CoordinatorInput
     
-    var logoutCompleted = PublishRelay<Void>()
-    var withdrawlCompleted = PublishRelay<Void>()
+    public var logoutCompleted = PublishRelay<Void>()
+    public var withdrawlCompleted = PublishRelay<Void>()
     
     // MARK: - Outputs
     
     public struct Output {
-        var myPageDataFetched = PublishRelay<MyPageEntity>()
+        var myPageDataFetched = BehaviorRelay<MyPageEntity?>(value: nil)
         var startUsernameEdit = PublishRelay<Bool>()
         var showAlert = PublishRelay<Void>()
         var usernameEditCompleted = PublishRelay<Bool>()

@@ -26,8 +26,9 @@ public class MyPageVC: UIViewController {
     
     public var viewModel: MyPageViewModel!
     
-    private var usernameAlertDismissed = PublishRelay<Void>()
-  
+    private let usernameAlertDismissed = PublishRelay<Void>()
+    private let withdrawlActionTapped = PublishRelay<Void>()
+    
     // MARK: - UI Components
     
     private let naviBar = RDNaviBar()
@@ -90,13 +91,14 @@ public class MyPageVC: UIViewController {
         bt.titleLabel?.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
         return bt
     }()
-  
+    
     // MARK: - View Life Cycle
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.setUI()
         self.setLayout()
+        self.bindViews()
         self.bindViewModels()
     }
 }
@@ -181,7 +183,16 @@ extension MyPageVC {
 // MARK: - Bind
 
 extension MyPageVC {
-  
+    
+    private func bindViews() {
+        self.withdrawlButton.rx.tap
+            .asDriver()
+            .drive(onNext: {
+                self.showWithdrawlWarningAlert()
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
     // TODO: usernameTextField와 keyboardReturn의 Merge, UIDatePicker 뷰 작성 및 이벤트 바인딩
     
     private func bindViewModels() {
@@ -192,7 +203,7 @@ extension MyPageVC {
                                           pushSwitchChagned: pushSettingView.rx.pushSwitchIsOn.asObservable(),
                                           pushTimePicked: Observable.just(""),
                                           logoutButtonTapped: logoutButton.rx.tap.asObservable(),
-                                          withdrawlButtonTapped: withdrawlButton.rx.tap.asObservable())
+                                          withdrawlButtonTapped: withdrawlActionTapped.asObservable())
         
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
@@ -216,10 +227,19 @@ extension MyPageVC {
         self.myPageEditableView.initText = model.userName
         self.emailLabel.text = model.email
     }
-
+    
     private func showUsernameWarningAlert() {
         self.makeAlert(title: "닉네임 변경", message: "1~8자까지 가능합니다.", okAction:  { _ in
             self.usernameAlertDismissed.accept(())
+        })
+    }
+    
+    private func showWithdrawlWarningAlert() {
+        self.makeAlertWithCancelDestructive(title: "탈퇴하기",
+                                            message: "탈퇴시 저장된 기록은 복구되지 않습니다.\n 정말로 탈퇴하시겠습니까?",
+                                            okActionTitle: "탈퇴",
+                                            okAction:  { _ in
+            self.withdrawlActionTapped.accept(())
         })
     }
 }

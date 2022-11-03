@@ -34,4 +34,19 @@ public extension UIViewController {
         alertViewController.addAction(okAction)
         self.present(alertViewController, animated: true, completion: completion)
     }
+    
+    func makeAlertWithCancelDestructive(title: String,
+                   message: String,
+                   okActionTitle: String,
+                   okAction: ((UIAlertAction) -> Void)? = nil,
+                   completion : (() -> Void)? = nil) {
+        makeVibrate()
+        let alertViewController = UIAlertController(title: title, message: message,
+                                                    preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "취소", style: .default)
+        let okAction = UIAlertAction(title: okActionTitle, style: .destructive, handler: okAction)
+        alertViewController.addAction(cancelAction)
+        alertViewController.addAction(okAction)
+        self.present(alertViewController, animated: true, completion: completion)
+    }
 }
