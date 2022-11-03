@@ -171,6 +171,12 @@ extension MyPageVC {
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(safeAreaBottomInset() + 18)
         }
+        
+//        timePickerView.snp.makeConstraints { make in
+//            make.leading.trailing.equalToSuperview()
+//            make.height.equalTo(340.adjustedH)
+//            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
+//        }
     }
 }
 
