@@ -123,7 +123,6 @@ extension DreamWriteViewModel {
     
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
         let fetchedModel = useCase.fetchedRecord
-        
         fetchedModel.subscribe(onNext: { entity in
             self.shouldShowWarningForInit = entity.shouldeShowWarning
             output.dreamWriteModelFetched.accept(entity)
@@ -131,20 +130,17 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         let writeRelay = useCase.writeSuccess
-        
         writeRelay.subscribe(onNext: { entity in
             self.writeRequestSuccess.accept(())
             output.writeRequestSuccess.accept(())
         }).disposed(by: disposeBag)
         
         let writeEnabled = useCase.isWriteEnabled
-        
         writeEnabled.subscribe(onNext: { status in
             output.writeButtonEnabled.accept(status)
         }).disposed(by: disposeBag)
         
         let showCaution = useCase.showCaution
-        
         showCaution.subscribe(onNext: { status in
             output.showGenreCountCaution.accept(status)
         }).disposed(by: disposeBag)
