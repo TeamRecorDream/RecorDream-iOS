@@ -8,6 +8,7 @@
 
 import UIKit
 
+import RD_Core
 import RD_DSKit
 
 import RxSwift
@@ -37,14 +38,7 @@ public class MyPageVC: UIViewController {
         return iv
     }()
     
-    private let nickNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "닉네임"
-        label.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 16.adjusted)
-        label.textColor = .white
-        label.sizeToFit()
-        return label
-    }()
+    private let myPageEditableView = MyPageEditableView()
     
     private let editButton: UIButton = {
         let bt = UIButton()
@@ -113,7 +107,7 @@ extension MyPageVC {
     }
     
     private func setLayout() {
-        self.view.addSubviews(naviBar, profileImageView, nickNameLabel,
+        self.view.addSubviews(naviBar, profileImageView, myPageEditableView,
                               editButton, emailLabel, pushSettingView,
                               timeSettingView, guideLabel, logoutButton,
                               withdrawlButton)
@@ -130,18 +124,18 @@ extension MyPageVC {
             make.centerX.equalToSuperview()
         }
         
-        nickNameLabel.snp.makeConstraints { make in
+        myPageEditableView.snp.makeConstraints { make in
             make.top.equalTo(profileImageView.snp.bottom).offset(8.adjustedH)
             make.centerX.equalToSuperview()
         }
         
         editButton.snp.makeConstraints { make in
-            make.leading.equalTo(nickNameLabel.snp.trailing).offset(3.adjusted)
-            make.centerY.equalTo(nickNameLabel.snp.centerY)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(-5.adjusted)
+            make.centerY.equalTo(myPageEditableView.snp.centerY)
         }
         
         emailLabel.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLabel.snp.bottom).offset(5.adjustedH)
+            make.top.equalTo(myPageEditableView.snp.bottom).offset(5.adjustedH)
             make.centerX.equalToSuperview()
         }
         
