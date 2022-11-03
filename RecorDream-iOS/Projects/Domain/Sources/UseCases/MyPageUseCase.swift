@@ -11,12 +11,14 @@ import RxRelay
 
 public protocol MyPageUseCase {
 
+    func validateUsernameEdit()
 }
 
 public class DefaultMyPageUseCase {
   
     private let repository: MyPageRepository
     private let disposeBag = DisposeBag()
+    public var usernameEditStatus = BehaviorRelay<Bool>(value: false)
   
     public init(repository: MyPageRepository) {
         self.repository = repository
@@ -25,4 +27,10 @@ public class DefaultMyPageUseCase {
 
 extension DefaultMyPageUseCase: MyPageUseCase {
   
+    public func validateUsernameEdit() {
+        let isAlreadyEditing = usernameEditStatus.value
+        
+        guard !isAlreadyEditing else { return }
+        usernameEditStatus.accept(true)
+    }
 }

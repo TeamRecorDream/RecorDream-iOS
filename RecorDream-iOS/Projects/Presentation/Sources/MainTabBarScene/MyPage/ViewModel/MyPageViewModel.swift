@@ -58,10 +58,20 @@ extension MyPageViewModel {
         let output = Output()
         
         self.bindOutput(output: output, disposeBag: disposeBag)
+        input.editButtonTapped.subscribe(onNext: { _ in
+            self.useCase.validateUsernameEdit()
+        }).disposed(by: disposeBag)
         return output
     }
   
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
     
+        
+        let startUsernameEdit = self.useCase.usernameEditStatus
+        startUsernameEdit
+            .asDriver()
+            .drive(onNext: {
+                output.startUsernameEdit.accept($0)
+            }).disposed(by: disposeBag)
     }
 }

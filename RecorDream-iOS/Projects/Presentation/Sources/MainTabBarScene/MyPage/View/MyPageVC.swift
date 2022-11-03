@@ -192,7 +192,13 @@ extension MyPageVC {
                                           pushTimePicked: Observable.just(""),
                                           logoutButtonTapped: logoutButton.rx.tap.asObservable(),
                                           withdrawlButtonTapped: withdrawlButton.rx.tap.asObservable())
+        
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        
+        output.startUsernameEdit
+            .bind(to: self.myPageEditableView.rx.isEditing)
+            .disposed(by: self.disposeBag)
+        
         output.showAlert
             .bind { self.showUsernameWarningAlert() }
             .disposed(by: self.disposeBag)
