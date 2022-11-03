@@ -24,6 +24,8 @@ public class MyPageVC: UIViewController {
     private let disposeBag = DisposeBag()
     
     public var viewModel: MyPageViewModel!
+    
+    private var usernameAlertDismissed = PublishRelay<Void>()
   
     // MARK: - UI Components
     
@@ -184,13 +186,21 @@ extension MyPageVC {
     private func bindViewModels() {
         let input = MyPageViewModel.Input(viewDidLoad: Observable.just(()),
                                           editButtonTapped: editButton.rx.tap.asObservable(),
-                                          usernameTextFieldChanged: Observable.just(()),
-                                          keyboardReturnTapped: Observable.just(()),
+                                          myPageReturnOutput: myPageEditableView.endEditingWithText.asObservable(),
+                                          usernameAlertDismissed: self.usernameAlertDismissed.asObservable(),
                                           pushSwitchChagned: pushSettingView.rx.pushSwitchIsOn.asObservable(),
                                           pushTimePicked: Observable.just(""),
                                           logoutButtonTapped: logoutButton.rx.tap.asObservable(),
                                           withdrawlButtonTapped: withdrawlButton.rx.tap.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        output.showAlert
+            .bind { self.showUsernameWarningAlert() }
+            .disposed(by: self.disposeBag)
     }
 
+    private func showUsernameWarningAlert() {
+        self.makeAlert(title: "닉네임 변경", message: "1~8자까지 가능합니다.", okAction:  { _ in
+            self.usernameAlertDismissed.accept(())
+        })
+    }
 }

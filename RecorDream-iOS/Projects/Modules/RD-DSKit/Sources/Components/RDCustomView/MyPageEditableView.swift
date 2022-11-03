@@ -18,7 +18,14 @@ public class MyPageEditableView: UIView {
     
     // MARK: - Properties
     
+    public enum EndEditOutput {
+        case noText
+        case endWithProperText(text: String)
+    }
+    
     private let disposeBag = DisposeBag()
+    
+    public var endEditingWithText = PublishRelay<EndEditOutput>()
     
     // MARK: - UI Components
     
@@ -85,6 +92,23 @@ extension MyPageEditableView {
 
 extension MyPageEditableView {
     private func bind() {
+    }
+    
+    public func updateEditingStatus(_ isEditing: Bool) {
+        resultLabel.isHidden = isEditing
+        
+        editingTextField.isHidden = !isEditing
+        if isEditing {
+            editingTextField.becomeFirstResponder()
+        }
+    }
+}
+
+extension Reactive where Base: MyPageEditableView {
+    public var isEditing: Binder<Bool> {
+        return Binder(base) { view, isEditing in
+            view.updateEditingStatus(isEditing)
+        }
     }
 }
 
