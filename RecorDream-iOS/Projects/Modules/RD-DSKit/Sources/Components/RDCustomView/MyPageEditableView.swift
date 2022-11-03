@@ -92,6 +92,26 @@ extension MyPageEditableView {
 
 extension MyPageEditableView {
     private func bind() {
+        Observable.merge(editingTextField.rx.controlEvent(.editingDidEndOnExit).asObservable(), editingTextField.rx.controlEvent(.editingDidEnd).asObservable())
+            .withUnretained(self)
+            .subscribe(onNext: { (strongSelf, _) in
+                if let text = strongSelf.editingTextField.text,
+                   !text.isEmpty {
+                    strongSelf.resultLabel.text = text
+                    self.endEditingWithText.accept(.endWithProperText(text: text))
+                } else {
+                    strongSelf.endEditingWithText.accept(.noText)
+                }
+                strongSelf.rx.isEditing.onNext(false)
+            }).disposed(by: disposeBag)
+        
+        editingTextField.rx.text
+            .orEmpty
+            .scan("") { (previous, new) -> String in
+                return (new.count > 8) ? previous : new
+            }
+            .bind(to: editingTextField.rx.text)
+            .disposed(by: disposeBag)
     }
     
     public func updateEditingStatus(_ isEditing: Bool) {
