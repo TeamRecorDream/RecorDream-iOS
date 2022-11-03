@@ -61,6 +61,20 @@ extension MyPageViewModel {
         input.editButtonTapped.subscribe(onNext: { _ in
             self.useCase.validateUsernameEdit()
         }).disposed(by: disposeBag)
+        
+        input.myPageReturnOutput.subscribe(onNext: { editOutput in
+            switch editOutput {
+            case .noText:
+                self.useCase.restartUsernameEdit()
+            case .endWithProperText(let text):
+                // TODO: - 로딩 화면 보여주기
+                self.useCase.editUsername(username: text)
+            }
+        }).disposed(by: disposeBag)
+        
+        input.usernameAlertDismissed.subscribe { _ in
+            self.useCase.startUsernameEdit()
+        }.disposed(by: disposeBag)
         return output
     }
   
@@ -72,6 +86,12 @@ extension MyPageViewModel {
             .asDriver()
             .drive(onNext: {
                 output.startUsernameEdit.accept($0)
+            }).disposed(by: disposeBag)
+        
+        let showUsernameWarningAlert = self.useCase.shouldShowAlert
+        showUsernameWarningAlert
+            .subscribe(onNext: { entity in
+                output.showAlert.accept(())
             }).disposed(by: disposeBag)
     }
 }
