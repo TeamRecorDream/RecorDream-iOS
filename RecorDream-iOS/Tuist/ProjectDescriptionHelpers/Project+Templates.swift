@@ -18,7 +18,8 @@ public extension Project {
         let defaultSettings: Settings = .settings(
             base: .init()
                 .setFirebaseDependency()
-                .setCodeSignManual(),
+                .setCodeSignManual()
+                .setCodeSignEntitlements(),
             debug: .init()
                 .setProvisioningDevelopment(),
             release: .init()
@@ -34,7 +35,7 @@ public extension Project {
                 .setProvisioningAppstore(),
             defaultSettings: .recommended)
         
-        let settings = (name == "ThirdPartyLib") ? thirdPartySettings : defaultSettings
+        let settings = (name == "RecorDream-iOS") ? defaultSettings : thirdPartySettings
         
         let bundleId = (name == "RecorDream-iOS") ? "com.RecorDream.Release" : "\(organizationName).\(name)"
 

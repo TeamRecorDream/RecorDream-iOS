@@ -48,10 +48,13 @@ public extension SettingsDictionary {
         merging(["OTHER_LDFLAGS": ["-ObjC", "$(OTHER_LDFLAGS)"]])
     }
     
+    func setCodeSignEntitlements() -> SettingsDictionary {
+        merging(["CODE_SIGN_ENTITLEMENTS": SettingValue(stringLiteral: "RecorDream-iOS.entitlements")])
+    }
+    
     func setCodeSignManual() -> SettingsDictionary {
         merging(["CODE_SIGN_STYLE": SettingValue(stringLiteral: "Manual")])
             .merging(["DEVELOPMENT_TEAM": SettingValue(stringLiteral: "FY8N9XTH66")])
-            .merging(["CODE_SIGN_ENTITLEMENTS": SettingValue(stringLiteral: "RecorDream-iOS.entitlements")])
     }
     
     func setProvisioningDevelopment() -> SettingsDictionary {
