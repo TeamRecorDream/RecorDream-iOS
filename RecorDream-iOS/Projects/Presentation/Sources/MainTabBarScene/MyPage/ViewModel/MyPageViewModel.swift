@@ -44,6 +44,7 @@ public class MyPageViewModel: ViewModelType {
         var showAlert = PublishRelay<Void>()
         var usernameEditCompleted = PublishRelay<Bool>()
         var loadingStatus = BehaviorRelay<Bool>(value: true)
+        var selectedPushTime = PublishRelay<String?>()
     }
     
     // MARK: - Coordination
@@ -139,8 +140,9 @@ extension MyPageViewModel {
         
         let pushUpdateSuccess = self.useCase.updatePushSuccess
         pushUpdateSuccess
-            .bind {
+            .bind { selectedTime in
                 output.loadingStatus.accept(false)
+                output.selectedPushTime.accept(selectedTime)
             }.disposed(by: disposeBag)
     }
 }

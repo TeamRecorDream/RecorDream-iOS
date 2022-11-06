@@ -26,7 +26,7 @@ public protocol MyPageUseCase {
     var withdrawlSuccess: PublishSubject<Void> { get set }
     var usernameEditStatus: BehaviorRelay<Bool> { get set }
     var shouldShowAlert: PublishRelay<Void> { get set }
-    var updatePushSuccess: PublishSubject<Void> { get set }
+    var updatePushSuccess: PublishSubject<String?> { get set }
 }
 
 public class DefaultMyPageUseCase {
@@ -39,7 +39,7 @@ public class DefaultMyPageUseCase {
     public var shouldShowAlert = PublishRelay<Void>()
     public var logoutSuccess = PublishSubject<Void>()
     public var withdrawlSuccess = PublishSubject<Void>()
-    public var updatePushSuccess = PublishSubject<Void>()
+    public var updatePushSuccess = PublishSubject<String?>()
     
     public init(repository: MyPageRepository) {
         self.repository = repository
@@ -49,15 +49,15 @@ public class DefaultMyPageUseCase {
 extension DefaultMyPageUseCase: MyPageUseCase {
     public func enablePushNotice(time: String) {
         self.repository.enablePushNotice(time: time)
-            .subscribe { _ in
-                self.updatePushSuccess.onNext(())
+            .subscribe { selectedTime in
+                self.updatePushSuccess.onNext(selectedTime)
             }.disposed(by: self.disposeBag)
     }
 
     public func disablePushNotice() {
         self.repository.disablePushNotice()
             .subscribe { _ in
-                self.updatePushSuccess.onNext(())
+                self.updatePushSuccess.onNext(nil)
             }.disposed(by: self.disposeBag)
     }
     

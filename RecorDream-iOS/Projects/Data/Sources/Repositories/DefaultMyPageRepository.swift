@@ -45,9 +45,9 @@ extension DefaultMyPageRepository: MyPageRepository {
         }
     }
     
-    public func enablePushNotice(time: String) -> Observable<Void> {
+    public func enablePushNotice(time: String) -> Observable<String> {
         return Observable.create { observer in
-            observer.onNext(())
+            observer.onNext("AM 08:20")
             return Disposables.create()
         }
     }

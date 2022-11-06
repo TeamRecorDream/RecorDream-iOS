@@ -12,6 +12,6 @@ public protocol MyPageRepository {
     func fetchUserInformation() -> Observable<MyPageEntity>
     func userLogout() -> Observable<Bool>
     func userWithdrawl() -> Observable<Bool>
-    func enablePushNotice(time: String) -> Observable<Void>
+    func enablePushNotice(time: String) -> Observable<String>
     func disablePushNotice() -> Observable<Void>
 }

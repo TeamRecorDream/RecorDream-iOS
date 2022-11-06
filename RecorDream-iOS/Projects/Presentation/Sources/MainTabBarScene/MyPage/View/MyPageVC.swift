@@ -95,6 +95,14 @@ public class MyPageVC: UIViewController {
     private let timePickerView = RDDateTimePickerView()
         .viewType(.time)
     
+    private let backGroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black.withAlphaComponent(0.4)
+        view.isUserInteractionEnabled = false
+        view.alpha = 0
+        return view
+    }()
+    
     // MARK: - View Life Cycle
     
     public override func viewDidLoad() {
@@ -118,7 +126,7 @@ extension MyPageVC {
         self.view.addSubviews(naviBar, profileImageView, myPageEditableView,
                               editButton, emailLabel, pushSettingView,
                               timeSettingView, guideLabel, logoutButton,
-                              withdrawlButton, timePickerView)
+                              withdrawlButton, backGroundView, timePickerView)
         
         naviBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -178,7 +186,11 @@ extension MyPageVC {
         timePickerView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(340.adjustedH)
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+        }
+        
+        backGroundView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
 }
@@ -200,6 +212,27 @@ extension MyPageVC {
                 self.showWithdrawlWarningAlert()
             })
             .disposed(by: self.disposeBag)
+        
+        self.timePickerView.rx.cancelButtonTapped
+            .bind {
+                self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
+                self.dismissTimePickerView()
+            }
+            .disposed(by: self.disposeBag)
+        
+        self.timePickerView.rx.saveButtonTapped
+            .map { _ in return }
+            .bind(onNext: { _ in
+                self.dismissTimePickerView()
+            })
+            .disposed(by: self.disposeBag)
+        
+        self.pushSettingView.rx.pushSwitchIsOn
+            .filter { $0 == true }
+            .map { _ in return }
+            .bind {
+                self.showTimePickerView()
+            }.disposed(by: self.disposeBag)
     }
     
     // TODO: usernameTextField와 keyboardReturn의 Merge, UIDatePicker 뷰 작성 및 이벤트 바인딩
@@ -210,7 +243,7 @@ extension MyPageVC {
                                           myPageReturnOutput: myPageEditableView.endEditingWithText.asObservable(),
                                           usernameAlertDismissed: usernameAlertDismissed.asObservable(),
                                           pushSwitchChagned: pushSettingView.rx.pushSwitchIsOn.asObservable(),
-                                          pushTimePicked: Observable.just(""),
+                                          pushTimePicked: timePickerView.rx.saveButtonTapped,
                                           logoutButtonTapped: logoutButton.rx.tap.asObservable(),
                                           withdrawlButtonTapped: withdrawlActionTapped.asObservable())
         
@@ -229,6 +262,10 @@ extension MyPageVC {
         
         output.showAlert
             .bind { self.showUsernameWarningAlert() }
+            .disposed(by: self.disposeBag)
+        
+        output.selectedPushTime
+            .bind(to: self.timeSettingView.rx.pushTimeSelected)
             .disposed(by: self.disposeBag)
     }
     
@@ -250,5 +287,38 @@ extension MyPageVC {
                                             okAction:  { _ in
             self.withdrawlActionTapped.accept(())
         })
+    }
+    
+    private func showTimePickerView() {
+        self.makeTransParentBackground()
+        self.animateUpTimePickerView()
+    }
+    
+    private func animateUpTimePickerView() {
+        timePickerView.transform = CGAffineTransform.identity
+        timePickerView.snp.updateConstraints { make in
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func makeTransParentBackground() {
+        self.backGroundView.isUserInteractionEnabled = true
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.backGroundView.alpha = 1
+        }
+    }
+    
+    private func dismissTimePickerView() {
+        self.backGroundView.isUserInteractionEnabled = false
+        timePickerView.snp.updateConstraints { make in
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.backGroundView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
     }
 }

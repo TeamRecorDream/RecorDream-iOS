@@ -392,7 +392,9 @@ extension Reactive where Base: RDDateTimePickerView {
         return base.cancelButton.rx.tap
     }
     
-    public var saveButtonTapped: ControlEvent<Void> {
+    public var saveButtonTapped: Observable<String> {
         return base.saveButton.rx.tap
+            .map { "\(base.selectedMeridium)" + "\(base.selectedHour)" + "\(base.selectedMinute)" }
+            .asObservable()
     }
 }
