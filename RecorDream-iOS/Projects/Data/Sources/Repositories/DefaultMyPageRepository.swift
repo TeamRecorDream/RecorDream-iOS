@@ -44,4 +44,18 @@ extension DefaultMyPageRepository: MyPageRepository {
             return Disposables.create()
         }
     }
+    
+    public func enablePushNotice(time: String) -> Observable<Void> {
+        return Observable.create { observer in
+            observer.onNext(())
+            return Disposables.create()
+        }
+    }
+    
+    public func disablePushNotice() -> Observable<Void> {
+        return Observable.create { observer in
+            observer.onNext(())
+            return Disposables.create()
+        }
+    }
 }
