@@ -92,6 +92,9 @@ public class MyPageVC: UIViewController {
         return bt
     }()
     
+    private let timePickerView = RDDateTimePickerView()
+        .viewType(.time)
+    
     // MARK: - View Life Cycle
     
     public override func viewDidLoad() {
@@ -115,7 +118,7 @@ extension MyPageVC {
         self.view.addSubviews(naviBar, profileImageView, myPageEditableView,
                               editButton, emailLabel, pushSettingView,
                               timeSettingView, guideLabel, logoutButton,
-                              withdrawlButton)
+                              withdrawlButton, timePickerView)
         
         naviBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -172,11 +175,11 @@ extension MyPageVC {
             make.bottom.equalToSuperview().inset(safeAreaBottomInset() + 18)
         }
         
-//        timePickerView.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview()
-//            make.height.equalTo(340.adjustedH)
-//            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
-//        }
+        timePickerView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(340.adjustedH)
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
+        }
     }
 }
 
@@ -205,7 +208,7 @@ extension MyPageVC {
         let input = MyPageViewModel.Input(viewDidLoad: Observable.just(()),
                                           editButtonTapped: editButton.rx.tap.asObservable(),
                                           myPageReturnOutput: myPageEditableView.endEditingWithText.asObservable(),
-                                          usernameAlertDismissed: self.usernameAlertDismissed.asObservable(),
+                                          usernameAlertDismissed: usernameAlertDismissed.asObservable(),
                                           pushSwitchChagned: pushSettingView.rx.pushSwitchIsOn.asObservable(),
                                           pushTimePicked: Observable.just(""),
                                           logoutButtonTapped: logoutButton.rx.tap.asObservable(),
