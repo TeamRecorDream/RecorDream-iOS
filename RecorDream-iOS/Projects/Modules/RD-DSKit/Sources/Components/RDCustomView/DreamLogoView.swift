@@ -56,7 +56,7 @@ public class DreamLogoView: UIView {
     private func setLayout() {
         self.addSubviews(logoImage, mypageButton, searchButton)
 
-        var adjustedInset = 16.adjusted
+        let adjustedInset = 16.adjusted
 
         logoImage.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(adjustedInset)
