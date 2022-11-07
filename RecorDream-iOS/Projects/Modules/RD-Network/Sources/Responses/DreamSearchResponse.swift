@@ -1,8 +1,8 @@
 //
-//  DreamSearch.swift
-//  Domain
+//  DreamSearchResponse.swift
+//  RD-Network
 //
-//  Created by 정은희 on 2022/11/06.
+//  Created by 정은희 on 2022/11/08.
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
