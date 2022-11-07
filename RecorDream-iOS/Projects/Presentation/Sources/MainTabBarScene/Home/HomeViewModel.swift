@@ -13,7 +13,7 @@ import RxRelay
 
 public class HomeViewModel: ViewModelType {
 
-    private let useCase: HomeUseCase
+    //private let useCase: HomeUseCase
     private let disposeBag = DisposeBag()
   
     // MARK: - Inputs
@@ -32,8 +32,8 @@ public class HomeViewModel: ViewModelType {
     
     // MARK: - Coordination
   
-    public init(useCase: HomeUseCase) {
-        self.useCase = useCase
+    public init() {
+        //self.useCase = useCase
     }
 }
 
@@ -42,11 +42,16 @@ extension HomeViewModel {
         let output = Output()
         self.bindOutput(output: output, disposeBag: disposeBag)
         // input,output 상관관계 작성
-    
+
         return output
     }
   
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
-    
+    }
+}
+
+extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
+    var numberOfItems: Int {
+        return 10
     }
 }
