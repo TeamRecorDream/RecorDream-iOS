@@ -8,8 +8,8 @@
 
 import Foundation
 
-public struct DreamSearchEntity: Codable, Equatable {
-    public static func == (lhs: DreamSearchEntity, rhs: DreamSearchEntity) -> Bool {
+public struct DreamSearchResponse: Codable, Equatable {
+    public static func == (lhs: DreamSearchResponse, rhs: DreamSearchResponse) -> Bool {
         return lhs.query == rhs.query && lhs.results == rhs.results
     }
     public let query: String
