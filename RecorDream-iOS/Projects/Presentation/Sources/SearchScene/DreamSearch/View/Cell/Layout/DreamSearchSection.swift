@@ -9,7 +9,6 @@
 import UIKit
 
 
-@available(iOS 16.0, *)
 extension DreamSearchVC {
     func layout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { [weak self] sectionNumber, environment -> NSCollectionLayoutSection? in
@@ -34,7 +33,7 @@ extension DreamSearchVC {
             heightDimension: .estimated(88.adjustedHeight)
         )
         let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: groupSize, repeatingSubitem: item, count: 1)
+            layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         let sectionFooter = self.createSectionFooter()
         section.orthogonalScrollingBehavior = .continuous
@@ -55,7 +54,7 @@ extension DreamSearchVC {
             heightDimension: .fractionalHeight(1.0)
         )
         let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: groupSize, repeatingSubitem: item, count: 1
+            layoutSize: groupSize, subitems: [item]
         )
         let sectionFooter = self.createSectionFooter()
         let section = NSCollectionLayoutSection(group: group)
@@ -64,7 +63,6 @@ extension DreamSearchVC {
         section.contentInsets = .init(
             top: 208, leading: 113, bottom: 282, trailing: 113
         )
-        
         return section
     }
     private func createSectionFooter() -> NSCollectionLayoutBoundarySupplementaryItem {

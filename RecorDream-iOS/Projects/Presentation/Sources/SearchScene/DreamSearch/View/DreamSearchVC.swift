@@ -10,7 +10,6 @@ import UIKit
 
 import RD_DSKit
 
-@available(iOS 16.0, *)
 public class DreamSearchVC: UIViewController {
     // MARK: - UI Components
     private lazy var navigationBar = RDNaviBar().title("검색하기")
@@ -59,13 +58,12 @@ public class DreamSearchVC: UIViewController {
     }
 }
 
-@available(iOS 16.0, *)
+// MARK: - Extensions
 extension DreamSearchVC: DreamSearhControllable {
     public func setupView() {
         self.view.backgroundColor = .black
         self.view.addSubviews(navigationBar, searchLabel, searchButton, searchTextField, dreamSearchCollectionView)
     }
-    
     public func setupConstraint() {
         navigationBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
