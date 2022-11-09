@@ -9,6 +9,7 @@
 import UIKit
 
 import RD_DSKit
+import RxSwift
 
 public class DreamSearchVC: UIViewController {
     // MARK: - UI Components
@@ -47,13 +48,17 @@ public class DreamSearchVC: UIViewController {
         return cv
     }()
     
+    // MARK: - Reactive Properties
+    private var disposeBag = DisposeBag()
+    private var viewModel = DreamSearchViewModel()
+    
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupView()
         self.setupConstraint()
-//        self.assignDelegate()
+        self.assignDelegate()
         self.registerXib()
     }
 }
@@ -89,35 +94,51 @@ extension DreamSearchVC: DreamSearhControllable {
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
-//    private func assignDelegate() {
-//        dreamSearchCollectionView.dataSource = self
-//        dreamSearchCollectionView.delegate = self
-//    }
+    private func assignDelegate() {
+        dreamSearchCollectionView.dataSource = self
+        dreamSearchCollectionView.delegate = self
+    }
     private func registerXib() {
         dreamSearchCollectionView.register(DreamSearchBottomCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchCountCVC.self, forCellWithReuseIdentifier: DreamSearchCountCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchEmptyCVC.self, forCellWithReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchExistCVC.self, forCellWithReuseIdentifier: DreamSearchExistCVC.reuseIdentifier)
-        
+    }
+}
+extension DreamSearchVC: UICollectionViewDataSource, UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.numberOfItems
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        switch
+//        guard let cell = collectionView.deq
+    }
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        <#code#>
+    }
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+        <#code#>
+    }
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        <#code#>
     }
 }
 
-//@available(iOS 16.0, *)
-//extension DreamSearchVC: UICollectionViewDataSource, UICollectionViewDelegate {
-//    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        <#code#>
-//    }
-//
-//    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-////        switch
-//    }
-//    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        <#code#>
-//    }
-//    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        <#code#>
-//    }
-//    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        <#code#>
-//    }
-//}
+// MARK: - Reactive stuff
+extension DreamSearchVC {
+    private func reloadDataSubscription() {
+        self.viewModel.reloadCollectionViewData.subscribe { [weak self] _ in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.dreamSearchCollectionView.reloadData()
+            }
+        }.disposed(by: disposeBag)
+    }
+    private func bindSearchData() {
+        dreamSearchCollectionView.rx
+            .itemSelected
+            .bind(to: <#T##IndexPath...##IndexPath#>)
+            .disposed(by: disposeBag)
+    }
+}

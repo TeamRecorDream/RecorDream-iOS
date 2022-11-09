@@ -88,3 +88,10 @@ final class DreamSearchExistCVC: DreamSearchCollectionViewCell {
         }
     }
 }
+
+extension DreamSearchExistCVC {
+    func configureCell(viewModel: DreamSearchResultViewModel) {
+//        self.backgroundImageView
+//        self.genreView
+    }
+}

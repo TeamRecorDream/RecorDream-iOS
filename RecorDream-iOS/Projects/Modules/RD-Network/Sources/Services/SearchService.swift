@@ -9,10 +9,9 @@
 import Foundation
 
 import Alamofire
-import RxSwift
 
 public protocol SearchService {
-    func searchDreamRecords(keyword: String) -> Observable<DreamSearchResponse?>
+    func searchDreamRecords(keyword: String) throws -> DreamSearchResponse
 }
 
 public class DefaultSearchService: BaseService {
@@ -22,9 +21,10 @@ public class DefaultSearchService: BaseService {
 }
 
 extension DefaultSearchService: SearchService {
-    public func searchDreamRecords(keyword: String) -> RxSwift.Observable<DreamSearchResponse?> {
-        requestObjectInRx(SearchRouter.searchRecord(keyword: keyword))
+    public func searchDreamRecords(keyword: String) throws -> DreamSearchResponse {
+        AFManager.request(SearchRouter.searchRecord(keyword: keyword))
+            .responseData { response in
+                
+            }
     }
-    
-    
 }

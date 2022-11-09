@@ -13,7 +13,6 @@ import RD_DSKit
 final class DreamSearchCountCVC: DreamSearchCollectionViewCell {
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
-        lb.text = "4개의 기록" // ✅
         lb.textColor = RDDSKitColors.Color.white
         lb.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 12)
         return lb
@@ -39,5 +38,11 @@ final class DreamSearchCountCVC: DreamSearchCollectionViewCell {
             make.leading.equalTo(countLabel.snp.trailing).offset(7)
             make.trailing.equalToSuperview().offset(21)
         }
+    }
+}
+
+extension DreamSearchCountCVC {
+    func configureCell(viewModel: DreamSearchResultViewModel) {
+        self.countLabel.text = "\(viewModel.recordsCount)개의 기록"
     }
 }
