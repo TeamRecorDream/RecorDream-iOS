@@ -58,7 +58,7 @@ public class DreamSearchVC: UIViewController {
         
         self.setupView()
         self.setupConstraint()
-        self.assignDelegate()
+//        self.assignDelegate()
         self.registerXib()
     }
 }
@@ -94,10 +94,10 @@ extension DreamSearchVC: DreamSearhControllable {
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
-    private func assignDelegate() {
-        dreamSearchCollectionView.dataSource = self
-        dreamSearchCollectionView.delegate = self
-    }
+//    private func assignDelegate() {
+//        dreamSearchCollectionView.dataSource = self
+//        dreamSearchCollectionView.delegate = self
+//    }
     private func registerXib() {
         dreamSearchCollectionView.register(DreamSearchBottomCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchCountCVC.self, forCellWithReuseIdentifier: DreamSearchCountCVC.reuseIdentifier)
@@ -105,25 +105,25 @@ extension DreamSearchVC: DreamSearhControllable {
         dreamSearchCollectionView.register(DreamSearchExistCVC.self, forCellWithReuseIdentifier: DreamSearchExistCVC.reuseIdentifier)
     }
 }
-extension DreamSearchVC: UICollectionViewDataSource, UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.numberOfItems
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        switch
-//        guard let cell = collectionView.deq
-    }
-    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        <#code#>
-    }
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-        <#code#>
-    }
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        <#code#>
-    }
-}
+//extension DreamSearchVC: UICollectionViewDataSource, UICollectionViewDelegate {
+//    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return viewModel.numberOfItems
+//    }
+//
+//    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+////        switch
+////        guard let cell = collectionView.deq
+//    }
+//    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        <#code#>
+//    }
+//    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        <#code#>
+//    }
+//    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        <#code#>
+//    }
+//}
 
 // MARK: - Reactive stuff
 extension DreamSearchVC {
