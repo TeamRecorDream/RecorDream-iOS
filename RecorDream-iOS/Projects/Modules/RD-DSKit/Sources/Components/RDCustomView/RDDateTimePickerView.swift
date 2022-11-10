@@ -137,7 +137,7 @@ public class RDDateTimePickerView: UIView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "음성녹음"
+        label.text = "날짜 설정"
         label.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 16)
         label.textColor = .white
         label.sizeToFit()

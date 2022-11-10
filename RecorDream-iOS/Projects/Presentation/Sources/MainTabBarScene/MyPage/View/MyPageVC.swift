@@ -27,7 +27,7 @@ public class MyPageVC: UIViewController {
     public var viewModel: MyPageViewModel!
     
     private let usernameAlertDismissed = PublishRelay<Void>()
-    private let withdrawlActionTapped = PublishRelay<Void>()
+    private let withdrawalActionTapped = PublishRelay<Void>()
     
     // MARK: - UI Components
     
@@ -83,7 +83,7 @@ public class MyPageVC: UIViewController {
         return bt
     }()
     
-    private let withdrawlButton: UIButton = {
+    private let withdrawalButton: UIButton = {
         let bt = UIButton()
         bt.setTitle("탈퇴하기", for: .normal)
         bt.setUnderline()
@@ -126,7 +126,7 @@ extension MyPageVC {
         self.view.addSubviews(naviBar, profileImageView, myPageEditableView,
                               editButton, emailLabel, pushSettingView,
                               timeSettingView, guideLabel, logoutButton,
-                              withdrawlButton, backGroundView, timePickerView)
+                              withdrawalButton, backGroundView, timePickerView)
         
         naviBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -175,10 +175,10 @@ extension MyPageVC {
         logoutButton.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(16.adjusted)
             make.height.equalTo(50.adjustedH)
-            make.bottom.equalTo(withdrawlButton.snp.top).offset(-12.adjusted)
+            make.bottom.equalTo(withdrawalButton.snp.top).offset(-12.adjusted)
         }
         
-        withdrawlButton.snp.makeConstraints { make in
+        withdrawalButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(safeAreaBottomInset() + 18)
         }
@@ -206,10 +206,10 @@ extension MyPageVC {
 extension MyPageVC {
     
     private func bindViews() {
-        self.withdrawlButton.rx.tap
+        self.withdrawalButton.rx.tap
             .asDriver()
             .drive(onNext: {
-                self.showWithdrawlWarningAlert()
+                self.showWithdrawalWarningAlert()
             })
             .disposed(by: self.disposeBag)
         
@@ -245,7 +245,7 @@ extension MyPageVC {
                                           pushSwitchChagned: pushSettingView.rx.pushSwitchIsOn.asObservable(),
                                           pushTimePicked: timePickerView.rx.saveButtonTapped,
                                           logoutButtonTapped: logoutButton.rx.tap.asObservable(),
-                                          withdrawlButtonTapped: withdrawlActionTapped.asObservable())
+                                          withdrawalButtonTapped: withdrawalActionTapped.asObservable())
         
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
@@ -280,12 +280,12 @@ extension MyPageVC {
         })
     }
     
-    private func showWithdrawlWarningAlert() {
+    private func showWithdrawalWarningAlert() {
         self.makeAlertWithCancelDestructive(title: "탈퇴하기",
                                             message: "탈퇴시 저장된 기록은 복구되지 않습니다.\n 정말로 탈퇴하시겠습니까?",
                                             okActionTitle: "탈퇴",
                                             okAction:  { _ in
-            self.withdrawlActionTapped.accept(())
+            self.withdrawalActionTapped.accept(())
         })
     }
     

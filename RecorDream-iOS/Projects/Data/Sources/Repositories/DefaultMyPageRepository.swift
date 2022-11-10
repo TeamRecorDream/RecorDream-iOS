@@ -38,7 +38,7 @@ extension DefaultMyPageRepository: MyPageRepository {
         }
     }
     
-    public func userWithdrawl() -> Observable<Bool> {
+    public func userWithdrawal() -> Observable<Bool> {
         return Observable.create { observer in
             observer.onNext(true)
             return Disposables.create()

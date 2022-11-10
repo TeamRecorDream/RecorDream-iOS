@@ -19,11 +19,11 @@ public protocol MyPageUseCase {
     func disablePushNotice()
     func enablePushNotice(time: String)
     func userLogout()
-    func userWithdrawl()
+    func userWithdrawal()
     
     var myPageFetched: PublishSubject<MyPageEntity?> { get set }
     var logoutSuccess: PublishSubject<Void> { get set }
-    var withdrawlSuccess: PublishSubject<Void> { get set }
+    var withdrawalSuccess: PublishSubject<Void> { get set }
     var usernameEditStatus: BehaviorRelay<Bool> { get set }
     var shouldShowAlert: PublishRelay<Void> { get set }
     var updatePushSuccess: PublishSubject<String?> { get set }
@@ -38,7 +38,7 @@ public class DefaultMyPageUseCase {
     public var usernameEditStatus = BehaviorRelay<Bool>(value: false)
     public var shouldShowAlert = PublishRelay<Void>()
     public var logoutSuccess = PublishSubject<Void>()
-    public var withdrawlSuccess = PublishSubject<Void>()
+    public var withdrawalSuccess = PublishSubject<Void>()
     public var updatePushSuccess = PublishSubject<String?>()
     
     public init(repository: MyPageRepository) {
@@ -101,11 +101,11 @@ extension DefaultMyPageUseCase: MyPageUseCase {
             }).disposed(by: self.disposeBag)
     }
     
-    public func userWithdrawl() {
-        self.repository.userWithdrawl()
+    public func userWithdrawal() {
+        self.repository.userWithdrawal()
             .filter { $0 }
             .subscribe(onNext: { _ in
-                self.withdrawlSuccess.onNext(())
+                self.withdrawalSuccess.onNext(())
             }).disposed(by: self.disposeBag)
     }
 }
