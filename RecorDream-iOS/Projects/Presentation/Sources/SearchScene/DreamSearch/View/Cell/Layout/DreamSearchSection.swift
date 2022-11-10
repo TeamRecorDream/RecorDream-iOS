@@ -15,12 +15,14 @@ extension DreamSearchVC {
         return UICollectionViewCompositionalLayout { [weak self] sectionNumber, environment -> NSCollectionLayoutSection? in
             guard let self = self else { return nil }
 
-            switch DreamSearchResultType {
-            case .exist:
-                self.createExistSection()
-            case .non:
-                self.createNoneSection()
-            }
+//            switch DreamSearchResultType {
+//            case .exist:
+//                self.createExistSection()
+//            case .non:
+//                self.createNoneSection()
+//            }
+            return self.createNoneSection()
+
         }
     }
     private func createExistSection() -> NSCollectionLayoutSection {

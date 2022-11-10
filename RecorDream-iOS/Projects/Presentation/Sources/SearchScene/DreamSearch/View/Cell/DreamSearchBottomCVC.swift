@@ -13,7 +13,7 @@ import RD_DSKit
 final class DreamSearchBottomCVC: DreamSearchCollectionViewCell {
     private lazy var rogoImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = RDDSKitAsset.Images.rdRogoMark.image
+        iv.image = RDDSKitAsset.Images.rdHomeLogo.image
         iv.contentMode = .scaleAspectFit
         return iv
     }()

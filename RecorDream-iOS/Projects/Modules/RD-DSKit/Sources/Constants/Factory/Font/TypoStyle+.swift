@@ -11,7 +11,7 @@ import UIKit
 public extension TypoStyle {
     private var fontDescription: FontDescription {
         switch self {
-        case .tittle01:
+        case .title01:
             return FontDescription(font: .pretendardSemibold, size: 18)
         case .title02:
             return FontDescription(font: .pretendardBold, size: 16)
