@@ -121,8 +121,8 @@ public enum RDDSKitAsset {
     public static let listRed = RDDSKitImages(name: "list_red")
     public static let listWhite = RDDSKitImages(name: "list_white")
     public static let listYellow = RDDSKitImages(name: "list_yellow")
-    public static let rdHomeRogo = RDDSKitImages(name: "rd_home_rogo")
-    public static let rdSplashRogo = RDDSKitImages(name: "rd_splash_rogo")
+    public static let rdHomeLogo = RDDSKitImages(name: "rd_home_logo")
+    public static let rdSplashLogo = RDDSKitImages(name: "rd_splash_logo")
     public static let rdgoroMark = RDDSKitImages(name: "rdgoro_mark")
     public static let splashBackground = RDDSKitImages(name: "splash_background")
   }
