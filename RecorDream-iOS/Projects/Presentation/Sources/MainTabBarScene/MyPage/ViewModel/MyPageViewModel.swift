@@ -28,13 +28,13 @@ public class MyPageViewModel: ViewModelType {
         let pushSwitchChagned: Observable<Bool>
         let pushTimePicked: Observable<String>
         let logoutButtonTapped: Observable<Void>
-        let withdrawlButtonTapped: Observable<Void>
+        let WithdrawalButtonTapped: Observable<Void>
     }
     
     // MARK: - CoordinatorInput
     
     public var logoutCompleted = PublishRelay<Void>()
-    public var withdrawlCompleted = PublishRelay<Void>()
+    public var WithdrawalCompleted = PublishRelay<Void>()
     
     // MARK: - Outputs
     
@@ -84,8 +84,8 @@ extension MyPageViewModel {
             self.useCase.userLogout()
         }).disposed(by: disposeBag)
         
-        input.withdrawlButtonTapped.subscribe(onNext: { _ in
-            self.useCase.userWithdrawl()
+        input.WithdrawalButtonTapped.subscribe(onNext: { _ in
+            self.useCase.userWithdrawal()
         }).disposed(by: disposeBag)
         
         return output
@@ -119,11 +119,11 @@ extension MyPageViewModel {
                 self.logoutCompleted.accept(())
             }.disposed(by: disposeBag)
         
-        let withdrawlSuccessed = self.useCase.withdrawlSuccess
-        withdrawlSuccessed
+        let WithdrawalSuccessed = self.useCase.WithdrawalSuccess
+        WithdrawalSuccessed
             .bind {
                 output.loadingStatus.accept(false)
-                self.withdrawlCompleted.accept(())
+                self.WithdrawalCompleted.accept(())
             }.disposed(by: disposeBag)
     }
 }

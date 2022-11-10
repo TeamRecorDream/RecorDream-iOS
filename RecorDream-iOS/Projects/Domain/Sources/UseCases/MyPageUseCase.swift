@@ -17,11 +17,11 @@ public protocol MyPageUseCase {
     func startUsernameEdit()
     func editUsername(username: String)
     func userLogout()
-    func userWithdrawl()
+    func userWithdrawal()
     
     var myPageFetched: PublishSubject<MyPageEntity?> { get set }
     var logoutSuccess: PublishSubject<Void> { get set }
-    var withdrawlSuccess: PublishSubject<Void> { get set }
+    var WithdrawalSuccess: PublishSubject<Void> { get set }
     var usernameEditStatus: BehaviorRelay<Bool> { get set }
     var shouldShowAlert: PublishRelay<Void> { get set }
 }
@@ -35,7 +35,7 @@ public class DefaultMyPageUseCase {
     public var usernameEditStatus = BehaviorRelay<Bool>(value: false)
     public var shouldShowAlert = PublishRelay<Void>()
     public var logoutSuccess = PublishSubject<Void>()
-    public var withdrawlSuccess = PublishSubject<Void>()
+    public var WithdrawalSuccess = PublishSubject<Void>()
     
     public init(repository: MyPageRepository) {
         self.repository = repository
@@ -84,11 +84,11 @@ extension DefaultMyPageUseCase: MyPageUseCase {
             }).disposed(by: self.disposeBag)
     }
     
-    public func userWithdrawl() {
-        self.repository.userWithdrawl()
+    public func userWithdrawal() {
+        self.repository.userWithdrawal()
             .filter { $0 }
             .subscribe(onNext: { _ in
-                self.withdrawlSuccess.onNext(())
+                self.WithdrawalSuccess.onNext(())
             }).disposed(by: self.disposeBag)
     }
 }

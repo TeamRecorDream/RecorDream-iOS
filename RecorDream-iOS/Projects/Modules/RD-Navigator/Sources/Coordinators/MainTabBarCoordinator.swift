@@ -53,7 +53,7 @@ final class MainTabBarCoordinator: DefaultCoordinator {
             .subscribe(onNext: { [unowned self] in
                 self.router.popModule()
             }).disposed(by: disposeBag)
-        myPageVC.viewModel.withdrawlCompleted
+        myPageVC.viewModel.WithdrawalCompleted
             .subscribe(onNext: { [unowned self] in
                 self.router.popModule()
             }).disposed(by: disposeBag)
