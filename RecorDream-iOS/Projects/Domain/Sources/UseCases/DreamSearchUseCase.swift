@@ -9,29 +9,27 @@
 import Foundation
 
 import RD_Core
-import Domain
 
 protocol DreamSearchUseCase {
     func execute(requestValue: DreamSearchUseCaseRequestValue,
-                 completion: @escaping (Result<DreamSearchQuery, Error>) -> Void) -> Cancellable?
+                 completion: @escaping (Result<DreamSearchEntity, Error>) -> Void) -> Cancellable?
 }
 
-//final class DefaultDreamSearchUseCase: DreamSearchUseCase {
-//    private let dreamSearchRepository: DreamSearchRepository
-//
-//    init(dreamSearchRepository: DreamSearchRepository) {
-//        self.dreamSearchRepository = dreamSearchRepository
-//    }
-//
-//    func execute(requestValue: DreamSearchUseCaseRequestValue,
-//                 completion: @escaping (Result<DreamSearchEntity, Error>) -> Void) -> Cancellable? {
-//
-//        return dreamSearchRepository.fetchDreamSearchList(query: requestValue.query,
-//                                                        completion: { result in
-//            completion(result)
-//        })
-//    }
-//}
+final class DefaultDreamSearchUseCase: DreamSearchUseCase {
+    
+    private let dreamSearchRepository: DreamSearchRepository
+
+    init(dreamSearchRepository: DreamSearchRepository) {
+        self.dreamSearchRepository = dreamSearchRepository
+    }
+
+    func execute(requestValue: DreamSearchUseCaseRequestValue,
+                 completion: @escaping (Result<DreamSearchEntity, Error>) -> Void) -> Cancellable? {
+        return dreamSearchRepository.fetchDreamSearchList(query: requestValue.query) { result in
+            completion(result)
+        }
+    }
+}
 
 struct DreamSearchUseCaseRequestValue {
     let query: DreamSearchQuery
