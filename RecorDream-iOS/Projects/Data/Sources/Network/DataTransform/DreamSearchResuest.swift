@@ -1,5 +1,5 @@
 //
-//  DreamSearchResuestDTO.swift
+//  DreamSearchResuest.swift
 //  Data
 //
 //  Created by 정은희 on 2022/11/09.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct DreamSearchResuestDTO: Encodable {
+struct DreamSearchResuest: Encodable {
     let query: String
 }

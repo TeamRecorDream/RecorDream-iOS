@@ -10,12 +10,12 @@ import Foundation
 
 import RD_Core
 
-protocol DreamSearchUseCase {
+public protocol DreamSearchUseCase {
     func execute(requestValue: DreamSearchUseCaseRequestValue,
                  completion: @escaping (Result<DreamSearchEntity, Error>) -> Void) -> Cancellable?
 }
 
-final class DefaultDreamSearchUseCase: DreamSearchUseCase {
+public final class DefaultDreamSearchUseCase: DreamSearchUseCase {
     
     private let dreamSearchRepository: DreamSearchRepository
 
@@ -23,7 +23,7 @@ final class DefaultDreamSearchUseCase: DreamSearchUseCase {
         self.dreamSearchRepository = dreamSearchRepository
     }
 
-    func execute(requestValue: DreamSearchUseCaseRequestValue,
+    public func execute(requestValue: DreamSearchUseCaseRequestValue,
                  completion: @escaping (Result<DreamSearchEntity, Error>) -> Void) -> Cancellable? {
         return dreamSearchRepository.fetchDreamSearchList(query: requestValue.query) { result in
             completion(result)
@@ -31,6 +31,6 @@ final class DefaultDreamSearchUseCase: DreamSearchUseCase {
     }
 }
 
-struct DreamSearchUseCaseRequestValue {
+public struct DreamSearchUseCaseRequestValue {
     let query: DreamSearchQuery
 }

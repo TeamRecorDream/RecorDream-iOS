@@ -12,7 +12,7 @@ import HeeKit
 
 public protocol DreamSearhControllable: Presentable, Reusable { }
 
-public class DreamSearchCollectionViewCell: UICollectionReusableView, DreamSearhControllable {
+public class DreamSearchCollectionViewCell: UICollectionViewCell, DreamSearhControllable {
     // MARK: - View Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)

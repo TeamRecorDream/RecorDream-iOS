@@ -13,12 +13,12 @@ import RD_Network
 
 struct DreamSearchResultViewModel {
     // Input
-    var dreamSearchResult: DreamSearchResult!
+    var dreamSearchResult: DreamSearchEntity!
     // Output
     var recordsCount: Int = 0
     var hasRecords: [Records] = []
     
-    init(dreamSearchResultModel: DreamSearchResult) {
+    init(dreamSearchResultModel: DreamSearchEntity) {
         self.dreamSearchResult = dreamSearchResultModel
         self.configureOutputForCell()
     }

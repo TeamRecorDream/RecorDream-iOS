@@ -15,13 +15,13 @@ import HeeKit
 
 final class DreamSearchViewModel {
     // Input
-    private var provider: DefaultSearchService!
+    private var provider: DefaultRecordService!
     private var collectionViewDataSource: [DreamSearchResultViewModel] = [] // 서브 뷰모델에 해당
     private var currentSearchQuery = ""
     // Output
     var numberOfItems: Int = 0
     // Observer input
-    var searchResults = PublishSubject<[DreamSearchResult]>()
+    var searchResults = PublishSubject<[DreamSearchEntity]>()
     var cellSelected = PublishSubject<DreamSearchResultViewModel>()
     var reloadCollectionViewData = PublishSubject<Bool>()
     var cancelButtonTapped = PublishSubject<Void>()
@@ -29,7 +29,7 @@ final class DreamSearchViewModel {
     
     private var disposeBag = DisposeBag()
     
-    init(provider: DefaultSearchService = DefaultSearchService.shared) {
+    init(provider: DefaultRecordService = DefaultRecordService.shared) {
         self.provider = provider
         self.initialize()
     }
@@ -40,13 +40,13 @@ extension DreamSearchViewModel {
         searchQuery
             .asObservable()
             .observe(on: MainScheduler.instance)
-            .flatMapLatest { query -> Observable<[DreamSearchResult]> in
+            .flatMapLatest { query -> Observable<[DreamSearchEntity]> in
                 Log.event(type: .info, "사용자가 \(query)에 대한 검색을 시작함")
                 self.currentSearchQuery = query
                 self.resetCollectionViewDataSource()
                 
                 return self.searchItemsForTerm()
-                    .catch { error -> Observable<[DreamSearchResult]> in
+                    .catch { error -> Observable<[DreamSearchEntity]> in
                         self.reloadCollectionViewData.onNext(true)
                         return Observable.empty()
                     }
@@ -71,12 +71,12 @@ extension DreamSearchViewModel {
 }
 
 extension DreamSearchViewModel {
-    func prepareCollectionViewDataSource(results: [DreamSearchResult]) {
+    func prepareCollectionViewDataSource(results: [DreamSearchEntity]) {
         self.numberOfItems = numberOfItems + results.count
-        let preparedData = results.map { DreamSearchResultViewModel(dreamSearchResultModel: $0) }
+        let preparedData = results.map({ DreamSearchResultViewModel(dreamSearchResultModel: $0) })
         self.collectionViewDataSource.append(contentsOf: preparedData)
     }
-    func searchItemsForTerm() -> Observable<[DreamSearchResult]> {
+    func searchItemsForTerm() -> Observable<[DreamSearchEntity]> {
         return Observable.create({ [weak self] observer -> Disposable in
             guard let self = self else { return }
             self.provider.searchDreamRecords(keyword: self.currentSearchQuery) { result in
