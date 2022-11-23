@@ -37,7 +37,7 @@ public class MyPageInteractionView: UIView {
         return label
     }()
     
-    private let pushSwitch: UISwitch = {
+    public let pushSwitch: UISwitch = {
         let sw = UISwitch()
         sw.onTintColor = RDDSKitAsset.Colors.purple.color
         sw.isSelected = false
@@ -134,5 +134,9 @@ extension Reactive where Base: MyPageInteractionView {
         return Binder(base) { view, isEnabled in
             view.updateEnabledStatus(isEnabled)
         }
+    }
+    
+    public var pushSwitchIsOn: ControlProperty<Bool> {
+        return base.pushSwitch.rx.isOn
     }
 }
