@@ -16,14 +16,17 @@ public protocol MyPageUseCase {
     func restartUsernameEdit()
     func startUsernameEdit()
     func editUsername(username: String)
+    func disablePushNotice()
+    func enablePushNotice(time: String)
     func userLogout()
     func userWithdrawal()
     
     var myPageFetched: PublishSubject<MyPageEntity?> { get set }
     var logoutSuccess: PublishSubject<Void> { get set }
-    var WithdrawalSuccess: PublishSubject<Void> { get set }
+    var withdrawalSuccess: PublishSubject<Void> { get set }
     var usernameEditStatus: BehaviorRelay<Bool> { get set }
     var shouldShowAlert: PublishRelay<Void> { get set }
+    var updatePushSuccess: PublishSubject<String?> { get set }
 }
 
 public class DefaultMyPageUseCase {
@@ -35,7 +38,8 @@ public class DefaultMyPageUseCase {
     public var usernameEditStatus = BehaviorRelay<Bool>(value: false)
     public var shouldShowAlert = PublishRelay<Void>()
     public var logoutSuccess = PublishSubject<Void>()
-    public var WithdrawalSuccess = PublishSubject<Void>()
+    public var withdrawalSuccess = PublishSubject<Void>()
+    public var updatePushSuccess = PublishSubject<String?>()
     
     public init(repository: MyPageRepository) {
         self.repository = repository
@@ -43,6 +47,19 @@ public class DefaultMyPageUseCase {
 }
 
 extension DefaultMyPageUseCase: MyPageUseCase {
+    public func enablePushNotice(time: String) {
+        self.repository.enablePushNotice(time: time)
+            .subscribe { selectedTime in
+                self.updatePushSuccess.onNext(selectedTime)
+            }.disposed(by: self.disposeBag)
+    }
+
+    public func disablePushNotice() {
+        self.repository.disablePushNotice()
+            .subscribe { _ in
+                self.updatePushSuccess.onNext(nil)
+            }.disposed(by: self.disposeBag)
+    }
     
     public func fetchMyPageData() {
         self.repository.fetchUserInformation()
@@ -88,7 +105,7 @@ extension DefaultMyPageUseCase: MyPageUseCase {
         self.repository.userWithdrawal()
             .filter { $0 }
             .subscribe(onNext: { _ in
-                self.WithdrawalSuccess.onNext(())
+                self.withdrawalSuccess.onNext(())
             }).disposed(by: self.disposeBag)
     }
 }

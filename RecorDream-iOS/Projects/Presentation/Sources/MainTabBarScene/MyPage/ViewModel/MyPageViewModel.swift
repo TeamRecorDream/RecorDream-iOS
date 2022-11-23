@@ -28,13 +28,13 @@ public class MyPageViewModel: ViewModelType {
         let pushSwitchChagned: Observable<Bool>
         let pushTimePicked: Observable<String>
         let logoutButtonTapped: Observable<Void>
-        let WithdrawalButtonTapped: Observable<Void>
+        let withdrawalButtonTapped: Observable<Void>
     }
     
     // MARK: - CoordinatorInput
     
     public var logoutCompleted = PublishRelay<Void>()
-    public var WithdrawalCompleted = PublishRelay<Void>()
+    public var withdrawalCompleted = PublishRelay<Void>()
     
     // MARK: - Outputs
     
@@ -44,6 +44,7 @@ public class MyPageViewModel: ViewModelType {
         var showAlert = PublishRelay<Void>()
         var usernameEditCompleted = PublishRelay<Bool>()
         var loadingStatus = BehaviorRelay<Bool>(value: true)
+        var selectedPushTime = PublishRelay<String?>()
     }
     
     // MARK: - Coordination
@@ -72,7 +73,7 @@ extension MyPageViewModel {
             case .noText:
                 self.useCase.restartUsernameEdit()
             case .endWithProperText(let text):
-                // TODO: - 로딩 화면 보여주기
+                output.loadingStatus.accept(true)
                 self.useCase.editUsername(username: text)
             }
         }).disposed(by: disposeBag)
@@ -80,11 +81,22 @@ extension MyPageViewModel {
         input.usernameAlertDismissed.subscribe { _ in
             self.useCase.startUsernameEdit()
         }.disposed(by: disposeBag)
+        
+        input.pushSwitchChagned
+            .filter { $0 == false }
+            .subscribe(onNext: { _ in
+                self.useCase.disablePushNotice()
+        }).disposed(by: disposeBag)
+        
+        input.pushTimePicked.subscribe(onNext: { selectedTime in
+            self.useCase.enablePushNotice(time: selectedTime)
+        }).disposed(by: disposeBag)
+        
         input.logoutButtonTapped.subscribe(onNext: { _ in
             self.useCase.userLogout()
         }).disposed(by: disposeBag)
         
-        input.WithdrawalButtonTapped.subscribe(onNext: { _ in
+        input.withdrawalButtonTapped.subscribe(onNext: { _ in
             self.useCase.userWithdrawal()
         }).disposed(by: disposeBag)
         
@@ -119,11 +131,18 @@ extension MyPageViewModel {
                 self.logoutCompleted.accept(())
             }.disposed(by: disposeBag)
         
-        let WithdrawalSuccessed = self.useCase.WithdrawalSuccess
-        WithdrawalSuccessed
+        let withdrawalSuccessed = self.useCase.withdrawalSuccess
+        withdrawalSuccessed
             .bind {
                 output.loadingStatus.accept(false)
-                self.WithdrawalCompleted.accept(())
+                self.withdrawalCompleted.accept(())
+            }.disposed(by: disposeBag)
+        
+        let pushUpdateSuccess = self.useCase.updatePushSuccess
+        pushUpdateSuccess
+            .bind { selectedTime in
+                output.loadingStatus.accept(false)
+                output.selectedPushTime.accept(selectedTime)
             }.disposed(by: disposeBag)
     }
 }
