@@ -21,5 +21,27 @@ public class DefaultMyPageRepository {
 }
 
 extension DefaultMyPageRepository: MyPageRepository {
-  
+    public func fetchUserInformation() -> Observable<MyPageEntity> {
+        return Observable.create { observer in
+            observer.onNext(.init(userName: "샘플닉네임",
+                                  email: "sample@gmail.com",
+                                  pushOnOff: true,
+                                  pushTime: "08:00"))
+            return Disposables.create()
+        }
+    }
+    
+    public func userLogout() -> Observable<Bool> {
+        return Observable.create { observer in
+            observer.onNext(true)
+            return Disposables.create()
+        }
+    }
+    
+    public func userWithdrawal() -> Observable<Bool> {
+        return Observable.create { observer in
+            observer.onNext(true)
+            return Disposables.create()
+        }
+    }
 }
