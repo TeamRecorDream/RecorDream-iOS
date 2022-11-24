@@ -10,7 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-final class DreamSearchBottomCVC: UICollectionReusableView {
+final class DreamSearchBottomCVC: DreamSearchReusableView {
     private lazy var rogoImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = RDDSKitAsset.Images.rdHomeLogo.image
