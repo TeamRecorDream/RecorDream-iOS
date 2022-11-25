@@ -111,14 +111,18 @@ extension DreamWriteMainCVC {
         self.titleTextView.initText = model.titleText
         self.contentTextView.initText = model.contentText
         
-        self.dateInteractionView.rx
-            .dateUpdated
-            .onNext(model.date)
+        self.dateChanged(date: model.date)
         
         guard let recordTime = model.recordTime else { return }
         self.voiceRecordInteractionView.rx
             .recordTimeUpdated
             .onNext(recordTime)
+    }
+    
+    public func dateChanged(date: String) {
+        self.dateInteractionView.rx
+            .dateUpdated
+            .onNext(date)
     }
     
     @objc

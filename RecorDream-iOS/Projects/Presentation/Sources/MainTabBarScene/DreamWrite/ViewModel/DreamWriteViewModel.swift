@@ -21,7 +21,7 @@ public class DreamWriteViewModel: ViewModelType {
     public struct Input {
         let viewDidLoad: Observable<Void>
         let closeButtonTapped: Observable<Void>
-        let datePicked: Observable<Void>
+        let datePicked: Observable<String>
         let voiceRecorded: Observable<(URL, CGFloat)?>
         let titleTextChanged: Observable<String>
         let contentTextChanged: Observable<String>
@@ -73,7 +73,7 @@ extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
         
-        Observable.combineLatest(input.datePicked.startWith(()),
+        Observable.combineLatest(input.datePicked.startWith(""),
                                  input.voiceRecorded.startWith(nil),
                                  input.titleTextChanged.startWith(""),
                                  input.contentTextChanged.startWith(""),

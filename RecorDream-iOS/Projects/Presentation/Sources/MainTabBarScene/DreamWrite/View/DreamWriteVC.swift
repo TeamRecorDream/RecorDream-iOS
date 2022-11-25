@@ -25,7 +25,7 @@ public class DreamWriteVC: UIViewController {
     
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
-    private let datePicked = PublishRelay<Void>()
+    private let datePicked = PublishRelay<String>()
     private let voiceRecorded = PublishRelay<(URL, CGFloat)?>()
     private let titleTextChanged = PublishRelay<String>()
     private let contentTextChanged = PublishRelay<String>()
@@ -46,6 +46,8 @@ public class DreamWriteVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
+    
+    private var mainCell: DreamWriteMainCVC?
     
     private var warningFooter: DreamWriteWarningFooter?
     
@@ -207,6 +209,9 @@ extension DreamWriteVC {
         datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
             guard let self = self else { return }
             self.dismissDatePickerView()
+            guard let date = dateOutput else { return }
+            self.datePicked.accept(date)
+            self.mainCell?.dateChanged(date: date)
         }).disposed(by: self.disposeBag)
     }
 }
@@ -220,6 +225,7 @@ extension DreamWriteVC {
             switch Section.type(indexPath.section) {
             case .main:
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
+                self.mainCell = mainCell
                 if let model = itemIdentifier as? DreamWriteEntity.Main {
                     mainCell.setData(model: model)
                 }
