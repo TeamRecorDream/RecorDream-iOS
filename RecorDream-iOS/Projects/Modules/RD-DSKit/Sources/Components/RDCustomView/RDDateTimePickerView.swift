@@ -127,6 +127,9 @@ public class RDDateTimePickerView: UIView {
     var selectedHour = 0
     var selectedMinute = 0
     
+    private let disposeBag = DisposeBag()
+    public let dateTimeOutput = PublishSubject<String?>()
+    
     // MARK: - UI Components
     
     private let grabberView: UIView = {
@@ -147,6 +150,7 @@ public class RDDateTimePickerView: UIView {
     lazy var datePicker: UIPickerView = {
         let datePicker = UIPickerView()
         datePicker.tintColor = .white
+        datePicker.setValue(UIColor.white, forKeyPath: "textColor")
         datePicker.delegate = self
         datePicker.dataSource = self
         return datePicker
@@ -288,6 +292,34 @@ extension RDDateTimePickerView {
     private func setTimePicker() {
         self.titleLabel.text = "시간 설정"
         datePicker.removeFromSuperview()
+    }
+    
+    @discardableResult
+    public func enablePanGesture() -> Self {
+        let panGesture = UIPanGestureRecognizer()
+        self.addGestureRecognizer(panGesture)
+        panGesture.rx.event.asDriver { _ in .never() }
+            .drive(onNext: { [weak self] sender in
+                guard let self = self else { return }
+                let translation = sender.translation(in: self)
+                switch sender.state {
+                case .changed:
+                    if translation.y >= 0 {
+                            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+                    }
+                case .ended:
+                    if translation.y >= 200 {
+                        self.dateTimeOutput.onNext(nil)
+                    } else {
+                        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseIn) {
+                            self.transform = CGAffineTransform.identity
+                        }
+                    }
+                default:
+                    break
+                }
+            }).disposed(by: self.disposeBag)
+        return self
     }
 }
 

@@ -60,6 +60,10 @@ public class DreamWriteVC: UIViewController {
         return view
     }()
     
+    private let datePickerView = RDDateTimePickerView()
+        .viewType(.date)
+        .enablePanGesture()
+    
     private let recordView = DreamWriteRecordView()
     
     // MARK: - View Life Cycle
@@ -88,7 +92,7 @@ extension DreamWriteVC {
     
     private func setLayout() {
         self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton,
-                              backGroundView, recordView)
+                              backGroundView, recordView, datePickerView)
         
         dreamWriteCollectionView.snp.makeConstraints { make in
             make.top.equalTo(naviBar.snp.bottom)
@@ -114,6 +118,12 @@ extension DreamWriteVC {
         recordView.snp.updateConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(327.adjustedH)
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+        }
+        
+        datePickerView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(340.adjustedH)
             make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
         }
     }
@@ -193,6 +203,11 @@ extension DreamWriteVC {
                   let totalTime = urlTimeTuple?.1 else { return }
             self.voiceRecorded.accept((fileURL, totalTime))
         }).disposed(by: self.disposeBag)
+        
+        datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
+            guard let self = self else { return }
+            self.dismissDatePickerView()
+        }).disposed(by: self.disposeBag)
     }
 }
 
@@ -218,8 +233,7 @@ extension DreamWriteVC {
                     guard let self = self else { return }
                     switch viewType {
                     case .date:
-                        // TODO: - 날짜 선택 기능 구현
-                        print("구현 예정")
+                        self.dateInteractionViewTapped()
                     case .voiceRecord:
                         self.voiceRecordInteractionViewTapped()
                     }
@@ -308,9 +322,31 @@ extension DreamWriteVC {
 // MARK: - BindCellActions
 
 extension DreamWriteVC {
+    private func dateInteractionViewTapped() {
+        self.makeTransParentBackground()
+        self.showDatePickerView()
+    }
+    
     private func voiceRecordInteractionViewTapped() {
         self.makeTransParentBackground()
         self.showVoiceRecordView()
+    }
+    
+    private func makeTransParentBackground() {
+        self.backGroundView.isUserInteractionEnabled = true
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.backGroundView.alpha = 1
+        }
+    }
+    
+    private func showDatePickerView() {
+        datePickerView.transform = CGAffineTransform.identity
+        datePickerView.snp.updateConstraints { make in
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     private func showVoiceRecordView() {
@@ -323,16 +359,20 @@ extension DreamWriteVC {
         }
     }
     
-    private func makeTransParentBackground() {
-        self.backGroundView.isUserInteractionEnabled = true
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
-            self.backGroundView.alpha = 1
-        }
-    }
-    
     private func dismissVoiceRecordView() {
         self.backGroundView.isUserInteractionEnabled = false
         recordView.snp.updateConstraints { make in
+            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+        }
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
+            self.backGroundView.alpha = 0
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func dismissDatePickerView() {
+        self.backGroundView.isUserInteractionEnabled = false
+        datePickerView.snp.updateConstraints { make in
             make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {

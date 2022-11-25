@@ -101,9 +101,10 @@ extension DreamWriteMainCVC {
 extension DreamWriteMainCVC {
     
     private func setGesture() {
-        let interactionViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
-        dateInteractionView.addGestureRecognizer(interactionViewTapGesture)
-        voiceRecordInteractionView.addGestureRecognizer(interactionViewTapGesture)
+        let dateInteractionViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
+        let voiceRecordViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
+        dateInteractionView.addGestureRecognizer(dateInteractionViewTapGesture)
+        voiceRecordInteractionView.addGestureRecognizer(voiceRecordViewTapGesture)
     }
     
     public func setData(model: DreamWriteEntity.Main) {
