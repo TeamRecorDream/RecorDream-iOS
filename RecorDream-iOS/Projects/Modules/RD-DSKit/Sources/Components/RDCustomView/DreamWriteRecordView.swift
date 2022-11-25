@@ -68,6 +68,13 @@ public class DreamWriteRecordView: UIView {
     
     private let playSliderView = DreamWritePlayerSliderView()
     
+    private let playAndPauseButton: UIButton = {
+        let bt = UIButton()
+        bt.setImage(RDDSKitAsset.Images.icnStart.image, for: .normal)
+        bt.isHidden = true
+        return bt
+    }()
+    
     private let recordButton: UIButton = {
         let bt = UIButton()
         bt.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
@@ -115,7 +122,7 @@ extension DreamWriteRecordView {
     private func setLayout() {
         self.addSubviews(grabberView, titleLabel, mainMicImageView,
                          playSliderView, recordButton, closeButton,
-                         saveButton)
+                         saveButton, playAndPauseButton)
         
         grabberView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(12.adjustedH)
@@ -139,6 +146,12 @@ extension DreamWriteRecordView {
             make.top.equalTo(mainMicImageView.snp.bottom).offset(21.adjustedH)
             make.height.equalTo(23.adjustedH)
             make.leading.trailing.equalToSuperview()
+        }
+        
+        playAndPauseButton.snp.makeConstraints { make in
+            make.centerY.equalTo(playSliderView)
+            make.trailing.equalTo(playSliderView.snp.centerX).offset((-228.adjusted / 2) - 10)
+            make.size.equalTo(20)
         }
         
         recordButton.snp.makeConstraints { make in
@@ -180,11 +193,27 @@ extension DreamWriteRecordView {
             })
             .disposed(by: self.disposeBag)
         
+        playAndPauseButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                guard let self = self,
+                      let player = self.audioPlayer else { return }
+                if player.isPlaying {
+                    self.playAndPauseButton.setImage(RDDSKitAsset.Images.icnStart.image, for: .normal)
+                    self.pausePlayer()
+                } else {
+                    self.playAndPauseButton.setImage(RDDSKitAsset.Images.icnStop.image, for: .normal)
+                    self.startPlayer()
+                }
+            })
+            .disposed(by: self.disposeBag)
+        
         closeButton.rx.tap
             .asDriver()
             .drive(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.recordOutput.onNext(nil)
+                self.resetView()
             })
             .disposed(by: self.disposeBag)
         
@@ -197,6 +226,7 @@ extension DreamWriteRecordView {
                 let duration = audioAsset.duration
                 let durationInSeconds = CGFloat(CMTimeGetSeconds(duration))
                 self.recordOutput.onNext((self.audioFileURL, durationInSeconds))
+                self.resetView()
             })
             .disposed(by: self.disposeBag)
         
@@ -210,6 +240,17 @@ extension DreamWriteRecordView {
                 else {
                     self.playSliderView.rx.elapsedTime.onNext(time)
                 }
+            }
+            .disposed(by: self.disposeBag)
+        
+        Observable<Int>
+            .interval(.milliseconds(100), scheduler: MainScheduler.asyncInstance)
+            .compactMap { [weak self] _ in self?.audioPlayer?.currentTime }
+            .subscribe { timeEvent in
+                guard let time = timeEvent.element,
+                      let player = self.audioPlayer else { return }
+                if !player.isPlaying { self.stopPlayer() }
+                else { self.playSliderView.rx.elapsedTime.onNext(time) }
             }
             .disposed(by: self.disposeBag)
     }
@@ -236,6 +277,10 @@ extension DreamWriteRecordView {
         [closeButton, saveButton].forEach { $0.isHidden = false }
         
         self.stopRecording()
+        
+        self.initPlayer()
+        self.playSliderView.stopRecordAndHiddenLabel()
+        self.playAndPauseButton.isHidden = false
         //        self.stopPlayer()
     }
     
@@ -244,8 +289,8 @@ extension DreamWriteRecordView {
         self.recordStatus = RecordStatus.notStarted
         [closeButton, saveButton].forEach { $0.isHidden = true }
         
-        self.playSliderView.elapsedTimeSecondsFloat = 0.0
-        //        self.startPlayer()
+        self.playAndPauseButton.isHidden = true
+        self.playSliderView.resetSliderView()
     }
     
     private func showNeedsGrantAlert() {
@@ -264,11 +309,12 @@ extension DreamWriteRecordView {
                 switch sender.state {
                 case .changed:
                     if translation.y >= 0 {
-                            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+                        self.transform = CGAffineTransform(translationX: 0, y: translation.y)
                     }
                 case .ended:
                     if translation.y >= 200 {
                         self.recordOutput.onNext(nil)
+                        self.resetView()
                     } else {
                         UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseIn) {
                             self.transform = CGAffineTransform.identity
@@ -278,6 +324,10 @@ extension DreamWriteRecordView {
                     break
                 }
             }).disposed(by: self.disposeBag)
+    }
+    
+    private func resetView() {
+        self.tappedReset()
     }
 }
 
@@ -341,17 +391,25 @@ extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
     private func stopPlayer() {
         if let player = audioPlayer {
             if player.isPlaying { player.stop() }
+            self.playAndPauseButton.setImage(RDDSKitAsset.Images.icnStart.image, for: .normal)
         }
     }
     
-    private func startPlayer() {
+    private func initPlayer() {
         guard let recorder = audioRecorder else { return }
         if !recorder.isRecording {
             audioPlayer = try? AVAudioPlayer(contentsOf: recorder.url)
             audioPlayer?.delegate = self
             audioPlayer?.volume = 100
-            audioPlayer?.play()
         }
+    }
+    
+    private func startPlayer() {
+        audioPlayer?.play()
+    }
+    
+    private func pausePlayer() {
+        audioPlayer?.pause()
     }
     
     private func stopRecording() {
