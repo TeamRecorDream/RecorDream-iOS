@@ -124,7 +124,12 @@ extension DreamWriteInteractionView {
         case .date:
             self.iconImageView.image = RDDSKitAsset.Images.icnCalendar.image
             self.titleLabel.text = "날짜"
-            self.dataLabel.text = "2022-06-27"
+            let currentDate = {
+                var formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                return formatter.string(from: Date())
+            }()
+            self.dataLabel.text = currentDate
             self.buttonImageView.image = RDDSKitAsset.Images.icnArrow.image
         case .voiceRecord:
             self.iconImageView.image = RDDSKitAsset.Images.icnMicS.image

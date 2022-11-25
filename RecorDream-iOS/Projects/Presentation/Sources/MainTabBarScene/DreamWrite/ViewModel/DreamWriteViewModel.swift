@@ -80,9 +80,9 @@ extension DreamWriteViewModel {
                                  input.emotionChagned.startWith(nil),
                                  input.genreListChagned.startWith([]),
                                  input.noteTextChanged.startWith(""))
-        .subscribe(onNext: { (_, urlTime, title, content, emotion, genreList, note) in
+        .subscribe(onNext: { (date, urlTime, title, content, emotion, genreList, note) in
             self.writeRequestEntity.accept(DreamWriteRequest.init(title: title,
-                                                                  date: "22.03.01",
+                                                                  date: date,
                                                                   content: content,
                                                                   emotion: emotion,
                                                                   genre: genreList,

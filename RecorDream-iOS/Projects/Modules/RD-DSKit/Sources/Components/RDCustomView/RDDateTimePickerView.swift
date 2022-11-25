@@ -326,7 +326,7 @@ extension RDDateTimePickerView {
                 switch sender.state {
                 case .changed:
                     if translation.y >= 0 {
-                            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+                        self.transform = CGAffineTransform(translationX: 0, y: translation.y)
                     }
                 case .ended:
                     if translation.y >= 200 {
@@ -415,14 +415,16 @@ extension RDDateTimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
         let componentType = DateComponent.init(rawValue: component)
         switch componentType {
         case .day:
-            var day = ""
-            if row < 9 { day = "0\(row + 1)" }
-            else { day = "\(row + 1)" }
+            let day: String = {
+                if row < 9 { return "0\(row + 1)" }
+                else { return "\(row + 1)" }
+            }()
             selectedDay = day
         case .month:
-            var month = ""
-            if row < 9 { month = "0\(row + 1)" }
-            else { month = "\(row + 1)" }
+            let month: String = {
+                if row < 9 { return "0\(row + 1)" }
+                else { return "\(row + 1)" }
+            }()
             selectedMonth = month
         case .year:
             selectedYear = DateComponent.getYear(row: row)
