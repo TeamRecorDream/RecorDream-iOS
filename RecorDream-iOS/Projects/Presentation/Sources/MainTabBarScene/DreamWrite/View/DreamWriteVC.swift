@@ -268,7 +268,7 @@ extension DreamWriteVC {
                     noteCell.setData(noteText: model.noteText)
                 }
                 noteCell.noteTextChanged
-                    .bind(to: self.titleTextChanged)
+                    .bind(to: self.noteTextChanged)
                     .disposed(by: self.disposeBag)
                 return noteCell
             }
