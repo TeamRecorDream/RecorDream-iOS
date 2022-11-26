@@ -15,11 +15,13 @@ public protocol DreamWriteUseCase {
     func fetchDreamRecord(recordId: String)
     func titleTextValidate(text: String)
     func genreListCautionValidate(genreList: [Int])
+    func uploadVoice(fileURL: URL)
     
     var writeSuccess: PublishSubject<Void> { get set }
     var isWriteEnabled: PublishSubject<Bool> { get set }
     var showCaution: PublishSubject<Bool> { get set }
     var fetchedRecord: PublishSubject<DreamWriteEntity> { get set }
+    var uploadedVoice: PublishSubject<String?> { get set }
 }
 
 public class DefaultDreamWriteUseCase {
@@ -31,6 +33,7 @@ public class DefaultDreamWriteUseCase {
     public var isWriteEnabled = PublishSubject<Bool>()
     public var showCaution = PublishSubject<Bool>()
     public var fetchedRecord = PublishSubject<DreamWriteEntity>()
+    public var uploadedVoice = PublishSubject<String?>()
     
     public init(repository: DreamWriteRepository) {
         self.repository = repository
@@ -62,5 +65,13 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
             .subscribe(onNext: { strongSelf, entity in
             strongSelf.writeSuccess.onNext(())
         }).disposed(by: self.disposeBag)
+    }
+    
+    public func uploadVoice(fileURL: URL) {
+        self.repository.uploadVoice(fileURL: fileURL)
+            .withUnretained(self)
+            .subscribe(onNext: { strongSelf, voiceId in
+                strongSelf.uploadedVoice.onNext(voiceId)
+            }).disposed(by: self.disposeBag)
     }
 }

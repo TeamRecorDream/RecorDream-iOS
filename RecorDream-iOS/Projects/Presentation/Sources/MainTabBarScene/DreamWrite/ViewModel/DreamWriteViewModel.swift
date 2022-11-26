@@ -22,7 +22,7 @@ public class DreamWriteViewModel: ViewModelType {
         let viewDidLoad: Observable<Void>
         let closeButtonTapped: Observable<Void>
         let datePicked: Observable<String>
-        let voiceRecorded: Observable<(URL, CGFloat)?>
+        let voiceRecorded: Observable<URL?>
         let titleTextChanged: Observable<String>
         let contentTextChanged: Observable<String>
         let emotionChagned: Observable<Int?>
@@ -58,6 +58,7 @@ public class DreamWriteViewModel: ViewModelType {
     private var viewModelType = DreamWriteViewModelType.write
     
     let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: [], note: nil, voice: nil))
+    var voiceId: String? = nil
     
     var shouldShowWarningForInit: Bool?
     
@@ -87,7 +88,7 @@ extension DreamWriteViewModel {
                                                                   emotion: emotion,
                                                                   genre: genreList,
                                                                   note: note,
-                                                                  voice: "voiceId"))
+                                                                  voice: self.voiceId))
         }).disposed(by: disposeBag)
         
         self.bindOutput(output: output, disposeBag: disposeBag)
@@ -98,8 +99,9 @@ extension DreamWriteViewModel {
             }
         }).disposed(by: disposeBag)
         
-        input.voiceRecorded.subscribe(onNext: { _ in
-            
+        input.voiceRecorded.subscribe(onNext: { url in
+            guard let url = url else { return }
+            self.useCase.uploadVoice(fileURL: url)
         }).disposed(by: disposeBag)
         
         input.titleTextChanged.subscribe(onNext: {
@@ -143,6 +145,11 @@ extension DreamWriteViewModel {
         let showCaution = useCase.showCaution
         showCaution.subscribe(onNext: { status in
             output.showGenreCountCaution.accept(status)
+        }).disposed(by: disposeBag)
+        
+        let uploadedVoiceId = useCase.uploadedVoice
+        uploadedVoiceId.subscribe(onNext: { voiceId in
+            self.voiceId = voiceId
         }).disposed(by: disposeBag)
     }
 }
