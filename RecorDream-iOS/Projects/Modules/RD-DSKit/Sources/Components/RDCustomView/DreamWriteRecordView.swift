@@ -34,6 +34,8 @@ public class DreamWriteRecordView: UIView {
     var audioRecorder: AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
     
+    private var isReRecord = false
+    
     public var audioFileURL: URL {
         let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let audioFileName = UUID().uuidString + ".m4a"
@@ -211,7 +213,9 @@ extension DreamWriteRecordView {
             .drive(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.recordOutput.onNext(nil)
-                self.resetView()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    self.resetView()
+                }
             })
             .disposed(by: self.disposeBag)
         
@@ -224,7 +228,9 @@ extension DreamWriteRecordView {
                 let duration = audioAsset.duration
                 let durationInSeconds = CGFloat(CMTimeGetSeconds(duration))
                 self.recordOutput.onNext((self.audioFileURL, durationInSeconds))
-                self.resetView()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    self.resetView()
+                }
             })
             .disposed(by: self.disposeBag)
         
@@ -257,16 +263,26 @@ extension DreamWriteRecordView {
         checkMicrophoneAccess { granted in
             DispatchQueue.main.async {
                 if granted {
-                    self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
-                    self.recordStatus = RecordStatus.recording
+                    guard self.isReRecord else {
+                        return self.startRecordWithUI()
+                    }
                     
-                    self.stopPlayer()
-                    self.startRecording()
+                    self.showResetAlert {
+                        self.startRecordWithUI()
+                    }
                 } else {
                     self.showNeedsGrantAlert()
                 }
             }
         }
+    }
+    
+    private func startRecordWithUI() {
+        self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
+        self.recordStatus = RecordStatus.recording
+        
+        self.stopPlayer()
+        self.startRecording()
     }
     
     private func tappedStop() {
@@ -275,6 +291,7 @@ extension DreamWriteRecordView {
         [closeButton, saveButton].forEach { $0.isHidden = false }
         
         self.stopRecording()
+        self.isReRecord = true
         
         self.initPlayer()
         self.playSliderView.stopRecordAndHiddenLabel()
@@ -282,16 +299,16 @@ extension DreamWriteRecordView {
     }
     
     private func tappedReset() {
-        self.showResetAlert()
+        self.showResetAlert(completion: self.resetView)
     }
     
-    private func showResetAlert() {
+    private func showResetAlert(completion: @escaping (()->Void)) {
         let topVC = UIApplication.getMostTopViewController()
         topVC?.makeAlertWithCancelDestructive(title: "다시 녹음하기",
                                               message: "다시 녹음할 경우 기존 녹음은 삭제됩니다. 다시 녹음하시겠습니까?",
                                               okActionTitle: "확인",
                                               okAction: { _ in
-            self.resetView()
+            completion()
         })
     }
     
@@ -316,7 +333,9 @@ extension DreamWriteRecordView {
                 case .ended:
                     if translation.y >= 200 {
                         self.recordOutput.onNext(nil)
-                        self.resetView()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                            self.resetView()
+                        }
                     } else {
                         UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseIn) {
                             self.transform = CGAffineTransform.identity
