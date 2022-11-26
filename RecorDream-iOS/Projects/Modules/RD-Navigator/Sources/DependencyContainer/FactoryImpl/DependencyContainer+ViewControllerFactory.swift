@@ -28,7 +28,8 @@ extension DependencyContainer: MainTabBarControllerFactory {
     }
     
     func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC {
-        let repository = DefaultDreamWriteRepository(recordService: self.recordService)
+        let repository = DefaultDreamWriteRepository(recordService: self.recordService,
+                                                     voiceService: self.voiceService)
         let useCase = DefaultDreamWriteUseCase(repository: repository)
         var viewModel: DreamWriteViewModel
         switch type {

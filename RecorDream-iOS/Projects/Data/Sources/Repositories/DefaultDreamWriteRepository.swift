@@ -18,9 +18,12 @@ public class DefaultDreamWriteRepository {
     private let disposeBag = DisposeBag()
     
     private let recordService: RecordService
+    private let voiceService: VoiceService
     
-    public init(recordService: RecordService) {
+    public init(recordService: RecordService,
+                voiceService: VoiceService) {
         self.recordService = recordService
+        self.voiceService = voiceService
     }
 }
 

@@ -15,3 +15,13 @@ public struct DreamWriteResponse: Codable {
         case id = "_id"
     }
 }
+
+public struct DreamWriteVoiceResponse: Codable {
+    public let id: String
+    public let url: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case url
+    }
+}
