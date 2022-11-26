@@ -87,7 +87,7 @@ extension DreamWriteViewModel {
                                                                   emotion: emotion,
                                                                   genre: genreList,
                                                                   note: note,
-                                                                  voice: urlTime?.0))
+                                                                  voice: "voiceId"))
         }).disposed(by: disposeBag)
         
         self.bindOutput(output: output, disposeBag: disposeBag)

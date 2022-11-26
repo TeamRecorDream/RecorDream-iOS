@@ -9,6 +9,9 @@
 import Foundation
 
 public struct DreamWriteResponse: Codable {
-    public let userId: Int
-    public let content: String
+    public let id: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+    }
 }
