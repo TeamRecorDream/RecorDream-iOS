@@ -204,6 +204,7 @@ extension DreamWriteVC {
             guard let fileURL = urlTimeTuple?.0,
                   let totalTime = urlTimeTuple?.1 else { return }
             self.voiceRecorded.accept((fileURL, totalTime))
+            self.mainCell?.recordUpdated(record: totalTime)
         }).disposed(by: self.disposeBag)
         
         datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
