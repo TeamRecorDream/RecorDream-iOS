@@ -15,8 +15,6 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-// TODO: - 회의에서 RecordView의 재생 기능 필요성이 결정된 이후 주석 처리하기
-
 public class DreamWriteRecordView: UIView {
     
     // MARK: - Properties
@@ -281,16 +279,20 @@ extension DreamWriteRecordView {
         self.initPlayer()
         self.playSliderView.stopRecordAndHiddenLabel()
         self.playAndPauseButton.isHidden = false
-        //        self.stopPlayer()
     }
     
     private func tappedReset() {
-        self.recordButton.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
-        self.recordStatus = RecordStatus.notStarted
-        [closeButton, saveButton].forEach { $0.isHidden = true }
-        
-        self.playAndPauseButton.isHidden = true
-        self.playSliderView.resetSliderView()
+        self.showResetAlert()
+    }
+    
+    private func showResetAlert() {
+        let topVC = UIApplication.getMostTopViewController()
+        topVC?.makeAlertWithCancelDestructive(title: "다시 녹음하기",
+                                              message: "다시 녹음할 경우 기존 녹음은 삭제됩니다. 다시 녹음하시겠습니까?",
+                                              okActionTitle: "확인",
+                                              okAction: { _ in
+            self.resetView()
+        })
     }
     
     private func showNeedsGrantAlert() {
@@ -327,7 +329,12 @@ extension DreamWriteRecordView {
     }
     
     private func resetView() {
-        self.tappedReset()
+        self.recordButton.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
+        self.recordStatus = RecordStatus.notStarted
+        [closeButton, saveButton].forEach { $0.isHidden = true }
+        
+        self.playAndPauseButton.isHidden = true
+        self.playSliderView.resetSliderView()
     }
 }
 
