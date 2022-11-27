@@ -124,7 +124,12 @@ extension DreamWriteInteractionView {
         case .date:
             self.iconImageView.image = RDDSKitAsset.Images.icnCalendar.image
             self.titleLabel.text = "날짜"
-            self.dataLabel.text = "2022-06-27"
+            let currentDate = {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                return formatter.string(from: Date())
+            }()
+            self.dataLabel.text = currentDate
             self.buttonImageView.image = RDDSKitAsset.Images.icnArrow.image
         case .voiceRecord:
             self.iconImageView.image = RDDSKitAsset.Images.icnMicS.image
@@ -155,6 +160,14 @@ extension DreamWriteInteractionView {
     public func updateDataLabel(data: String) {
         self.dataLabel.text = data
     }
+    
+    public func updateRecordLabel(record: CGFloat) {
+        let totalTimeText = {
+            let intTime = Int(record)
+            return String(format: "%02d:%02d", intTime.miniuteDigitInt, intTime.secondsDigitInt)
+        }()
+        self.dataLabel.text = totalTimeText
+    }
 }
 
 extension Reactive where Base: DreamWriteInteractionView {
@@ -164,10 +177,9 @@ extension Reactive where Base: DreamWriteInteractionView {
         }
     }
     
-    public var recordTimeUpdated: Binder<String> {
+    public var recordTimeUpdated: Binder<CGFloat> {
         return Binder(base) { view, recordTime in
-            view.updateEnabledStatus(false)
-            view.updateDataLabel(data: recordTime)
+            view.updateRecordLabel(record: recordTime)
         }
     }
     

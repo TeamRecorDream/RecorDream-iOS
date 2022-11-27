@@ -119,13 +119,16 @@ public class RDDateTimePickerView: UIView {
     
     public var viewType = ViewType.date
     
-    var selectedYear = 0
-    var selectedMonth = 0
-    var selectedDay = 0
+    var selectedYear = 2020
+    var selectedMonth = "01"
+    var selectedDay = "01"
     
     var selectedMeridium = ""
     var selectedHour = 0
     var selectedMinute = 0
+    
+    private let disposeBag = DisposeBag()
+    public let dateTimeOutput = PublishSubject<String?>()
     
     // MARK: - UI Components
     
@@ -147,6 +150,7 @@ public class RDDateTimePickerView: UIView {
     lazy var datePicker: UIPickerView = {
         let datePicker = UIPickerView()
         datePicker.tintColor = .white
+        datePicker.setValue(UIColor.white, forKeyPath: "textColor")
         datePicker.delegate = self
         datePicker.dataSource = self
         return datePicker
@@ -195,6 +199,7 @@ public class RDDateTimePickerView: UIView {
         setUI()
         setLayout()
         DateComponent.initToday()
+        bindViews()
     }
     
     required init?(coder: NSCoder) {
@@ -289,6 +294,54 @@ extension RDDateTimePickerView {
         self.titleLabel.text = "시간 설정"
         datePicker.removeFromSuperview()
     }
+    
+    private func bindViews() {
+        cancelButton.rx.tap
+            .asDriver()
+            .drive(onNext: {
+                self.dateTimeOutput.onNext(nil)
+            }).disposed(by: self.disposeBag)
+        
+        saveButton.rx.tap
+            .asDriver()
+            .drive(onNext: {
+                switch self.viewType {
+                case .date:
+                    let selectedDate = "\(self.selectedYear)-\(self.selectedMonth)-\(self.selectedDay)"
+                    self.dateTimeOutput.onNext(selectedDate)
+                case .time:
+                    self.dateTimeOutput.onNext(nil)
+                }
+            }).disposed(by: self.disposeBag)
+    }
+    
+    @discardableResult
+    public func enablePanGesture() -> Self {
+        let panGesture = UIPanGestureRecognizer()
+        self.addGestureRecognizer(panGesture)
+        panGesture.rx.event.asDriver { _ in .never() }
+            .drive(onNext: { [weak self] sender in
+                guard let self = self else { return }
+                let translation = sender.translation(in: self)
+                switch sender.state {
+                case .changed:
+                    if translation.y >= 0 {
+                        self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+                    }
+                case .ended:
+                    if translation.y >= 200 {
+                        self.dateTimeOutput.onNext(nil)
+                    } else {
+                        UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseIn) {
+                            self.transform = CGAffineTransform.identity
+                        }
+                    }
+                default:
+                    break
+                }
+            }).disposed(by: self.disposeBag)
+        return self
+    }
 }
 
 extension RDDateTimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
@@ -349,9 +402,9 @@ extension RDDateTimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
         switch self.viewType {
         case .date:
             self.dateSelected(row: row, component: component)
-            if (Int(DateComponent.todayYear) == selectedYear && Int(DateComponent.todayMonth)! < selectedMonth) {
+            if (Int(DateComponent.todayYear) == selectedYear && Int(DateComponent.todayMonth)! < Int(selectedMonth)!) {
                 pickerView.selectRow(Int(DateComponent.todayMonth)!-1, inComponent: 1, animated: true)
-                selectedMonth = Int(DateComponent.todayMonth)!
+                selectedMonth = DateComponent.todayMonth
             }
         case .time:
             self.timeSelected(row: row, component: component)
@@ -362,9 +415,17 @@ extension RDDateTimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
         let componentType = DateComponent.init(rawValue: component)
         switch componentType {
         case .day:
-            selectedDay = row + 1
+            let day: String = {
+                if row < 9 { return "0\(row + 1)" }
+                else { return "\(row + 1)" }
+            }()
+            selectedDay = day
         case .month:
-            selectedMonth = row + 1
+            let month: String = {
+                if row < 9 { return "0\(row + 1)" }
+                else { return "\(row + 1)" }
+            }()
+            selectedMonth = month
         case .year:
             selectedYear = DateComponent.getYear(row: row)
         default: return

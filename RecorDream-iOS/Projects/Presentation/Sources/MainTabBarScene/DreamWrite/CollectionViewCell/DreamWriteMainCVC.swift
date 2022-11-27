@@ -101,23 +101,38 @@ extension DreamWriteMainCVC {
 extension DreamWriteMainCVC {
     
     private func setGesture() {
-        let interactionViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
-        dateInteractionView.addGestureRecognizer(interactionViewTapGesture)
-        voiceRecordInteractionView.addGestureRecognizer(interactionViewTapGesture)
+        let dateInteractionViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
+        let voiceRecordViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(interactionViewTapped(_:)))
+        dateInteractionView.addGestureRecognizer(dateInteractionViewTapGesture)
+        voiceRecordInteractionView.addGestureRecognizer(voiceRecordViewTapGesture)
     }
     
     public func setData(model: DreamWriteEntity.Main) {
         self.titleTextView.initText = model.titleText
         self.contentTextView.initText = model.contentText
         
-        self.dateInteractionView.rx
-            .dateUpdated
-            .onNext(model.date)
+        self.dateChanged(date: model.date)
         
         guard let recordTime = model.recordTime else { return }
+        let recordTimes = recordTime.split(separator: ":").compactMap { Int(String($0)) }
+        let recordTimeFloat: CGFloat = CGFloat(recordTimes
+            .reduce(0) { partialResult, seconds in
+                return partialResult*60 + seconds
+            })
+        
+        self.recordUpdated(record: recordTimeFloat)
+    }
+    
+    public func dateChanged(date: String) {
+        self.dateInteractionView.rx
+            .dateUpdated
+            .onNext(date)
+    }
+    
+    public func recordUpdated(record: CGFloat) {
         self.voiceRecordInteractionView.rx
             .recordTimeUpdated
-            .onNext(recordTime)
+            .onNext(record)
     }
     
     @objc

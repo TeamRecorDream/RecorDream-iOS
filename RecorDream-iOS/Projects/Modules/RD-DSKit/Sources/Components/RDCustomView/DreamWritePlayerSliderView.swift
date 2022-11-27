@@ -28,7 +28,16 @@ public class DreamWritePlayerSliderView: UIView {
         }
     }
     
-    var totalTimeSecondsFloat: Float64 = 180
+    var totalTimeSecondsFloat: Float64 = 180 {
+        didSet {
+            let totalTimeText = {
+                let minute = Int(totalTimeSecondsFloat)
+                let seconds = Int(totalTimeSecondsFloat)
+                return String(format: "%02d:%02d", minute.miniuteDigitInt, seconds.secondsDigitInt)
+            }()
+            self.totalTimeLabel.text = totalTimeText
+        }
+    }
     
     // MARK: - UI Components
     
@@ -95,6 +104,23 @@ extension DreamWritePlayerSliderView {
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().inset(24.adjusted)
         }
+    }
+}
+
+// MARK: - Methods
+
+extension DreamWritePlayerSliderView {
+    public func stopRecordAndHiddenLabel() {
+        self.totalTimeSecondsFloat = self.elapsedTimeSecondsFloat
+        self.elapsedTimeSecondsFloat = 0
+        self.elapsedTimeSecondsFloat = totalTimeSecondsFloat
+        self.currentTimeLabel.isHidden = true
+    }
+    
+    public func resetSliderView() {
+        self.currentTimeLabel.isHidden = false
+        self.totalTimeSecondsFloat = 180.0
+        self.elapsedTimeSecondsFloat = 0.0
     }
 }
 
