@@ -30,7 +30,7 @@ public class DreamWriteVC: UIViewController {
     private let titleTextChanged = PublishRelay<String>()
     private let contentTextChanged = PublishRelay<String>()
     private let emotionChagned = PublishRelay<Int?>()
-    private let genreListChagned = PublishRelay<[Int]>()
+    private let genreListChagned = PublishRelay<[Int]?>()
     private let noteTextChanged = PublishRelay<String>()
     
     // MARK: - UI Components
@@ -399,7 +399,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             selectedIndexPath = collectionView
                 .indexPathsForSelectedItems?
                 .first { $0.section == indexPath.section }
-            self.emotionChagned.accept(indexPath.item)
+            self.emotionChagned.accept(indexPath.item + 1)
             guard let selected = selectedIndexPath else {
                 return true
             }
@@ -407,7 +407,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             return true
         case .genres:
             let selectedList = self.getCurrentGenreList(indexPath: indexPath, insert: true)
-            self.genreListChagned.accept(selectedList)
+            self.genreListChagned.accept(selectedList.count == 0 ? nil : selectedList)
             if selectedList.count >= 4 {
                 return false
             } else { return true }
@@ -428,7 +428,8 @@ extension DreamWriteVC: UICollectionViewDelegate {
         case .emotions:
             self.emotionChagned.accept(nil)
         case .genres:
-            self.genreListChagned.accept(getCurrentGenreList(indexPath: indexPath))
+            let currentList = getCurrentGenreList(indexPath: indexPath)
+            self.genreListChagned.accept(currentList.count == 0 ? nil : currentList)
         default: return
         }
     }

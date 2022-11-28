@@ -70,10 +70,8 @@ extension DefaultDreamWriteRepository: DreamWriteRepository {
     
     public func writeDreamRecord(request: DreamWriteRequest) -> Observable<Void> {
         return Observable.create { observer in
-            guard let title = request.title,
-                  let content = request.content,
-                  let emotion = request.emotion else { return Disposables.create() }
-            self.recordService.writeDreamRecord(title: title, date: request.date, content: content, emotion: emotion, genre: request.genre, note: request.note, voice: request.voice)
+            guard let title = request.title else { return Disposables.create() }
+            self.recordService.writeDreamRecord(title: title, date: request.date, content: request.content, emotion: request.emotion, genre: request.genre, note: request.note, voice: request.voice)
                 .subscribe(onNext: { _ in
                     observer.onNext(())
                 }, onError: { err in

@@ -26,7 +26,7 @@ public class DreamWriteViewModel: ViewModelType {
         let titleTextChanged: Observable<String>
         let contentTextChanged: Observable<String>
         let emotionChagned: Observable<Int?>
-        let genreListChagned: Observable<[Int]>
+        let genreListChagned: Observable<[Int]?>
         let noteTextChanged: Observable<String>
         let saveButtonTapped: Observable<Void>
     }
@@ -57,7 +57,7 @@ public class DreamWriteViewModel: ViewModelType {
     
     private var viewModelType = DreamWriteViewModelType.write
     
-    let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: [], note: nil, voice: nil))
+    let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: nil, note: nil, voice: nil))
     var voiceId: String? = nil
     
     var shouldShowWarningForInit: Bool?
@@ -79,7 +79,7 @@ extension DreamWriteViewModel {
                                  input.titleTextChanged.startWith(""),
                                  input.contentTextChanged.startWith(""),
                                  input.emotionChagned.startWith(nil),
-                                 input.genreListChagned.startWith([]),
+                                 input.genreListChagned.startWith(nil),
                                  input.noteTextChanged.startWith(""))
         .subscribe(onNext: { (date, urlTime, title, content, emotion, genreList, note) in
             self.writeRequestEntity.accept(DreamWriteRequest.init(title: title,
@@ -117,6 +117,7 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         input.saveButtonTapped.subscribe(onNext: { _ in
+            print(self.writeRequestEntity.value, "상황")
             self.useCase.writeDreamRecord(request: self.writeRequestEntity.value, voiceId: self.voiceId)
         }).disposed(by: disposeBag)
         

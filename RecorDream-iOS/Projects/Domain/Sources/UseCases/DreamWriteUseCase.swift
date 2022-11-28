@@ -65,6 +65,7 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
     
     public func writeDreamRecord(request: DreamWriteRequest, voiceId: String?) {
         let validRequest = request.makeValidFileds(voiceId: voiceId)
+        print(request,"뷰모델")
         self.repository.writeDreamRecord(request: validRequest)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, entity in

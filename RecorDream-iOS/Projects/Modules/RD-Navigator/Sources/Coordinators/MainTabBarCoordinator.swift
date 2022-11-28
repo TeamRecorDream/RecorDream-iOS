@@ -44,6 +44,10 @@ final class MainTabBarCoordinator: DefaultCoordinator {
             .subscribe(onNext: { [unowned self] in
                 dreamWriteVC.dismiss(animated: true)
             }).disposed(by: disposeBag)
+        dreamWriteVC.viewModel.writeRequestSuccess
+            .subscribe(onNext: { [unowned self] in
+                dreamWriteVC.dismiss(animated: true)
+            }).disposed(by: disposeBag)
         self.router.present(dreamWriteVC)
     }
     
