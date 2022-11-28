@@ -26,4 +26,16 @@ public struct DreamWriteRequest: Codable {
         self.note = note
         self.voice = voice
     }
+    
+    public func makeEmptyFileds() -> Self {
+        var newContent = (content == "무슨 꿈을 꾸셨나요?" ? nil : content)
+        var newNote = (note == "꿈에 대해 따로 기록할 게 있나요?" ? nil : note)
+        return .init(title: title,
+                     date: date,
+                     content: newContent,
+                     emotion: emotion,
+                     genre: genre,
+                     note: newNote,
+                     voice: voice)
+    }
 }

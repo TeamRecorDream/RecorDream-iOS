@@ -60,7 +60,8 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
     }
     
     public func writeDreamRecord(request: DreamWriteRequest) {
-        self.repository.writeDreamRecord(request: request)
+        let validRequest = request.makeEmptyFileds()
+        self.repository.writeDreamRecord(request: validRequest)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, entity in
             strongSelf.writeSuccess.onNext(())

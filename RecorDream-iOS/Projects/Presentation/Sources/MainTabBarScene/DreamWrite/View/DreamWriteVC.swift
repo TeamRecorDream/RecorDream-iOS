@@ -26,7 +26,7 @@ public class DreamWriteVC: UIViewController {
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
     private let datePicked = PublishRelay<String>()
-    private let voiceRecorded = PublishRelay<(URL, CGFloat)?>()
+    private let voiceRecorded = PublishRelay<URL?>()
     private let titleTextChanged = PublishRelay<String>()
     private let contentTextChanged = PublishRelay<String>()
     private let emotionChagned = PublishRelay<Int?>()
@@ -203,7 +203,7 @@ extension DreamWriteVC {
             self.dismissVoiceRecordView()
             guard let fileURL = urlTimeTuple?.0,
                   let totalTime = urlTimeTuple?.1 else { return }
-            self.voiceRecorded.accept((fileURL, totalTime))
+            self.voiceRecorded.accept(fileURL)
             self.mainCell?.recordUpdated(record: totalTime)
         }).disposed(by: self.disposeBag)
         
@@ -439,7 +439,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             .filter { $0.section == indexPath.section } ?? [])
         if insert == true { selectedSet.insert(indexPath) }
         return selectedSet
-            .map { $0.item }
+            .map { $0.item + 1 }
             .sorted()
     }
 }

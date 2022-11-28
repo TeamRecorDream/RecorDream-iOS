@@ -49,7 +49,7 @@ extension VoiceRouter: BaseRouter {
             let multiPart = MultipartFormData()
             
             guard let audioFile: Data = try? Data (contentsOf: url) else { return multiPart }
-            multiPart.append(audioFile, withName: "audio", fileName: "audio.wav", mimeType: "audio/wav")
+            multiPart.append(audioFile, withName: "audio", fileName: "audio.m4a", mimeType: "audio/m4a")
             
             return multiPart
         default: return MultipartFormData()

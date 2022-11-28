@@ -74,7 +74,7 @@ extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
         
-        Observable.combineLatest(input.datePicked.startWith(""),
+        Observable.combineLatest(input.datePicked.startWith(.toDateWithYYMMDD("")()),
                                  input.voiceRecorded.startWith(nil),
                                  input.titleTextChanged.startWith(""),
                                  input.contentTextChanged.startWith(""),
