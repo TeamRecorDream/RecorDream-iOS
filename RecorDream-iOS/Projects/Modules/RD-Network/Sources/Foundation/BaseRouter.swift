@@ -57,6 +57,11 @@ extension BaseRouter {
             request.setValue(HeaderContent.json.rawValue, forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
             request.setValue(HeaderContent.accessTokenSerial.rawValue, forHTTPHeaderField: HTTPHeaderField.access.rawValue)
             request.setValue(HeaderContent.refreshTokenSerial.rawValue, forHTTPHeaderField: HTTPHeaderField.refresh.rawValue)
+            
+        case .tempForVoice:
+            request.setValue(HeaderContent.multiPart.rawValue, forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
+            request.setValue(HeaderContent.accessTokenSerial.rawValue, forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
+            request.setValue("635b977ea5fdd57c7ebb4c7d", forHTTPHeaderField: "userId")
         }
         
         return request

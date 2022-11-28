@@ -28,9 +28,9 @@ public class DefaultDreamWriteRepository {
 }
 
 extension DefaultDreamWriteRepository: DreamWriteRepository {
-    public func uploadVoice(fileURL: URL) -> RxSwift.Observable<String?> {
+    public func uploadVoice(voiceData: Data) -> RxSwift.Observable<String?> {
         return Observable.create { observer in
-            self.voiceService.uploadVoice(fileURL: fileURL)
+            self.voiceService.uploadVoice(data: voiceData)
                 .subscribe(onNext: { entity in
                     guard let id = entity?.id else {
                         observer.onNext(nil)

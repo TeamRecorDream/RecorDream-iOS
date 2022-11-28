@@ -26,7 +26,7 @@ public class DreamWriteVC: UIViewController {
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
     private let datePicked = PublishRelay<String>()
-    private let voiceRecorded = PublishRelay<URL?>()
+    private let voiceRecorded = PublishRelay<Data?>()
     private let titleTextChanged = PublishRelay<String>()
     private let contentTextChanged = PublishRelay<String>()
     private let emotionChagned = PublishRelay<Int?>()
@@ -198,12 +198,12 @@ extension DreamWriteVC {
     }
     
     private func bindViews() {
-        recordView.recordOutput.subscribe(onNext: { [weak self] urlTimeTuple in
+        recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
             guard let self = self else { return }
             self.dismissVoiceRecordView()
-            guard let fileURL = urlTimeTuple?.0,
-                  let totalTime = urlTimeTuple?.1 else { return }
-            self.voiceRecorded.accept(fileURL)
+            guard let voiceData = dataTimeTuple?.0,
+                  let totalTime = dataTimeTuple?.1 else { return }
+            self.voiceRecorded.accept(voiceData)
             self.mainCell?.recordUpdated(record: totalTime)
         }).disposed(by: self.disposeBag)
         

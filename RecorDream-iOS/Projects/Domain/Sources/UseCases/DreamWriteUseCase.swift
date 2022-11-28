@@ -11,11 +11,11 @@ import Foundation
 import RxSwift
 
 public protocol DreamWriteUseCase {
-    func writeDreamRecord(request: DreamWriteRequest)
+    func writeDreamRecord(request: DreamWriteRequest, voiceId: String?)
     func fetchDreamRecord(recordId: String)
     func titleTextValidate(text: String)
-    func genreListCautionValidate(genreList: [Int])
-    func uploadVoice(fileURL: URL)
+    func genreListCautionValidate(genreList: [Int]?)
+    func uploadVoice(voiceData: Data)
     
     var writeSuccess: PublishSubject<Void> { get set }
     var isWriteEnabled: PublishSubject<Bool> { get set }
@@ -46,8 +46,12 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         self.isWriteEnabled.onNext(existDistinctTitle)
     }
     
-    public func genreListCautionValidate(genreList: [Int]) {
-        self.showCaution.onNext(genreList.count >= 3)
+    public func genreListCautionValidate(genreList: [Int]?) {
+        guard let list = genreList else {
+            self.showCaution.onNext(false)
+            return
+        }
+        self.showCaution.onNext(list.count >= 3)
     }
     
     public func fetchDreamRecord(recordId: String) {
@@ -59,8 +63,8 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
             }).disposed(by: self.disposeBag)
     }
     
-    public func writeDreamRecord(request: DreamWriteRequest) {
-        let validRequest = request.makeEmptyFileds()
+    public func writeDreamRecord(request: DreamWriteRequest, voiceId: String?) {
+        let validRequest = request.makeValidFileds(voiceId: voiceId)
         self.repository.writeDreamRecord(request: validRequest)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, entity in
@@ -68,8 +72,8 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         }).disposed(by: self.disposeBag)
     }
     
-    public func uploadVoice(fileURL: URL) {
-        self.repository.uploadVoice(fileURL: fileURL)
+    public func uploadVoice(voiceData: Data) {
+        self.repository.uploadVoice(voiceData: voiceData)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, voiceId in
                 strongSelf.uploadedVoice.onNext(voiceId)

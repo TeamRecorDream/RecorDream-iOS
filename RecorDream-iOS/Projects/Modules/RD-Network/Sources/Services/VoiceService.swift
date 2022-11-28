@@ -12,7 +12,7 @@ import Alamofire
 import RxSwift
 
 public protocol VoiceService {
-    func uploadVoice(fileURL: URL) -> Observable<DreamWriteVoiceResponse?>
+    func uploadVoice(data: Data) -> Observable<DreamWriteVoiceResponse?>
 }
 
 public class DefaultVoiceService: BaseService {
@@ -22,7 +22,7 @@ public class DefaultVoiceService: BaseService {
 }
 
 extension DefaultVoiceService: VoiceService {
-    public func uploadVoice(fileURL: URL) -> RxSwift.Observable<DreamWriteVoiceResponse?> {
-        uploadMultipartInRx(VoiceRouter.uploadVoice(fileURL: fileURL))
+    public func uploadVoice(data: Data) -> RxSwift.Observable<DreamWriteVoiceResponse?> {
+        uploadMultipartInRx(VoiceRouter.uploadVoice(data: data))
     }
 }

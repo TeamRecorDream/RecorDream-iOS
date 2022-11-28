@@ -14,6 +14,7 @@ public enum HeaderType {
     case multiPart
     case multiPartWithToken
     case reissuance
+    case tempForVoice
 }
 
 enum HTTPHeaderField: String {

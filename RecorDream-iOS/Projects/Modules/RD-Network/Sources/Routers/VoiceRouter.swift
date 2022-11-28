@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 
 enum VoiceRouter {
-    case uploadVoice(fileURL: URL)
+    case uploadVoice(data: Data)
 }
 
 extension VoiceRouter: BaseRouter {
@@ -45,14 +45,25 @@ extension VoiceRouter: BaseRouter {
     
     var multipart: MultipartFormData {
         switch self {
-        case .uploadVoice(let url):
+        case .uploadVoice(let data):
             let multiPart = MultipartFormData()
-            
-            guard let audioFile: Data = try? Data (contentsOf: url) else { return multiPart }
-            multiPart.append(audioFile, withName: "audio", fileName: "audio.m4a", mimeType: "audio/m4a")
-            
+            multiPart.append(data, withName: "file", fileName: "audio.m4a", mimeType: "audio/m4a")
             return multiPart
         default: return MultipartFormData()
+        }
+    }
+    
+    func getDirectory() -> URL
+        {
+            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            let documentDirectory = paths[0]
+            return documentDirectory
+        }
+    
+    var header: HeaderType {
+        switch self {
+        case .uploadVoice: return .tempForVoice
+        default: return .withToken
         }
     }
 }

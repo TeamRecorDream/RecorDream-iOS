@@ -29,7 +29,7 @@ public class DreamWriteRecordView: UIView {
     
     private var recordStatus = RecordStatus.notStarted
     
-    public let recordOutput = PublishSubject<(URL, CGFloat)?>()
+    public let recordOutput = PublishSubject<(Data, CGFloat)?>()
     
     var audioRecorder: AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
@@ -227,7 +227,12 @@ extension DreamWriteRecordView {
                 let audioAsset = AVURLAsset.init(url: recorderURL, options: nil)
                 let duration = audioAsset.duration
                 let durationInSeconds = CGFloat(CMTimeGetSeconds(duration))
-                self.recordOutput.onNext((self.audioFileURL, durationInSeconds))
+                do {
+                    let data = try Data(contentsOf: recorderURL)
+                    self.recordOutput.onNext((data, durationInSeconds))
+                } catch {
+                    self.recordOutput.onNext(nil)
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                     self.resetView()
                 }

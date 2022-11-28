@@ -22,7 +22,7 @@ public class DreamWriteViewModel: ViewModelType {
         let viewDidLoad: Observable<Void>
         let closeButtonTapped: Observable<Void>
         let datePicked: Observable<String>
-        let voiceRecorded: Observable<URL?>
+        let voiceRecorded: Observable<Data?>
         let titleTextChanged: Observable<String>
         let contentTextChanged: Observable<String>
         let emotionChagned: Observable<Int?>
@@ -99,9 +99,9 @@ extension DreamWriteViewModel {
             }
         }).disposed(by: disposeBag)
         
-        input.voiceRecorded.subscribe(onNext: { url in
-            guard let url = url else { return }
-            self.useCase.uploadVoice(fileURL: url)
+        input.voiceRecorded.subscribe(onNext: { data in
+            guard let data else { return }
+            self.useCase.uploadVoice(voiceData: data)
         }).disposed(by: disposeBag)
         
         input.titleTextChanged.subscribe(onNext: {
@@ -117,7 +117,7 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         input.saveButtonTapped.subscribe(onNext: { _ in
-            self.useCase.writeDreamRecord(request: self.writeRequestEntity.value)
+            self.useCase.writeDreamRecord(request: self.writeRequestEntity.value, voiceId: self.voiceId)
         }).disposed(by: disposeBag)
         
         return output
