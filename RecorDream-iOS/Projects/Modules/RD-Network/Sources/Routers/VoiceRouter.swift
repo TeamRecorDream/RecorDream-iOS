@@ -36,6 +36,13 @@ extension VoiceRouter: BaseRouter {
         }
     }
     
+    var parameterEncoding: ParameterEncoding {
+        switch self {
+        default:
+            return JSONEncoding.default
+        }
+    }
+    
     var multipart: MultipartFormData {
         switch self {
         case .uploadVoice(let url):

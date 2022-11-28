@@ -57,4 +57,11 @@ extension RecordRouter: BaseRouter {
         default: return .requestPlain
         }
     }
+    
+    var parameterEncoding: ParameterEncoding {
+        switch self {
+        default:
+            return JSONEncoding.default
+        }
+    }
 }
