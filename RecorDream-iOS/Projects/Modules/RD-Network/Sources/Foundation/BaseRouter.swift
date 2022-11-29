@@ -104,8 +104,8 @@ public extension BaseRouter {
 // MARK: ParameterType
 
 public enum RequestParams {
-    case queryBody(_ query: [String: Any], _ body: [String: Any], parameterEncoding: ParameterEncoding = JSONEncoding.default, bodyEncoding: ParameterEncoding = JSONEncoding.default)
-    case query(_ query: [String: Any], parameterEncoding: ParameterEncoding = JSONEncoding.default)
+    case queryBody(_ query: [String: Any], _ body: [String: Any], parameterEncoding: ParameterEncoding = URLEncoding(), bodyEncoding: ParameterEncoding = JSONEncoding.default)
+    case query(_ query: [String: Any], parameterEncoding: ParameterEncoding = URLEncoding())
     case requestBody(_ body: [String: Any], bodyEncoding: ParameterEncoding = JSONEncoding.default)
     case requestPlain
 }

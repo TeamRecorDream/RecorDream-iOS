@@ -53,13 +53,6 @@ extension VoiceRouter: BaseRouter {
         }
     }
     
-    func getDirectory() -> URL
-        {
-            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            let documentDirectory = paths[0]
-            return documentDirectory
-        }
-    
     var header: HeaderType {
         switch self {
         case .uploadVoice:
