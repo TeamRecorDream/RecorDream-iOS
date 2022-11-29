@@ -62,7 +62,8 @@ extension VoiceRouter: BaseRouter {
     
     var header: HeaderType {
         switch self {
-        case .uploadVoice: return .tempForVoice
+        case .uploadVoice:
+            return .multiPartWithToken
         default: return .withToken
         }
     }
