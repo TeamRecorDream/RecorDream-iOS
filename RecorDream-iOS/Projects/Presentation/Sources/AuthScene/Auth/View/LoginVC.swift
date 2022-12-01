@@ -17,18 +17,7 @@ import SnapKit
 public final class LoginVC: UIViewController {
     
     // MARK: - UI Components
-    private let backgroundImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = RDDSKitAsset.Images.splashBackground.image
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-    private let logoImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = RDDSKitAsset.Images.rdSplashLogo.image
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
+    private let authView = AuthView()
     private let kakaoLoginButton = RDLoginButton(flatform: .kakao, title: "카카오로 시작하기")
     private let appleLoginButton = RDLoginButton(flatform: .apple, title: "Apple로 시작하기")
     private let descriptionLabel: UILabel = {
@@ -45,26 +34,23 @@ public final class LoginVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupView()
-        setupConstraint()
+        self.setupView()
+        self.setupConstraint()
     }
     
 }
 
 // MARK: - Extensions
-extension LoginVC: AutoControllable {
+extension LoginVC: AuthControllable {
     func setupView() {
-        self.view.addSubview(backgroundImageView)
-        self.backgroundImageView.addSubviews(logoImageView, kakaoLoginButton, appleLoginButton, descriptionLabel)
+        self.view.addSubview(authView)
+        self.authView.addSubviews(kakaoLoginButton, appleLoginButton, descriptionLabel)
     }
     
     func setupConstraint() {
-        self.backgroundImageView.snp.makeConstraints { make in
+        self.authView.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalToSuperview()
-            make.centerX.centerY.equalToSuperview()
-        }
-        self.logoImageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
         self.kakaoLoginButton.snp.makeConstraints { make in

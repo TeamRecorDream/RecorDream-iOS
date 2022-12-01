@@ -26,12 +26,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: windowScene)
         
-        rootController = CoordinatorNavigationController(rootViewController: UIViewController())
-        self.window?.rootViewController = rootController
+        rootController = CoordinatorNavigationController(rootViewController: SplashVC())
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            self.rootController = CoordinatorNavigationController(rootViewController: UIViewController())
+        }
+        
+        self.window?.rootViewController = self.rootController
         self.window?.makeKeyAndVisible()
-        
+
         dependencyConatiner = DependencyContainer(rootController: self.rootController!)
-        
+
         self.dependencyConatiner?.start()
         
         // MARK: - Debug 관련
