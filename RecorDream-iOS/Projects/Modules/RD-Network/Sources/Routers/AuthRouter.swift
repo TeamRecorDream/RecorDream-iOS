@@ -36,5 +36,12 @@ extension AuthRouter: BaseRouter {
 
         }
     }
+    
+    var parameterEncoding: ParameterEncoding {
+        switch self {
+        default:
+            return JSONEncoding.default
+        }
+    }
 }
 

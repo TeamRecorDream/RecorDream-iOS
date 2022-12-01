@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 
 enum RecordRouter {
-    case writeRecord(title: String, date: String, content: String, emotion: Int, genre: [Int], note: String?, voice: URL?)
+    case writeRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?)
     case searchRecord(keyword: String)
 }
 
@@ -38,13 +38,15 @@ extension RecordRouter: BaseRouter {
     
     var parameters: RequestParams {
         switch self {
-        case .writeRecord(let title, let date, let content, let emotion, let genre, _, _):
+        case .writeRecord(let title, let date, let content, let emotion, let genre, let note, let voice):
             let requestBody: [String: Any] = [
                 "title": title,
                 "date": date,
                 "content": content,
                 "emotion": emotion,
-                "genre": genre
+                "genre": genre,
+                "note": note,
+                "voice": voice
             ]
             return .requestBody(requestBody)
         case .searchRecord(let keyword):
@@ -53,6 +55,13 @@ extension RecordRouter: BaseRouter {
             ]
             return .query(query)
         default: return .requestPlain
+        }
+    }
+    
+    var parameterEncoding: ParameterEncoding {
+        switch self {
+        default:
+            return JSONEncoding.default
         }
     }
 }

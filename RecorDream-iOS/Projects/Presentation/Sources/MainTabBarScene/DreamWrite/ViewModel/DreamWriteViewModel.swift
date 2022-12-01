@@ -22,11 +22,11 @@ public class DreamWriteViewModel: ViewModelType {
         let viewDidLoad: Observable<Void>
         let closeButtonTapped: Observable<Void>
         let datePicked: Observable<String>
-        let voiceRecorded: Observable<(URL, CGFloat)?>
+        let voiceRecorded: Observable<Data?>
         let titleTextChanged: Observable<String>
         let contentTextChanged: Observable<String>
         let emotionChagned: Observable<Int?>
-        let genreListChagned: Observable<[Int]>
+        let genreListChagned: Observable<[Int]?>
         let noteTextChanged: Observable<String>
         let saveButtonTapped: Observable<Void>
     }
@@ -57,7 +57,8 @@ public class DreamWriteViewModel: ViewModelType {
     
     private var viewModelType = DreamWriteViewModelType.write
     
-    let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: [], note: nil, voice: nil))
+    let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: nil, note: nil, voice: nil))
+    var voiceId: String? = nil
     
     var shouldShowWarningForInit: Bool?
     
@@ -73,12 +74,12 @@ extension DreamWriteViewModel {
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
         
-        Observable.combineLatest(input.datePicked.startWith(""),
+        Observable.combineLatest(input.datePicked.startWith(.toDateWithYYMMDD("")()),
                                  input.voiceRecorded.startWith(nil),
                                  input.titleTextChanged.startWith(""),
                                  input.contentTextChanged.startWith(""),
                                  input.emotionChagned.startWith(nil),
-                                 input.genreListChagned.startWith([]),
+                                 input.genreListChagned.startWith(nil),
                                  input.noteTextChanged.startWith(""))
         .subscribe(onNext: { (date, urlTime, title, content, emotion, genreList, note) in
             self.writeRequestEntity.accept(DreamWriteRequest.init(title: title,
@@ -87,7 +88,7 @@ extension DreamWriteViewModel {
                                                                   emotion: emotion,
                                                                   genre: genreList,
                                                                   note: note,
-                                                                  voice: urlTime?.0))
+                                                                  voice: self.voiceId))
         }).disposed(by: disposeBag)
         
         self.bindOutput(output: output, disposeBag: disposeBag)
@@ -98,8 +99,9 @@ extension DreamWriteViewModel {
             }
         }).disposed(by: disposeBag)
         
-        input.voiceRecorded.subscribe(onNext: { _ in
-            
+        input.voiceRecorded.subscribe(onNext: { data in
+            guard let data else { return }
+            self.useCase.uploadVoice(voiceData: data)
         }).disposed(by: disposeBag)
         
         input.titleTextChanged.subscribe(onNext: {
@@ -115,7 +117,8 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         input.saveButtonTapped.subscribe(onNext: { _ in
-            self.useCase.writeDreamRecord(request: self.writeRequestEntity.value)
+            print(self.writeRequestEntity.value, "상황")
+            self.useCase.writeDreamRecord(request: self.writeRequestEntity.value, voiceId: self.voiceId)
         }).disposed(by: disposeBag)
         
         return output
@@ -143,6 +146,11 @@ extension DreamWriteViewModel {
         let showCaution = useCase.showCaution
         showCaution.subscribe(onNext: { status in
             output.showGenreCountCaution.accept(status)
+        }).disposed(by: disposeBag)
+        
+        let uploadedVoiceId = useCase.uploadedVoice
+        uploadedVoiceId.subscribe(onNext: { voiceId in
+            self.voiceId = voiceId
         }).disposed(by: disposeBag)
     }
 }

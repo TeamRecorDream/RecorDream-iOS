@@ -139,4 +139,26 @@ extension BaseService {
             return Disposables.create()
         }
     }
+    
+    func uploadMultipartInRx<T: Codable>(_ target: BaseRouter) -> Observable<T?> {
+        return Observable<T?>.create { observer in
+            self.AFManager.uploadMultipart(target: target).responseData { response in
+                switch response.result {
+                case .success(let data):
+                    do {
+                        let body = try Json.decoder.decode(GeneralResponse<T>.self, from: data)
+                        observer.onNext(body.data)
+                        observer.onCompleted()
+                    }
+                    catch let error {
+                        observer.onError(error)
+                    }
+                    
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+    }
 }

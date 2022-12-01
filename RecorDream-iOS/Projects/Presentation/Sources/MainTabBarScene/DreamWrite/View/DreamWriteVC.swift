@@ -26,11 +26,11 @@ public class DreamWriteVC: UIViewController {
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
     private let datePicked = PublishRelay<String>()
-    private let voiceRecorded = PublishRelay<(URL, CGFloat)?>()
+    private let voiceRecorded = PublishRelay<Data?>()
     private let titleTextChanged = PublishRelay<String>()
     private let contentTextChanged = PublishRelay<String>()
     private let emotionChagned = PublishRelay<Int?>()
-    private let genreListChagned = PublishRelay<[Int]>()
+    private let genreListChagned = PublishRelay<[Int]?>()
     private let noteTextChanged = PublishRelay<String>()
     
     // MARK: - UI Components
@@ -198,12 +198,12 @@ extension DreamWriteVC {
     }
     
     private func bindViews() {
-        recordView.recordOutput.subscribe(onNext: { [weak self] urlTimeTuple in
+        recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
             guard let self = self else { return }
             self.dismissVoiceRecordView()
-            guard let fileURL = urlTimeTuple?.0,
-                  let totalTime = urlTimeTuple?.1 else { return }
-            self.voiceRecorded.accept((fileURL, totalTime))
+            guard let voiceData = dataTimeTuple?.0,
+                  let totalTime = dataTimeTuple?.1 else { return }
+            self.voiceRecorded.accept(voiceData)
             self.mainCell?.recordUpdated(record: totalTime)
         }).disposed(by: self.disposeBag)
         
@@ -268,7 +268,7 @@ extension DreamWriteVC {
                     noteCell.setData(noteText: model.noteText)
                 }
                 noteCell.noteTextChanged
-                    .bind(to: self.titleTextChanged)
+                    .bind(to: self.noteTextChanged)
                     .disposed(by: self.disposeBag)
                 return noteCell
             }
@@ -399,7 +399,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             selectedIndexPath = collectionView
                 .indexPathsForSelectedItems?
                 .first { $0.section == indexPath.section }
-            self.emotionChagned.accept(indexPath.item)
+            self.emotionChagned.accept(indexPath.item + 1)
             guard let selected = selectedIndexPath else {
                 return true
             }
@@ -407,7 +407,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             return true
         case .genres:
             let selectedList = self.getCurrentGenreList(indexPath: indexPath, insert: true)
-            self.genreListChagned.accept(selectedList)
+            self.genreListChagned.accept(selectedList.count == 0 ? nil : selectedList)
             if selectedList.count >= 4 {
                 return false
             } else { return true }
@@ -428,7 +428,8 @@ extension DreamWriteVC: UICollectionViewDelegate {
         case .emotions:
             self.emotionChagned.accept(nil)
         case .genres:
-            self.genreListChagned.accept(getCurrentGenreList(indexPath: indexPath))
+            let currentList = getCurrentGenreList(indexPath: indexPath)
+            self.genreListChagned.accept(currentList.count == 0 ? nil : currentList)
         default: return
         }
     }
@@ -439,7 +440,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             .filter { $0.section == indexPath.section } ?? [])
         if insert == true { selectedSet.insert(indexPath) }
         return selectedSet
-            .map { $0.item }
+            .map { $0.item + 1 }
             .sorted()
     }
 }

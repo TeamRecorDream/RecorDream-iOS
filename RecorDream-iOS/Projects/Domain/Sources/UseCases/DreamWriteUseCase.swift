@@ -11,15 +11,17 @@ import Foundation
 import RxSwift
 
 public protocol DreamWriteUseCase {
-    func writeDreamRecord(request: DreamWriteRequest)
+    func writeDreamRecord(request: DreamWriteRequest, voiceId: String?)
     func fetchDreamRecord(recordId: String)
     func titleTextValidate(text: String)
-    func genreListCautionValidate(genreList: [Int])
+    func genreListCautionValidate(genreList: [Int]?)
+    func uploadVoice(voiceData: Data)
     
     var writeSuccess: PublishSubject<Void> { get set }
     var isWriteEnabled: PublishSubject<Bool> { get set }
     var showCaution: PublishSubject<Bool> { get set }
     var fetchedRecord: PublishSubject<DreamWriteEntity> { get set }
+    var uploadedVoice: PublishSubject<String?> { get set }
 }
 
 public class DefaultDreamWriteUseCase {
@@ -31,6 +33,7 @@ public class DefaultDreamWriteUseCase {
     public var isWriteEnabled = PublishSubject<Bool>()
     public var showCaution = PublishSubject<Bool>()
     public var fetchedRecord = PublishSubject<DreamWriteEntity>()
+    public var uploadedVoice = PublishSubject<String?>()
     
     public init(repository: DreamWriteRepository) {
         self.repository = repository
@@ -43,8 +46,12 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         self.isWriteEnabled.onNext(existDistinctTitle)
     }
     
-    public func genreListCautionValidate(genreList: [Int]) {
-        self.showCaution.onNext(genreList.count >= 3)
+    public func genreListCautionValidate(genreList: [Int]?) {
+        guard let list = genreList else {
+            self.showCaution.onNext(false)
+            return
+        }
+        self.showCaution.onNext(list.count >= 3)
     }
     
     public func fetchDreamRecord(recordId: String) {
@@ -56,11 +63,21 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
             }).disposed(by: self.disposeBag)
     }
     
-    public func writeDreamRecord(request: DreamWriteRequest) {
-        self.repository.writeDreamRecord(request: request)
+    public func writeDreamRecord(request: DreamWriteRequest, voiceId: String?) {
+        let validRequest = request.makeValidFileds(voiceId: voiceId)
+        print(request,"뷰모델")
+        self.repository.writeDreamRecord(request: validRequest)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, entity in
             strongSelf.writeSuccess.onNext(())
         }).disposed(by: self.disposeBag)
+    }
+    
+    public func uploadVoice(voiceData: Data) {
+        self.repository.uploadVoice(voiceData: voiceData)
+            .withUnretained(self)
+            .subscribe(onNext: { strongSelf, voiceId in
+                strongSelf.uploadedVoice.onNext(voiceId)
+            }).disposed(by: self.disposeBag)
     }
 }

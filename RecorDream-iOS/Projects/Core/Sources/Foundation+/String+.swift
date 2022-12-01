@@ -30,6 +30,15 @@ public extension String {
         }
     }
     
+    func toDateWithYYMMDD() -> String {
+        let currentDate = {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            return formatter.string(from: Date())
+        }()
+        return currentDate
+    }
+    
     /// serverTimeToString의 용도 정의
     enum TimeStringCase {
         case forNotification

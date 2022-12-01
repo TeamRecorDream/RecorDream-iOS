@@ -9,6 +9,19 @@
 import Foundation
 
 public struct DreamWriteResponse: Codable {
-    public let userId: Int
-    public let content: String
+    public let id: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+    }
+}
+
+public struct DreamWriteVoiceResponse: Codable {
+    public let id: String
+    public let url: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case url
+    }
 }

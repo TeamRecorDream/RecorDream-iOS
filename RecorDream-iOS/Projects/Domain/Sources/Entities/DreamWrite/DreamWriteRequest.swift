@@ -13,11 +13,11 @@ public struct DreamWriteRequest: Codable {
     public let date: String
     public var content: String? = nil
     public var emotion: Int? = nil
-    public let genre: [Int]
+    public var genre: [Int]? = nil
     public var note: String? = nil
-    public var voice: URL? = nil
+    public var voice: String? = nil
     
-    public init(title: String?, date: String, content: String?, emotion: Int?, genre: [Int], note: String?, voice: URL?) {
+    public init(title: String?, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?) {
         self.title = title
         self.date = date
         self.content = content
@@ -25,5 +25,17 @@ public struct DreamWriteRequest: Codable {
         self.genre = genre
         self.note = note
         self.voice = voice
+    }
+    
+    public func makeValidFileds(voiceId: String?) -> Self {
+        let newContent = (content == "무슨 꿈을 꾸셨나요?") ? nil : content
+        let newNote = (note == "꿈에 대해 따로 기록할 게 있나요?") ? nil : note
+        return .init(title: title,
+                     date: date,
+                     content: newContent,
+                     emotion: emotion,
+                     genre: genre,
+                     note: newNote,
+                     voice: voiceId)
     }
 }
