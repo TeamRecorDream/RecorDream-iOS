@@ -8,5 +8,5 @@
 import RxSwift
 
 public protocol HomeRepository {
-  
+    func fetchDreamRecord() -> Observable<HomeEntity>
 }
