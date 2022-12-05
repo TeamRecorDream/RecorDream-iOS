@@ -9,7 +9,7 @@
 import Alamofire
 
 enum AuthRouter {
-    case login(kakaoToken: String, appleToken: String, fcmToken: String)
+    case login(kakaoToken: String?, appleToken: String?, fcmToken: String)
 }
 
 extension AuthRouter: BaseRouter {

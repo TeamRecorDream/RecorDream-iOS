@@ -9,5 +9,5 @@
 import RxSwift
 
 public protocol AuthRepository {
-    func requestAuth(kakaoToken: String, appleToken: String, fcmToken: String) -> Observable<AuthEntity?>
+    func requestAuth(request: AuthRequest) -> Observable<AuthEntity?>
 }

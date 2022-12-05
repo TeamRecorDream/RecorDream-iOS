@@ -24,10 +24,9 @@ public final class DefaultAuthRepository {
 }
 
 extension DefaultAuthRepository: AuthRepository {
-    public func requestAuth(kakaoToken: String, appleToken: String, fcmToken: String) -> RxSwift.Observable<Domain.AuthEntity?> {
+    public func requestAuth(request: AuthRequest) -> RxSwift.Observable<AuthEntity?> {
         return Observable.create { observer in
-            
-            self.authService.login(kakaoToken: kakaoToken, appleToken: appleToken, fcmToken: fcmToken)
+            self.authService.login(kakaoToken: request.kakaoToken, appleToken: request.appleToken, fcmToken: request.fcmToken)
                 .subscribe(onNext: { response in
                     guard let response = response else { return }
                     observer.onNext(.init(duplicated: response.duplicated, accessToken: response.accessToken, refreshToken: response.refreshToken))
@@ -38,6 +37,4 @@ extension DefaultAuthRepository: AuthRepository {
             return Disposables.create()
         }
     }
-    
-    
 }
