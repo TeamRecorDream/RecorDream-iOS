@@ -11,7 +11,7 @@ import UIKit
 import SnapKit
 
 public class RDLoginButton: UIButton {
-    public enum FlatformType: String {
+    public enum PlatformType: String {
         case kakao = "kakao"
         case apple = "apple"
     }
@@ -24,10 +24,10 @@ public class RDLoginButton: UIButton {
     }()
     
     // MARK: - Initialization
-    public convenience init(flatform: FlatformType, title: String) {
+    public convenience init(platform: PlatformType, title: String) {
         self.init(frame: .zero)
         
-        self.setupView(at: flatform, for: title)
+        self.setupView(at: platform, for: title)
         self.setupConstraint()
     }
     override init(frame: CGRect) {
@@ -40,8 +40,8 @@ public class RDLoginButton: UIButton {
 
 // MARK: - Extensions
 extension RDLoginButton {
-    private func setupView(at flatform: FlatformType, for title: String) {
-        switch flatform {
+    private func setupView(at platform: PlatformType, for title: String) {
+        switch platform {
         case .kakao:
             self.iconImageView.image = RDDSKitAsset.Images.kakaotalk.image
         case .apple:

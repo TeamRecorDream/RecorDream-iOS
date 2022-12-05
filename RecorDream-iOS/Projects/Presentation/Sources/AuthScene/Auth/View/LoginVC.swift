@@ -18,8 +18,8 @@ public final class LoginVC: UIViewController {
     
     // MARK: - UI Components
     private let authView = AuthView()
-    private let kakaoLoginButton = RDLoginButton(flatform: .kakao, title: "카카오로 시작하기")
-    private let appleLoginButton = RDLoginButton(flatform: .apple, title: "Apple로 시작하기")
+    private let kakaoLoginButton = RDLoginButton(platform: .kakao, title: "카카오로 시작하기")
+    private let appleLoginButton = RDLoginButton(platform: .apple, title: "Apple로 시작하기")
     private let descriptionLabel: UILabel = {
         let lb = UILabel()
         lb.font = RDDSKitFontFamily.Pretendard.regular.font(size: 12)
