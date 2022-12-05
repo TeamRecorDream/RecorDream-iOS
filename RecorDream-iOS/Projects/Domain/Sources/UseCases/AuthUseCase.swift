@@ -8,6 +8,8 @@
 
 import Foundation
 
+import RD_Core
+
 import RxSwift
 
 public protocol AuthUseCase {
@@ -37,8 +39,9 @@ extension DefaultAuthUseCase: AuthUseCase {
                 guard let self = self else { return }
                 guard let entity = entity else {
                     return }
+                DefaultUserDefaultManager.set(value: entity.accessToken, keyPath: C.accessToken)
+                DefaultUserDefaultManager.set(value: entity.refreshToken, keyPath: C.refreshToken)
                 self.authSuccess.onNext(entity)
-                // TODO: - 토큰 저장 처리
             }, onError: { err in
                 self.authFail.onNext(err)
             }).disposed(by: disposeBag)
