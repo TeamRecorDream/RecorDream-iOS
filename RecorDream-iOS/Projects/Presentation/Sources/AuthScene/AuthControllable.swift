@@ -10,3 +10,8 @@ protocol AuthControllable {
     func setupView()
     func setupConstraint()
 }
+
+enum AuthPlatformType: String {
+    case kakao = "kakao"
+    case apple = "apple"
+}
