@@ -15,3 +15,9 @@ enum AuthPlatformType: String {
     case kakao = "kakao"
     case apple = "apple"
 }
+
+enum TokenState {
+    case valid
+    case invalid
+    case missed
+}

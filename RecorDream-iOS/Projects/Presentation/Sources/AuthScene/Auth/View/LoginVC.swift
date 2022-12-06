@@ -43,6 +43,7 @@ public final class LoginVC: UIViewController {
 
         self.setupView()
         self.setupConstraint()
+        self.bindViewModels()
     }
     
 }
