@@ -8,6 +8,7 @@
 
 import UIKit
 
+import Domain
 import RD_DSKit
 
 import RxSwift
@@ -29,6 +30,12 @@ public final class LoginVC: UIViewController {
         lb.sizeToFit()
         return lb
     }()
+    
+    // MARK: - Properties
+    var loginViewModel: LoginViewModel!
+    var loginRequestFail = PublishSubject<AuthPlatformType>()
+    var loginRequestSuccess = PublishSubject<AuthRequest>()
+    private let disposeBag = DisposeBag()
 
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
@@ -68,5 +75,44 @@ extension LoginVC: AuthControllable {
             make.top.equalTo(appleLoginButton.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
         }
+    }
+}
+
+// MARK: - Reactive Part
+extension LoginVC {
+    private func bindViewModels() {
+        let input = LoginViewModel.Input(loginButtonTapped: Observable.merge(
+            self.kakaoLoginButton.rx.tap.map { _ in
+                AuthPlatformType.kakao
+            },
+            self.appleLoginButton.rx.tap.map { _ in
+                AuthPlatformType.apple
+            })
+            .asObservable(),
+            loginRequestFail: loginRequestFail, loginRequestSuccess: loginRequestSuccess)
+        
+        let output = self.loginViewModel.transform(from: input, disposeBag: self.disposeBag)
+        
+        output.loginRequest.subscribe(onNext: { [weak self] platformType in
+            guard let self = self else { return }
+            switch platformType {
+            case .kakao:
+                self.kakaoLoginAuthentication()
+            case .apple:
+                self.appleLoginAuthentication()
+            }
+        }).disposed(by: disposeBag)
+        
+        output.loginSuccess.subscribe(onNext: { entity in
+            // TODO: - 홈뷰로 화면전환, 닉네임 데이터 넘기기
+        }).disposed(by: self.disposeBag)
+        
+        output.showLoginFailError.subscribe(onNext: { _ in
+            print("로그인 오류")
+        }).disposed(by: self.disposeBag)
+        
+        output.showNetworkError.subscribe(onNext: { _ in
+            print("네트워크 오류")
+        }).disposed(by: self.disposeBag)
     }
 }

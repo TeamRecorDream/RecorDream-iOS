@@ -22,7 +22,7 @@ public final class LoginViewModel {
     public struct Input {
         let loginButtonTapped: Observable<AuthPlatformType>
         let loginRequestFail: Observable<AuthPlatformType>
-        let loginRequestSuccess: Observable<AuthEntity>
+        let loginRequestSuccess: Observable<AuthRequest>
     }
     
     // MARK: - Outputs
