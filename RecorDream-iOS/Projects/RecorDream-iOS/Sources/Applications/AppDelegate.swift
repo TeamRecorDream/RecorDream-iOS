@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RD_Core
+
 import FirebaseCore
 import FirebaseMessaging
 import KakaoSDKCommon
@@ -17,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application( _ application: UIApplication,
                       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        KakaoSDK.initSDK(appKey: "000e1e31f022f98fbe16c76ab287abd1") // TODO: - 상수로 빼기
+        KakaoSDK.initSDK(appKey: C.KAKAO_APP_KEY)
         self.configureFirebase()
         self.registerAPNs(to: application)
         return true
