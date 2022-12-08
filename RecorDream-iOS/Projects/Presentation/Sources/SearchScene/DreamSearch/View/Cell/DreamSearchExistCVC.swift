@@ -10,7 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-final class DreamSearchExistCVC: DreamSearchCollectionViewCell {
+final class DreamSearchExistCVC: DreamCollectionViewCell {
     // MARK: - UI Components
     private lazy var backgroundImageView: UIImageView = {
         let iv = UIImageView()
