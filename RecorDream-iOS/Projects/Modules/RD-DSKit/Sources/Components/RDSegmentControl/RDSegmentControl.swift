@@ -31,6 +31,7 @@ extension RDSegmentControl {
     }
     private func setupView() {
         self.backgroundColor = .clear
+        self.selectedSegmentIndex = 1
         self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 1)
         self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 2)
         self.tintColor = RDDSKitAsset.Colors.white04.color
