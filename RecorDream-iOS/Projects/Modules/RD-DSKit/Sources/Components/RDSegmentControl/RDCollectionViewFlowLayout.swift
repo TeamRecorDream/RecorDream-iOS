@@ -32,20 +32,17 @@ public class RDCollectionViewFlowLayout: UICollectionViewFlowLayout {
 
 // MARK: - Extensions
 extension RDCollectionViewFlowLayout {
-    private func setTarget() {
-        
-    }
-    fileprivate func setupView(_ display: CollectionDisplay) {
+    private func setupView(_ display: CollectionDisplay) {
         self.display = display
         self.minimumLineSpacing = 9.adjusted
         self.minimumInteritemSpacing = 9.adjusted
         self.scrollDirection = .vertical
     }
-    fileprivate func setupLayout(_ display: CollectionDisplay) {
+    private func setupLayout(_ display: CollectionDisplay) {
         switch display {
         case .list:
             if let collectionView = self.collectionView {
-                self.itemSize = CGSize(width: collectionView.frame.width , height: 88)
+                self.itemSize = CGSize(width: collectionView.frame.width, height: 88)
             }
         case .grid:
             if let collectionView = self.collectionView {
