@@ -22,13 +22,13 @@ public enum DreamStorageSection: String, CaseIterable {
 
 extension DreamStorageSection {
     public static let titles = ["기쁜", "슬픈", "무서운", "이상한", "민망한", "미설정"]
-    static let icons = [RDDSKitAsset.Images.feelingXsJoySelected.image,
+    public static let icons = [RDDSKitAsset.Images.feelingXsJoySelected.image,
                         RDDSKitAsset.Images.feelingXsSadSelected.image,
                         RDDSKitAsset.Images.feelingXsScarySelected.image,
                         RDDSKitAsset.Images.feelingXsStrangeSelected.image,
                         RDDSKitAsset.Images.feelingXsShySelected.image,
                         RDDSKitAsset.Images.feelingXsBlank.image]
-    static let deselectedIcons = [RDDSKitAsset.Images.feelingXsJoy.image,
+    public static let deselectedIcons = [RDDSKitAsset.Images.feelingXsJoy.image,
                                   RDDSKitAsset.Images.feelingXsSad.image,
                                   RDDSKitAsset.Images.feelingXsScary.image,
                                   RDDSKitAsset.Images.feelingXsStrange.image,
