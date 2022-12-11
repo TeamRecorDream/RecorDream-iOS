@@ -10,7 +10,13 @@ import UIKit
 
 import SnapKit
 
-public class RDSegmentControl: UISegmentedControl {
+public protocol RDSegmentControl {
+    func setupView()
+    func setupConstraint()
+    func setTarget()
+}
+
+public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
     private lazy var rdCollectionViewFlowLayout = RDCollectionViewFlowLayout(display: .grid)
     private let lineView: UIView = {
         let v = UIView()
@@ -33,11 +39,11 @@ public class RDSegmentControl: UISegmentedControl {
     }
 }
 
-extension RDSegmentControl {
-    private func setTarget() {
+extension RDStorageSegmentControl {
+    public func setTarget() {
         self.addTarget(self, action: #selector(layoutValueChanged), for: .valueChanged)
     }
-    private func setupView() {
+    public func setupView() {
         self.addSubview(lineView)
         self.backgroundColor = .clear
         self.selectedSegmentIndex = 1
@@ -46,7 +52,7 @@ extension RDSegmentControl {
         self.selectedSegmentTintColor = RDDSKitAsset.Colors.white01.color
         self.tintColor = RDDSKitAsset.Colors.white04.color
     }
-    private func setupConstraint() {
+    public func setupConstraint() {
         self.lineView.snp.makeConstraints { make in
             make.width.equalTo(1.adjustedWidth)
             make.height.equalTo(10.adjustedHeight)

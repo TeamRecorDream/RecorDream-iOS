@@ -22,7 +22,7 @@ final class StorageHeaderCVC: DreamReusableView {
         lb.textColor = RDDSKitAsset.Colors.white01.color
         return lb
     }()
-    private lazy var segmentControl = RDSegmentControl(items: ["", ""])
+    private lazy var segmentControl = RDStorageSegmentControl(items: ["", ""])
     
     // MARK: - Functions
     override func setupView() {
