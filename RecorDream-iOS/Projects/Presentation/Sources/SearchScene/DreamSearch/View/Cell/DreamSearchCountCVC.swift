@@ -10,7 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-final class DreamSearchCountCVC: DreamSearchReusableView {
+final class DreamSearchCountCVC: DreamReusableView {
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = RDDSKitColors.Color.white
