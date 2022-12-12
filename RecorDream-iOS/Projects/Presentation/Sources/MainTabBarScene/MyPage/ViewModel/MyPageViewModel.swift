@@ -113,8 +113,8 @@ extension MyPageViewModel {
         
         let startUsernameEdit = self.useCase.usernameEditStatus
         startUsernameEdit
-            .asDriver()
-            .drive(onNext: {
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: {
                 output.startUsernameEdit.accept($0)
             }).disposed(by: disposeBag)
         
