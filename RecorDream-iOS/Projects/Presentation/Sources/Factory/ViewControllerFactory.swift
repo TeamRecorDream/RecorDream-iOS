@@ -7,7 +7,7 @@
 
 import Foundation
 
-import Presentation
+public typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBarControllerFactory
 
 // TODO: - Login Flow에 사용될 Factory Protocol, 추후에 구현
 public protocol AuthViewControllerFactory {
