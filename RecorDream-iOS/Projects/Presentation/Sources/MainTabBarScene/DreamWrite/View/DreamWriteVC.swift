@@ -21,6 +21,7 @@ public class DreamWriteVC: UIViewController {
     
     private let disposeBag = DisposeBag()
     
+    public var factory: ViewControllerFactory!
     public var viewModel: DreamWriteViewModel!
     
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
@@ -167,7 +168,6 @@ extension DreamWriteVC {
     
     private func bindViewModels() {
         let input = DreamWriteViewModel.Input(viewDidLoad: Observable.just(()),
-                                              closeButtonTapped: self.naviBar.rightButtonTapped.asObservable(),
                                               datePicked: self.datePicked.asObservable(),
                                               voiceRecorded: self.voiceRecorded.asObservable(),
                                               titleTextChanged: self.titleTextChanged.asObservable(),
@@ -195,9 +195,20 @@ extension DreamWriteVC {
             .bind { (strongSelf, shouldShow) in
                 strongSelf.warningFooter?.shouldShowCaution = shouldShow
             }.disposed(by: self.disposeBag)
+        
+        output.writeRequestSuccess
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.dismiss(animated: true)
+            }).disposed(by: self.disposeBag)
     }
     
     private func bindViews() {
+        naviBar.rightButtonTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.dismiss(animated: true)
+        }).disposed(by: self.disposeBag)
+        
         recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
             guard let self = self else { return }
             self.dismissVoiceRecordView()

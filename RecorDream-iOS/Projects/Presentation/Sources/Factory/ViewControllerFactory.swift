@@ -7,14 +7,14 @@
 
 import Foundation
 
-import Presentation
+public typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBarControllerFactory
 
 // TODO: - Login Flow에 사용될 Factory Protocol, 추후에 구현
-protocol AuthViewControllerFactory {
+public protocol AuthViewControllerFactory {
 //    func instantiateSpalshViewController() -> SplashViewController
 }
 
-protocol MainTabBarControllerFactory {
+public protocol MainTabBarControllerFactory {
     func instantiateMainTabBarController() -> MainTabBarController
     func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC
     func instantiateMyPageVC() -> MyPageVC

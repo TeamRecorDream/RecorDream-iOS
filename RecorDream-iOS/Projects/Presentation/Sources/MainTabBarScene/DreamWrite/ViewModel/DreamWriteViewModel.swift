@@ -20,7 +20,6 @@ public class DreamWriteViewModel: ViewModelType {
     
     public struct Input {
         let viewDidLoad: Observable<Void>
-        let closeButtonTapped: Observable<Void>
         let datePicked: Observable<String>
         let voiceRecorded: Observable<Data?>
         let titleTextChanged: Observable<String>
@@ -30,11 +29,6 @@ public class DreamWriteViewModel: ViewModelType {
         let noteTextChanged: Observable<String>
         let saveButtonTapped: Observable<Void>
     }
-    
-    // MARK: - Coordinator
-    
-    public let closeButtonTapped = PublishRelay<Void>()
-    public let writeRequestSuccess = PublishRelay<Void>()
     
     // MARK: - Outputs
     
@@ -112,10 +106,6 @@ extension DreamWriteViewModel {
             self.useCase.genreListCautionValidate(genreList: $0)
         }).disposed(by: disposeBag)
         
-        input.closeButtonTapped.subscribe(onNext: {
-            self.closeButtonTapped.accept(())
-        }).disposed(by: disposeBag)
-        
         input.saveButtonTapped.subscribe(onNext: { _ in
             print(self.writeRequestEntity.value, "상황")
             self.useCase.writeDreamRecord(request: self.writeRequestEntity.value, voiceId: self.voiceId)
@@ -134,7 +124,6 @@ extension DreamWriteViewModel {
         
         let writeRelay = useCase.writeSuccess
         writeRelay.subscribe(onNext: { entity in
-            self.writeRequestSuccess.accept(())
             output.writeRequestSuccess.accept(())
         }).disposed(by: disposeBag)
         
