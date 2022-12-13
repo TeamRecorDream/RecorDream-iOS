@@ -18,6 +18,7 @@ public class MainTabBarController: RDTabBarController {
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
+    public var factory: ViewControllerFactory!
     public var viewModel: MainTabBarViewModel!
     private let middleButtonTapped = PublishRelay<Void>()
     
@@ -65,8 +66,11 @@ extension MainTabBarController {
     }
     
     private func setMiddleButtonAction() {
-        self.middleButtonAction = {
-            self.middleButtonTapped.accept(())
+        self.middleButtonAction = { [weak self] in
+            guard let self = self else { return }
+            let dreamWriteVC = self.factory.instantiateDreamWriteVC(.write)
+            dreamWriteVC.modalPresentationStyle = .fullScreen
+            self.present(dreamWriteVC, animated: true)
         }
     }
     

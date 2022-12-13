@@ -40,14 +40,14 @@ final class MainTabBarCoordinator: DefaultCoordinator {
     private func showDreamWriteViewController() {
         let dreamWriteVC = self.factory.instantiateDreamWriteVC(.write)
         dreamWriteVC.modalPresentationStyle = .fullScreen
-        dreamWriteVC.viewModel.closeButtonTapped
-            .subscribe(onNext: { [unowned self] in
-                dreamWriteVC.dismiss(animated: true)
-            }).disposed(by: disposeBag)
-        dreamWriteVC.viewModel.writeRequestSuccess
-            .subscribe(onNext: { [unowned self] in
-                dreamWriteVC.dismiss(animated: true)
-            }).disposed(by: disposeBag)
+//        dreamWriteVC.viewModel.closeButtonTapped
+//            .subscribe(onNext: { [unowned self] in
+//                dreamWriteVC.dismiss(animated: true)
+//            }).disposed(by: disposeBag)
+//        dreamWriteVC.viewModel.writeRequestSuccess
+//            .subscribe(onNext: { [unowned self] in
+//                dreamWriteVC.dismiss(animated: true)
+//            }).disposed(by: disposeBag)
         self.router.present(dreamWriteVC)
     }
     
