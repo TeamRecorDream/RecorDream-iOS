@@ -15,7 +15,7 @@ import RD_Network
 import RxSwift
 
 public final class SplashVC: UIViewController {
-
+    
     private let authView = AuthView()
     private let disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
@@ -23,7 +23,7 @@ public final class SplashVC: UIViewController {
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.setupView()
         self.setupConstraint()
     }
@@ -53,17 +53,36 @@ extension SplashVC: AuthControllable {
 extension SplashVC {
     private func setupViewState() {
         self.checkLoginEnable { tokenState in
-//            switch tokenState {
-//            case .valid:
-//                // TODO: - 홈 뷰로 전환
-//            case .invalid:
-//                // TODO: - 로그인 뷰로 전환
-//            case .missed:
-//                self.postLogin { state in
-//                    // TODO: - state에 따라 화면전환
-//                }
-//            }
+            switch tokenState {
+            case .valid:
+                // TODO: - 홈 뷰로 전환
+                self.presentMainTabBar()
+            case .invalid:
+                // TODO: - 로그인 뷰로 전환
+                self.presentLoginVC()
+            case .missed:
+                // TODO: - state에 따라 화면전환
+                self.postLogin { success in
+                    success
+                    ? self.presentMainTabBar()
+                    : self.presentLoginVC()
+                }
+            }
         }
+    }
+    
+    private func presentMainTabBar() {
+        let mainTabBar = self.factory.instantiateMainTabBarController()
+        let navigation = UINavigationController(rootViewController: mainTabBar)
+        navigation.modalPresentationStyle = .overFullScreen
+        self.present(navigation, animated: true)
+    }
+    
+    private func presentLoginVC() {
+        let loginVC = self.factory.instantiateLoginVC()
+        loginVC.modalPresentationStyle = .overFullScreen
+        loginVC.modalTransitionStyle = .crossDissolve
+        self.present(loginVC, animated: true)
     }
     
     private func checkLoginEnable(completion: @escaping ((TokenState) -> Void)) {
@@ -72,6 +91,7 @@ extension SplashVC {
             // TODO: - 홈뷰 서버통신
             /// 성공이라면 토큰 상태로 .valid
             /// 실패라면 토큰 상태로 .invalid 넣어주기
+            completion(.valid)
         }
         else {
             completion(.missed)
@@ -79,8 +99,11 @@ extension SplashVC {
     }
     
     private func postLogin(completion: @escaping ((Bool) -> Void)) {
-        let userToken = UserDefaults.standard.string(forKey: Key.userToken.rawValue)!
-        let accessToken = UserDefaults.standard.string(forKey: Key.accessToken.rawValue)!
+        guard let userToken = UserDefaults.standard.string(forKey: Key.userToken.rawValue),
+              let accessToken = UserDefaults.standard.string(forKey: Key.accessToken.rawValue) else {
+            completion(false)
+            return
+        }
         
         DefaultAuthService.shared.login(kakaoToken: userToken, appleToken: userToken, fcmToken: accessToken) // ✅
             .subscribe(onNext: { response in

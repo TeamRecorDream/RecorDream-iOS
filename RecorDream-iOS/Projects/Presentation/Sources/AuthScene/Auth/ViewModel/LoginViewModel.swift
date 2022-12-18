@@ -56,7 +56,7 @@ extension LoginViewModel: ViewModelType {
         input.loginRequestSuccess
             .subscribe(onNext: { [weak self] request in
                 guard let self = self else { return }
-                self.useCase.login(request: self.authRequestEntity.value)
+                self.useCase.login(request: request)
             }).disposed(by: disposeBag)
         
         input.loginRequestFail

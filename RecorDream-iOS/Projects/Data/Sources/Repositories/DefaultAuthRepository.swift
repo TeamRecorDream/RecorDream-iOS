@@ -29,7 +29,7 @@ extension DefaultAuthRepository: AuthRepository {
             self.authService.login(kakaoToken: request.kakaoToken, appleToken: request.appleToken, fcmToken: request.fcmToken)
                 .subscribe(onNext: { response in
                     guard let response = response else { return }
-                    observer.onNext(.init(duplicated: response.duplicated, accessToken: response.accessToken, refreshToken: response.refreshToken))
+                    observer.onNext(.init(duplicated: response.duplicated, accessToken: response.accessToken, refreshToken: response.refreshToken, nickname: response.nickname))
                 }, onError: { err in
                     observer.onError(err)
                 })

@@ -10,5 +10,6 @@ public enum Key: String {
     case platform = "key.platform"
     case userToken = "key.userToken"
     case accessToken = "key.accessToken"
+    case refreshToken = "key.refreshToken"
     case nickname = "key.nickname"
 }
