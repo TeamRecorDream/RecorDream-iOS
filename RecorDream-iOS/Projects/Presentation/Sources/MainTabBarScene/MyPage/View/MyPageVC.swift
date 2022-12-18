@@ -32,7 +32,7 @@ public class MyPageVC: UIViewController {
     // MARK: - UI Components
     
     private let naviBar = RDNaviBar()
-        .rightButtonImage(RDDSKitAsset.Images.icnBack.image)
+        .leftButtonImage(RDDSKitAsset.Images.icnBack.image)
         .title("마이페이지")
     
     private let profileImageView: UIImageView = {
@@ -233,6 +233,13 @@ extension MyPageVC {
             .bind {
                 self.showTimePickerView()
             }.disposed(by: self.disposeBag)
+        
+        self.naviBar.leftButtonTapped
+            .withUnretained(self)
+            .bind(onNext: { (owner, _) in
+                owner.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     // TODO: usernameTextField와 keyboardReturn의 Merge, UIDatePicker 뷰 작성 및 이벤트 바인딩

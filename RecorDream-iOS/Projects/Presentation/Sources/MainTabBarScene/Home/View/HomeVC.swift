@@ -80,10 +80,16 @@ public class HomeVC: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.bindViews()
         self.bindViewModels()
         self.setUI()
         self.setLayout()
         self.setCollectionViewAdapter()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.resetView()
     }
 
     // MARK: - UI & Layout
@@ -126,14 +132,30 @@ public class HomeVC: UIViewController {
 // MARK: - Methods
 
 extension HomeVC {
+    
+    private func bindViews() {
+        self.logoView.rx.mypageButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                let myPageVC = owner.factory.instantiateMyPageVC()
+                owner.navigationController?.pushViewController(myPageVC, animated: true)
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.rdTabBar.isHidden = true
+            }).disposed(by: self.disposeBag)
+    }
   
     private func bindViewModels() {
         let input = HomeViewModel.Input()
-        // let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        // let output = self.viewModel.transform(frsom: input, disposeBag: self.disposeBag)
     }
 
     private func setCollectionViewAdapter() {
         self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
             collectionView: self.dreamCardCollectionView, adapterDataSource: HomeViewModel())
+    }
+    
+    private func resetView() {
+        guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
+        rdtabbarController.rdTabBar.isHidden = false
     }
 }
