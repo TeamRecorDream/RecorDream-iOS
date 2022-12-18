@@ -8,10 +8,10 @@ public extension Project {
         "UILaunchStoryboardName": "LaunchScreen",
         "CFBundleDisplayName": "레코드림",
         "LSApplicationQueriesSchemes": ["kakaokompassauth", "kakaolink"],
-        "CFBundleURLTypes": ["CFBundleURLSchemes": ["kakao$(KAKAO_APP_KEY)"]],
+        "CFBundleURLTypes": ["CFBundleURLSchemes": ["kakao000e1e31f022f98fbe16c76ab287abd1"]],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
-            "UISceneConfigurations": [
+            "UISceneConfigurations": [만
                 "UIWindowSceneSessionRoleApplication": [
                     [
                         "UISceneConfigurationName": "Default Configuration",

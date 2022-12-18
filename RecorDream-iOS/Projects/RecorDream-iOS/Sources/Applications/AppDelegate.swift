@@ -100,6 +100,7 @@ extension AppDelegate: MessagingDelegate {
                 print("FCM 등록토큰 가져오기 오류: \(error)")
             } else if let token = token {
                 print("FCM 등록토큰 : \(token)")
+                UserDefaults.standard.set(token, forKey: Key.userToken.rawValue)
             }
         }
     }
@@ -107,5 +108,6 @@ extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         guard let token = fcmToken else { return }
         print("FCM 등록토큰 갱신: \(token)")
+        UserDefaults.standard.set(token, forKey: Key.userToken.rawValue)
     }
 }

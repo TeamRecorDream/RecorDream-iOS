@@ -16,7 +16,22 @@ import Data
  클린 아키텍쳐에서의 의존성 주입도 담당합니다.
  */
 extension DependencyContainer: AuthViewControllerFactory {
+    public func instantiateSpalshVC() -> Presentation.SplashVC {
+        let splashVC = SplashVC()
+        splashVC.factory = self
+        return splashVC
+    }
     
+    public func instantiateLoginVC() -> Presentation.LoginVC {
+        let loginVC = LoginVC()
+        let repository = DefaultAuthRepository(authService: self.authService)
+        let useCase = DefaultAuthUseCase(repository: repository)
+        let viewModel = LoginViewModel(useCase: useCase)
+        
+        loginVC.factory = self
+        loginVC.loginViewModel = viewModel
+        return loginVC
+    }
 }
 
 extension DependencyContainer: MainTabBarControllerFactory {

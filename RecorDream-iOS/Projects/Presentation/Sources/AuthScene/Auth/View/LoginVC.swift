@@ -32,7 +32,8 @@ public final class LoginVC: UIViewController {
     }()
     
     // MARK: - Properties
-    var loginViewModel: LoginViewModel!
+    public var loginViewModel: LoginViewModel!
+    public var factory: ViewControllerFactory!
     var loginRequestFail = PublishSubject<AuthPlatformType>()
     var loginRequestSuccess = PublishSubject<AuthRequest>()
     private let disposeBag = DisposeBag()

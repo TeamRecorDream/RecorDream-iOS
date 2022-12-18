@@ -18,7 +18,7 @@ public final class DefaultAuthRepository {
     private let authService: AuthService
     private let disposeBag = DisposeBag()
     
-    init(authService: AuthService) {
+    public init(authService: AuthService) {
         self.authService = authService
     }
 }

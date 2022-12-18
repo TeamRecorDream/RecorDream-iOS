@@ -18,6 +18,7 @@ public final class SplashVC: UIViewController {
 
     private let authView = AuthView()
     private let disposeBag = DisposeBag()
+    public var factory: ViewControllerFactory!
     
     // MARK: - View Life Cycle
     public override func viewDidLoad() {

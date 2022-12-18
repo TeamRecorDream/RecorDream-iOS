@@ -26,7 +26,7 @@ public final class DefaultAuthUseCase {
     public var authSuccess = PublishSubject<AuthEntity>()
     public var authFail = PublishSubject<Error>()
     
-    init(repository: AuthRepository) {
+    public init(repository: AuthRepository) {
         self.repository = repository
     }
 }

@@ -37,7 +37,7 @@ public final class LoginViewModel {
     let authRequestEntity = BehaviorRelay<AuthRequest>(value: .init(kakaoToken: "", appleToken: "", fcmToken: ""))
     
     // MARK: - Initialization
-    init(useCase: AuthUseCase) {
+    public init(useCase: AuthUseCase) {
         self.useCase = useCase
     }
 }
