@@ -13,7 +13,7 @@ public class DefaultHomeRepository {
   
     private let disposeBag = DisposeBag()
 
-    init() {
+    public init() {
     
     }
 }

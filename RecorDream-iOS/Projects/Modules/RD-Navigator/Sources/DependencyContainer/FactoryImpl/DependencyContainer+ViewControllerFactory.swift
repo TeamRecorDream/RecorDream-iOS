@@ -35,13 +35,36 @@ extension DependencyContainer: AuthViewControllerFactory {
 }
 
 extension DependencyContainer: MainTabBarControllerFactory {
+
     public func instantiateMainTabBarController() -> MainTabBarController {
         let mainTabBar = MainTabBarController()
         mainTabBar.viewModel = MainTabBarViewModel()
+        mainTabBar.homeVC = self.instantiateHomeVC()
+        mainTabBar.storageVC = self.instantiateStorageVC()
         mainTabBar.factory = self
         
         return mainTabBar
     }
+    
+    public func instantiateHomeVC() -> Presentation.HomeVC {
+        let homeVC = HomeVC()
+        let repository = DefaultHomeRepository()
+        let useCase = DefaultHomeUseCase(repository: repository)
+        let viewModel = HomeViewModel()
+        
+        homeVC.factory = self
+        homeVC.viewModel = viewModel
+        
+        return homeVC
+    }
+    
+    public func instantiateStorageVC() -> Presentation.StorageVC {
+        let storageVC = StorageVC()
+        storageVC.factory = self
+        
+        return storageVC
+    }
+    
     
     public func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC {
         let repository = DefaultDreamWriteRepository(recordService: self.recordService,

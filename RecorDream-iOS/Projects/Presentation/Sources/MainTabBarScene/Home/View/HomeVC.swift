@@ -26,6 +26,7 @@ public class HomeVC: UIViewController {
     
     private let disposeBag = DisposeBag()
     public var viewModel: HomeViewModel!
+    public var factory: ViewControllerFactory!
 
     private var dreamCardCollectionViewAdapter: DreamCardCollectionViewAdapter?
     

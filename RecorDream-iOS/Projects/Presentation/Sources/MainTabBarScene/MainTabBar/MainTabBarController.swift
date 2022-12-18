@@ -20,6 +20,8 @@ public class MainTabBarController: RDTabBarController {
     private let disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: MainTabBarViewModel!
+    public var homeVC: HomeVC!
+    public var storageVC: StorageVC!
     private let middleButtonTapped = PublishRelay<Void>()
     
     // MARK: - View Life Cycle
@@ -39,8 +41,8 @@ public class MainTabBarController: RDTabBarController {
 
 extension MainTabBarController {
     private func setTabBar() {
-        let homeNVC = makeNavigationController(with: HomeVC())
-        let storageNVC = makeNavigationController(with: UIViewController())
+        let homeNVC = makeNavigationController(with: homeVC)
+        let storageNVC = makeNavigationController(with: storageVC)
         storageNVC.view.backgroundColor = .cyan
         
         homeNVC.tabBarItem = UITabBarItem(title: "홈",

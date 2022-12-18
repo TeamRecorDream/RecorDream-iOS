@@ -17,6 +17,9 @@ public protocol AuthViewControllerFactory {
 
 public protocol MainTabBarControllerFactory {
     func instantiateMainTabBarController() -> MainTabBarController
+    func instantiateHomeVC() -> HomeVC
+    func instantiateStorageVC() -> StorageVC
+    
     func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC
     func instantiateMyPageVC() -> MyPageVC
 }
