@@ -8,8 +8,8 @@
 
 import Foundation
 
-public struct Records: Equatable, Identifiable {
-    public enum Genre: Int {
+public struct Records: Codable {
+    public enum Genre: Int, Codable {
         case comedy
         case romance
         case action
@@ -31,7 +31,7 @@ public struct Records: Equatable, Identifiable {
     public let genre: Genre?
 }
 
-public struct DreamSearchEntity: Equatable {
+public struct DreamSearchEntity: Codable {
     public let recordsCount: Int
     public let records: [Records]
 }

@@ -10,27 +10,35 @@ import Foundation
 
 import RD_Core
 
+import RxSwift
+
 public protocol DreamSearchUseCase {
-    func execute(requestValue: DreamSearchUseCaseRequestValue,
-                 completion: @escaping (Result<DreamSearchEntity, Error>) -> Void) -> Cancellable?
+    func execute(requestValue: DreamSearchQuery)
+    
+    var fetchSuccess: PublishSubject<DreamSearchEntity> { get set }
+    var fetchFail: PublishSubject<Error> { get set }
 }
 
-public final class DefaultDreamSearchUseCase: DreamSearchUseCase {
+public final class DefaultDreamSearchUseCase {
+    private let repository: DreamSearchRepository
+    private let disposeBag = DisposeBag()
     
-    private let dreamSearchRepository: DreamSearchRepository
+    public var fetchSuccess = PublishSubject<DreamSearchEntity>()
+    public var fetchFail = PublishSubject<Error>()
 
     init(dreamSearchRepository: DreamSearchRepository) {
-        self.dreamSearchRepository = dreamSearchRepository
-    }
-
-    public func execute(requestValue: DreamSearchUseCaseRequestValue,
-                 completion: @escaping (Result<DreamSearchEntity, Error>) -> Void) -> Cancellable? {
-        return dreamSearchRepository.fetchDreamSearchList(query: requestValue.query) { result in
-            completion(result)
-        }
+        self.repository = dreamSearchRepository
     }
 }
 
-public struct DreamSearchUseCaseRequestValue {
-    let query: DreamSearchQuery
+extension DefaultDreamSearchUseCase: DreamSearchUseCase {
+    public func execute(requestValue: DreamSearchQuery) {
+        self.repository.fetchDreamSearchList(query: requestValue)
+            .subscribe(onNext: { [weak self] entity in
+                guard let self = self else { return }
+                self.fetchSuccess.onNext(entity)
+            }, onError: { err in
+                self.fetchFail.onNext(err)
+            }).disposed(by: disposeBag)
+    }
 }

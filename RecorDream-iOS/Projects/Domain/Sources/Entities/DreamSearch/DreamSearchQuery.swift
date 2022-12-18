@@ -8,6 +8,6 @@
 
 import Foundation
 
-public struct DreamSearchQuery: Equatable {
-    public let query: String
+public struct DreamSearchQuery: Codable {
+    public let keyword: String
 }
