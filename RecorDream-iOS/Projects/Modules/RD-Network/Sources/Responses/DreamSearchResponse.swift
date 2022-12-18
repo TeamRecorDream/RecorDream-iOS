@@ -8,47 +8,41 @@
 
 import Foundation
 
-public struct DreamSearchResponse: Decodable {
-    public let query: String
-    public let results: [DreamSearchResult]
+public struct DreamSearchResponse: Codable {
+    public let recordsCount: Int
+    public let records: [Records]
+    
+    private enum CodingKeys: String, CodingKey {
+        case recordsCount = "records_count"
+        case records
+    }
 }
 
-public extension DreamSearchResponse {
-    struct DreamSearchResult: Decodable {
-        private enum CodingKeys: String, CodingKey {
-            case recordsCount = "records_count"
-            case records
-        }
-        
-        public let recordsCount: Int
-        public let records: [Records]
-    }
+public struct Records: Codable {
+    public let id: String?
+    public let dreamColor: Int?
+    public let emotion: Int?
+    public let date: String?
+    public let title: String?
+    public let genre: Genre?
     
-    struct Records: Decodable {
-        private enum CodingKeys: String, CodingKey {
-            case id = "_id"
-            case dreamColor = "dream_color"
-            case emotion, date, title, genre
-        }
-        public enum Genre: Int, Decodable {
-            case comedy
-            case romance
-            case action
-            case thriller
-            case mystery
-            case fear
-            case sf
-            case fantasy
-            case family
-            case etc
-            case none
-        }
-        
-        public let id: String?
-        public let dreamColor: Int?
-        public let emotion: Int?
-        public let date: String?
-        public let title: String?
-        public let genre: Genre?
+    public enum Genre: Int, Codable {
+        case comedy
+        case romance
+        case action
+        case thriller
+        case mystery
+        case fear
+        case sf
+        case fantasy
+        case family
+        case etc
+        case none
+    }
+    private enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case dreamColor = "dream_color"
+        case emotion, date, title, genre
     }
 }
+

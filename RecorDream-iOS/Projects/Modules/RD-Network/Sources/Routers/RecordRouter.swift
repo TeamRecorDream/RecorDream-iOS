@@ -22,7 +22,6 @@ extension RecordRouter: BaseRouter {
             return .post
         case .searchRecord:
             return .get
-        default: return .get
         }
     }
     
@@ -32,7 +31,6 @@ extension RecordRouter: BaseRouter {
             return "/record"
         case .searchRecord:
             return "/record/storage/search"
-        default: return ""
         }
     }
     
@@ -54,7 +52,6 @@ extension RecordRouter: BaseRouter {
                 "keyword": keyword
             ]
             return .query(query)
-        default: return .requestPlain
         }
     }
     
