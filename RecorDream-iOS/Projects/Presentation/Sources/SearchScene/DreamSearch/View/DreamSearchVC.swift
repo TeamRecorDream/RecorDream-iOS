@@ -1,65 +1,114 @@
-////
-////  DreamSearchVC.swift
-////  Presentation
-////
-////  Created by 정은희 on 2022/10/10.
-////  Copyright © 2022 RecorDream. All rights reserved.
-////
 //
-//import UIKit
+//  DreamSearchVC.swift
+//  Presentation
 //
-//import RD_DSKit
-//import RxSwift
+//  Created by 정은희 on 2022/10/10.
+//  Copyright © 2022 RecorDream. All rights reserved.
 //
-//public class DreamSearchVC: UIViewController {
-//    // MARK: - UI Components
-//    private lazy var navigationBar = RDNaviBar().title("검색하기")
-//    private lazy var searchLabel: UILabel = {
-//        let lb = UILabel()
-//        lb.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 14.adjusted)
-//        lb.text = "검색어 입력"
-//        lb.textColor = .white
-//        return lb
-//    }()
-//    private lazy var searchButton: UIButton = {
-//        let bt = UIButton()
-//        bt.setImage(RDDSKitAsset.Images.icnSearch.image, for: .normal)
-//        bt.contentMode = .scaleAspectFit
-//        return bt
-//    }()
-//    private lazy var searchTextField: UITextField = {
-//        let tf = UITextField()
-//        tf.backgroundColor = .gray
-//        tf.backgroundColor = .white.withAlphaComponent(0.05)
-//        tf.clipsToBounds = true
-//        tf.font = RDDSKitFontFamily.Pretendard.medium.font(size: 14.adjusted)
-//        tf.makeRoundedWithBorder(radius: 15, borderColor: UIColor.white.withAlphaComponent(0.1).cgColor)
-//        tf.placeholder = "어떤 기록을 찾고 있나요?"
-//        tf.setPlaceholderColor(UIColor.white.withAlphaComponent(0.4))
-//        tf.setLeftPadding(amount: 52)
-//        return tf
-//    }()
-//    private lazy var dreamSearchCollectionView: UICollectionView = {
-//        let cv = UICollectionView(frame: .zero, collectionViewLayout: self.layout())
-//        cv.showsVerticalScrollIndicator = false
-//        cv.backgroundColor = RDDSKitAsset.Colors.dark.color
-//        cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//        cv.allowsMultipleSelection = true
-//        return cv
-//    }()
-//    
-//    // MARK: - Reactive Properties
-//    private var disposeBag = DisposeBag()
-////    private var viewModel = DreamSearchViewModel()
-//    
-//    // MARK: - View Life Cycle
-//    public override func viewDidLoad() {
-//        super.viewDidLoad()
-//        
-//        self.setupView()
-//        self.setupConstraint()
-////        self.assignDelegate()
-//        self.registerXib()
+
+import UIKit
+
+import RD_DSKit
+import RxSwift
+
+public class DreamSearchVC: UIViewController {
+    // MARK: - UI Components
+    private lazy var navigationBar = RDNaviBar().title("검색하기")
+    private lazy var searchLabel: UILabel = {
+        let lb = UILabel()
+        lb.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 14.adjusted)
+        lb.text = "검색어 입력"
+        lb.textColor = .white
+        return lb
+    }()
+    private lazy var searchTextField = DramSearchTextField()
+    private lazy var dreamSearchCollectionView: UICollectionView = {
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: self.layout())
+        cv.showsVerticalScrollIndicator = false
+        cv.backgroundColor = RDDSKitAsset.Colors.dark.color
+        cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        cv.allowsMultipleSelection = true
+        return cv
+    }()
+    
+    // MARK: - Reactive Properties
+    private var disposeBag = DisposeBag()
+//    private var viewModel = DreamSearchViewModel()
+    lazy var dataSource: UICollectionViewDiffableDataSource<DreamSearchResultType, AnyHashable>! = nil
+    
+    // MARK: - View Life Cycle
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setupView()
+        self.setupConstraint()
+        self.assignDelegate()
+        self.registerXib()
+    }
+}
+
+// MARK: - Extensions
+extension DreamSearchVC {
+    public func setupView() {
+        self.view.backgroundColor = .black
+        self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView)
+    }
+    public func setupConstraint() {
+        navigationBar.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(44.adjustedHeight)
+        }
+        searchLabel.snp.makeConstraints { make in
+            make.top.equalTo(navigationBar.snp.bottom).offset(34)
+            make.leading.equalToSuperview().offset(16)
+        }
+        searchTextField.snp.makeConstraints { make in
+            make.height.equalTo(46.adjustedHeight)
+            make.centerX.equalToSuperview().inset(16)
+            make.top.equalTo(searchLabel.snp.bottom).offset(16)
+        }
+        dreamSearchCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(searchTextField.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+    }
+    private func assignDelegate() {
+        dreamSearchCollectionView.delegate = self
+    }
+    private func registerXib() {
+        dreamSearchCollectionView.register(DreamSearchBottomCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier)
+        dreamSearchCollectionView.register(DreamSearchHeaderCVC.self, forCellWithReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier)
+        dreamSearchCollectionView.register(DreamSearchEmptyCVC.self, forCellWithReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier)
+        dreamSearchCollectionView.register(StorageExistCVC.self, forCellWithReuseIdentifier: StorageExistCVC.reuseIdentifier)
+    }
+}
+extension DreamSearchVC: UICollectionViewDelegate {
+    private func setDataSource() {
+        self.dataSource = UICollectionViewDiffableDataSource<DreamSearchResultType, AnyHashable>(collectionView: dreamSearchCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+            switch DreamSearchResultType.type(indexPath.section) {
+            case .non:
+                guard let emptyCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier, for: indexPath) as? DreamSearchEmptyCVC else { return UICollectionViewCell() }
+                return emptyCell
+            case .exist:
+                guard let resultCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
+//                resultCell.setData(emotion: , date: <#T##String#>, title: <#T##String#>, tag: <#T##[String]#>)
+                return resultCell
+            }
+        })
+        self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            switch kind {
+            case DreamSearchHeaderCVC.className:
+                guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier, for: indexPath) as? DreamSearchHeaderCVC else { return UICollectionReusableView() }
+                return header
+            case DreamSearchEmptyCVC.className:
+                guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier, for: indexPath) as? DreamSearchEmptyCVC else { return UICollectionReusableView() }
+                return footer
+            default:
+                return UICollectionReusableView()
+            }
+        }
+    }
 //    }
 //}
 //

@@ -6,7 +6,11 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
-public enum DreamSearchResultType: Int {
+public enum DreamSearchResultType: Int, CaseIterable {
     case exist
     case non
+    
+    public static func type(_ index: Int) -> DreamSearchResultType {
+        return self.allCases[index]
+    }
 }

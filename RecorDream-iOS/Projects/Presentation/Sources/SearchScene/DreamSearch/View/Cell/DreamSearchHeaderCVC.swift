@@ -1,5 +1,5 @@
 //
-//  DreamSearchCountCVC.swift
+//  DreamSearchHeaderCVC.swift
 //  Presentation
 //
 //  Created by 정은희 on 2022/10/11.
@@ -10,7 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-final class DreamSearchCountCVC: DreamReusableView {
+final class DreamSearchHeaderCVC: DreamReusableView {
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = RDDSKitColors.Color.white
@@ -41,7 +41,7 @@ final class DreamSearchCountCVC: DreamReusableView {
     }
 }
 
-extension DreamSearchCountCVC {
+extension DreamSearchHeaderCVC {
     func configureCell(viewModel: DreamSearchResultViewModel) {
         self.countLabel.text = "\(viewModel.recordsCount)개의 기록"
     }
