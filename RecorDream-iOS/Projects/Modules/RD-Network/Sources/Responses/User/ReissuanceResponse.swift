@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+public struct ReissuanceResponse: Codable {
+    public let accessToken, refreshToken: String
+}

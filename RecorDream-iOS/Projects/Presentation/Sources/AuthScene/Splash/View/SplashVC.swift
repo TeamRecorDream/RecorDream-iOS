@@ -52,21 +52,12 @@ extension SplashVC: AuthControllable {
 
 extension SplashVC {
     private func setupViewState() {
-        self.checkLoginEnable { tokenState in
-            switch tokenState {
-            case .valid:
-                // TODO: - 홈 뷰로 전환
+        self.checkLoginEnable { loginEnabled in
+            switch loginEnabled {
+            case true:
                 self.presentMainTabBar()
-            case .invalid:
-                // TODO: - 로그인 뷰로 전환
+            case false:
                 self.presentLoginVC()
-            case .missed:
-                // TODO: - state에 따라 화면전환
-                self.postLogin { success in
-                    success
-                    ? self.presentMainTabBar()
-                    : self.presentLoginVC()
-                }
             }
         }
     }
@@ -85,33 +76,35 @@ extension SplashVC {
         self.present(loginVC, animated: true)
     }
     
-    private func checkLoginEnable(completion: @escaping ((TokenState) -> Void)) {
-        if UserDefaults.standard.string(forKey: Key.userToken.rawValue) != nil &&
-            UserDefaults.standard.string(forKey: Key.accessToken.rawValue) != nil {
-            // TODO: - 홈뷰 서버통신
-            /// 성공이라면 토큰 상태로 .valid
-            /// 실패라면 토큰 상태로 .invalid 넣어주기
-            completion(.valid)
+    private func checkLoginEnable(completion: @escaping ((Bool) -> Void)) {
+        if UserDefaults.standard.string(forKey: UserDefaultKey.userToken.rawValue) != nil &&
+            UserDefaults.standard.string(forKey: UserDefaultKey.accessToken.rawValue) != nil {
+            DefaultAuthService.shared.reissuance()
+                .subscribe(onNext: { response in
+                    guard let response = response else {
+                        completion(false)
+                        return
+                    }
+                    
+                    if let message = response.message,
+                       message == "아직 유효한 토큰입니다." {
+                        completion(true)
+                        return
+                    }
+                    
+                    guard let token = response.data else {
+                        completion(false)
+                        return
+                    }
+                    
+                    DefaultUserDefaultManager.set(value: token.accessToken, keyPath: .accessToken)
+                    DefaultUserDefaultManager.set(value: token.refreshToken, keyPath: .refreshToken)
+                    completion(true)
+                })
+                .disposed(by: self.disposeBag)
         }
         else {
-            completion(.missed)
-        }
-    }
-    
-    private func postLogin(completion: @escaping ((Bool) -> Void)) {
-        guard let userToken = UserDefaults.standard.string(forKey: Key.userToken.rawValue),
-              let accessToken = UserDefaults.standard.string(forKey: Key.accessToken.rawValue) else {
             completion(false)
-            return
         }
-        
-        DefaultAuthService.shared.login(kakaoToken: userToken, appleToken: userToken, fcmToken: accessToken) // ✅
-            .subscribe(onNext: { response in
-                guard let response = response else { return }
-                DefaultUserDefaultManager.set(value: response.accessToken, keyPath: Key.accessToken.rawValue)
-                completion(true)
-            }, onError: { _ in
-                completion(false)
-            }).disposed(by: self.disposeBag)
     }
 }

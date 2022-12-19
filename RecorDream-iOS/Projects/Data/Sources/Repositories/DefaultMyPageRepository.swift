@@ -7,6 +7,7 @@
 //
 
 import Domain
+import RD_Core
 import RD_Network
 
 import RxSwift

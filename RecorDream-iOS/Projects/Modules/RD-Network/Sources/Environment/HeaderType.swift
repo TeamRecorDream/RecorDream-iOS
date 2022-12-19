@@ -23,7 +23,7 @@ enum HTTPHeaderField: String {
     case authorization = "Authorization"
     
     case access
-    case refresh = "refreshtoken"
+    case refresh
 }
 
 enum HeaderContent: String {

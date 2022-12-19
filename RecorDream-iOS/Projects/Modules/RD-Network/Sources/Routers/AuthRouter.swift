@@ -8,14 +8,25 @@
 
 import Alamofire
 
+import RD_Core
+
 enum AuthRouter {
     case login(kakaoToken: String?, appleToken: String?, fcmToken: String)
+    case reissuance
 }
 
 extension AuthRouter: BaseRouter {
+    
+    var header: HeaderType {
+        switch self {
+        case .reissuance:
+            return .reissuance
+        default: return .withToken
+        }
+    }
     var method: HTTPMethod {
         switch self {
-        case .login:
+        case .login, .reissuance:
             return .post
         }
     }
@@ -24,6 +35,8 @@ extension AuthRouter: BaseRouter {
         switch self {
         case .login:
             return "/auth/login"
+        case .reissuance:
+            return "/auth/token"
         }
     }
     
@@ -36,6 +49,7 @@ extension AuthRouter: BaseRouter {
                 "fcmToken": fcmToken
             ]
             return .requestBody(body)
+        default: return .requestPlain
         }
     }
     

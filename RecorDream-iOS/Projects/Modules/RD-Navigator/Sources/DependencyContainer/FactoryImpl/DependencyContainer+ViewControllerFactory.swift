@@ -85,11 +85,13 @@ extension DependencyContainer: MainTabBarControllerFactory {
     }
     
     public func instantiateMyPageVC() -> MyPageVC {
-        let repository = DefaultMyPageRepository()
+        let repository = DefaultMyPageRepository(authService: self.authService,
+                                                 userService: self.userService)
         let useCase = DefaultMyPageUseCase(repository: repository)
         let viewModel = MyPageViewModel(useCase: useCase)
         let myPageVC = MyPageVC()
         myPageVC.viewModel = viewModel
+        myPageVC.factory = self
         
         return myPageVC
     }

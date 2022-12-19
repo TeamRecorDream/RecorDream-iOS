@@ -11,6 +11,7 @@ import RxSwift
 
 public protocol AuthService {
     func login(kakaoToken: String?, appleToken: String?, fcmToken: String) -> Observable<AuthResponse?>
+    func reissuance() -> Observable<GeneralResponse<ReissuanceResponse>?>
 }
 
 public class DefaultAuthService: BaseService {
@@ -20,7 +21,9 @@ public class DefaultAuthService: BaseService {
 }
 
 extension DefaultAuthService: AuthService {
-    public func login(kakaoToken: String?, appleToken: String?, fcmToken: String) -> RxSwift.Observable<AuthResponse?> {
+    public func reissuance() -> Observable<GeneralResponse<ReissuanceResponse>?> {
+        requestObjectInRxWithGeneral(AuthRouter.reissuance)
+    }
         requestObjectInRx(AuthRouter.login(kakaoToken: kakaoToken, appleToken: appleToken, fcmToken: fcmToken))
     }
 }

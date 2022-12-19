@@ -25,6 +25,7 @@ public class MyPageVC: UIViewController {
     private let disposeBag = DisposeBag()
     
     public var viewModel: MyPageViewModel!
+    public var factory: ViewControllerFactory!
     
     private let usernameAlertDismissed = PublishRelay<Void>()
     private let withdrawalActionTapped = PublishRelay<Void>()
