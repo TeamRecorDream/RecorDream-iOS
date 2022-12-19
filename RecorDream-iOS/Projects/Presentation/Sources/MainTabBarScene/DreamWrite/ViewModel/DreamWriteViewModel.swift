@@ -37,6 +37,7 @@ public class DreamWriteViewModel: ViewModelType {
         var showGenreCountCaution = BehaviorRelay<Bool>(value: false)
         var writeRequestSuccess = PublishRelay<Void>()
         var dreamWriteModelFetched = BehaviorRelay<DreamWriteEntity?>(value: nil)
+        var loadingStatus = PublishRelay<Bool>()
     }
     
     // MARK: - Properties
@@ -90,6 +91,7 @@ extension DreamWriteViewModel {
         input.viewDidLoad.subscribe(onNext: { _ in
             if case let .modify(postId) = self.viewModelType {
                 self.useCase.fetchDreamRecord(recordId: postId)
+                output.loadingStatus.accept(true)
             }
         }).disposed(by: disposeBag)
         
@@ -107,7 +109,7 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         input.saveButtonTapped.subscribe(onNext: { _ in
-            print(self.writeRequestEntity.value, "상황")
+            output.loadingStatus.accept(true)
             self.useCase.writeDreamRecord(request: self.writeRequestEntity.value, voiceId: self.voiceId)
         }).disposed(by: disposeBag)
         
@@ -119,12 +121,14 @@ extension DreamWriteViewModel {
         fetchedModel.subscribe(onNext: { entity in
             self.shouldShowWarningForInit = entity.shouldeShowWarning
             output.dreamWriteModelFetched.accept(entity)
+            output.loadingStatus.accept(false)
             self.writeRequestEntity.accept(entity.toRequest())
         }).disposed(by: disposeBag)
         
         let writeRelay = useCase.writeSuccess
         writeRelay.subscribe(onNext: { entity in
             output.writeRequestSuccess.accept(())
+            output.loadingStatus.accept(false)
         }).disposed(by: disposeBag)
         
         let writeEnabled = useCase.isWriteEnabled
