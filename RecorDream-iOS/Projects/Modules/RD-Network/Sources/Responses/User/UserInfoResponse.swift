@@ -10,6 +10,5 @@ import Foundation
 
 public struct UserInfoResponse: Codable {
     public let nickname, email: String
-    public let isActive: Bool
     public let time: String?
 }

@@ -6,7 +6,7 @@
 //  Copyright © 2022 RecorDream-iOS. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public extension UIWindow {
     static var keyWindowGetter: UIWindow? {

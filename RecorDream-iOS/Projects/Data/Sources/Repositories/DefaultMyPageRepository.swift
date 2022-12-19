@@ -27,10 +27,16 @@ public class DefaultMyPageRepository {
 extension DefaultMyPageRepository: MyPageRepository {
     public func fetchUserInformation() -> Observable<MyPageEntity> {
         return Observable.create { observer in
-            observer.onNext(.init(userName: "샘플닉네임",
-                                  email: "sample@gmail.com",
-                                  pushOnOff: true,
-                                  pushTime: "08:00"))
+            self.userService.fetchUserInfo()
+                .subscribe(onNext: { response in
+                    guard let entity = response?.toDomain() else {
+                        return
+                    }
+                    observer.onNext(entity)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }
@@ -45,7 +51,7 @@ extension DefaultMyPageRepository: MyPageRepository {
                         return
                     }
                     DefaultUserDefaultManager.clearUserData()
-            observer.onNext(true)
+                    observer.onNext(true)
                 }, onError: { err in
                     observer.onError(err)
                 })
@@ -63,7 +69,7 @@ extension DefaultMyPageRepository: MyPageRepository {
                         return
                     }
                     DefaultUserDefaultManager.clearUserData()
-            observer.onNext(true)
+                    observer.onNext(true)
                 }, onError: { err in
                     observer.onError(err)
                 })

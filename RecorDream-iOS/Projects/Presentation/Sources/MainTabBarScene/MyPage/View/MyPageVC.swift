@@ -288,6 +288,12 @@ extension MyPageVC {
     private func fetchMyPageData(model: MyPageEntity) {
         self.myPageEditableView.initText = model.userName
         self.emailLabel.text = model.email
+        
+        pushSettingView.rx.pushSwitchIsOnBindable
+            .onNext(model.pushOnOff)
+        
+        timeSettingView.rx.pushTimeSelected
+            .onNext(model.pushTime)
     }
     
     private func showUsernameWarningAlert() {
