@@ -25,6 +25,23 @@ public class DefaultMyPageRepository {
 }
 
 extension DefaultMyPageRepository: MyPageRepository {
+    public func changeUserNickname(nickname: String) -> RxSwift.Observable<Bool> {
+        return Observable.create { observer in
+            self.userService.changeNickname(nickname: nickname)
+                .subscribe(onNext: { nicknameChangeSuccessed in
+                    guard nicknameChangeSuccessed else {
+                        observer.onNext(false)
+                        return
+                    }
+                    observer.onNext(true)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
     public func fetchUserInformation() -> Observable<MyPageEntity> {
         return Observable.create { observer in
             self.userService.fetchUserInfo()

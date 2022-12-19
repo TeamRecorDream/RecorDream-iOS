@@ -14,4 +14,5 @@ public protocol MyPageRepository {
     func userWithdrawal() -> Observable<Bool>
     func enablePushNotice(time: String) -> Observable<String>
     func disablePushNotice() -> Observable<Void>
+    func changeUserNickname(nickname: String) -> Observable<Bool>
 }

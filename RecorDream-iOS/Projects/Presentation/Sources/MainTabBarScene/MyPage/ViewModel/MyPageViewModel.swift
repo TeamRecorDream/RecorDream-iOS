@@ -67,10 +67,10 @@ extension MyPageViewModel {
         input.myPageReturnOutput.subscribe(onNext: { editOutput in
             switch editOutput {
             case .noText:
-                self.useCase.restartUsernameEdit()
+                self.useCase.restartUsernameEditAfterAlert()
             case .endWithProperText(let text):
                 output.loadingStatus.accept(true)
-                self.useCase.editUsername(username: text)
+                self.useCase.requestUsernameEdit(username: text)
             }
         }).disposed(by: disposeBag)
         
@@ -109,7 +109,6 @@ extension MyPageViewModel {
         
         let startUsernameEdit = self.useCase.usernameEditStatus
         startUsernameEdit
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: {
                 output.startUsernameEdit.accept($0)
             }).disposed(by: disposeBag)

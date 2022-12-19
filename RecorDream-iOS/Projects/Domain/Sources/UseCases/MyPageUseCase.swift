@@ -13,9 +13,9 @@ public protocol MyPageUseCase {
     // 회원 정보를 Token으로 요청하기 때문에 파라미터 없음
     func fetchMyPageData()
     func validateUsernameEdit()
-    func restartUsernameEdit()
+    func restartUsernameEditAfterAlert()
     func startUsernameEdit()
-    func editUsername(username: String)
+    func requestUsernameEdit(username: String)
     func disablePushNotice()
     func enablePushNotice(time: String)
     func userLogout()
@@ -44,7 +44,51 @@ public class DefaultMyPageUseCase {
     }
 }
 
+// MARK: - EditNickname
+
 extension DefaultMyPageUseCase: MyPageUseCase {
+    
+    /// 이미 닉네임 변경 중인 경우를 필터링하고 닉네임 변경 상태로 전환하는 메서드
+    public func validateUsernameEdit() {
+        let isAlreadyEditing = usernameEditStatus.value
+        
+        guard !isAlreadyEditing else { return }
+        usernameEditStatus.accept(true)
+    }
+    
+    /// respository에 username 변경 요청
+    /// - Parameter username: 변경할 닉네임
+    public func requestUsernameEdit(username: String) {
+        self.repository.changeUserNickname(nickname: username)
+            .withUnretained(self)
+            .subscribe { owner, successed in
+                guard successed else {
+                    owner.shouldShowAlert.accept(())
+                    return
+                }
+                owner.stopUsernameEdit()
+            }.disposed(by: self.disposeBag)
+    }
+    
+    private func stopUsernameEdit() {
+        usernameEditStatus.accept(false)
+    }
+    
+    /// 알러트가 해제되고 강제로 다시 닉네임 변경 상태로 전환하기 위한 메서드
+    public func startUsernameEdit() {
+        usernameEditStatus.accept(true)
+    }
+    
+    /// Alert를 띄우고 다시 UserName 변경 상태로 전환하는 메서드
+    public func restartUsernameEditAfterAlert() {
+        usernameEditStatus.accept(true)
+        shouldShowAlert.accept(())
+    }
+}
+
+// MARK: - Push Notice Setting
+
+extension DefaultMyPageUseCase {
     public func enablePushNotice(time: String) {
         self.repository.enablePushNotice(time: time)
             .subscribe { selectedTime in
@@ -58,37 +102,16 @@ extension DefaultMyPageUseCase: MyPageUseCase {
                 self.updatePushSuccess.onNext(nil)
             }.disposed(by: self.disposeBag)
     }
-    
+}
+
+// MARK: - Logout & Withdrawal
+
+extension DefaultMyPageUseCase {
     public func fetchMyPageData() {
         self.repository.fetchUserInformation()
             .subscribe(onNext: { entity in
                 self.myPageFetched.onNext(entity)
             }).disposed(by: self.disposeBag)
-    }
-    
-    // TODO: - repostiory에 요청하고 성공하면 stopUsername 호출
-    public func editUsername(username: String) {
-        stopUsernameEdit()
-    }
-    
-    public func validateUsernameEdit() {
-        let isAlreadyEditing = usernameEditStatus.value
-        
-        guard !isAlreadyEditing else { return }
-        usernameEditStatus.accept(true)
-    }
-    
-    private func stopUsernameEdit() {
-        usernameEditStatus.accept(false)
-    }
-    
-    public func startUsernameEdit() {
-        usernameEditStatus.accept(true)
-    }
-    
-    public func restartUsernameEdit() {
-        usernameEditStatus.accept(true)
-        shouldShowAlert.accept(())
     }
     
     public func userLogout() {

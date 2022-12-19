@@ -43,7 +43,7 @@ extension MockMyPageUseCase {
         usernameEditStatus.accept(true)
     }
     
-    func restartUsernameEdit() {
+    func restartUsernameEditAfterAlert() {
         
     }
     
@@ -51,7 +51,7 @@ extension MockMyPageUseCase {
         
     }
     
-    func editUsername(username: String) {
+    func requestUsernameEdit(username: String) {
         
     }
     
