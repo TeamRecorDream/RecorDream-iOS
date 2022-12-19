@@ -16,8 +16,6 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-// TODO: Loading Extension 만들기, Loading Event 바인딩하기
-
 public class MyPageVC: UIViewController {
     
     // MARK: - Properties
@@ -290,6 +288,10 @@ extension MyPageVC {
                 let splashVC = owner.factory.instantiateSpalshVC()
                 UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: splashVC, withAnimation: true)
             }.disposed(by: self.disposeBag)
+        
+        output.loadingStatus
+            .bind(to: self.rx.isLoading)
+            .disposed(by: self.disposeBag)
     }
     
     private func fetchMyPageData(model: MyPageEntity) {
