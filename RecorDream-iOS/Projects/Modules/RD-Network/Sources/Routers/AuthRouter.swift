@@ -9,31 +9,33 @@
 import Alamofire
 
 enum AuthRouter {
-
+    case login(kakaoToken: String?, appleToken: String?, fcmToken: String)
 }
 
 extension AuthRouter: BaseRouter {
     var method: HTTPMethod {
         switch self {
-        default: return .get
+        case .login:
+            return .post
         }
     }
     
     var path: String {
         switch self {
-        default: return ""
+        case .login:
+            return "/auth/login"
         }
     }
     
     var parameters: RequestParams {
         switch self {
-        default: return .requestPlain
-        }
-    }
-    
-    var header: HeaderType {
-        switch self {
-
+        case .login(let kakaoToken, let appleToken, let fcmToken):
+            let body: [String: Any] = [
+                "kakaoToken": kakaoToken,
+                "appleToken": appleToken,
+                "fcmToken": fcmToken
+            ]
+            return .requestBody(body)
         }
     }
     

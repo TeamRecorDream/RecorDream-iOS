@@ -32,8 +32,10 @@ public enum RDDSKitAsset {
   }
   public enum Images {
     public static let icnMicTitle = RDDSKitImages(name: "icn_mic_title")
+    public static let kakaotalk = RDDSKitImages(name: "Kakaotalk")
     public static let icnEdit = RDDSKitImages(name: "icn_edit")
     public static let icnMypage = RDDSKitImages(name: "icn_mypage")
+    public static let apple = RDDSKitImages(name: "apple")
     public static let backgroundBlue = RDDSKitImages(name: "background_blue")
     public static let backgroundPink = RDDSKitImages(name: "background_pink")
     public static let backgroundPurple = RDDSKitImages(name: "background_purple")
@@ -78,6 +80,7 @@ public enum RDDSKitAsset {
     public static let feelingSStrange = RDDSKitImages(name: "feeling_s_strange")
     public static let feelingXsAll = RDDSKitImages(name: "feeling_xs_all")
     public static let feelingXsBlank = RDDSKitImages(name: "feeling_xs_blank")
+    public static let feelingXsBlankUnselected = RDDSKitImages(name: "feeling_xs_blank_unselected")
     public static let feelingXsJoy = RDDSKitImages(name: "feeling_xs_joy")
     public static let feelingXsJoySelected = RDDSKitImages(name: "feeling_xs_joy_selected")
     public static let feelingXsSad = RDDSKitImages(name: "feeling_xs_sad")

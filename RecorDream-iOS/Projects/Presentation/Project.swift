@@ -14,5 +14,6 @@ let project = Project.makeModule(
     dependencies: [
         .Project.RDDSKit,
         .Project.Domain
-    ]
+    ],
+    hasTest: true
 )

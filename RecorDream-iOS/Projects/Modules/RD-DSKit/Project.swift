@@ -14,5 +14,6 @@ let project = Project.makeModule(
     dependencies: [
         .Project.RDCore
     ],
-    resources: ["Resources/**"]
+    resources: ["Resources/**"],
+    hasTest: true
 )

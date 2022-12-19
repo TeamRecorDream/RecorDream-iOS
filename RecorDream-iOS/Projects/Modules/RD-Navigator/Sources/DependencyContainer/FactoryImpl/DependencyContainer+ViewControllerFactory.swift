@@ -20,11 +20,10 @@ extension DependencyContainer: AuthViewControllerFactory {
 }
 
 extension DependencyContainer: MainTabBarControllerFactory {
-
-    func instantiateMainTabBarController() -> MainTabBarController {
+    public func instantiateMainTabBarController() -> MainTabBarController {
         let mainTabBar = MainTabBarController()
         mainTabBar.viewModel = MainTabBarViewModel()
-        mainTabBar.homeViewController = instantiateHomeViewController()
+        mainTabBar.factory = self
         
         return mainTabBar
     }
@@ -39,7 +38,7 @@ extension DependencyContainer: MainTabBarControllerFactory {
         return homeViewController
     }
     
-    func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC {
+    public func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC {
         let repository = DefaultDreamWriteRepository(recordService: self.recordService,
                                                      voiceService: self.voiceService)
         let useCase = DefaultDreamWriteUseCase(repository: repository)
@@ -52,11 +51,12 @@ extension DependencyContainer: MainTabBarControllerFactory {
         }
         let dreamWriteVC = DreamWriteVC()
         dreamWriteVC.viewModel = viewModel
+        dreamWriteVC.factory = self
         
         return dreamWriteVC
     }
     
-    func instantiateMyPageVC() -> MyPageVC {
+    public func instantiateMyPageVC() -> MyPageVC {
         let repository = DefaultMyPageRepository()
         let useCase = DefaultMyPageUseCase(repository: repository)
         let viewModel = MyPageViewModel(useCase: useCase)
