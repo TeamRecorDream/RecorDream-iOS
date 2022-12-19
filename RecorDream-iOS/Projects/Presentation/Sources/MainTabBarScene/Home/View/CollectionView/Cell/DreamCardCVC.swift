@@ -33,12 +33,11 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
 
     // MARK: - UI Components
 
-    private var backgroundImage = UIImageView(image: RDDSKitAsset.Images.cardMYellow.image)
+    private var backgroundImage = UIImageView()
 
     private var emotionImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.image = RDDSKitAsset.Images.feelingLJoy.image
         return iv
     }()
 
@@ -153,18 +152,19 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
 
         noteLabel.text = model.content
     }
-
-    // Temp: 추후 서버와 논의 후 바뀔 수 있음.
+    
     private func setEmotionImage(emotion: Int) -> [UIImage] {
         switch emotion {
         case 1:
             return [RDDSKitAsset.Images.cardMYellow.image, RDDSKitAsset.Images.feelingLJoy.image]
         case 2:
-            return [RDDSKitAsset.Images.cardMRed.image, RDDSKitAsset.Images.feelingLScary.image]
-        case 3:
-            return [RDDSKitAsset.Images.cardMPink.image, RDDSKitAsset.Images.feelingLShy.image]
-        case 4:
             return [RDDSKitAsset.Images.cardMBlue.image, RDDSKitAsset.Images.feelingLSad.image]
+        case 3:
+            return [RDDSKitAsset.Images.cardMRed.image, RDDSKitAsset.Images.feelingLScary.image]
+        case 4:
+            return [RDDSKitAsset.Images.cardMPurple.image, RDDSKitAsset.Images.feelingLStrange.image]
+        case 5:
+            return [RDDSKitAsset.Images.cardMPink.image, RDDSKitAsset.Images.feelingLShy.image]
         default:
             return [RDDSKitAsset.Images.cardMWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
         }
