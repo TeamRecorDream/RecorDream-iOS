@@ -67,7 +67,7 @@ extension RDLoadingView {
         }
         self.loadingView.snp.makeConstraints {
             $0.center.equalTo(self.safeAreaLayoutGuide)
-            $0.size.equalTo(150)
+            $0.size.equalTo(108.adjustedH)
         }
     }
     
