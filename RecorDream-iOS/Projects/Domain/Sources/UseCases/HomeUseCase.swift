@@ -42,11 +42,8 @@ extension DefaultHomeUseCase: HomeUseCase {
         self.repository.fetchDreamRecord()
             .subscribe(onNext: { entity in
                 guard let records = entity.records else { return }
-                if records.isEmpty {
-                    self.isExistRecord.onNext(false)
-                } else {
-                    self.isExistRecord.onNext(true)
-                }
+                let isExistRecords = !records.isEmpty
+                self.isExistRecord.onNext(isExistRecords)
             }).disposed(by: self.disposeBag)
     }
 }
