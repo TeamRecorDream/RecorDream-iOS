@@ -273,7 +273,14 @@ extension MyPageVC {
             .disposed(by: self.disposeBag)
         
         output.selectedPushTime
-            .bind(to: self.timeSettingView.rx.pushTimeSelected)
+            .bind { selectedTime in
+                self.timeSettingView.rx.pushTimeSelected.onNext(selectedTime)
+                guard selectedTime != nil else {
+                    self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
+                    return
+                }
+                self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(true)
+            }
             .disposed(by: self.disposeBag)
         
         output.popToSplash
