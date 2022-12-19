@@ -9,19 +9,21 @@
 import Alamofire
 
 enum UserRouter {
-
+    case fetchUserInfo
+    case withdrawal
 }
 
 extension UserRouter: BaseRouter {
     var method: HTTPMethod {
         switch self {
+        case .withdrawal: return .delete
         default: return .get
         }
     }
     
     var path: String {
         switch self {
-        default: return ""
+        default: return "/user"
         }
     }
     

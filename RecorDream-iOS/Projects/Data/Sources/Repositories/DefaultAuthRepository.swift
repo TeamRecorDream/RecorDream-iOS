@@ -9,6 +9,7 @@
 import Foundation
 
 import Domain
+import RD_Core
 import RD_Network
 
 import RxSwift
@@ -30,6 +31,36 @@ extension DefaultAuthRepository: AuthRepository {
                 .subscribe(onNext: { response in
                     guard let response = response else { return }
                     observer.onNext(.init(duplicated: response.duplicated, accessToken: response.accessToken, refreshToken: response.refreshToken, nickname: response.nickname))
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    public func requestReissuance() -> Observable<Bool> {
+        return Observable.create { observer in
+            self.authService.reissuance()
+                .subscribe(onNext: { response in
+                    guard let response = response else {
+                        observer.onNext(false)
+                        return
+                    }
+                    
+                    if let message = response.message,
+                       message == "아직 유효한 토큰입니다." {
+                        observer.onNext(true)
+                        return
+                    }
+                    
+                    guard let token = response.data else {
+                        observer.onNext(false)
+                        return
+                    }
+                    DefaultUserDefaultManager.set(value: token.accessToken, keyPath: .accessToken)
+                    DefaultUserDefaultManager.set(value: token.refreshToken, keyPath: .refreshToken)
+                    observer.onNext(true)
                 }, onError: { err in
                     observer.onError(err)
                 })

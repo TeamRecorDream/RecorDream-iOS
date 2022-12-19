@@ -13,11 +13,14 @@ import RD_Network
 import RxSwift
 
 public class DefaultMyPageRepository {
-  
-    private let disposeBag = DisposeBag()
-
-    public init() {
     
+    private let disposeBag = DisposeBag()
+    private var authService: AuthService
+    private var userService: UserService
+    
+    public init(authService: AuthService, userService: UserService) {
+        self.authService = authService
+        self.userService = userService
     }
 }
 
@@ -34,14 +37,37 @@ extension DefaultMyPageRepository: MyPageRepository {
     
     public func userLogout() -> Observable<Bool> {
         return Observable.create { observer in
+            guard let fcmToken = DefaultUserDefaultManager.string(key: UserDefaultKey.userToken) else { return Disposables.create() }
+            self.authService.logout(fcmToken: fcmToken)
+                .subscribe(onNext: { logoutSuccess in
+                    guard logoutSuccess else {
+                        observer.onNext(false)
+                        return
+                    }
+                    DefaultUserDefaultManager.clearUserData()
             observer.onNext(true)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }
     
     public func userWithdrawal() -> Observable<Bool> {
         return Observable.create { observer in
+            self.userService.withDrawal()
+                .subscribe(onNext: { withDrawalSuccess in
+                    guard withDrawalSuccess else {
+                        observer.onNext(false)
+                        return
+                    }
+                    DefaultUserDefaultManager.clearUserData()
             observer.onNext(true)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }

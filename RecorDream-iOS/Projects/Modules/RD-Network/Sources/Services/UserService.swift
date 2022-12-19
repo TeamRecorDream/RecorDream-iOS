@@ -8,8 +8,11 @@
 
 import Alamofire
 
+import RxSwift
+
 public protocol UserService {
-    
+    func withDrawal() -> Observable<Bool>
+    func fetchUserInfo() -> Observable<UserInfoResponse?>
 }
 
 public class DefaultUserService: BaseService {
@@ -19,6 +22,11 @@ public class DefaultUserService: BaseService {
 }
 
 extension DefaultUserService: UserService {
+    public func fetchUserInfo() -> Observable<UserInfoResponse?> {
+        requestObjectInRx(UserRouter.fetchUserInfo)
+    }
     
+    public func withDrawal() -> Observable<Bool> {
+        requestObjectInRxWithEmptyResponse(UserRouter.withdrawal)
+    }
 }
-
