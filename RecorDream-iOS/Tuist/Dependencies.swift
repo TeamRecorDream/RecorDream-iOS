@@ -15,7 +15,8 @@ let spm = SwiftPackageManagerDependencies([
     .remote(url: "https://github.com/firebase/firebase-ios-sdk.git", requirement: .upToNextMinor(from: "9.6.0")),
     .remote(url: "https://github.com/EunHee-Jeong/HeeKit.git", requirement: .revision("e79a507")),
     .remote(url: "https://github.com/Quick/Quick.git", requirement: .upToNextMajor(from: "6.1.0")),
-    .remote(url: "https://github.com/Quick/Nimble.git", requirement: .upToNextMajor(from: "11.0.0"))
+    .remote(url: "https://github.com/Quick/Nimble.git", requirement: .upToNextMajor(from: "11.0.0")),
+    .remote(url: "https://github.com/airbnb/lottie-ios", requirement: .upToNextMajor(from:"4.0.1"))
 ])
 
 let dependencies = Dependencies(
