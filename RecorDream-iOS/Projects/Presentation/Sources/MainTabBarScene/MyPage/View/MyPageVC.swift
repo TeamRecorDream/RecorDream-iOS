@@ -260,8 +260,8 @@ extension MyPageVC {
         output.myPageDataFetched
             .compactMap { $0 }
             .withUnretained(self)
-            .bind { strongSelf, entity in
-                strongSelf.fetchMyPageData(model: entity)
+            .bind { owner, entity in
+                owner.fetchMyPageData(model: entity)
             }.disposed(by: self.disposeBag)
         
         output.startUsernameEdit
@@ -275,6 +275,14 @@ extension MyPageVC {
         output.selectedPushTime
             .bind(to: self.timeSettingView.rx.pushTimeSelected)
             .disposed(by: self.disposeBag)
+        
+        output.popToSplash
+            .withUnretained(self)
+            .subscribe { owner, _ in
+                owner.navigationController?.popViewController(animated: true)
+                let splashVC = owner.factory.instantiateSpalshVC()
+                UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: splashVC, withAnimation: true)
+            }.disposed(by: self.disposeBag)
     }
     
     private func fetchMyPageData(model: MyPageEntity) {

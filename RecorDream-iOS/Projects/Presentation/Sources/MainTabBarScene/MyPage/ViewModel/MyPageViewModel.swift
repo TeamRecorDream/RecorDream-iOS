@@ -31,11 +31,6 @@ public class MyPageViewModel: ViewModelType {
         let withdrawalButtonTapped: Observable<Void>
     }
     
-    // MARK: - CoordinatorInput
-    
-    public var logoutCompleted = PublishRelay<Void>()
-    public var withdrawalCompleted = PublishRelay<Void>()
-    
     // MARK: - Outputs
     
     public struct Output {
@@ -45,6 +40,7 @@ public class MyPageViewModel: ViewModelType {
         var usernameEditCompleted = PublishRelay<Bool>()
         var loadingStatus = BehaviorRelay<Bool>(value: true)
         var selectedPushTime = PublishRelay<String?>()
+        var popToSplash = PublishRelay<Void>()
     }
     
     // MARK: - Coordination
@@ -124,18 +120,12 @@ extension MyPageViewModel {
                 output.showAlert.accept(())
             }).disposed(by: disposeBag)
                 
-        let logoutSuccessed = self.useCase.logoutSuccess
-        logoutSuccessed
-            .bind {
+        let logoutOrWithDrawalSuccessed = self.useCase.logoutOrWithDrawalSuccess
+        logoutOrWithDrawalSuccessed
+            .bind { success in
                 output.loadingStatus.accept(false)
-                self.logoutCompleted.accept(())
-            }.disposed(by: disposeBag)
-        
-        let withdrawalSuccessed = self.useCase.withdrawalSuccess
-        withdrawalSuccessed
-            .bind {
-                output.loadingStatus.accept(false)
-                self.withdrawalCompleted.accept(())
+                guard success else { return }
+                output.popToSplash.accept(())
             }.disposed(by: disposeBag)
         
         let pushUpdateSuccess = self.useCase.updatePushSuccess

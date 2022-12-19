@@ -22,8 +22,7 @@ public protocol MyPageUseCase {
     func userWithdrawal()
     
     var myPageFetched: PublishSubject<MyPageEntity?> { get set }
-    var logoutSuccess: PublishSubject<Void> { get set }
-    var withdrawalSuccess: PublishSubject<Void> { get set }
+    var logoutOrWithDrawalSuccess: PublishSubject<Bool> { get set }
     var usernameEditStatus: BehaviorRelay<Bool> { get set }
     var shouldShowAlert: PublishRelay<Void> { get set }
     var updatePushSuccess: PublishSubject<String?> { get set }
@@ -37,8 +36,7 @@ public class DefaultMyPageUseCase {
     public var myPageFetched = PublishSubject<MyPageEntity?>()
     public var usernameEditStatus = BehaviorRelay<Bool>(value: false)
     public var shouldShowAlert = PublishRelay<Void>()
-    public var logoutSuccess = PublishSubject<Void>()
-    public var withdrawalSuccess = PublishSubject<Void>()
+    public var logoutOrWithDrawalSuccess = PublishSubject<Bool>()
     public var updatePushSuccess = PublishSubject<String?>()
     
     public init(repository: MyPageRepository) {
@@ -53,7 +51,7 @@ extension DefaultMyPageUseCase: MyPageUseCase {
                 self.updatePushSuccess.onNext(selectedTime)
             }.disposed(by: self.disposeBag)
     }
-
+    
     public func disablePushNotice() {
         self.repository.disablePushNotice()
             .subscribe { _ in
@@ -95,17 +93,17 @@ extension DefaultMyPageUseCase: MyPageUseCase {
     
     public func userLogout() {
         self.repository.userLogout()
-            .filter { $0 }
-            .subscribe(onNext: { _ in
-                self.logoutSuccess.onNext(())
+            .withUnretained(self)
+            .subscribe(onNext: { owner, logoutSuccess in
+                owner.logoutOrWithDrawalSuccess.onNext(logoutSuccess)
             }).disposed(by: self.disposeBag)
     }
     
     public func userWithdrawal() {
         self.repository.userWithdrawal()
-            .filter { $0 }
-            .subscribe(onNext: { _ in
-                self.withdrawalSuccess.onNext(())
+            .withUnretained(self)
+            .subscribe(onNext: { owner, withDrawalSuccess in
+                owner.logoutOrWithDrawalSuccess.onNext(withDrawalSuccess)
             }).disposed(by: self.disposeBag)
     }
 }
