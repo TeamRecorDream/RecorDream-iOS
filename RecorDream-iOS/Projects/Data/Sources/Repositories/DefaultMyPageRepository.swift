@@ -95,16 +95,46 @@ extension DefaultMyPageRepository: MyPageRepository {
         }
     }
     
-    public func enablePushNotice(time: String) -> Observable<String> {
+    public func enablePushNotice(time: String) -> Observable<Bool> {
         return Observable.create { observer in
-            observer.onNext("AM 08:20")
+            self.userService.changeNoticeStatus(isActive: true)
+                .compactMap { $0?.isActive }
+                .do(onNext: { isActive in
+                    guard isActive else {
+                        observer.onNext(false)
+                        return
+                    }
+                })
+                .filter { $0 }
+                .flatMap { _ in self.userService.postNoticeTime(time: time) }
+                .subscribe(onNext: { changeTimeSuccessed in
+                    guard changeTimeSuccessed else {
+                        observer.onNext(false)
+                        return
+                    }
+                    observer.onNext(true)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }
     
-    public func disablePushNotice() -> Observable<Void> {
+    public func disablePushNotice() -> Observable<Bool> {
         return Observable.create { observer in
-            observer.onNext(())
+            self.userService.changeNoticeStatus(isActive: false)
+                .subscribe(onNext: { response in
+                    guard let isActive = response?.isActive else {
+                        observer.onNext(false)
+                        return
+                    }
+                    
+                    observer.onNext(!isActive)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }

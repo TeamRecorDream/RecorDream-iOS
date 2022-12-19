@@ -26,6 +26,7 @@ public protocol MyPageUseCase {
     var usernameEditStatus: BehaviorRelay<Bool> { get set }
     var shouldShowAlert: PublishRelay<Void> { get set }
     var updatePushSuccess: PublishSubject<String?> { get set }
+    var pushTime: String { get set }
 }
 
 public class DefaultMyPageUseCase {
@@ -38,6 +39,7 @@ public class DefaultMyPageUseCase {
     public var shouldShowAlert = PublishRelay<Void>()
     public var logoutOrWithDrawalSuccess = PublishSubject<Bool>()
     public var updatePushSuccess = PublishSubject<String?>()
+    public var pushTime = ""
     
     public init(repository: MyPageRepository) {
         self.repository = repository
@@ -63,7 +65,7 @@ extension DefaultMyPageUseCase: MyPageUseCase {
             .withUnretained(self)
             .subscribe { owner, successed in
                 guard successed else {
-                    owner.shouldShowAlert.accept(())
+                    owner.startUsernameEdit()
                     return
                 }
                 owner.stopUsernameEdit()
@@ -91,15 +93,21 @@ extension DefaultMyPageUseCase: MyPageUseCase {
 extension DefaultMyPageUseCase {
     public func enablePushNotice(time: String) {
         self.repository.enablePushNotice(time: time)
-            .subscribe { selectedTime in
-                self.updatePushSuccess.onNext(selectedTime)
+            .withUnretained(self)
+            .subscribe { owner, successed in
+                guard successed else {
+                    owner.updatePushSuccess.onNext(nil)
+                    return
+                }
+                owner.updatePushSuccess.onNext(owner.pushTime)
             }.disposed(by: self.disposeBag)
     }
     
     public func disablePushNotice() {
         self.repository.disablePushNotice()
-            .subscribe { _ in
-                self.updatePushSuccess.onNext(nil)
+            .withUnretained(self)
+            .subscribe { owner, successed in
+                owner.updatePushSuccess.onNext(nil)
             }.disposed(by: self.disposeBag)
     }
 }

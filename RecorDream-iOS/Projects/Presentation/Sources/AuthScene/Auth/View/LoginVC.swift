@@ -105,9 +105,10 @@ extension LoginVC {
             }
         }).disposed(by: disposeBag)
         
-        output.loginSuccess.subscribe(onNext: { entity in
-            // TODO: - 홈뷰로 화면전환, 닉네임 데이터 넘기기
-            self.presentMainTabBar()
+        output.loginSuccess
+            .withUnretained(self)
+            .subscribe(onNext: { owner, entity in
+            owner.makeMainTabBarToRoot()
         }).disposed(by: self.disposeBag)
         
         output.showLoginFailError.subscribe(onNext: { _ in
@@ -119,10 +120,9 @@ extension LoginVC {
         }).disposed(by: self.disposeBag)
     }
     
-    private func presentMainTabBar() {
+    private func makeMainTabBarToRoot() {
         let mainTabBar = self.factory.instantiateMainTabBarController()
         let navigation = UINavigationController(rootViewController: mainTabBar)
-        navigation.modalPresentationStyle = .overFullScreen
-        self.present(navigation, animated: true)
+        UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: navigation, withAnimation: true)
     }
 }

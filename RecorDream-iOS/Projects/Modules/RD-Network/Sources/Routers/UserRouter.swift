@@ -12,6 +12,8 @@ enum UserRouter {
     case fetchUserInfo
     case withdrawal
     case changeNickname(nickname: String)
+    case toggleNoticeStatus(isActive: Bool)
+    case postPushTime(time: String)
 }
 
 extension UserRouter: BaseRouter {
@@ -19,6 +21,8 @@ extension UserRouter: BaseRouter {
         switch self {
         case .withdrawal: return .delete
         case .changeNickname: return .put
+        case .toggleNoticeStatus: return .post
+        case .postPushTime: return .post
         default: return .get
         }
     }
@@ -26,6 +30,8 @@ extension UserRouter: BaseRouter {
     var path: String {
         switch self {
         case .changeNickname: return "/user/nickname"
+        case .toggleNoticeStatus: return "/user/toggle"
+        case .postPushTime: return "/user/notice"
         default: return "/user"
         }
     }
@@ -35,6 +41,16 @@ extension UserRouter: BaseRouter {
         case .changeNickname(let nickname):
             let body: [String: Any] = [
                 "nickname": nickname
+            ]
+            return .requestBody(body)
+        case .toggleNoticeStatus(let isActive):
+            let body: [String: Any] = [
+                "isActive": isActive
+            ]
+            return .requestBody(body)
+        case .postPushTime(let time):
+            let body: [String: Any] = [
+                "time": time
             ]
             return .requestBody(body)
         default: return .requestPlain

@@ -45,4 +45,8 @@ public extension DefaultUserDefaultManager {
     static var refreshToken: String? {
         return string(key: .refreshToken)
     }
+    
+    static var isKakaoUser: Bool {
+        return string(key: .platform) == UserDefaultKey.Constants.kakao
+    }
 }

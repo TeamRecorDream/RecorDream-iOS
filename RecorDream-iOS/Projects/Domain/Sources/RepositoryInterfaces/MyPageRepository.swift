@@ -12,7 +12,7 @@ public protocol MyPageRepository {
     func fetchUserInformation() -> Observable<MyPageEntity>
     func userLogout() -> Observable<Bool>
     func userWithdrawal() -> Observable<Bool>
-    func enablePushNotice(time: String) -> Observable<String>
-    func disablePushNotice() -> Observable<Void>
+    func enablePushNotice(time: String) -> Observable<Bool>
+    func disablePushNotice() -> Observable<Bool>
     func changeUserNickname(nickname: String) -> Observable<Bool>
 }

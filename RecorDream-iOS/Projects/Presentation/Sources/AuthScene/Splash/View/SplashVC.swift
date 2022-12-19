@@ -86,8 +86,7 @@ extension SplashVC {
                         return
                     }
                     
-                    if let message = response.message,
-                       message == "아직 유효한 토큰입니다." {
+                    if response.status == 403 {
                         completion(true)
                         return
                     }

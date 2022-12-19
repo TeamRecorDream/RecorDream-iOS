@@ -48,8 +48,7 @@ extension DefaultAuthRepository: AuthRepository {
                         return
                     }
                     
-                    if let message = response.message,
-                       message == "아직 유효한 토큰입니다." {
+                    if response.status == 403 {
                         observer.onNext(true)
                         return
                     }

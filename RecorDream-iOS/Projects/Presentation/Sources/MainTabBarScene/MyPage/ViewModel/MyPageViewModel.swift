@@ -82,7 +82,7 @@ extension MyPageViewModel {
             .filter { $0 == false }
             .subscribe(onNext: { _ in
                 self.useCase.disablePushNotice()
-        }).disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
         
         input.pushTimePicked.subscribe(onNext: { selectedTime in
             self.useCase.enablePushNotice(time: selectedTime)
@@ -118,7 +118,7 @@ extension MyPageViewModel {
             .subscribe(onNext: { entity in
                 output.showAlert.accept(())
             }).disposed(by: disposeBag)
-                
+        
         let logoutOrWithDrawalSuccessed = self.useCase.logoutOrWithDrawalSuccess
         logoutOrWithDrawalSuccessed
             .bind { success in
