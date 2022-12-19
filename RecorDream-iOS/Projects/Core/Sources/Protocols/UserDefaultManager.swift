@@ -9,30 +9,40 @@
 import Foundation
 
 public protocol UserDefaultManager {
-    static func set(value: Any, keyPath: Key.RawValue)
-    static func string(key: Key) -> String?
-    static func int(key: Key) -> Int?
-    static func remove(key: Key)
+    static func set(value: Any, keyPath: UserDefaultKey)
+    static func string(key: UserDefaultKey) -> String?
+    static func int(key: UserDefaultKey) -> Int?
+    static func remove(key: UserDefaultKey)
     static func clearUserData()
 }
 
 public class DefaultUserDefaultManager: UserDefaultManager {
-    public static func set(value: Any, keyPath: Key.RawValue) {
-        UserDefaults.standard.setValue(value, forKeyPath: keyPath)
+    public static func set(value: Any, keyPath: UserDefaultKey) {
+        UserDefaults.standard.setValue(value, forKeyPath: keyPath.rawValue)
     }
-    public static func string(key: Key) -> String? {
+    public static func string(key: UserDefaultKey) -> String? {
         return UserDefaults.standard.string(forKey: key.rawValue)
     }
-    public static func int(key: Key) -> Int? {
+    public static func int(key: UserDefaultKey) -> Int? {
         return UserDefaults.standard.integer(forKey: key.rawValue)
     }
-    public static func remove(key: Key) {
+    public static func remove(key: UserDefaultKey) {
         UserDefaults.standard.removeObject(forKey: key.rawValue)
     }
     public static func clearUserData() {
         self.remove(key: .platform)
-        self.remove(key: .userToken)
         self.remove(key: .accessToken)
+        self.remove(key: .refreshToken)
         self.remove(key: .nickname)
+    }
+}
+
+public extension DefaultUserDefaultManager {
+    static var accessToken: String? {
+        return string(key: .accessToken)
+    }
+    
+    static var refreshToken: String? {
+        return string(key: .refreshToken)
     }
 }

@@ -39,9 +39,9 @@ extension DefaultAuthUseCase: AuthUseCase {
                 guard let self = self else { return }
                 guard let entity = entity else {
                     return }
-                UserDefaults.standard.set(entity.accessToken, forKey: Key.accessToken.rawValue)
-                UserDefaults.standard.set(entity.refreshToken, forKey: Key.refreshToken.rawValue)
-                UserDefaults.standard.set(entity.nickname, forKey: Key.nickname.rawValue)
+                UserDefaults.standard.set(entity.accessToken, forKey: UserDefaultKey.accessToken.rawValue)
+                UserDefaults.standard.set(entity.refreshToken, forKey: UserDefaultKey.refreshToken.rawValue)
+                UserDefaults.standard.set(entity.nickname, forKey: UserDefaultKey.nickname.rawValue)
                 self.authSuccess.onNext(entity)
             }, onError: { err in
                 self.authFail.onNext(err)

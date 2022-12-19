@@ -13,3 +13,10 @@ public enum UserDefaultKey: String {
     case refreshToken = "key.refreshToken"
     case nickname = "key.nickname"
 }
+
+public extension UserDefaultKey {
+    enum Constants {
+        static var kakao = "kakao"
+        static var apple = "apple"
+    }
+}

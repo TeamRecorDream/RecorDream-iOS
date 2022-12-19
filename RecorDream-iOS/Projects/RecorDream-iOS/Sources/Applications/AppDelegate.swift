@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application( _ application: UIApplication,
                       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        KakaoSDK.initSDK(appKey: C.KAKAO_APP_KEY)
+        KakaoSDK.initSDK(appKey: Constants.KAKAO_APP_KEY)
         self.configureFirebase()
         self.registerAPNs(to: application)
         return true
@@ -100,7 +100,7 @@ extension AppDelegate: MessagingDelegate {
                 print("FCM 등록토큰 가져오기 오류: \(error)")
             } else if let token = token {
                 print("FCM 등록토큰 : \(token)")
-                UserDefaults.standard.set(token, forKey: Key.userToken.rawValue)
+                UserDefaults.standard.set(token, forKey: UserDefaultKey.userToken.rawValue)
             }
         }
     }
@@ -108,6 +108,6 @@ extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         guard let token = fcmToken else { return }
         print("FCM 등록토큰 갱신: \(token)")
-        UserDefaults.standard.set(token, forKey: Key.userToken.rawValue)
+        UserDefaults.standard.set(token, forKey: UserDefaultKey.userToken.rawValue)
     }
 }

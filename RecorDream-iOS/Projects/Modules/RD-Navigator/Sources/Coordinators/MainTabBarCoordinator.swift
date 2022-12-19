@@ -53,14 +53,14 @@ final class MainTabBarCoordinator: DefaultCoordinator {
     
     private func showMyPageViewController() {
         let myPageVC = self.factory.instantiateMyPageVC()
-        myPageVC.viewModel.logoutCompleted
-            .subscribe(onNext: { [unowned self] in
-                self.router.popModule()
-            }).disposed(by: disposeBag)
-        myPageVC.viewModel.withdrawalCompleted
-            .subscribe(onNext: { [unowned self] in
-                self.router.popModule()
-            }).disposed(by: disposeBag)
+//        myPageVC.viewModel.logoutCompleted
+//            .subscribe(onNext: { [unowned self] in
+//                self.router.popModule()
+//            }).disposed(by: disposeBag)
+//        myPageVC.viewModel.withdrawalCompleted
+//            .subscribe(onNext: { [unowned self] in
+//                self.router.popModule()
+//            }).disposed(by: disposeBag)
         self.router.push(myPageVC)
     }
     

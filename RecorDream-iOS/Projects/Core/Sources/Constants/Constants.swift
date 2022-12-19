@@ -8,7 +8,4 @@
 
 public struct Constants {
     public static let KAKAO_APP_KEY = "000e1e31f022f98fbe16c76ab287abd1"
-    public static let accessToken = "accessToken"
-    public static let refreshToken = "refreshToken"
-    public static let nickname = "nickname"
 }
