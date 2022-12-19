@@ -140,6 +140,33 @@ extension BaseService {
         }
     }
     
+    func requestObjectInRxWithEmptyResponse(_ target: BaseRouter) -> Observable<Bool> {
+        return Observable<Bool>.create { observer in
+            self.AFManager.request(target).responseData { response in
+                switch response.result {
+                case .success(let data):
+                    do {
+                        let body = try Json.decoder.decode(GeneralResponse<Bool>.self, from: data)
+                        guard body.status <= 299 else {
+                            observer.onNext(false)
+                            observer.onCompleted()
+                            return
+                        }
+                        observer.onNext(true)
+                        observer.onCompleted()
+                    }
+                    catch let error {
+                        observer.onError(error)
+                    }
+                    
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
     func uploadMultipartInRx<T: Codable>(_ target: BaseRouter) -> Observable<T?> {
         return Observable<T?>.create { observer in
             self.AFManager.uploadMultipart(target: target).responseData { response in

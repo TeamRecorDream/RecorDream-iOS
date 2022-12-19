@@ -8,6 +8,8 @@
 
 import Foundation
 
+import RD_Core
+
 public enum HeaderType {
     case `default`
     case withToken
@@ -27,6 +29,4 @@ enum HTTPHeaderField: String {
 enum HeaderContent: String {
     case json = "application/json"
     case multiPart = "multipart/form-data"
-    case accessTokenSerial = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjM1Yjk3N2VhNWZkZDU3YzdlYmI0YzdkIn0sImlhdCI6MTY2OTQ2OTkwMiwiZXhwIjoxNjcxODAyNzAyfQ._y1ec4x0PIPkXp9Gs19XFGNMEtTdDqRIZ-Z3XMdWUjo"
-    case refreshTokenSerial = "리프레시 토큰 스트링"
 }

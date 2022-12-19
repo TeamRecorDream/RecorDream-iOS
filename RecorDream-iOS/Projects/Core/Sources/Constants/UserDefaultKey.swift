@@ -6,7 +6,7 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
-public enum Key: String {
+public enum UserDefaultKey: String {
     case platform = "key.platform"
     case userToken = "key.userToken"
     case accessToken = "key.accessToken"

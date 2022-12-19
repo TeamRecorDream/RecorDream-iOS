@@ -11,7 +11,7 @@ public extension Project {
         "CFBundleURLTypes": ["CFBundleURLSchemes": ["kakao000e1e31f022f98fbe16c76ab287abd1"]],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
-            "UISceneConfigurations": [만
+            "UISceneConfigurations": [
                 "UIWindowSceneSessionRoleApplication": [
                     [
                         "UISceneConfigurationName": "Default Configuration",
