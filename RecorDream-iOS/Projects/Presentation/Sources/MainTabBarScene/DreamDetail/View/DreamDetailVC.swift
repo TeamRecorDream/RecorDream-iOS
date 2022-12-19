@@ -29,6 +29,7 @@ public final class DreamDetailVC: UIViewController {
         static let grabberTop = 21.f
 
         static let headerViewTop = 16.f
+        static let headerHeight = 24.f
 
         static let emotionImageSize = 85.f
 
@@ -39,6 +40,9 @@ public final class DreamDetailVC: UIViewController {
 
         static let genreStackSpacing = 5.f
         static let genreStackHeight = 27.f
+
+        static let pageControllerLeadingTrailing = 24.f
+        static let pageContollerBottom = 7.f
 
         static let logoMarkBottom = 20.f
     }
@@ -70,7 +74,6 @@ public final class DreamDetailVC: UIViewController {
     private var titleLabel: UILabel = {
         let label = UILabel()
         label.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 18)
-        label.textAlignment = .left
         label.textColor = RDDSKitColors.Color.white
         label.numberOfLines = 2
         return label
@@ -87,22 +90,26 @@ public final class DreamDetailVC: UIViewController {
 
     private let logoMark = UIImageView(image: RDDSKitAsset.Images.rdgoroMark.image)
 
+    private lazy var pageViewController = DetailRecordPageViewController(segmentTitles: ["꿈기록", "노트"], on: self)
+
   
     // MARK: - View Life Cycle
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.setUI()
         self.setLayout()
         self.bindViewModels()
-        self.setData(model: HomeEntity.Record(recordId: "id어쩌구", emotion: 1, date: "2022/11/22", title: "제목입니다", genres: [.로맨스,.코미디], content: "내용입니다"))
+        self.setData(model: HomeEntity.Record(recordId: "id어쩌구", emotion: 1, date: "2022/11/22 SUN", title: "제목입니다 혹시 제목이 두줄이면 어떻게 될까요ㅍ 아아아아아아아아?", genres: [.로맨스,.코미디], content: "내용입니다"))
+        self.setupTabbarControllersChild()
     }
 
     // MARK: - UI & Layout
     private func setUI() {
         self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
         grabberView.makeRounded(radius: Metric.grabberConerRadius)
-        titleLabel.addLabelSpacing(kernValue: -0.28)
+        titleLabel.addLabelSpacing(kernValue: -0.36, lineSpacing: 1.17)
     }
 
     private func setLayout() {
@@ -121,6 +128,7 @@ public final class DreamDetailVC: UIViewController {
 
         headerView.snp.makeConstraints {
             $0.top.equalTo(grabberView.snp.bottom).offset(Metric.headerViewTop)
+            $0.height.equalTo(Metric.headerHeight)
             $0.leading.trailing.equalToSuperview()
         }
 
@@ -150,6 +158,14 @@ public final class DreamDetailVC: UIViewController {
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(Metric.logoMarkBottom)
         }
+
+        self.view.addSubview(pageViewController)
+
+        pageViewController.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(Metric.pageControllerLeadingTrailing)
+            $0.top.equalTo(genreStackView.snp.bottom)
+            $0.bottom.equalTo(logoMark.snp.top).offset(Metric.pageContollerBottom)
+        }
     }
 
     func setData(model: HomeEntity.Record) {
@@ -176,5 +192,13 @@ extension DreamDetailVC {
     private func bindViewModels() {
         let input = DreamDetailViewModel.Input()
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+    }
+}
+
+// MARK: - PageController Methods
+
+extension DreamDetailVC {
+    private func setupTabbarControllersChild() {
+        pageViewController.setTabContentsItem(contentPages: [DreamRecordViewController(), DreamNoteViewController()])
     }
 }
