@@ -9,9 +9,9 @@ import UIKit
 
 import RD_DSKit
 import RD_Network
+import Presentation
 
 typealias Factory = CoordinatorFactoryProtocol & ViewControllerFactory
-typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBarControllerFactory
 
 /**
  각종 인스턴스의 의존성을 보유하는 Container Class 입니다.
@@ -29,11 +29,11 @@ open class DependencyContainer {
     
     // MARK: - Vars & Lets
     
-    var rootController: CoordinatorNavigationController
+//    var rootController: CoordinatorNavigationController
     
     // MARK: App Coordinator
     
-    internal lazy var aplicationCoordinator = self.instantiateAppCoordinator()
+//    internal lazy var aplicationCoordinator = self.instantiateAppCoordinator()
     
     // MARK: APi Manager
     
@@ -49,29 +49,29 @@ open class DependencyContainer {
     
     // MARK: - Public func
     
-    public func start() {
-        self.aplicationCoordinator.start()
-    }
+//    public func start() {
+//        self.aplicationCoordinator.start()
+//    }
     
     // MARK: - Initialization
     
-    public init(rootController: CoordinatorNavigationController) {
-        self.rootController = rootController
-        self.customizeNavigationController()
+    public init() {
+//        self.rootController = rootController
+//        self.customizeNavigationController()
     }
 }
 
 // MARK: - Private methods
 
 extension DependencyContainer {
-    private func customizeNavigationController() {
-        self.rootController.enableSwipeBack()
-        self.rootController.customizeTitle(titleColor: UIColor.white,
-                                           largeTextFont: RDDSKitFontFamily.Pretendard.semiBold.font(size: 16),
-                                           smallTextFont: RDDSKitFontFamily.Pretendard.semiBold.font(size: 16),
-                                           isTranslucent: true,
-                                           barTintColor: RDDSKitAsset.Colors.dark.color)
-        self.rootController.customizeBackButton(backButtonImage: RDDSKitAsset.Images.icnBack.image, backButtonTitleColor: .white,
-                                      shouldUseViewControllerTitles: true)
-    }
+//    private func customizeNavigationController() {
+//        self.rootController.enableSwipeBack()
+//        self.rootController.customizeTitle(titleColor: UIColor.white,
+//                                           largeTextFont: RDDSKitFontFamily.Pretendard.semiBold.font(size: 16),
+//                                           smallTextFont: RDDSKitFontFamily.Pretendard.semiBold.font(size: 16),
+//                                           isTranslucent: true,
+//                                           barTintColor: RDDSKitAsset.Colors.dark.color)
+//        self.rootController.customizeBackButton(backButtonImage: RDDSKitAsset.Images.icnBack.image, backButtonTitleColor: .white,
+//                                      shouldUseViewControllerTitles: true)
+//    }
 }

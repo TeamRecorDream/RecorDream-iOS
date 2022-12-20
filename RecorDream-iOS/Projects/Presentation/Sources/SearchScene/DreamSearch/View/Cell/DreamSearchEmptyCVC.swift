@@ -10,7 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-final class DreamSearchEmptyCVC: DreamSearchCollectionViewCell {
+final class DreamSearchEmptyCVC: DreamCollectionViewCell {
     private lazy var emptyLabel: UILabel = {
         let lb = UILabel()
         lb.font = RDDSKitFontFamily.Pretendard.medium.font(size: 16)

@@ -19,6 +19,7 @@ public final class DreamGenreTagView: UIView {
         case home
         case detail
         case search
+        case storage
     }
 
     public var cardType: CardType = .home
@@ -65,7 +66,7 @@ extension DreamGenreTagView: Presentable {
             self.genreNameLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 10)
         case .detail:
             self.genreNameLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 12)
-        case .search:
+        case .search, .storage:
             self.genreNameLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 8)
         }
     }
@@ -80,7 +81,7 @@ extension DreamGenreTagView: Presentable {
             case .detail:
                 make.top.bottom.equalToSuperview().inset(4)
                 make.leading.trailing.equalToSuperview().inset(6)
-            case .search:
+            case .search, .storage:
                 make.centerY.equalToSuperview().inset(3)
                 make.leading.trailing.equalToSuperview().offset(4)
             }

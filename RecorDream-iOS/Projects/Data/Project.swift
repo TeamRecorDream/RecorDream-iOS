@@ -15,5 +15,6 @@ let project = Project.makeModule(
         .Project.RDNetwork,
         .Project.Domain,
         .Project.RDUtilKit
-    ]
+    ],
+    hasTest: true
 )
