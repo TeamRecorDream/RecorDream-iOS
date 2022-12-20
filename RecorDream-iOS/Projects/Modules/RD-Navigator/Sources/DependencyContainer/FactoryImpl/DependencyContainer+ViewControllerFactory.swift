@@ -50,7 +50,7 @@ extension DependencyContainer: MainTabBarControllerFactory {
         let homeVC = HomeVC()
         let repository = DefaultHomeRepository()
         let useCase = DefaultHomeUseCase(repository: repository)
-        let viewModel = HomeViewModel()
+        let viewModel = HomeViewModel(useCase: useCase)
         
         homeVC.factory = self
         homeVC.viewModel = viewModel
