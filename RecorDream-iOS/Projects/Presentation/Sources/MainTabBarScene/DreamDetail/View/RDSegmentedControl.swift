@@ -94,9 +94,6 @@ extension RDSegmentedControl {
     }
 
     private func createButton() {
-        selectorButtons.removeAll()
-        subviews.forEach { $0.removeFromSuperview() }
-
         buttonTitles.forEach { _ in
             let button = UIButton(type: .custom)
             button.addTarget(self, action: #selector(self.didClickOnButton(sender:)), for: .touchUpInside)
