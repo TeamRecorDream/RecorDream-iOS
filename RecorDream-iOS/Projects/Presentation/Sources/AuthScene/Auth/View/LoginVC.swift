@@ -32,15 +32,16 @@ public final class LoginVC: UIViewController {
     }()
     
     // MARK: - Properties
-    var loginViewModel: LoginViewModel!
+    public var loginViewModel: LoginViewModel!
+    public var factory: ViewControllerFactory!
     var loginRequestFail = PublishSubject<AuthPlatformType>()
     var loginRequestSuccess = PublishSubject<AuthRequest>()
     private let disposeBag = DisposeBag()
-
+    
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.setupView()
         self.setupConstraint()
         self.bindViewModels()
@@ -90,7 +91,7 @@ extension LoginVC {
                 AuthPlatformType.apple
             })
             .asObservable(),
-            loginRequestFail: loginRequestFail, loginRequestSuccess: loginRequestSuccess)
+                                         loginRequestFail: loginRequestFail, loginRequestSuccess: loginRequestSuccess)
         
         let output = self.loginViewModel.transform(from: input, disposeBag: self.disposeBag)
         
@@ -104,8 +105,10 @@ extension LoginVC {
             }
         }).disposed(by: disposeBag)
         
-        output.loginSuccess.subscribe(onNext: { entity in
-            // TODO: - 홈뷰로 화면전환, 닉네임 데이터 넘기기
+        output.loginSuccess
+            .withUnretained(self)
+            .subscribe(onNext: { owner, entity in
+            owner.makeMainTabBarToRoot()
         }).disposed(by: self.disposeBag)
         
         output.showLoginFailError.subscribe(onNext: { _ in
@@ -115,5 +118,11 @@ extension LoginVC {
         output.showNetworkError.subscribe(onNext: { _ in
             print("네트워크 오류")
         }).disposed(by: self.disposeBag)
+    }
+    
+    private func makeMainTabBarToRoot() {
+        let mainTabBar = self.factory.instantiateMainTabBarController()
+        let navigation = UINavigationController(rootViewController: mainTabBar)
+        UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: navigation, withAnimation: true)
     }
 }

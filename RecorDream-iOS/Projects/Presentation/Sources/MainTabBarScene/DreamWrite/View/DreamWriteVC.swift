@@ -204,7 +204,7 @@ extension DreamWriteVC {
     }
     
     private func bindViews() {
-        naviBar.rightButtonTapped.subscribe(onNext: { [weak self] _ in
+        naviBar.leftButtonTapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.dismiss(animated: true)
         }).disposed(by: self.disposeBag)

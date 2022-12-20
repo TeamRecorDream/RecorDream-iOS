@@ -25,6 +25,7 @@ public class MyPageVC: UIViewController {
     private let disposeBag = DisposeBag()
     
     public var viewModel: MyPageViewModel!
+    public var factory: ViewControllerFactory!
     
     private let usernameAlertDismissed = PublishRelay<Void>()
     private let withdrawalActionTapped = PublishRelay<Void>()
@@ -32,7 +33,7 @@ public class MyPageVC: UIViewController {
     // MARK: - UI Components
     
     private let naviBar = RDNaviBar()
-        .rightButtonImage(RDDSKitAsset.Images.icnBack.image)
+        .leftButtonImage(RDDSKitAsset.Images.icnBack.image)
         .title("마이페이지")
     
     private let profileImageView: UIImageView = {
@@ -233,6 +234,13 @@ extension MyPageVC {
             .bind {
                 self.showTimePickerView()
             }.disposed(by: self.disposeBag)
+        
+        self.naviBar.leftButtonTapped
+            .withUnretained(self)
+            .bind(onNext: { (owner, _) in
+                owner.navigationController?.popViewController(animated: true)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     // TODO: usernameTextField와 keyboardReturn의 Merge, UIDatePicker 뷰 작성 및 이벤트 바인딩
@@ -252,8 +260,8 @@ extension MyPageVC {
         output.myPageDataFetched
             .compactMap { $0 }
             .withUnretained(self)
-            .bind { strongSelf, entity in
-                strongSelf.fetchMyPageData(model: entity)
+            .bind { owner, entity in
+                owner.fetchMyPageData(model: entity)
             }.disposed(by: self.disposeBag)
         
         output.startUsernameEdit
@@ -265,13 +273,34 @@ extension MyPageVC {
             .disposed(by: self.disposeBag)
         
         output.selectedPushTime
-            .bind(to: self.timeSettingView.rx.pushTimeSelected)
+            .bind { selectedTime in
+                self.timeSettingView.rx.pushTimeSelected.onNext(selectedTime)
+                guard selectedTime != nil else {
+                    self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
+                    return
+                }
+                self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(true)
+            }
             .disposed(by: self.disposeBag)
+        
+        output.popToSplash
+            .withUnretained(self)
+            .subscribe { owner, _ in
+                owner.navigationController?.popViewController(animated: true)
+                let splashVC = owner.factory.instantiateSpalshVC()
+                UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: splashVC, withAnimation: true)
+            }.disposed(by: self.disposeBag)
     }
     
     private func fetchMyPageData(model: MyPageEntity) {
         self.myPageEditableView.initText = model.userName
         self.emailLabel.text = model.email
+        
+        pushSettingView.rx.pushSwitchIsOnBindable
+            .onNext(model.pushOnOff)
+        
+        timeSettingView.rx.pushTimeSelected
+            .onNext(model.pushTime)
     }
     
     private func showUsernameWarningAlert() {

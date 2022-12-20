@@ -9,6 +9,7 @@
 import Foundation
 
 import Domain
+import RD_Core
 import RD_Network
 
 import RxSwift
@@ -18,7 +19,7 @@ public final class DefaultAuthRepository {
     private let authService: AuthService
     private let disposeBag = DisposeBag()
     
-    init(authService: AuthService) {
+    public init(authService: AuthService) {
         self.authService = authService
     }
 }
@@ -29,7 +30,37 @@ extension DefaultAuthRepository: AuthRepository {
             self.authService.login(kakaoToken: request.kakaoToken, appleToken: request.appleToken, fcmToken: request.fcmToken)
                 .subscribe(onNext: { response in
                     guard let response = response else { return }
-                    observer.onNext(.init(duplicated: response.duplicated, accessToken: response.accessToken, refreshToken: response.refreshToken))
+                    observer.onNext(.init(duplicated: response.duplicated, accessToken: response.accessToken, refreshToken: response.refreshToken, nickname: response.nickname))
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    public func requestReissuance() -> Observable<Bool> {
+        return Observable.create { observer in
+            self.authService.reissuance()
+                .subscribe(onNext: { response in
+                    guard let response = response else {
+                        observer.onNext(false)
+                        return
+                    }
+                    
+                    let isStillValidToken = (response.status == 403)
+                    if isStillValidToken {
+                        observer.onNext(true)
+                        return
+                    }
+                    
+                    guard let token = response.data else {
+                        observer.onNext(false)
+                        return
+                    }
+                    DefaultUserDefaultManager.set(value: token.accessToken, keyPath: .accessToken)
+                    DefaultUserDefaultManager.set(value: token.refreshToken, keyPath: .refreshToken)
+                    observer.onNext(true)
                 }, onError: { err in
                     observer.onError(err)
                 })

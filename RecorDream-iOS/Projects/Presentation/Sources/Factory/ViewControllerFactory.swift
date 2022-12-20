@@ -11,12 +11,15 @@ public typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBar
 
 // TODO: - Login Flow에 사용될 Factory Protocol, 추후에 구현
 public protocol AuthViewControllerFactory {
-//    func instantiateSpalshViewController() -> SplashViewController
+    func instantiateSpalshVC() -> SplashVC
+    func instantiateLoginVC() -> LoginVC
 }
 
 public protocol MainTabBarControllerFactory {
     func instantiateMainTabBarController() -> MainTabBarController
-    func instantiateHomeViewController() -> HomeVC
+    func instantiateHomeVC() -> HomeVC
+    func instantiateStorageVC() -> StorageVC
+    
     func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC
     func instantiateMyPageVC() -> MyPageVC
 }

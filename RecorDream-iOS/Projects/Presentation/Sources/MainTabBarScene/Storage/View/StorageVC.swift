@@ -13,8 +13,9 @@ import RD_DSKit
 
 import SnapKit
 
-final class StorageVC: UIViewController {
+public class StorageVC: UIViewController {
     // MARK: - Properties
+    public var factory: ViewControllerFactory!
     lazy var dataSource: UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>! = nil
     
     // MARK: - UI Components

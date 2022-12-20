@@ -43,7 +43,6 @@ open class DependencyContainer {
     
     internal lazy var authService = DefaultAuthService.shared
     internal lazy var recordService = DefaultRecordService.shared
-    internal lazy var noticeService = DefaultNoticeService.shared
     internal lazy var userService = DefaultUserService.shared
     internal lazy var voiceService = DefaultVoiceService.shared
     
