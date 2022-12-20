@@ -13,7 +13,7 @@ import RD_DSKit
 import RxSwift
 
 protocol SegmentedControlDelegate: AnyObject {
-    func segmentControl(_ segmentControl: SegmentedControl, didChangedOn index: Int)
+    func segmentControl(_ segmentControl: RDSegmentedControl, didChangedOn index: Int)
 }
 
 struct SegmentInfo {
@@ -27,7 +27,7 @@ struct SegmentInfo {
 
 // TODO: - 터치 영역 넓혀야할듯.. 
 
-final class SegmentedControl: UIControl {
+final class RDSegmentedControl: UIControl {
 
     private(set) var segmentInfo: SegmentInfo
     private let disposeBag = DisposeBag()
@@ -72,7 +72,7 @@ final class SegmentedControl: UIControl {
 }
 
 // MARK: - Public functions
-extension SegmentedControl {
+extension RDSegmentedControl {
     func selectIndex(_ index: Int, shouldAnimate: Bool) {
         guard 0..<selectorButtons.count ~= index else { return }
         
@@ -87,7 +87,7 @@ extension SegmentedControl {
 }
 
 // MARK: - Private functions
-extension SegmentedControl {
+extension RDSegmentedControl {
     private func drawSegmentControl() {
         createButton()
         configureStackView()
@@ -145,7 +145,7 @@ extension SegmentedControl {
 }
 
 // MARK: - Selectors
-extension SegmentedControl {
+extension RDSegmentedControl {
     @objc
     private func didClickOnButton(sender: UIButton) {
 

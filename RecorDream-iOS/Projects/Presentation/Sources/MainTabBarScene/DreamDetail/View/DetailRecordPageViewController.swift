@@ -24,7 +24,7 @@ final class DetailRecordPageViewController: UIView {
         transitionStyle: .scroll,
         navigationOrientation: .horizontal)
 
-    private let segmentedControl: SegmentedControl
+    private let segmentedControl: RDSegmentedControl
     private let segmentTitles: [String]
 
     private var contentPages: [UIViewController] = []
@@ -33,7 +33,7 @@ final class DetailRecordPageViewController: UIView {
     private let disposeBag = DisposeBag()
 
     init(segmentTitles: [String], on viewController: UIViewController) {
-        self.segmentedControl = SegmentedControl(buttonTitles: segmentTitles)
+        self.segmentedControl = RDSegmentedControl(buttonTitles: segmentTitles)
         self.segmentTitles = segmentTitles
 
         super.init(frame: .zero)
@@ -101,7 +101,7 @@ extension DetailRecordPageViewController {
 }
 
 extension DetailRecordPageViewController: SegmentedControlDelegate {
-    func segmentControl(_ segmentControl: SegmentedControl, didChangedOn index: Int) {
+    func segmentControl(_ segmentControl: RDSegmentedControl, didChangedOn index: Int) {
         movePage(from: currentPageIndex, to: index, animated: true)
         currentPageIndex = index
     }
