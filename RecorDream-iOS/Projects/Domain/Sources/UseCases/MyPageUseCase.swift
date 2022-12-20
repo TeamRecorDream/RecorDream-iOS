@@ -92,6 +92,7 @@ extension DefaultMyPageUseCase: MyPageUseCase {
 
 extension DefaultMyPageUseCase {
     public func enablePushNotice(time: String) {
+        self.pushTime = time
         self.repository.enablePushNotice(time: time)
             .withUnretained(self)
             .subscribe { owner, successed in
