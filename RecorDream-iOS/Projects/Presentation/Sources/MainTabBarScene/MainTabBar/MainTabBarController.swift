@@ -21,6 +21,7 @@ public class MainTabBarController: RDTabBarController {
     public var factory: ViewControllerFactory!
     public var viewModel: MainTabBarViewModel!
     private let middleButtonTapped = PublishRelay<Void>()
+    public var homeViewController: HomeVC!
     
     // MARK: - View Life Cycle
     
@@ -39,7 +40,7 @@ public class MainTabBarController: RDTabBarController {
 
 extension MainTabBarController {
     private func setTabBar() {
-        let homeNVC = makeNavigationController(with: HomeVC())
+        let homeNVC = makeNavigationController(with: homeViewController)
         let storageNVC = makeNavigationController(with: UIViewController())
         storageNVC.view.backgroundColor = .cyan
         

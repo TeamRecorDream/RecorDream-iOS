@@ -79,9 +79,9 @@ public class HomeVC: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.bindViewModels()
         self.setUI()
         self.setLayout()
+        self.bindViewModels()
         self.setCollectionViewAdapter()
     }
 
@@ -125,14 +125,27 @@ public class HomeVC: UIViewController {
 // MARK: - Methods
 
 extension HomeVC {
-  
     private func bindViewModels() {
-        let input = HomeViewModel.Input()
-        // let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        let input = HomeViewModel.Input(viewDidLoad: Observable.just(()))
+
+        let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+
+
+        output.fetchedHomeData
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { strongSelf, entity in
+                strongSelf.fetchHomeData(model: entity)
+            }.disposed(by: self.disposeBag)
+    }
+
+    private func fetchHomeData(model: HomeEntity) {
+        self.welcomeLabel.text = "반가워요, \(model.nickname)님!"
+        self.viewModel.fetchedDreamRecord = model
     }
 
     private func setCollectionViewAdapter() {
         self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
-            collectionView: self.dreamCardCollectionView, adapterDataSource: HomeViewModel())
+            collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
     }
 }

@@ -13,13 +13,16 @@ import RxRelay
 
 public class HomeViewModel: ViewModelType {
 
-    //private let useCase: HomeUseCase
+    private let useCase: HomeUseCase
     private let disposeBag = DisposeBag()
+    
+    internal var numberOfItems: Int = 0
+    internal var fetchedDreamRecord = HomeEntity(nickname: "", records: [])
   
     // MARK: - Inputs
     
     public struct Input {
-    
+        let viewDidLoad: Observable<Void>
     }
     
     // MARK: - CoordinatorInput
@@ -27,31 +30,41 @@ public class HomeViewModel: ViewModelType {
     // MARK: - Outputs
     
     public struct Output {
-    
+        var fetchedHomeData = BehaviorRelay<HomeEntity?>(value: nil)
     }
     
     // MARK: - Coordination
   
-    public init() {
-        //self.useCase = useCase
+    public init(useCase: HomeUseCase) {
+        self.useCase = useCase
     }
 }
 
-extension HomeViewModel {
+extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
+
     public func transform(from input: Input, disposeBag: DisposeBag) -> Output {
         let output = Output()
         self.bindOutput(output: output, disposeBag: disposeBag)
-        // input,output 상관관계 작성
+
+        input.viewDidLoad.subscribe(onNext: { _ in
+            self.useCase.fetchDreamRecord()
+        }).disposed(by: disposeBag)
 
         return output
     }
   
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
-    }
-}
 
-extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
-    var numberOfItems: Int {
-        return 10
+        let homeData = self.useCase.fetchedHomeData
+        homeData
+            .compactMap { $0 }
+            .subscribe(onNext: { entity in
+                output.fetchedHomeData.accept(entity)
+
+                if let count = entity.records?.count {
+                    self.numberOfItems = count
+                }
+                self.fetchedDreamRecord = entity
+            }).disposed(by: disposeBag)
     }
 }

@@ -27,6 +27,16 @@ extension DependencyContainer: MainTabBarControllerFactory {
         
         return mainTabBar
     }
+
+    func instantiateHomeViewController() -> HomeVC {
+        let repository = DefaultHomeRepository()
+        let useCase = DefaultHomeUseCase(repository: repository)
+        let viewModel = HomeViewModel(useCase: useCase)
+        let homeViewController = HomeVC()
+        homeViewController.viewModel = viewModel
+
+        return homeViewController
+    }
     
     public func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC {
         let repository = DefaultDreamWriteRepository(recordService: self.recordService,
