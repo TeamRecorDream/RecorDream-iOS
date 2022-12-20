@@ -124,6 +124,8 @@ extension DetailRecordPageViewController: UIPageViewControllerDataSource {
         return contentPages.safeget(index: index + 1)
     }
 
+    // TODO: Animation 느린 부분 개선
+
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard finished,
               completed,
