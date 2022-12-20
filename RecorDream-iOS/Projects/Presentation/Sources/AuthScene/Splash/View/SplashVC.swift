@@ -86,7 +86,8 @@ extension SplashVC {
                         return
                     }
                     
-                    if response.status == 403 {
+                    let isStillValidToken = (response.status == 403)
+                    if isStillValidToken {
                         completion(true)
                         return
                     }

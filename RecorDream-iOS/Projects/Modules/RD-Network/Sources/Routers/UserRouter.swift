@@ -21,7 +21,7 @@ extension UserRouter: BaseRouter {
         switch self {
         case .withdrawal: return .delete
         case .changeNickname: return .put
-        case .toggleNoticeStatus: return .post
+        case .toggleNoticeStatus: return .patch
         case .postPushTime: return .post
         default: return .get
         }

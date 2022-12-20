@@ -48,7 +48,8 @@ extension DefaultAuthRepository: AuthRepository {
                         return
                     }
                     
-                    if response.status == 403 {
+                    let isStillValidToken = (response.status == 403)
+                    if isStillValidToken {
                         observer.onNext(true)
                         return
                     }
