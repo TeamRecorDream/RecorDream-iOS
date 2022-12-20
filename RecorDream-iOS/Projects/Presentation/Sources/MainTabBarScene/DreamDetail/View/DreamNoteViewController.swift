@@ -31,6 +31,14 @@ public final class DreamNoteViewController: UIViewController {
         return label
     }()
 
+    private let placeHolder: UILabel = {
+        let label = UILabel()
+        label.text = "기록된 내용이 없어요."
+        label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
+        label.textColor = RDDSKitAsset.Colors.white04.color
+        return label
+    }()
+
 
     // MARK: - View Life Cycle
 
@@ -47,10 +55,15 @@ public final class DreamNoteViewController: UIViewController {
     }
 
     private func setLayout() {
-        self.view.addSubviews(titleLabel)
+        self.view.addSubviews(titleLabel, placeHolder)
 
         titleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
+        }
+
+        placeHolder.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(12)
+            $0.leading.equalToSuperview()
         }
     }
 }
