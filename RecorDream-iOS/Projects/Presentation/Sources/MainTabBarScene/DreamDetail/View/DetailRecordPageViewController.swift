@@ -17,18 +17,20 @@ final class DetailRecordPageViewController: UIView {
     private enum Metric {
         static let segmentControlHeight = 1.f
         static let segmentControlWidth = 324.adjustedWidth
-
         static let segmentControlTopBottom = 20.f
     }
 
-    private let pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+    private let pageViewController = UIPageViewController(
+        transitionStyle: .scroll,
+        navigationOrientation: .horizontal)
 
     private let segmentedControl: SegmentedControl
-    private let disposeBag = DisposeBag()
     private let segmentTitles: [String]
 
     private var contentPages: [UIViewController] = []
     private var currentPageIndex: Int = 0
+
+    private let disposeBag = DisposeBag()
 
     init(segmentTitles: [String], on viewController: UIViewController) {
         self.segmentedControl = SegmentedControl(buttonTitles: segmentTitles)
@@ -89,10 +91,12 @@ extension DetailRecordPageViewController {
     private func movePage(from currentIndex: Int, to targetIndex: Int, animated: Bool) {
         guard let targetPage = contentPages.safeget(index: targetIndex) else { return }
 
-        let direction: UIPageViewController.NavigationDirection = currentIndex < targetIndex ? .forward : .reverse
+        let direction: UIPageViewController.NavigationDirection =
+        currentIndex < targetIndex ? .forward : .reverse
 
-        self.pageViewController.setViewControllers([targetPage], direction: direction, animated: true) { isCompleted in
-        }
+        self.pageViewController
+            .setViewControllers([targetPage], direction: direction, animated: true)
+        { isCompleted in }
     }
 }
 
@@ -106,13 +110,15 @@ extension DetailRecordPageViewController: SegmentedControlDelegate {
 extension DetailRecordPageViewController: UIPageViewControllerDelegate { }
 
 extension DetailRecordPageViewController: UIPageViewControllerDataSource {
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController,
+                            viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let index = contentPages.firstIndex(of: viewController) else { return nil }
 
         return contentPages.safeget(index: index - 1)
     }
 
-    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController,
+                            viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let index = contentPages.firstIndex(of: viewController) else { return nil }
 
         return contentPages.safeget(index: index + 1)

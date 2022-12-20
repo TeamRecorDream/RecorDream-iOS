@@ -28,19 +28,23 @@ struct SegmentInfo {
 // TODO: - 터치 영역 넓혀야할듯.. 
 
 final class SegmentedControl: UIControl {
+
     private(set) var segmentInfo: SegmentInfo
-    private let buttonTitles: [String]
     private let disposeBag = DisposeBag()
 
+    private let buttonTitles: [String]
     private var selectorButtons: [UIButton] = []
     private lazy var selectorView: UIControl = {
-        let control = UIControl(frame: CGRect(x: .zero, y: -1, width: segmentInfo.selectWidth, height: segmentInfo.selectHeight))
+        let control = UIControl(frame: CGRect(x: .zero, y: -1,
+                                              width: segmentInfo.selectWidth,
+                                              height: segmentInfo.selectHeight))
+
         control.layer.cornerRadius = segmentInfo.cornerRadius
         control.backgroundColor = segmentInfo.selectPageColor
         return control
     }()
 
-    private var buttonWidth: CGFloat { (self.bounds.width / buttonTitles.count.f)}
+    private var buttonWidth: CGFloat { (self.bounds.width / buttonTitles.count.f) }
     public private(set) var selectedIndex: Int = 0
 
     weak var delegate: SegmentedControlDelegate?
