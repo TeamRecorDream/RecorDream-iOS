@@ -25,8 +25,6 @@ public class HomeViewModel: ViewModelType {
         let viewDidLoad: Observable<Void>
     }
     
-    // MARK: - CoordinatorInput
-  
     // MARK: - Outputs
     
     public struct Output {

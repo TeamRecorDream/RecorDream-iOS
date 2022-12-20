@@ -12,9 +12,10 @@ public struct AuthResponse: Codable {
     public let duplicated: Bool
     public let accessToken: String
     public let refreshToken: String
+    public let nickname: String
     
     enum CodingKeys: String, CodingKey {
         case duplicated = "isAlreadyUser"
-        case accessToken, refreshToken
+        case accessToken, refreshToken, nickname
     }
 }

@@ -123,9 +123,23 @@ public class RDDateTimePickerView: UIView {
     var selectedMonth = "01"
     var selectedDay = "01"
     
-    var selectedMeridium = ""
+    var selectedMeridium = "AM"
     var selectedHour = 0
     var selectedMinute = 0
+    
+    var selectedTimeGetter: String {
+        let selectedHour: String = {
+            self.selectedHour < 10
+            ? "0\(self.selectedHour)"
+            : "\(self.selectedHour)"
+        }()
+        let selectedMinute: String = {
+            self.selectedMinute < 10
+            ? "0\(self.selectedMinute)"
+            : "\(self.selectedMinute)"
+        }()
+        return "\(self.selectedMeridium)" + " " + "\(selectedHour)" + ":" + "\(selectedMinute)"
+    }
     
     private let disposeBag = DisposeBag()
     public let dateTimeOutput = PublishSubject<String?>()
@@ -455,7 +469,7 @@ extension Reactive where Base: RDDateTimePickerView {
     
     public var saveButtonTapped: Observable<String> {
         return base.saveButton.rx.tap
-            .map { "\(base.selectedMeridium)" + "\(base.selectedHour)" + "\(base.selectedMinute)" }
+            .map { base.selectedTimeGetter }
             .asObservable()
     }
 }

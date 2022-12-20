@@ -58,7 +58,7 @@ extension LoginVC: ASAuthorizationControllerDelegate, ASAuthorizationControllerP
         let authRequestEntity = AuthRequest(
             kakaoToken: kakaoToken,
             appleToken: nil,
-            fcmToken: UserDefaults.standard.string(forKey: Key.userToken.rawValue)!)
+            fcmToken: UserDefaults.standard.string(forKey: UserDefaultKey.userToken.rawValue)!)
         self.loginRequestSuccess.onNext(authRequestEntity)
     }
     public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
@@ -76,7 +76,7 @@ extension LoginVC: ASAuthorizationControllerDelegate, ASAuthorizationControllerP
             let authRequestEntity = AuthRequest(
                 kakaoToken: nil,
                 appleToken: tokenString,
-                fcmToken: UserDefaults.standard.string(forKey: Key.userToken.rawValue)!)
+                fcmToken: UserDefaults.standard.string(forKey: UserDefaultKey.userToken.rawValue)!)
           self.loginRequestSuccess.onNext(authRequestEntity)
         default:
           break

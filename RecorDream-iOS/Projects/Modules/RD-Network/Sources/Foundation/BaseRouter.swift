@@ -8,6 +8,8 @@
 
 import Foundation
 
+import RD_Core
+
 import Alamofire
 
 public protocol BaseRouter: URLRequestConvertible {
@@ -44,19 +46,19 @@ extension BaseRouter {
             
         case .withToken:
             request.setValue(HeaderContent.json.rawValue, forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
-            request.setValue(HeaderContent.accessTokenSerial.rawValue, forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
+            request.setValue(DefaultUserDefaultManager.accessToken, forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
             
         case .multiPart:
             request.setValue(HeaderContent.multiPart.rawValue, forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
             
         case .multiPartWithToken:
             request.setValue(HeaderContent.multiPart.rawValue, forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
-            request.setValue(HeaderContent.accessTokenSerial.rawValue, forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
+            request.setValue(DefaultUserDefaultManager.accessToken, forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
             
         case .reissuance:
             request.setValue(HeaderContent.json.rawValue, forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
-            request.setValue(HeaderContent.accessTokenSerial.rawValue, forHTTPHeaderField: HTTPHeaderField.access.rawValue)
-            request.setValue(HeaderContent.refreshTokenSerial.rawValue, forHTTPHeaderField: HTTPHeaderField.refresh.rawValue)
+            request.setValue(DefaultUserDefaultManager.accessToken, forHTTPHeaderField: HTTPHeaderField.access.rawValue)
+            request.setValue(DefaultUserDefaultManager.refreshToken, forHTTPHeaderField: HTTPHeaderField.refresh.rawValue)
         }
         
         return request

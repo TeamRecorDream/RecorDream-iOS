@@ -31,11 +31,6 @@ public class MyPageViewModel: ViewModelType {
         let withdrawalButtonTapped: Observable<Void>
     }
     
-    // MARK: - CoordinatorInput
-    
-    public var logoutCompleted = PublishRelay<Void>()
-    public var withdrawalCompleted = PublishRelay<Void>()
-    
     // MARK: - Outputs
     
     public struct Output {
@@ -45,6 +40,7 @@ public class MyPageViewModel: ViewModelType {
         var usernameEditCompleted = PublishRelay<Bool>()
         var loadingStatus = BehaviorRelay<Bool>(value: true)
         var selectedPushTime = PublishRelay<String?>()
+        var popToSplash = PublishRelay<Void>()
     }
     
     // MARK: - Coordination
@@ -71,10 +67,10 @@ extension MyPageViewModel {
         input.myPageReturnOutput.subscribe(onNext: { editOutput in
             switch editOutput {
             case .noText:
-                self.useCase.restartUsernameEdit()
+                self.useCase.restartUsernameEditAfterAlert()
             case .endWithProperText(let text):
                 output.loadingStatus.accept(true)
-                self.useCase.editUsername(username: text)
+                self.useCase.requestUsernameEdit(username: text)
             }
         }).disposed(by: disposeBag)
         
@@ -86,7 +82,7 @@ extension MyPageViewModel {
             .filter { $0 == false }
             .subscribe(onNext: { _ in
                 self.useCase.disablePushNotice()
-        }).disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
         
         input.pushTimePicked.subscribe(onNext: { selectedTime in
             self.useCase.enablePushNotice(time: selectedTime)
@@ -113,7 +109,6 @@ extension MyPageViewModel {
         
         let startUsernameEdit = self.useCase.usernameEditStatus
         startUsernameEdit
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: {
                 output.startUsernameEdit.accept($0)
             }).disposed(by: disposeBag)
@@ -123,19 +118,13 @@ extension MyPageViewModel {
             .subscribe(onNext: { entity in
                 output.showAlert.accept(())
             }).disposed(by: disposeBag)
-                
-        let logoutSuccessed = self.useCase.logoutSuccess
-        logoutSuccessed
-            .bind {
-                output.loadingStatus.accept(false)
-                self.logoutCompleted.accept(())
-            }.disposed(by: disposeBag)
         
-        let withdrawalSuccessed = self.useCase.withdrawalSuccess
-        withdrawalSuccessed
-            .bind {
+        let logoutOrWithDrawalSuccessed = self.useCase.logoutOrWithDrawalSuccess
+        logoutOrWithDrawalSuccessed
+            .bind { success in
                 output.loadingStatus.accept(false)
-                self.withdrawalCompleted.accept(())
+                guard success else { return }
+                output.popToSplash.accept(())
             }.disposed(by: disposeBag)
         
         let pushUpdateSuccess = self.useCase.updatePushSuccess

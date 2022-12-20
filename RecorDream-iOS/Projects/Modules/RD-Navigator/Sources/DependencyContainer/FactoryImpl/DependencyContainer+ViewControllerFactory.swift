@@ -16,27 +16,55 @@ import Data
  클린 아키텍쳐에서의 의존성 주입도 담당합니다.
  */
 extension DependencyContainer: AuthViewControllerFactory {
+    public func instantiateSpalshVC() -> Presentation.SplashVC {
+        let splashVC = SplashVC()
+        splashVC.factory = self
+        return splashVC
+    }
     
+    public func instantiateLoginVC() -> Presentation.LoginVC {
+        let loginVC = LoginVC()
+        let repository = DefaultAuthRepository(authService: self.authService)
+        let useCase = DefaultAuthUseCase(repository: repository)
+        let viewModel = LoginViewModel(useCase: useCase)
+        
+        loginVC.factory = self
+        loginVC.loginViewModel = viewModel
+        return loginVC
+    }
 }
 
 extension DependencyContainer: MainTabBarControllerFactory {
+
     public func instantiateMainTabBarController() -> MainTabBarController {
         let mainTabBar = MainTabBarController()
         mainTabBar.viewModel = MainTabBarViewModel()
+        mainTabBar.homeVC = self.instantiateHomeVC()
+        mainTabBar.storageVC = self.instantiateStorageVC()
         mainTabBar.factory = self
         
         return mainTabBar
     }
-
-    func instantiateHomeViewController() -> HomeVC {
+    
+    public func instantiateHomeVC() -> Presentation.HomeVC {
+        let homeVC = HomeVC()
         let repository = DefaultHomeRepository()
         let useCase = DefaultHomeUseCase(repository: repository)
         let viewModel = HomeViewModel(useCase: useCase)
-        let homeViewController = HomeVC()
-        homeViewController.viewModel = viewModel
-
-        return homeViewController
+        
+        homeVC.factory = self
+        homeVC.viewModel = viewModel
+        
+        return homeVC
     }
+    
+    public func instantiateStorageVC() -> Presentation.StorageVC {
+        let storageVC = StorageVC()
+        storageVC.factory = self
+        
+        return storageVC
+    }
+    
     
     public func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC {
         let repository = DefaultDreamWriteRepository(recordService: self.recordService,
@@ -57,11 +85,13 @@ extension DependencyContainer: MainTabBarControllerFactory {
     }
     
     public func instantiateMyPageVC() -> MyPageVC {
-        let repository = DefaultMyPageRepository()
+        let repository = DefaultMyPageRepository(authService: self.authService,
+                                                 userService: self.userService)
         let useCase = DefaultMyPageUseCase(repository: repository)
         let viewModel = MyPageViewModel(useCase: useCase)
         let myPageVC = MyPageVC()
         myPageVC.viewModel = viewModel
+        myPageVC.factory = self
         
         return myPageVC
     }

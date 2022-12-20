@@ -18,8 +18,8 @@ public class RDNaviBar: UIView {
     
     // MARK: - Properties
     
-    public var rightButtonTapped: ControlEvent<Void> {
-        return rightButton.rx.tap
+    public var leftButtonTapped: ControlEvent<Void> {
+        return leftButton.rx.tap
     }
     
     // MARK: - UI Components
@@ -33,7 +33,7 @@ public class RDNaviBar: UIView {
         return label
     }()
     
-    private let rightButton: UIButton = {
+    private let leftButton: UIButton = {
         let bt = UIButton()
         bt.setImage(RDDSKitAsset.Images.icnClose.image, for: .normal)
         bt.setImage(RDDSKitAsset.Images.icnClose.image, for: .selected)
@@ -69,9 +69,9 @@ public class RDNaviBar: UIView {
     }
     
     private func setLayout() {
-        self.addSubviews(rightButton, titleLabel, bottomLine)
+        self.addSubviews(leftButton, titleLabel, bottomLine)
         
-        rightButton.snp.makeConstraints { make in
+        leftButton.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
             make.leading.equalToSuperview().inset(16)
         }
@@ -115,8 +115,8 @@ public class RDNaviBar: UIView {
     }
     
     @discardableResult
-    public func rightButtonImage(_ image: UIImage) -> Self {
-        self.rightButton.setImage(image, for: .normal)
+    public func leftButtonImage(_ image: UIImage) -> Self {
+        self.leftButton.setImage(image, for: .normal)
         
         return self
     }
