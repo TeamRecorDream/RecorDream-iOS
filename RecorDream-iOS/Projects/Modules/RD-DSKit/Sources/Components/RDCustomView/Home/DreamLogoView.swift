@@ -12,7 +12,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-public class DreamLogoView: UIView {
+public final class DreamLogoView: UIView {
 
     // MARK: - UI Components
 
