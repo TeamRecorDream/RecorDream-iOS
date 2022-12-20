@@ -23,6 +23,7 @@ public class MainTabBarController: RDTabBarController {
     public var homeVC: HomeVC!
     public var storageVC: StorageVC!
     private let middleButtonTapped = PublishRelay<Void>()
+    public var homeViewController: HomeVC!
     
     // MARK: - View Life Cycle
     

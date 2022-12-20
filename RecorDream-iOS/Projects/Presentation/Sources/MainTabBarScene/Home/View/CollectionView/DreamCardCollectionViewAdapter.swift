@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+import Domain
 import RD_Core
 import RD_DSKit
 
@@ -23,6 +24,7 @@ import RD_DSKit
 protocol DreamCardCollectionViewAdapterDataSource: AnyObject {
     // ViewModel이 채택하여 관련 데이터 넘겨주기 , DataSource에 들어갈 정보들
     var numberOfItems: Int { get }
+    var fetchedDreamRecord: HomeEntity { get }
 }
 
 final class DreamCardCollectionViewAdapter: NSObject {
@@ -56,11 +58,15 @@ final class DreamCardCollectionViewAdapter: NSObject {
 
 extension DreamCardCollectionViewAdapter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return adapterDataSource?.numberOfItems ?? 10
+        return adapterDataSource?.numberOfItems ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamCardCVC.className, for: indexPath) as? DreamCardCVC else { return .init() }
+
+        if let dreamRecord = adapterDataSource?.fetchedDreamRecord.records?.safeget(index: indexPath.row) {
+            cell.setData(model: dreamRecord)
+        }
 
         return cell
     }
