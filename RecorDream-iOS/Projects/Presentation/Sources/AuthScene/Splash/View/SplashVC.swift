@@ -65,8 +65,7 @@ extension SplashVC {
     private func presentMainTabBar() {
         let mainTabBar = self.factory.instantiateMainTabBarController()
         let navigation = UINavigationController(rootViewController: mainTabBar)
-        navigation.modalPresentationStyle = .overFullScreen
-        self.present(navigation, animated: true)
+        UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: navigation, withAnimation: true)
     }
     
     private func presentLoginVC() {
