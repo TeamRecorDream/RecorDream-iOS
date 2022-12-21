@@ -284,7 +284,6 @@ extension MyPageVC {
         output.popToSplash
             .withUnretained(self)
             .subscribe { owner, _ in
-                owner.navigationController?.popViewController(animated: true)
                 let splashVC = owner.factory.instantiateSpalshVC()
                 UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: splashVC, withAnimation: true)
             }.disposed(by: self.disposeBag)
