@@ -18,7 +18,7 @@ public final class DreamNoteViewController: UIViewController {
     // MARK: - Properties
 
     private enum Metric {
-
+        static let noteLabelTop = 12.f
     }
 
     // MARK: - UI Components
@@ -36,6 +36,13 @@ public final class DreamNoteViewController: UIViewController {
         label.text = "기록된 내용이 없어요."
         label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
         label.textColor = RDDSKitAsset.Colors.white04.color
+        return label
+    }()
+
+    private let noteLabel: UILabel = {
+        let label = UILabel()
+        label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
+        label.textColor = RDDSKitAsset.Colors.white01.color
         return label
     }()
 
@@ -62,7 +69,7 @@ public final class DreamNoteViewController: UIViewController {
         }
 
         placeHolder.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(12)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
             $0.leading.equalToSuperview()
         }
     }
