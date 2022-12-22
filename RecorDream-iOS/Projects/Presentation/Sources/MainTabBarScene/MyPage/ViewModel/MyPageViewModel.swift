@@ -79,6 +79,7 @@ extension MyPageViewModel {
         }.disposed(by: disposeBag)
         
         input.pushSwitchChagned
+            .skip(1)
             .filter { $0 == false }
             .subscribe(onNext: { _ in
                 self.useCase.disablePushNotice()
@@ -109,9 +110,9 @@ extension MyPageViewModel {
         
         let startUsernameEdit = self.useCase.usernameEditStatus
         startUsernameEdit
-            .subscribe(onNext: { editfinished in
-                output.startUsernameEdit.accept(editfinished)
-                guard !editfinished else { return }
+            .subscribe(onNext: { isEditing in
+                output.startUsernameEdit.accept(isEditing)
+                guard !isEditing else { return }
                 output.loadingStatus.accept(false)
             }).disposed(by: disposeBag)
         
