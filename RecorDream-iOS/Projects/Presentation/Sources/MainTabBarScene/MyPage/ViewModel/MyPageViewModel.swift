@@ -109,8 +109,10 @@ extension MyPageViewModel {
         
         let startUsernameEdit = self.useCase.usernameEditStatus
         startUsernameEdit
-            .subscribe(onNext: {
-                output.startUsernameEdit.accept($0)
+            .subscribe(onNext: { editfinished in
+                output.startUsernameEdit.accept(editfinished)
+                guard !editfinished else { return }
+                output.loadingStatus.accept(false)
             }).disposed(by: disposeBag)
         
         let showUsernameWarningAlert = self.useCase.shouldShowAlert
