@@ -68,11 +68,11 @@ extension DefaultMyPageUseCase: MyPageUseCase {
                     owner.startUsernameEdit()
                     return
                 }
-                owner.stopUsernameEdit()
+                owner.completeUsernameEdit()
             }.disposed(by: self.disposeBag)
     }
     
-    private func stopUsernameEdit() {
+    private func completeUsernameEdit() {
         usernameEditStatus.accept(false)
     }
     
