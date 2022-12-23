@@ -18,4 +18,5 @@ public protocol MainTabBarControllerFactory {
     func instantiateMainTabBarController() -> MainTabBarController
     func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC
     func instantiateMyPageVC() -> MyPageVC
+    func instantiateSearchVC() -> DreamSearchVC
 }

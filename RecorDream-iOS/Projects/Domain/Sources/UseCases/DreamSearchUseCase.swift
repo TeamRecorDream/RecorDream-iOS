@@ -26,7 +26,7 @@ public final class DefaultDreamSearchUseCase {
     public var fetchSuccess = PublishSubject<DreamSearchEntity>()
     public var fetchFail = PublishSubject<Error>()
 
-    init(dreamSearchRepository: DreamSearchRepository) {
+    public init(dreamSearchRepository: DreamSearchRepository) {
         self.repository = dreamSearchRepository
     }
 }
