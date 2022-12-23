@@ -10,7 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-final class DreamSearchEmptyCVC: DreamCollectionViewCell {
+final class DreamSearchEmptyCVC: UICollectionViewCell {
     private lazy var emptyLabel: UILabel = {
         let lb = UILabel()
         lb.font = RDDSKitFontFamily.Pretendard.medium.font(size: 16)
@@ -19,10 +19,20 @@ final class DreamSearchEmptyCVC: DreamCollectionViewCell {
         return lb
     }()
     
-    override func setupView() {
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.setupView()
+        self.setupConstraint()
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupView() {
         self.addSubview(emptyLabel)
     }
-    override func setupConstraint() {
+    func setupConstraint() {
         emptyLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()

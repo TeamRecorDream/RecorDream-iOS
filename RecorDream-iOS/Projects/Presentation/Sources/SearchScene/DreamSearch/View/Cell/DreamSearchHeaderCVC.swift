@@ -8,9 +8,10 @@
 
 import UIKit
 
+import Domain
 import RD_DSKit
 
-final class DreamSearchHeaderCVC: DreamReusableView {
+final class DreamSearchHeaderCVC: UICollectionReusableView {
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = RDDSKitColors.Color.white
@@ -23,10 +24,20 @@ final class DreamSearchHeaderCVC: DreamReusableView {
         return v
     }()
     
-    override func setupView() {
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.setupView()
+        self.setupConstraint()
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupView() {
         self.addSubviews(countLabel, lineView)
     }
-    override func setupConstraint() {
+    func setupConstraint() {
         countLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview()
@@ -42,7 +53,7 @@ final class DreamSearchHeaderCVC: DreamReusableView {
 }
 
 extension DreamSearchHeaderCVC {
-    func configureCell(viewModel: DreamSearchResultViewModel) {
-        self.countLabel.text = "\(viewModel.recordsCount)개의 기록"
+    func configureCell(counts: Int) {
+        self.countLabel.text = "\(counts)개의 기록"
     }
 }

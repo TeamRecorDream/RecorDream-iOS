@@ -9,26 +9,12 @@
 import Foundation
 
 public struct Records: Codable {
-    public enum Genre: Int, Codable {
-        case comedy
-        case romance
-        case action
-        case thriller
-        case mystery
-        case fear
-        case sf
-        case fantasy
-        case family
-        case etc
-        case none
-    }
-    
     public let id: String
     public let dreamColor: Int?
     public let emotion: Int?
     public let date: String?
     public let title: String?
-    public let genre: Genre?
+    public let genre: [Int]?
 }
 
 public struct DreamSearchEntity: Codable {

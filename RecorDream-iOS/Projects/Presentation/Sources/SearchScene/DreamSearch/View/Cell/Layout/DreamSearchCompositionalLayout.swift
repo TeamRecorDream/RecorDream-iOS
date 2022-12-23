@@ -1,5 +1,5 @@
 //
-//  DreamSearchSection.swift
+//  DreamSearchCompositionalLayout.swift
 //  Presentation
 //
 //  Created by 정은희 on 2022/10/16.
@@ -8,9 +8,8 @@
 
 import UIKit
 
-
 extension DreamSearchVC {
-    func layout() -> UICollectionViewLayout {
+    func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { [weak self] sectionNumber, environment -> NSCollectionLayoutSection? in
             guard let self = self else { return nil }
             
@@ -19,13 +18,13 @@ extension DreamSearchVC {
 
             switch DreamSearchResultType.type(sectionNumber) {
             case .exist:
-                return self.createExistSection()
+                return self.createExistSection(resultHeader)
             case .non:
                 return self.createNoneSection()
             }
         }
     }
-    private func createExistSection() -> NSCollectionLayoutSection {
+    private func createExistSection(_ header: NSCollectionLayoutBoundarySupplementaryItem) -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .estimated(88.adjustedHeight)
