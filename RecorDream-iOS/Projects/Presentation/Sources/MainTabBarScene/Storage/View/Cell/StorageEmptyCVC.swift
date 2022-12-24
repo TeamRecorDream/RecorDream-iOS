@@ -10,7 +10,9 @@ import UIKit
 
 import RD_DSKit
 
-final class StorageEmptyCVC: DreamCollectionViewCell {
+import HeeKit
+
+final class StorageEmptyCVC: DreamCollectionViewCell, Reusable {
     // MARK: - UI Components
     private lazy var emptyLabel: UILabel = {
         let lb = UILabel()

@@ -12,8 +12,9 @@ import RD_Core
 import RD_DSKit
 
 import SnapKit
+import HeeKit
 
-final class StorageHeaderCVC: DreamReusableView {
+final class StorageHeaderCVC: DreamReusableView, Reusable {
     // MARK: - UI Components
     private lazy var countLabel: UILabel = {
         let lb = UILabel()

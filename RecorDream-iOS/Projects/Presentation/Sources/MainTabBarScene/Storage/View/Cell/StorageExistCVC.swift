@@ -11,7 +11,9 @@ import UIKit
 import RD_Core
 import RD_DSKit
 
-final class StorageExistCVC: DreamCollectionViewCell {
+import HeeKit
+
+final class StorageExistCVC: DreamCollectionViewCell, Reusable {
     // MARK: - UI Components
     private let section: RDCollectionViewFlowLayout.CollectionDisplay = .list
     private var backgroundImageView = UIImageView(image: RDDSKitAsset.Images.cardLRed.image)

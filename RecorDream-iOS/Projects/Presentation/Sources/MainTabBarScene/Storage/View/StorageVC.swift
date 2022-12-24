@@ -88,12 +88,12 @@ extension StorageVC {
         
         self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
             switch kind {
-            case DreamWriteHeader.className:
+            case DreamWriteHeader.reuseIdentifier:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteHeader.className, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
                 let sectionType = DreamStorageSection.type(indexPath.section)
                 view.title = sectionType.title
                 return view
-            case StorageHeaderCVC.className:
+            case StorageHeaderCVC.reuseIdentifier:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.reuseIdentifier, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
                 // TODO: - n개의 기록 추가
 //                view.title
