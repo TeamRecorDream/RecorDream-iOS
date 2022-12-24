@@ -61,6 +61,7 @@ extension DramSearchTextField {
         self.font = RDDSKitFontFamily.Pretendard.medium.font(size: 14.adjusted)
         self.makeRoundedWithBorder(radius: 15, borderColor: UIColor.white.withAlphaComponent(0.1).cgColor)
         self.placeholder = "어떤 기록을 찾고 있나요?"
+        self.textColor = .white
         self.setPlaceholderColor(UIColor.white.withAlphaComponent(0.4))
         self.setLeftPadding(amount: 52)
         self.addSubview(iconImageView)
