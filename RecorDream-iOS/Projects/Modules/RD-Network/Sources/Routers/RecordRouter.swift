@@ -13,6 +13,7 @@ import Alamofire
 enum RecordRouter {
     case writeRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?)
     case searchRecord(keyword: String)
+    case fetchStorage(filter: Int)
 }
 
 extension RecordRouter: BaseRouter {
@@ -21,6 +22,8 @@ extension RecordRouter: BaseRouter {
         case .writeRecord:
             return .post
         case .searchRecord:
+            return .get
+        case .fetchStorage:
             return .get
         default: return .get
         }
@@ -32,7 +35,9 @@ extension RecordRouter: BaseRouter {
             return "/record"
         case .searchRecord:
             return "/record/storage/search"
-        default: return ""
+        case .fetchStorage:
+            return ""
+        default: return "/record/storage/list"
         }
     }
     
@@ -52,6 +57,11 @@ extension RecordRouter: BaseRouter {
         case .searchRecord(let keyword):
             let query: [String: Any] = [
                 "keyword": keyword
+            ]
+            return .query(query)
+        case .fetchStorage(let filter):
+            let query: [String: Any] = [
+                "filter": filter
             ]
             return .query(query)
         default: return .requestPlain
