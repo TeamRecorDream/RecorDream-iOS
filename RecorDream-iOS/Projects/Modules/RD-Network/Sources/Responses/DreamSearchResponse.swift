@@ -18,31 +18,19 @@ public struct DreamSearchResponse: Codable {
     }
 }
 
-public struct Records: Codable {
-    public let id: String?
-    public let dreamColor: Int?
-    public let emotion: Int?
-    public let date: String?
-    public let title: String?
-    public let genre: Genre?
-    
-    public enum Genre: Int, Codable {
-        case comedy
-        case romance
-        case action
-        case thriller
-        case mystery
-        case fear
-        case sf
-        case fantasy
-        case family
-        case etc
-        case none
-    }
-    private enum CodingKeys: String, CodingKey {
-        case id = "_id"
-        case dreamColor = "dream_color"
-        case emotion, date, title, genre
+extension DreamSearchResponse {
+    public struct Records: Codable {
+        public let id: String?
+        public let dreamColor: Int?
+        public let emotion: Int?
+        public let date: String?
+        public let title: String?
+        public let genre: [Int]?
+        
+        private enum CodingKeys: String, CodingKey {
+            case id = "_id"
+            case dreamColor = "dream_color"
+            case emotion, date, title, genre
+        }
     }
 }
-

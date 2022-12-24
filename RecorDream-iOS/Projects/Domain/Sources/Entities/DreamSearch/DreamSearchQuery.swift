@@ -8,6 +8,10 @@
 
 import Foundation
 
-public struct DreamSearchQuery: Codable {
-    public let keyword: String
+public struct DreamSearchQuery {
+    public var keyword: String? = nil
+    
+    public init(keyword: String?) {
+        self.keyword = keyword
+    }
 }
