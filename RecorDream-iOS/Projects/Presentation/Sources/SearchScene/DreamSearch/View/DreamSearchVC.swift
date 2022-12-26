@@ -156,16 +156,18 @@ extension DreamSearchVC {
             .subscribe(onNext: { strongSelf, entity in
                 strongSelf.applySnapShot(model: entity)
             }).disposed(by: self.disposeBag)
-//        output.loadingStatus // TODO: - 풀 받고 주석 해제할 것
-//            .bind(to: self.rx.isLoading)
-//            .disposed(by: disposeBag)
+        
+        output.loadingStatus
+            .bind(to: self.rx.isLoading)
+            .disposed(by: disposeBag)
         
     }
     private func bindCollectionView() {
         self.dreamSearchCollectionView.rx.itemSelected
             .withUnretained(self)
-            .subscribe(onNext: { owner in
-                // TODO: - 상세보기로 화면전환
+            .subscribe(onNext: { (owner, _) in
+                let detailVC = owner.factory.instantiateDetailVC()
+                owner.navigationController?.pushViewController(detailVC, animated: true)
             }).disposed(by: disposeBag)
     }
     private func bindDismissButton() {
