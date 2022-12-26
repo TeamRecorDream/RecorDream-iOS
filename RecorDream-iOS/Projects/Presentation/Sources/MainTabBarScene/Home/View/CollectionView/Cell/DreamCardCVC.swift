@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Domain
 import RD_Core
 import RD_DSKit
 
@@ -32,12 +33,11 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
 
     // MARK: - UI Components
 
-    private var backgroundImage = UIImageView(image: RDDSKitAsset.Images.cardMYellow.image)
+    private var backgroundImage = UIImageView()
 
     private var emotionImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.image = RDDSKitAsset.Images.feelingLJoy.image
         return iv
     }()
 
@@ -46,7 +46,6 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         label.font = RDDSKitFontFamily.Pretendard.semiBold.font(size: 12)
         label.textAlignment = .center
         label.textColor = RDDSKitColors.Color.white
-        label.text = "2022/06/26 SUN"
         return label
     }()
 
@@ -56,7 +55,6 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         label.textAlignment = .left
         label.textColor = RDDSKitColors.Color.white
         label.numberOfLines = 2
-        label.text = "오늘 친구들이랑 피자 먹고 진짜 재밌는 일 많은 꿈을 꿨다."
         return label
     }()
 
@@ -75,7 +73,6 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         label.textAlignment = .left
         label.textColor = RDDSKitColors.Color.white
         label.numberOfLines = 0
-        label.text = "안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
         return label
     }()
 
@@ -135,39 +132,39 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
             $0.height.equalTo(Metric.noteLabelHeight)
         }
 
-        // DummyData
-        genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: "# 아직 설정되지 않았어요"))
     }
 
-    func setData(emotion: Int, date: String, title: String, tag: [String], note: String) {
-        backgroundImage.image = setEmotionImage(emotion: emotion)[0]
-        emotionImageView.image = setEmotionImage(emotion: emotion)[1]
+    func setData(model: HomeEntity.Record) {
+        // emotion: Int, date: String, title: String, tag: [String], note: String
+        backgroundImage.image = setEmotionImage(emotion: model.emotion)[0]
+        emotionImageView.image = setEmotionImage(emotion: model.emotion)[1]
 
-        dateLabel.text = date
-        titleLabel.text = title
+        dateLabel.text = model.date
+        titleLabel.text = model.title
 
-        if tag.isEmpty {
+        if model.genres.isEmpty {
             genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: "# 아직 설정되지 않았어요"))
         } else {
-            tag.forEach {
-                genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0))
+            model.genres.forEach {
+                genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0.rawValue))
             }
         }
 
-        noteLabel.text = note
+        noteLabel.text = model.content
     }
-
-    // Temp: 추후 서버와 논의 후 바뀔 수 있음.
+    
     private func setEmotionImage(emotion: Int) -> [UIImage] {
         switch emotion {
         case 1:
             return [RDDSKitAsset.Images.cardMYellow.image, RDDSKitAsset.Images.feelingLJoy.image]
         case 2:
-            return [RDDSKitAsset.Images.cardMRed.image, RDDSKitAsset.Images.feelingLScary.image]
-        case 3:
-            return [RDDSKitAsset.Images.cardMPink.image, RDDSKitAsset.Images.feelingLShy.image]
-        case 4:
             return [RDDSKitAsset.Images.cardMBlue.image, RDDSKitAsset.Images.feelingLSad.image]
+        case 3:
+            return [RDDSKitAsset.Images.cardMRed.image, RDDSKitAsset.Images.feelingLScary.image]
+        case 4:
+            return [RDDSKitAsset.Images.cardMPurple.image, RDDSKitAsset.Images.feelingLStrange.image]
+        case 5:
+            return [RDDSKitAsset.Images.cardMPink.image, RDDSKitAsset.Images.feelingLShy.image]
         default:
             return [RDDSKitAsset.Images.cardMWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
         }

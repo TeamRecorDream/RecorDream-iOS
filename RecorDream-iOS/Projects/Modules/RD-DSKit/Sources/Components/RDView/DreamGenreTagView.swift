@@ -62,8 +62,10 @@ extension DreamGenreTagView: Presentable {
 
     public func setUI() {
         switch cardType {
-        case .home, .detail:
+        case .home:
             self.genreNameLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 10)
+        case .detail:
+            self.genreNameLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 12)
         case .search, .storage:
             self.genreNameLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 8)
         }
@@ -74,8 +76,11 @@ extension DreamGenreTagView: Presentable {
 
         genreNameLabel.snp.makeConstraints { make in
             switch cardType {
-            case .home, .detail:
+            case .home:
                 make.edges.equalToSuperview().inset(4)
+            case .detail:
+                make.top.bottom.equalToSuperview().inset(4)
+                make.leading.trailing.equalToSuperview().inset(6)
             case .search, .storage:
                 make.centerY.equalToSuperview().inset(3)
                 make.leading.trailing.equalToSuperview().offset(4)

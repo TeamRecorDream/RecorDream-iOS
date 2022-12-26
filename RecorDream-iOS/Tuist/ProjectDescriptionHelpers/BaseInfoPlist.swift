@@ -8,7 +8,6 @@ public extension Project {
         "UILaunchStoryboardName": "LaunchScreen",
         "CFBundleDisplayName": "레코드림",
         "LSApplicationQueriesSchemes": ["kakaokompassauth", "kakaolink"],
-        "CFBundleURLTypes": ["CFBundleURLSchemes": ["kakao$(KAKAO_APP_KEY)"]],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
             "UISceneConfigurations": [
@@ -39,6 +38,12 @@ public extension Project {
         "Supports opening documents in place": true,
         "Application supports iTunes file sharing": true,
         "ITSAppUsesNonExemptEncryption": false,
-        "UIBackgroundModes": ["fetch", "remote-notification"]
+        "UIBackgroundModes": ["fetch", "remote-notification"],
+        "CFBundleURLTypes": [
+                                [
+                                    "CFBundleTypeRole": "Editor",
+                                    "CFBundleURLSchemes": ["kakao000e1e31f022f98fbe16c76ab287abd1"]
+                                ]
+                            ],
     ]
 }

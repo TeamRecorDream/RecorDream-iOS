@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         dependencyConatiner = DependencyContainer()
 //
 //        self.dependencyConatiner?.start()
-        let rootViewController = dependencyConatiner?.instantiateMainTabBarController()
+        let rootViewController = dependencyConatiner?.instantiateSpalshVC()
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
         self.window = window

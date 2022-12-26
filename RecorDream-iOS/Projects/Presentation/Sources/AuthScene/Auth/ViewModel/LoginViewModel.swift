@@ -37,7 +37,7 @@ public final class LoginViewModel {
     let authRequestEntity = BehaviorRelay<AuthRequest>(value: .init(kakaoToken: "", appleToken: "", fcmToken: ""))
     
     // MARK: - Initialization
-    init(useCase: AuthUseCase) {
+    public init(useCase: AuthUseCase) {
         self.useCase = useCase
     }
 }
@@ -56,7 +56,7 @@ extension LoginViewModel: ViewModelType {
         input.loginRequestSuccess
             .subscribe(onNext: { [weak self] request in
                 guard let self = self else { return }
-                self.useCase.login(request: self.authRequestEntity.value)
+                self.useCase.login(request: request)
             }).disposed(by: disposeBag)
         
         input.loginRequestFail

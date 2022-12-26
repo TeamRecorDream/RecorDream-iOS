@@ -12,7 +12,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-public class DreamLogoView: UIView {
+public final class DreamLogoView: UIView {
 
     // MARK: - UI Components
 
@@ -23,7 +23,7 @@ public class DreamLogoView: UIView {
         return imageView
     }()
 
-    private lazy var mypageButton: UIButton = {
+    public lazy var mypageButton: UIButton = {
         let button = UIButton()
         button.setImage(RDDSKitAsset.Images.icnMypageS.image, for: .normal)
         return button
@@ -75,3 +75,8 @@ public class DreamLogoView: UIView {
     }
 }
 
+extension Reactive where Base: DreamLogoView {
+    public var mypageButtonTapped: ControlEvent<Void> {
+        return base.mypageButton.rx.tap
+    }
+}

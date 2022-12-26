@@ -15,14 +15,15 @@ import RD_Network
 import RxSwift
 
 public final class SplashVC: UIViewController {
-
+    
     private let authView = AuthView()
     private let disposeBag = DisposeBag()
+    public var factory: ViewControllerFactory!
     
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.setupView()
         self.setupConstraint()
     }
@@ -51,43 +52,58 @@ extension SplashVC: AuthControllable {
 
 extension SplashVC {
     private func setupViewState() {
-        self.checkLoginEnable { tokenState in
-//            switch tokenState {
-//            case .valid:
-//                // TODO: - 홈 뷰로 전환
-//            case .invalid:
-//                // TODO: - 로그인 뷰로 전환
-//            case .missed:
-//                self.postLogin { state in
-//                    // TODO: - state에 따라 화면전환
-//                }
-//            }
+        self.checkLoginEnable { loginEnabled in
+            switch loginEnabled {
+            case true:
+                self.presentMainTabBar()
+            case false:
+                self.presentLoginVC()
+            }
         }
     }
     
-    private func checkLoginEnable(completion: @escaping ((TokenState) -> Void)) {
-        if UserDefaults.standard.string(forKey: Key.userToken.rawValue) != nil &&
-            UserDefaults.standard.string(forKey: Key.accessToken.rawValue) != nil {
-            // TODO: - 홈뷰 서버통신
-            /// 성공이라면 토큰 상태로 .valid
-            /// 실패라면 토큰 상태로 .invalid 넣어주기
+    private func presentMainTabBar() {
+        let mainTabBar = self.factory.instantiateMainTabBarController()
+        let navigation = UINavigationController(rootViewController: mainTabBar)
+        UIApplication.setRootViewController(window: UIWindow.keyWindowGetter!, viewController: navigation, withAnimation: true)
+    }
+    
+    private func presentLoginVC() {
+        let loginVC = self.factory.instantiateLoginVC()
+        loginVC.modalPresentationStyle = .overFullScreen
+        loginVC.modalTransitionStyle = .crossDissolve
+        self.present(loginVC, animated: true)
+    }
+    
+    private func checkLoginEnable(completion: @escaping ((Bool) -> Void)) {
+        if UserDefaults.standard.string(forKey: UserDefaultKey.userToken.rawValue) != nil &&
+            UserDefaults.standard.string(forKey: UserDefaultKey.accessToken.rawValue) != nil {
+            DefaultAuthService.shared.reissuance()
+                .subscribe(onNext: { response in
+                    guard let response = response else {
+                        completion(false)
+                        return
+                    }
+                    
+                    let isStillValidToken = (response.status == 403)
+                    if isStillValidToken {
+                        completion(true)
+                        return
+                    }
+                    
+                    guard let token = response.data else {
+                        completion(false)
+                        return
+                    }
+                    
+                    DefaultUserDefaultManager.set(value: token.accessToken, keyPath: .accessToken)
+                    DefaultUserDefaultManager.set(value: token.refreshToken, keyPath: .refreshToken)
+                    completion(true)
+                })
+                .disposed(by: self.disposeBag)
         }
         else {
-            completion(.missed)
+            completion(false)
         }
-    }
-    
-    private func postLogin(completion: @escaping ((Bool) -> Void)) {
-        let userToken = UserDefaults.standard.string(forKey: Key.userToken.rawValue)!
-        let accessToken = UserDefaults.standard.string(forKey: Key.accessToken.rawValue)!
-        
-        DefaultAuthService.shared.login(kakaoToken: userToken, appleToken: userToken, fcmToken: accessToken) // ✅
-            .subscribe(onNext: { response in
-                guard let response = response else { return }
-                DefaultUserDefaultManager.set(value: response.accessToken, keyPath: Key.accessToken.rawValue)
-                completion(true)
-            }, onError: { _ in
-                completion(false)
-            }).disposed(by: self.disposeBag)
     }
 }

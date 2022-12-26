@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct GeneralResponse<T> {
-    let success: Bool
-    let status: Int
-    let message: String?
-    let data: T?
+public struct GeneralResponse<T> {
+    public let success: Bool
+    public let status: Int
+    public let message: String?
+    public let data: T?
     
     enum CodingKeys: String, CodingKey {
         case success
@@ -23,7 +23,7 @@ struct GeneralResponse<T> {
 }
 
 extension GeneralResponse: Decodable where T: Decodable {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         success = try container.decode(Bool.self, forKey: .success)
         status = try container.decode(Int.self, forKey: .status)

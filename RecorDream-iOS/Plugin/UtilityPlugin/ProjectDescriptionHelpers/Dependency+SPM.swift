@@ -26,5 +26,6 @@ public extension TargetDependency.SPM {
     static let FirebaseMessaging = TargetDependency.external(name: "FirebaseMessaging")
     static let KakaoUser = TargetDependency.external(name: "KakaoSDKUser")
     static let KakaoAuth = TargetDependency.external(name: "KakaoSDKAuth")
+    static let KakaoCommon = TargetDependency.external(name: "KakaoSDKCommon")
     static let HeeKit = TargetDependency.external(name: "HeeKit")
 }

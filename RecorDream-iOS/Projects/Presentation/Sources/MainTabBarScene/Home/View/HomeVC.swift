@@ -26,6 +26,7 @@ public class HomeVC: UIViewController {
     
     private let disposeBag = DisposeBag()
     public var viewModel: HomeViewModel!
+    public var factory: ViewControllerFactory!
 
     private var dreamCardCollectionViewAdapter: DreamCardCollectionViewAdapter?
     
@@ -79,10 +80,16 @@ public class HomeVC: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.bindViews()
         self.bindViewModels()
         self.setUI()
         self.setLayout()
         self.setCollectionViewAdapter()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.resetView()
     }
 
     // MARK: - UI & Layout
@@ -125,14 +132,43 @@ public class HomeVC: UIViewController {
 // MARK: - Methods
 
 extension HomeVC {
-  
+    private func bindViews() {
+        self.logoView.rx.mypageButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                let myPageVC = owner.factory.instantiateMyPageVC()
+                owner.navigationController?.pushViewController(myPageVC, animated: true)
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.rdTabBar.isHidden = true
+            }).disposed(by: self.disposeBag)
+    }
+    
     private func bindViewModels() {
-        let input = HomeViewModel.Input()
-        // let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        let input = HomeViewModel.Input(viewDidLoad: Observable.just(()))
+
+        let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+
+
+        output.fetchedHomeData
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { strongSelf, entity in
+                strongSelf.fetchHomeData(model: entity)
+            }.disposed(by: self.disposeBag)
+    }
+
+    private func fetchHomeData(model: HomeEntity) {
+        self.welcomeLabel.text = "반가워요, \(model.nickname)님!"
+        self.viewModel.fetchedDreamRecord = model
     }
 
     private func setCollectionViewAdapter() {
         self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
-            collectionView: self.dreamCardCollectionView, adapterDataSource: HomeViewModel())
+            collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
+    }
+    
+    private func resetView() {
+        guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
+        rdtabbarController.rdTabBar.isHidden = false
     }
 }
