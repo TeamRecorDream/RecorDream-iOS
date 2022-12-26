@@ -12,6 +12,7 @@ import Alamofire
 
 enum RecordRouter {
     case writeRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?)
+    case fetchModifyRecord(recordId: String)
     case searchRecord(keyword: String)
 }
 
@@ -30,6 +31,8 @@ extension RecordRouter: BaseRouter {
         switch self {
         case .writeRecord:
             return "/record"
+        case .fetchModifyRecord(let recordId):
+            return "/record/\(recordId)"
         case .searchRecord:
             return "/record/storage/search"
         default: return ""
