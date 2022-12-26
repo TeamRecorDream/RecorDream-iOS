@@ -51,12 +51,14 @@ extension RecordRouter: BaseRouter {
             let query: [String: Any] = [
                 "keyword": keyword
             ]
-            return .query(query)
+            return .query(query, parameterEncoding: parameterEncoding)
         }
     }
     
     var parameterEncoding: ParameterEncoding {
         switch self {
+        case .searchRecord:
+            return URLEncoding.init(destination: .queryString)
         default:
             return JSONEncoding.default
         }

@@ -36,6 +36,7 @@ extension SplashVC: AuthControllable {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             UIView.animate(withDuration: 1.0, delay: 0) {
+                self.modalTransitionStyle = .partialCurl
                 self.setupViewState()
             }
         }

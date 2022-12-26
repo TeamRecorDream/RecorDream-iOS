@@ -169,7 +169,7 @@ extension DreamSearchVC {
             }).disposed(by: disposeBag)
     }
     private func bindDismissButton() {
-        self.navigationBar.rightButtonTapped
+        self.navigationBar.leftButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner in
                 self.dismiss(animated: true)
