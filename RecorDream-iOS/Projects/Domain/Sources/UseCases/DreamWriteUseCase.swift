@@ -20,7 +20,7 @@ public protocol DreamWriteUseCase {
     var writeSuccess: PublishSubject<Void> { get set }
     var isWriteEnabled: PublishSubject<Bool> { get set }
     var showCaution: PublishSubject<Bool> { get set }
-    var fetchedRecord: PublishSubject<DreamWriteEntity> { get set }
+    var fetchedRecord: PublishSubject<DreamWriteEntity?> { get set }
     var uploadedVoice: PublishSubject<String?> { get set }
 }
 
@@ -32,7 +32,7 @@ public class DefaultDreamWriteUseCase {
     public var writeSuccess = PublishSubject<Void>()
     public var isWriteEnabled = PublishSubject<Bool>()
     public var showCaution = PublishSubject<Bool>()
-    public var fetchedRecord = PublishSubject<DreamWriteEntity>()
+    public var fetchedRecord = PublishSubject<DreamWriteEntity?>()
     public var uploadedVoice = PublishSubject<String?>()
     
     public init(repository: DreamWriteRepository) {
@@ -58,6 +58,10 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         self.repository.fetchDreamRecord(recordId: recordId)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, entity in
+                guard let entity = entity else {
+                    strongSelf.fetchedRecord.onNext(nil)
+                    return
+                }
                 strongSelf.fetchedRecord.onNext(entity)
                 strongSelf.genreListCautionValidate(genreList: entity.genreList)
             }).disposed(by: self.disposeBag)

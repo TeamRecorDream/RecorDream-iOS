@@ -119,9 +119,12 @@ extension DreamWriteViewModel {
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
         let fetchedModel = useCase.fetchedRecord
         fetchedModel.subscribe(onNext: { entity in
+            output.loadingStatus.accept(false)
+            guard let entity = entity else {
+                return
+            }
             self.shouldShowWarningForInit = entity.shouldeShowWarning
             output.dreamWriteModelFetched.accept(entity)
-            output.loadingStatus.accept(false)
             self.writeRequestEntity.accept(entity.toRequest())
         }).disposed(by: disposeBag)
         

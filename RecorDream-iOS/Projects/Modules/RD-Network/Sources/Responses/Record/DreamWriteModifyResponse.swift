@@ -15,7 +15,7 @@ public struct DreamWriteModifyResponse: Codable {
     public let id, writer, date, title: String
     public let voice: Voice?
     public let content: String?
-    public let emotion: Int?
+    public let emotion: Int
     public let genre: [Int]
     public let note: String?
 

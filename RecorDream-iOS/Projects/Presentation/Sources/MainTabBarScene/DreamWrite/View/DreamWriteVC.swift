@@ -267,7 +267,7 @@ extension DreamWriteVC {
                                      deselectedImage: Section.emotionDeselectedImages[indexPath.row],
                                      text: Section.emotionTitles[indexPath.row])
                 if let model = itemIdentifier as? DreamWriteEntity.Emotion {
-                    if model.isSelected { collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally) }
+                    if model.isSelected { collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .bottom) }
                 }
                 return emotionsCell
             case .genres:

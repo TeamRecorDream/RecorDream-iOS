@@ -11,6 +11,6 @@ import RxSwift
 
 public protocol DreamWriteRepository {
     func writeDreamRecord(request: DreamWriteRequest) -> Observable<Void>
-    func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity>
+    func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity?>
     func uploadVoice(voiceData: Data) -> Observable<String?>
 }

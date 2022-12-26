@@ -45,25 +45,19 @@ extension DefaultDreamWriteRepository: DreamWriteRepository {
         }
     }
     
-    public func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity> {
+    public func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity?> {
         return Observable.create { observer in
-            observer.onNext(.init(main: .init(titleText: "안녕하세요", contentText: "내용입니다", recordTime: "01:24", date: "2022-04-03"),
-                                  emotions: [.init(isSelected: false),
-                                             .init(isSelected: false),
-                                             .init(isSelected: false),
-                                             .init(isSelected: true),
-                                             .init(isSelected: false)],
-                                  genres: [.init(isSelected: false),
-                                           .init(isSelected: false),
-                                           .init(isSelected: true),
-                                           .init(isSelected: false),
-                                           .init(isSelected: false),
-                                           .init(isSelected: false),
-                                           .init(isSelected: true),
-                                           .init(isSelected: true),
-                                           .init(isSelected: false),
-                                           .init(isSelected: false)],
-                                  note: .init(noteText: "노트 샘플 내용")))
+            self.recordService.fetchModifyRecord(recordId: recordId)
+                .subscribe(onNext: { response in
+                    guard let response = response else {
+                        observer.onNext(nil)
+                        return
+                    }
+                    observer.onNext(response.toDomain())
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }

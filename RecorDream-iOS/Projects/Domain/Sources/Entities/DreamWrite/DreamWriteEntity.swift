@@ -62,7 +62,7 @@ public extension DreamWriteEntity {
 }
 
 public extension DreamWriteEntity {
-    struct Emotion: Hashable {
+    public struct Emotion: Hashable {
         let id = UUID()
         public let isSelected: Bool
         
@@ -73,7 +73,7 @@ public extension DreamWriteEntity {
 }
 
 public extension DreamWriteEntity {
-    struct Genre: Hashable {
+    public struct Genre: Hashable {
         let id = UUID()
         public let isSelected: Bool
         
@@ -84,7 +84,7 @@ public extension DreamWriteEntity {
 }
 
 public extension DreamWriteEntity {
-    struct Note: Hashable {
+    public struct Note: Hashable {
         public let noteText: String
         
         public init(noteText: String) {
