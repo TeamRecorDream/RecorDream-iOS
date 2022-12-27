@@ -19,21 +19,21 @@ final class DreamSearchEmptyCVC: UICollectionViewCell {
         return lb
     }()
     
-    override public init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.setupView()
         self.setupConstraint()
     }
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupView() {
+    private func setupView() {
         self.addSubview(emptyLabel)
     }
-    func setupConstraint() {
-        emptyLabel.snp.makeConstraints { make in
+    private func setupConstraint() {
+        self.emptyLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
         }

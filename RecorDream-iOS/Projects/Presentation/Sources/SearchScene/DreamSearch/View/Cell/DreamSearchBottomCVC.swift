@@ -18,21 +18,21 @@ final class DreamSearchBottomCVC: UICollectionReusableView {
         return iv
     }()
     
-    override public init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.setupView()
         self.setupConstraint()
     }
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupView() {
+    private func setupView() {
         self.addSubview(rogoImageView)
     }
-    func setupConstraint() {
-        rogoImageView.snp.makeConstraints { make in
+    private func setupConstraint() {
+        self.rogoImageView.snp.makeConstraints { make in
             make.width.equalTo(124.adjustedWidth)
             make.height.equalTo(22.adjustedHeight)
             make.centerX.equalToSuperview()

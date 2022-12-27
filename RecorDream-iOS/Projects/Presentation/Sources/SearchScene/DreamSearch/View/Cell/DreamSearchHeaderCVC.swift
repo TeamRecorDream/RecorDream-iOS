@@ -24,26 +24,26 @@ final class DreamSearchHeaderCVC: UICollectionReusableView {
         return v
     }()
     
-    override public init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.setupView()
         self.setupConstraint()
     }
-    required public init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupView() {
+    private func setupView() {
         self.addSubviews(countLabel, lineView)
     }
-    func setupConstraint() {
-        countLabel.snp.makeConstraints { make in
+    private func setupConstraint() {
+        self.countLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(1)
         }
-        lineView.snp.makeConstraints { make in
+        self.lineView.snp.makeConstraints { make in
             make.height.equalTo(1.adjustedHeight)
             make.centerY.equalTo(countLabel)
             make.leading.equalTo(countLabel.snp.trailing).offset(7)
