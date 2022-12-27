@@ -58,7 +58,6 @@ extension DreamSearchViewModel {
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
         let searchRelay = self.useCase.fetchSuccess
         let searchError = self.useCase.fetchFail
-        
         searchRelay.subscribe(onNext: { entity in
             output.searchResultModelFetched.accept(entity)
             output.loadingStatus.accept(false)

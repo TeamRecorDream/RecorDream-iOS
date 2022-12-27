@@ -9,9 +9,9 @@
 import Foundation
 
 public struct DreamSearchQuery {
-    public var keyword: String? = nil
+    public var keyword: String
     
-    public init(keyword: String?) {
+    public init(keyword: String) {
         self.keyword = keyword
     }
 }

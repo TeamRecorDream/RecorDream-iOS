@@ -12,7 +12,7 @@ import Alamofire
 
 enum RecordRouter {
     case writeRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?)
-    case searchRecord(keyword: String?)
+    case searchRecord(keyword: String)
 }
 
 extension RecordRouter: BaseRouter {

@@ -11,11 +11,6 @@ import Foundation
 public struct DreamSearchResponse: Codable {
     public let recordsCount: Int
     public let records: [Records]
-    
-    private enum CodingKeys: String, CodingKey {
-        case recordsCount = "records_count"
-        case records
-    }
 }
 
 extension DreamSearchResponse {
