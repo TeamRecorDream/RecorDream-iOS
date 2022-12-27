@@ -136,7 +136,7 @@ extension DreamWriteMainCVC {
                 self.interactionViewTapped.accept(.date)
             }
         case .voiceRecord:
-            if dateInteractionView.isEnabled {
+            if voiceRecordInteractionView.isEnabled {
                 self.interactionViewTapped.accept(.voiceRecord)
             }
         }
