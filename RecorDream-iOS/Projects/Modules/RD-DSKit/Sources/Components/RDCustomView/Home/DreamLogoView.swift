@@ -29,7 +29,7 @@ public final class DreamLogoView: UIView {
         return button
     }()
 
-    private lazy var searchButton: UIButton = {
+    public lazy var searchButton: UIButton = {
         let button = UIButton()
         button.setImage(RDDSKitAsset.Images.icnSearch.image, for: .normal)
         return button
@@ -78,5 +78,8 @@ public final class DreamLogoView: UIView {
 extension Reactive where Base: DreamLogoView {
     public var mypageButtonTapped: ControlEvent<Void> {
         return base.mypageButton.rx.tap
+    }
+    public var searchButtonTapped: ControlEvent<Void> {
+        return base.searchButton.rx.tap
     }
 }

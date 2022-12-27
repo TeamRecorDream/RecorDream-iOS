@@ -28,7 +28,7 @@ extension RecordRouter: BaseRouter {
         default: return .get
         }
     }
-    
+
     var path: String {
         switch self {
         case .writeRecord:
@@ -40,7 +40,7 @@ extension RecordRouter: BaseRouter {
         default: return "/record/storage/list"
         }
     }
-    
+
     var parameters: RequestParams {
         switch self {
         case .writeRecord(let title, let date, let content, let emotion, let genre, let note, let voice):
@@ -67,9 +67,11 @@ extension RecordRouter: BaseRouter {
         default: return .requestPlain
         }
     }
-    
+
     var parameterEncoding: ParameterEncoding {
         switch self {
+        case .searchRecord:
+            return URLEncoding.init(destination: .queryString)
         default:
             return JSONEncoding.default
         }

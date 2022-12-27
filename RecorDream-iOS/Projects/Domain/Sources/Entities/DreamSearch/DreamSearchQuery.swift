@@ -8,6 +8,10 @@
 
 import Foundation
 
-public struct DreamSearchQuery: Equatable {
-    public let query: String
+public struct DreamSearchQuery {
+    public var keyword: String
+    
+    public init(keyword: String) {
+        self.keyword = keyword
+    }
 }

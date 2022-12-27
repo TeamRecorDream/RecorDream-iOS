@@ -108,6 +108,16 @@ extension DependencyContainer: MainTabBarControllerFactory {
         return myPageVC
     }
     
+    public func instantiateSearchVC() -> DreamSearchVC {
+        let repository = DefaultSearchRepository(recordService: self.recordService)
+        let useCase = DefaultDreamSearchUseCase(dreamSearchRepository: repository)
+        let viewModel = DreamSearchViewModel(useCase: useCase)
+        let dreamSearchVC = DreamSearchVC()
+        dreamSearchVC.viewModel = viewModel
+        
+        return dreamSearchVC
+    }
+    
     // MARK: - Examples
     // 아래에 예시를 첨부합니다
 //    func makeFeedListVC(isMyPage: Bool) -> FeedListVC {

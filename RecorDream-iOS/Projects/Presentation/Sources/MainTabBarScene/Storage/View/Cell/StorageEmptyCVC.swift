@@ -10,9 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-import HeeKit
-
-final class StorageEmptyCVC: DreamCollectionViewCell, Reusable {
+final class StorageEmptyCVC: UICollectionViewCell {
     // MARK: - UI Components
     private lazy var emptyLabel: UILabel = {
         let lb = UILabel()
@@ -21,12 +19,23 @@ final class StorageEmptyCVC: DreamCollectionViewCell, Reusable {
         lb.textColor = RDDSKitColors.Color(white: 1.0, alpha: 0.4)
         return lb
     }()
-    
+
+    // MARK: - View Life Cycle
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        self.setupView()
+        self.setupConstraint()
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: - Functions
-    override func setupView() {
+    private func setupView() {
         self.addSubview(emptyLabel)
     }
-    override func setupConstraint() {
+    private func setupConstraint() {
         emptyLabel.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
