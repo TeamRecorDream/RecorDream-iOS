@@ -17,6 +17,6 @@ extension DreamSearchResponse {
 
 extension DreamSearchResponse.Records {
     func toDomain() -> DreamSearchEntity.Records {
-        return .init(id: self.id, dreamColor: self.dreamColor, emotion: self.emotion, date: self.date, title: self.title, genre: self.genre)
+        return .init(id: self.id, emotion: self.emotion, date: self.date, title: self.title, genre: self.genre)
     }
 }

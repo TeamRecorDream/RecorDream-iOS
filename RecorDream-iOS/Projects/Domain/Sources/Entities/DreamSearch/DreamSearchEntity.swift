@@ -21,15 +21,13 @@ public struct DreamSearchEntity: Equatable {
 extension DreamSearchEntity {
     public struct Records: Equatable {
         public let id: String?
-        public let dreamColor: Int?
         public let emotion: Int?
         public let date: String?
         public let title: String?
         public let genre: [Int]?
         
-        public init(id: String?, dreamColor: Int?, emotion: Int?, date: String?, title: String?, genre: [Int]?) {
+        public init(id: String?, emotion: Int?, date: String?, title: String?, genre: [Int]?) {
             self.id = id
-            self.dreamColor = dreamColor
             self.emotion = emotion
             self.date = date
             self.title = title

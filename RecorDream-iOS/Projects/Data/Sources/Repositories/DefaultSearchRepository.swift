@@ -27,7 +27,7 @@ extension DefaultSearchRepository: DreamSearchRepository {
             self.recordService.searchDreamRecord(query: query.keyword)
                 .subscribe(onNext: { response in
                     guard let entity = response?.toDomain() else { return }
-                    observer.onNext(.init(recordsCount: entity.recordsCount, records: entity.records))
+                    observer.onNext(entity)
                 }, onError: { err in
                     observer.onError(err)
                 }).disposed(by: self.disposeBag)
