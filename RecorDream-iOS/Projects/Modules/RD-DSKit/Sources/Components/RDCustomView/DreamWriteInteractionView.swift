@@ -167,6 +167,9 @@ extension DreamWriteInteractionView {
             return String(format: "%02d:%02d", intTime.miniuteDigitInt, intTime.secondsDigitInt)
         }()
         self.dataLabel.text = totalTimeText
+        
+        let hasNoRecord = record == 0.0
+        self.updateEnabledStatus(hasNoRecord)
     }
 }
 

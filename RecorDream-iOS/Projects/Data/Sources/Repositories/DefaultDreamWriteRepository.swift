@@ -12,6 +12,7 @@ import Domain
 import RD_Network
 
 import RxSwift
+import AVFoundation
 
 public class DefaultDreamWriteRepository {
     
@@ -45,25 +46,40 @@ extension DefaultDreamWriteRepository: DreamWriteRepository {
         }
     }
     
-    public func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity> {
+    public func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity?> {
         return Observable.create { observer in
-            observer.onNext(.init(main: .init(titleText: "안녕하세요", contentText: "내용입니다", recordTime: "01:24", date: "2022-04-03"),
-                                  emotions: [.init(isSelected: false),
-                                             .init(isSelected: false),
-                                             .init(isSelected: false),
-                                             .init(isSelected: true),
-                                             .init(isSelected: false)],
-                                  genres: [.init(isSelected: false),
-                                           .init(isSelected: false),
-                                           .init(isSelected: true),
-                                           .init(isSelected: false),
-                                           .init(isSelected: false),
-                                           .init(isSelected: false),
-                                           .init(isSelected: true),
-                                           .init(isSelected: true),
-                                           .init(isSelected: false),
-                                           .init(isSelected: false)],
-                                  note: .init(noteText: "노트 샘플 내용")))
+            var tempResponse: DreamWriteModifyResponse?
+            var tempSeconds: Double?
+            self.recordService.fetchModifyRecord(recordId: recordId)
+                .do(onNext: { response in
+                    guard let response = response else {
+                        observer.onNext(nil)
+                        return
+                    }
+                    tempResponse = response
+                    guard tempResponse?.voice?.url != nil else {
+                        observer.onNext(response.toDomain())
+                        return
+                    }
+                })
+                .compactMap { $0?.voice?.url }
+                .flatMap { self.recordService.downloadVoiceRecord(url: $0) }
+                .do(onNext: { fileURL in
+                    guard let url = URL.init(string: fileURL),
+                          let audioPlayer = try? AVAudioPlayer(contentsOf: url) else {
+                        observer.onNext(tempResponse?.toDomain())
+                        return
+                    }
+                    tempSeconds = audioPlayer.duration
+                })
+                .subscribe(onNext: { response in
+                    guard var entity = tempResponse?.toDomain() else { return }
+                    entity.changeRecordTime(time: tempSeconds!)
+                    observer.onNext(entity)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
             return Disposables.create()
         }
     }
@@ -72,6 +88,20 @@ extension DefaultDreamWriteRepository: DreamWriteRepository {
         return Observable.create { observer in
             guard let title = request.title else { return Disposables.create() }
             self.recordService.writeDreamRecord(title: title, date: request.date, content: request.content, emotion: request.emotion, genre: request.genre, note: request.note, voice: request.voice)
+                .subscribe(onNext: { _ in
+                    observer.onNext(())
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    public func modifyDreamRecord(request: DreamWriteRequest, recordId: String) -> Observable<Void> {
+        return Observable.create { observer in
+            guard let title = request.title else { return Disposables.create() }
+            self.recordService.modifyRecord(title: title, date: request.date, content: request.content, emotion: request.emotion, genre: request.genre, note: request.note, voice: request.voice, recordId: recordId)
                 .subscribe(onNext: { _ in
                     observer.onNext(())
                 }, onError: { err in

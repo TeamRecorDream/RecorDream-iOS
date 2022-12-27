@@ -112,15 +112,7 @@ extension DreamWriteMainCVC {
         self.contentTextView.initText = model.contentText
         
         self.dateChanged(date: model.date)
-        
-        guard let recordTime = model.recordTime else { return }
-        let recordTimes = recordTime.split(separator: ":").compactMap { Int(String($0)) }
-        let recordTimeFloat: CGFloat = CGFloat(recordTimes
-            .reduce(0) { partialResult, seconds in
-                return partialResult*60 + seconds
-            })
-        
-        self.recordUpdated(record: recordTimeFloat)
+        self.recordUpdated(record: CGFloat(model.recordTime))
     }
     
     public func dateChanged(date: String) {
@@ -144,7 +136,7 @@ extension DreamWriteMainCVC {
                 self.interactionViewTapped.accept(.date)
             }
         case .voiceRecord:
-            if dateInteractionView.isEnabled {
+            if voiceRecordInteractionView.isEnabled {
                 self.interactionViewTapped.accept(.voiceRecord)
             }
         }
