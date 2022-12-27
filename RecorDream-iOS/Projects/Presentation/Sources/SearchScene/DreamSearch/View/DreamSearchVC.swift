@@ -136,9 +136,14 @@ extension DreamSearchVC {
         let previousItems = snapshot.itemIdentifiers(inSection: .non)
         
         snapshot.appendSections([.exist, .non])
-        snapshot.appendItems([], toSection: .exist)
-        snapshot.appendItems([], toSection: .non)
-        snapshot.deleteItems(previousItems)
+        
+        if model.recordsCount == 0 {
+            snapshot.appendItems([], toSection: .non)
+            snapshot.deleteItems(previousItems)
+        } else {
+            snapshot.appendItems([], toSection: .exist)
+        }
+        
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
     }
@@ -156,7 +161,7 @@ extension DreamSearchVC {
             .subscribe(onNext: { owner, entity in
                 owner.applySnapShot(model: entity)
             }).disposed(by: self.disposeBag)
-        
+                
         output.loadingStatus
             .bind(to: self.rx.isLoading)
             .disposed(by: disposeBag)
