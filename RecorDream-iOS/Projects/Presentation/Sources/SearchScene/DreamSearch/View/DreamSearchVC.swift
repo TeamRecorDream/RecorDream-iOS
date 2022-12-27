@@ -46,7 +46,6 @@ public class DreamSearchVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.bindViewModels()
         self.bindCollectionView()
         self.bindDismissButton()
         self.setupView()
@@ -61,6 +60,7 @@ extension DreamSearchVC {
     public func setupView() {
         self.view.backgroundColor = .black
         self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView)
+        self.searchTextField.addTarget(self, action: #selector(bindViewModels), for: .editingChanged)
     }
     public func setupConstraint() {
         navigationBar.snp.makeConstraints { make in
@@ -150,7 +150,8 @@ extension DreamSearchVC {
 }
 // MARK: - Bind
 extension DreamSearchVC {
-    private func bindViewModels() {
+    @objc
+    private func bindViewModels(_ sender: Any?) {
         let input = DreamSearchViewModel.Input(currentSearchQuery: self.searchTextField.shouldLoadResult, returnButtonTapped: self.searchTextField.returnKeyTapped.asObservable())
 
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
