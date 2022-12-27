@@ -13,6 +13,7 @@ import RxSwift
 public protocol DreamWriteUseCase {
     func writeDreamRecord(request: DreamWriteRequest, voiceId: String?)
     func fetchDreamRecord(recordId: String)
+    func modifyDreamRecord(request: DreamWriteRequest, voiceId: String?, recordId: String)
     func titleTextValidate(text: String)
     func genreListCautionValidate(genreList: [Int]?)
     func uploadVoice(voiceData: Data)
@@ -41,6 +42,7 @@ public class DefaultDreamWriteUseCase {
 }
 
 extension DefaultDreamWriteUseCase: DreamWriteUseCase {
+    
     public func titleTextValidate(text: String) {
         let existDistinctTitle = (text.count > 0 && text != "꿈의 제목을 남겨주세요")
         self.isWriteEnabled.onNext(existDistinctTitle)
@@ -70,6 +72,15 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
     public func writeDreamRecord(request: DreamWriteRequest, voiceId: String?) {
         let validRequest = request.makeValidFileds(voiceId: voiceId)
         self.repository.writeDreamRecord(request: validRequest)
+            .withUnretained(self)
+            .subscribe(onNext: { strongSelf, entity in
+            strongSelf.writeSuccess.onNext(())
+        }).disposed(by: self.disposeBag)
+    }
+    
+    public func modifyDreamRecord(request: DreamWriteRequest, voiceId: String?, recordId: String) {
+        let validRequest = request.makeValidFileds(voiceId: voiceId)
+        self.repository.modifyDreamRecord(request: validRequest, recordId: recordId)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, entity in
             strongSelf.writeSuccess.onNext(())

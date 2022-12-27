@@ -23,6 +23,9 @@ public class DreamWriteVC: UIViewController {
     
     public var factory: ViewControllerFactory!
     public var viewModel: DreamWriteViewModel!
+    private var viewModelType: DreamWriteViewModel.DreamWriteViewModelType {
+        return viewModel.viewModelType
+    }
     
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
@@ -36,8 +39,17 @@ public class DreamWriteVC: UIViewController {
     
     // MARK: - UI Components
     
-    private lazy var naviBar = RDNaviBar()
-        .title("기록하기")
+    private lazy var naviBar: RDNaviBar = {
+        let naviBar = RDNaviBar()
+        var title: String {
+            if case .write = self.viewModelType {
+                return "기록하기"
+            } else {
+                return "수정하기"
+            }
+        }
+        return naviBar.title(title)
+    }()
     
     private lazy var dreamWriteCollectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())

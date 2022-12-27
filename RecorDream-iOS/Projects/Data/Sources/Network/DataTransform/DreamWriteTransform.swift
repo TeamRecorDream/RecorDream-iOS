@@ -24,7 +24,7 @@ extension DreamWriteModifyResponse {
     
     var emotions: [DreamWriteEntity.Emotion] {
         var isSelectedArray = Array(repeating: false, count: 5)
-        if self.emotion != 0 {
+        if self.emotion != 6 {
             isSelectedArray[self.emotion - 1] = true
         }
         return isSelectedArray.map { DreamWriteEntity.Emotion.init(isSelected: $0) }

@@ -97,5 +97,19 @@ extension DefaultDreamWriteRepository: DreamWriteRepository {
             return Disposables.create()
         }
     }
+    
+    public func modifyDreamRecord(request: DreamWriteRequest, recordId: String) -> Observable<Void> {
+        return Observable.create { observer in
+            guard let title = request.title else { return Disposables.create() }
+            self.recordService.modifyRecord(title: title, date: request.date, content: request.content, emotion: request.emotion, genre: request.genre, note: request.note, voice: request.voice, recordId: recordId)
+                .subscribe(onNext: { _ in
+                    observer.onNext(())
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
 }
 
