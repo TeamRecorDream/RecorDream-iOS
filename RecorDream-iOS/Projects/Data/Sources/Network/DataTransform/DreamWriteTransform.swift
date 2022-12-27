@@ -15,7 +15,7 @@ extension DreamWriteModifyResponse {
     func toDomain() -> DreamWriteEntity {
         return .init(main: .init(titleText: self.title,
                                  contentText: self.content ?? "",
-                                 recordTime: "03:00",
+                                 recordTime: 0.0,
                                  date: self.processedDate),
                      emotions: self.emotions,
                      genres: self.genres,

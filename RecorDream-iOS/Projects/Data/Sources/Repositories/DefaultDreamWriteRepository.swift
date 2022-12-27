@@ -12,6 +12,7 @@ import Domain
 import RD_Network
 
 import RxSwift
+import AVFoundation
 
 public class DefaultDreamWriteRepository {
     
@@ -47,13 +48,34 @@ extension DefaultDreamWriteRepository: DreamWriteRepository {
     
     public func fetchDreamRecord(recordId: String) -> Observable<DreamWriteEntity?> {
         return Observable.create { observer in
+            var tempResponse: DreamWriteModifyResponse?
+            var tempSeconds: Double?
             self.recordService.fetchModifyRecord(recordId: recordId)
-                .subscribe(onNext: { response in
+                .do(onNext: { response in
                     guard let response = response else {
                         observer.onNext(nil)
                         return
                     }
-                    observer.onNext(response.toDomain())
+                    tempResponse = response
+                    guard tempResponse?.voice?.url != nil else {
+                        observer.onNext(response.toDomain())
+                        return
+                    }
+                })
+                .compactMap { $0?.voice?.url }
+                .flatMap { self.recordService.downloadVoiceRecord(url: $0) }
+                .do(onNext: { fileURL in
+                    guard let url = URL.init(string: fileURL),
+                          let audioPlayer = try? AVAudioPlayer(contentsOf: url) else {
+                        observer.onNext(tempResponse?.toDomain())
+                        return
+                    }
+                    tempSeconds = audioPlayer.duration
+                })
+                .subscribe(onNext: { response in
+                    guard var entity = tempResponse?.toDomain() else { return }
+                    entity.changeRecordTime(time: tempSeconds!)
+                    observer.onNext(entity)
                 }, onError: { err in
                     observer.onError(err)
                 })

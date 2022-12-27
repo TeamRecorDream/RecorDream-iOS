@@ -28,11 +28,11 @@ public struct DreamWriteModifyResponse: Codable {
 
 // MARK: - Voice
 public struct Voice: Codable {
-    public let id, recorder: String
+    public let id: String
     public let url: String
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case recorder, url
+        case url
     }
 }

@@ -188,4 +188,25 @@ extension BaseService {
             return Disposables.create()
         }
     }
+    
+    func downloadInRx(url: String) -> Observable<String> {
+        let destination: DownloadRequest.Destination = { _, _ in
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let fileURL = documentsURL.appendingPathComponent("downloadedVoice.m4a")
+
+            return (fileURL, [.removePreviousFile, .createIntermediateDirectories])
+        }
+        
+        return Observable<String>.create { observer in
+            self.AFManager.download(url, to: destination).response { response in
+                if response.error == nil, let path = response.fileURL?.path {
+                    observer.onNext(path)
+                } else {
+                    observer.onError(response.error!)
+                }
+            }
+            return Disposables.create()
+        }
+    }
 }
+

@@ -90,8 +90,10 @@ extension DreamWriteViewModel {
         
         input.viewDidLoad.subscribe(onNext: { _ in
             if case let .modify(postId) = self.viewModelType {
+                DispatchQueue.main.async {
+                    output.loadingStatus.accept(true)
+                }
                 self.useCase.fetchDreamRecord(recordId: postId)
-                output.loadingStatus.accept(true)
             }
         }).disposed(by: disposeBag)
         
