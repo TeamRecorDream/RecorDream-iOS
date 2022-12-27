@@ -41,13 +41,14 @@ public class StorageVC: UIViewController {
 
 extension StorageVC {
     private func setupView() {
+        self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
         self.view.addSubviews(logoView, dreamStorageCollectionView)
     }
     private func setupConstraint() {
         self.logoView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(18)
-            make.height.equalTo(24.adjustedHeight)
+            make.height.equalTo(23.adjustedHeight)
         }
         self.dreamStorageCollectionView.snp.makeConstraints { make in
             make.top.equalTo(logoView.snp.bottom)

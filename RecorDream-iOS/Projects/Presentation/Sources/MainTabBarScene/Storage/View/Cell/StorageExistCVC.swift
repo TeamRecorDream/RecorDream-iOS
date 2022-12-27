@@ -11,7 +11,7 @@ import UIKit
 import RD_Core
 import RD_DSKit
 
-final class StorageExistCVC: DreamCollectionViewCell {
+final class StorageExistCVC: UICollectionViewCell {
     // MARK: - UI Components
     private let section: RDCollectionViewFlowLayout.CollectionDisplay = .list
     private var backgroundImageView = UIImageView(image: RDDSKitAsset.Images.cardLRed.image)
@@ -45,13 +45,24 @@ final class StorageExistCVC: DreamCollectionViewCell {
         return sv
     }()
     
+    // MARK: - View Life Cycle
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.setupView()
+        self.setupConstraint()
+    }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Functions
-    override func setupView() {
+    private func setupView() {
         self.addSubviews(backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView)
         self.backgroundColor = .none
         self.titleLabel.addLabelSpacing(kernValue: -0.22)
     }
-    override func setupConstraint() {
+    private func setupConstraint() {
         self.backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -99,13 +110,13 @@ final class StorageExistCVC: DreamCollectionViewCell {
 }
 
 extension StorageExistCVC {
-    func setData(emotion: Int, date: String, title: String, tag: [String]) {
+    func setData(emotion: Int, date: String, title: String, tag: [Int]) {
         self.backgroundImageView.image = self.setEmotionImage(emotion: emotion)[0]
         self.emotionImageView.image = self.setEmotionImage(emotion: emotion)[0]
         self.dateLabel.text = date
         self.titleLabel.text = title
         tag.forEach { dto in
-            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage, genre: dto))
+            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage, genre: Section.genreTitles[dto]))
         }
     }
     private func setEmotionImage(emotion: Int) -> [UIImage] {

@@ -47,8 +47,8 @@ extension AuthView: AuthControllable {
     }
     func setupConstraint() {
         self.backgroundImageView.snp.makeConstraints { make in
-            make.width.height.equalToSuperview()
-            make.centerX.centerY.equalToSuperview()
+            make.width.height.equalToSuperview().inset(-1)
+            make.centerX.centerY.equalToSuperview().inset(-1)
         }
         self.logoImageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
