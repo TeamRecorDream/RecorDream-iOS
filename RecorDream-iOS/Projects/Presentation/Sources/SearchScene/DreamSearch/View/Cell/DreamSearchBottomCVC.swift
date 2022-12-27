@@ -10,7 +10,7 @@ import UIKit
 
 import RD_DSKit
 
-final class DreamSearchBottomCVC: DreamReusableView {
+final class DreamSearchBottomCVC: UICollectionReusableView {
     private lazy var rogoImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = RDDSKitAsset.Images.rdHomeLogo.image
@@ -18,11 +18,21 @@ final class DreamSearchBottomCVC: DreamReusableView {
         return iv
     }()
     
-    override func setupView() {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.setupView()
+        self.setupConstraint()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         self.addSubview(rogoImageView)
     }
-    override func setupConstraint() {
-        rogoImageView.snp.makeConstraints { make in
+    private func setupConstraint() {
+        self.rogoImageView.snp.makeConstraints { make in
             make.width.equalTo(124.adjustedWidth)
             make.height.equalTo(22.adjustedHeight)
             make.centerX.equalToSuperview()

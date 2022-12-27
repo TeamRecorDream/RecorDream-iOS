@@ -141,6 +141,17 @@ extension HomeVC {
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
                 rdtabbarController.rdTabBar.isHidden = true
             }).disposed(by: self.disposeBag)
+        
+        self.logoView.rx.searchButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                let searchVC = owner.factory.instantiateSearchVC()
+                searchVC.modalPresentationStyle = .fullScreen
+                searchVC.modalTransitionStyle = .coverVertical
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.rdTabBar.isHidden = true
+                owner.present(searchVC, animated: true)
+            }).disposed(by: disposeBag)
     }
     
     private func bindViewModels() {

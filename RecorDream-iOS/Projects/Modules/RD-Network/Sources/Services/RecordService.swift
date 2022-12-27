@@ -13,7 +13,7 @@ import RxSwift
 
 public protocol RecordService {
     func writeDreamRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?) -> Observable<DreamWriteResponse?>
-//    func searchDreamRecord(query: String) -> Observable<DreamSearchResponse?>
+    func searchDreamRecord(query: String) -> Observable<DreamSearchResponse?>
 }
 
 public class DefaultRecordService: BaseService {
@@ -25,5 +25,8 @@ public class DefaultRecordService: BaseService {
 extension DefaultRecordService: RecordService {
     public func writeDreamRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?) -> RxSwift.Observable<DreamWriteResponse?> {
         requestObjectInRx(RecordRouter.writeRecord(title: title, date: date, content: content, emotion: emotion, genre: genre, note: note, voice: voice))
+    }
+    public func searchDreamRecord(query: String) -> RxSwift.Observable<DreamSearchResponse?> {
+        requestObjectInRx(RecordRouter.searchRecord(keyword: query))
     }
 }

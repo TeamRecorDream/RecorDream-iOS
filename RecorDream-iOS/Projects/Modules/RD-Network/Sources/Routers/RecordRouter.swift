@@ -22,7 +22,6 @@ extension RecordRouter: BaseRouter {
             return .post
         case .searchRecord:
             return .get
-        default: return .get
         }
     }
     
@@ -32,7 +31,6 @@ extension RecordRouter: BaseRouter {
             return "/record"
         case .searchRecord:
             return "/record/storage/search"
-        default: return ""
         }
     }
     
@@ -53,13 +51,14 @@ extension RecordRouter: BaseRouter {
             let query: [String: Any] = [
                 "keyword": keyword
             ]
-            return .query(query)
-        default: return .requestPlain
+            return .query(query, parameterEncoding: parameterEncoding)
         }
     }
     
     var parameterEncoding: ParameterEncoding {
         switch self {
+        case .searchRecord:
+            return URLEncoding.init(destination: .queryString)
         default:
             return JSONEncoding.default
         }
