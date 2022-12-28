@@ -36,8 +36,8 @@ extension RecordRouter: BaseRouter {
         case .searchRecord:
             return "/record/storage/search"
         case .fetchStorage:
-            return ""
-        default: return "/record/storage/list"
+            return "/record/storage/list"
+        default: return ""
         }
     }
 
@@ -70,7 +70,7 @@ extension RecordRouter: BaseRouter {
 
     var parameterEncoding: ParameterEncoding {
         switch self {
-        case .searchRecord:
+        case .searchRecord, .fetchStorage:
             return URLEncoding.init(destination: .queryString)
         default:
             return JSONEncoding.default

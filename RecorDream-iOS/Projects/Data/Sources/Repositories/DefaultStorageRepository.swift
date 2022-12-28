@@ -2,19 +2,19 @@
 //  DefaultStorageRepository.swift
 //  Data
 //
-//  Created by 정은희 on 2022/12/24.
+//  Created by 정은희 on 2022/12/27.
 //  Copyright © 2022 RecorDream-iOS. All rights reserved.
 //
 
 import Domain
-import RD_Core
 import RD_Network
 
 import RxSwift
 
-public class DefaultStorageRepository {
+public final class DefaultStorageRepository {
+    
+    private let recordService: RecordService
     private let disposeBag = DisposeBag()
-    private var recordService: RecordService
     
     public init(recordService: RecordService) {
         self.recordService = recordService
@@ -22,9 +22,9 @@ public class DefaultStorageRepository {
 }
 
 extension DefaultStorageRepository: DreamStorageRepository {
-    public func requestStorageFetch(filter: Domain.StorageRequest) -> RxSwift.Observable<Domain.StorageEntity?> {
+    public func fetchDreamStorage(query: Domain.StorageFetchQuery) -> RxSwift.Observable<Domain.DreamStorageEntity.RecordList> {
         return Observable.create { observer in
-            self.recordService.fetchStorage(filter: filter.selectedFilter)
+            self.recordService.fetchStorage(filter: query.filterType)
                 .subscribe(onNext: { response in
                     guard let entity = response?.toDomain() else { return }
                     observer.onNext(entity)

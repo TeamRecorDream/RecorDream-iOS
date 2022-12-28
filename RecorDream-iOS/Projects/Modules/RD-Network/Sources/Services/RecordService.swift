@@ -32,4 +32,5 @@ extension DefaultRecordService: RecordService {
     }
     public func fetchStorage(filter: Int) -> RxSwift.Observable<DreamStorageResponse?> {
         requestObjectInRx(RecordRouter.fetchStorage(filter: filter))
+    }
 }
