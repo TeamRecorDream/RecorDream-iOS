@@ -25,6 +25,8 @@ open class RDTabBar: UIView {
     
     private var shapeLayer: CALayer?
     
+    private var layerContainer: [CALayer] = []
+    
     private let writeLabel: UILabel = {
         let label = UILabel()
         label.text = "기록하기"
@@ -36,6 +38,7 @@ open class RDTabBar: UIView {
     
     public override func draw(_ rect: CGRect) {
         self.addShape()
+        self.resetLayer()
         self.addShadowLayer()
     }
     
@@ -178,12 +181,21 @@ extension RDTabBar {
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
         self.layer.insertSublayer(shapeLayer, at: 1)
+        layerContainer.append(shapeLayer)
         
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.path = createLine()
         shapeLayer2.fillColor = UIColor.clear.cgColor
         shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.4, x: 0, y: 0.5, blur: 10, spread: 0)
         self.layer.insertSublayer(shapeLayer2, at: 2)
+        layerContainer.append(shapeLayer)
+    }
+    
+    private func resetLayer() {
+        self.layerContainer.forEach {
+            $0.removeFromSuperlayer()
+        }
+        layerContainer = []
     }
 
     func createPath() -> CGPath {
