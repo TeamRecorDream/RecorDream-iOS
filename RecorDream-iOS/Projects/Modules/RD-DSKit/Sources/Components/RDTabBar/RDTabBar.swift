@@ -180,15 +180,16 @@ extension RDTabBar {
         shapeLayer.path = createLine()
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
-        self.layer.insertSublayer(shapeLayer, at: 1)
+        self.layer.insertSublayer(shapeLayer, at: 0)
         layerContainer.append(shapeLayer)
         
         let shapeLayer2 = CAShapeLayer()
-        shapeLayer2.path = createLine()
+        shapeLayer2.path = createLine(lineHeight: 1)
+        shapeLayer2.bounds = self.shapeLayer!.bounds.offsetBy(dx: 0, dy: -2.6)
         shapeLayer2.fillColor = UIColor.clear.cgColor
-        shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.4, x: 0, y: 0.5, blur: 10, spread: 0)
+        shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.2, x: 0, y: 1, blur: 7, spread: 0)
         self.layer.insertSublayer(shapeLayer2, at: 2)
-        layerContainer.append(shapeLayer)
+        layerContainer.append(shapeLayer2)
     }
     
     private func resetLayer() {
@@ -219,11 +220,11 @@ extension RDTabBar {
         return path.cgPath
     }
     
-    func createLine() -> CGPath {
+    func createLine(lineHeight: CGFloat = 5) -> CGPath {
         let height: CGFloat = 37.0
         let path = UIBezierPath()
         let centerWidth = self.frame.width / 2
-        let lineHeight: CGFloat = 5
+        let lineHeight: CGFloat = lineHeight
         
         path.move(to: CGPoint(x: 0, y: 0)) // top left에서 시작하여 그린다
         
