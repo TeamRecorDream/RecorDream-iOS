@@ -166,8 +166,7 @@ extension DreamDetailMoreVC {
         self.bottomCancleButton.rx.tap
             .asDriver()
             .drive(onNext: {
-                self.modalTransitionStyle = .crossDissolve
-                self.dismiss(animated: true)
+                self.dismiss(animated: false)
             })
             .disposed(by: self.disposeBag)
 

@@ -211,9 +211,11 @@ extension DreamDetailVC {
                 // TODO: 더 자연스러운 animation
                 let detailMoreVC = self.factory.instantiateDetailMoreVC()
 
-                self.modalPresentationStyle = .fullScreen
-                self.modalTransitionStyle = .crossDissolve
-                self.present(detailMoreVC, animated: true)
+                let navigation = UINavigationController(rootViewController: detailMoreVC)
+                navigation.modalTransitionStyle = .coverVertical
+                navigation.modalPresentationStyle = .overFullScreen
+                navigation.isNavigationBarHidden = true
+                self.present(navigation, animated: false)
             }).disposed(by: self.disposeBag)
     }
 }
