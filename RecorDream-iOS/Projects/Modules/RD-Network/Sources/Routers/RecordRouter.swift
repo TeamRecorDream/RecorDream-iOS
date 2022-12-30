@@ -25,8 +25,6 @@ extension RecordRouter: BaseRouter {
             return .post
         case .modifyRecord:
             return .patch
-        default:
-            return .get
         case .fetchStorage:
             return .get
         default: return .get
