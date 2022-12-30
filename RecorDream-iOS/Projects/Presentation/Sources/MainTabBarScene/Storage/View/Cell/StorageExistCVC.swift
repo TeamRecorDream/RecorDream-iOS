@@ -11,20 +11,23 @@ import UIKit
 import RD_Core
 import RD_DSKit
 
-final class StorageExistCVC: UICollectionViewCell {
+final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable {
+    
+    // MARK: - Properties
+    public static var isFromNib: Bool = false
+    
     // MARK: - UI Components
     private let section: RDCollectionViewFlowLayout.CollectionDisplay = .list
-    private var backgroundImageView = UIImageView(image: RDDSKitAsset.Images.cardLRed.image)
+    private var backgroundImageView = UIImageView()
     private var emotionImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.image = RDDSKitAsset.Images.feelingLJoy.image
         return iv
     }()
     private var dateLabel: UILabel = {
         let label = UILabel()
         label.font = RDDSKitFontFamily.Pretendard.medium.font(size: 10)
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.textColor = RDDSKitColors.Color.white
         return label
     }()
@@ -69,8 +72,8 @@ final class StorageExistCVC: UICollectionViewCell {
         switch section {
         case .list:
             self.emotionImageView.snp.makeConstraints {
-                $0.top.equalToSuperview().inset(21)
-                $0.centerX.equalToSuperview().inset(32)
+                $0.top.equalToSuperview().offset(21)
+                $0.leading.equalToSuperview().inset(32)
                 $0.size.equalTo(46)
             }
             self.dateLabel.snp.makeConstraints {
@@ -79,12 +82,12 @@ final class StorageExistCVC: UICollectionViewCell {
             }
             self.titleLabel.snp.makeConstraints {
                 $0.top.equalTo(dateLabel.snp.bottom).offset(3)
-                $0.centerX.equalTo(emotionImageView)
+                $0.centerX.equalTo(emotionImageView.snp.trailing).offset(24)
             }
             self.genreStackView.snp.makeConstraints {
+                $0.height.equalTo(16)
                 $0.top.equalTo(titleLabel.snp.bottom).offset(3)
-                $0.centerX.equalToSuperview()
-                $0.centerX.equalTo(emotionImageView)
+                $0.leading.equalToSuperview().offset(102)
             }
         case .grid:
             self.emotionImageView.snp.makeConstraints {
@@ -111,30 +114,34 @@ final class StorageExistCVC: UICollectionViewCell {
 
 extension StorageExistCVC {
     func setData(emotion: Int, date: String, title: String, tag: [Int]) {
-        self.backgroundImageView.image = self.setEmotionImage(emotion: emotion)[0]
-        self.emotionImageView.image = self.setEmotionImage(emotion: emotion)[0]
+        self.backgroundImageView.image = self.setEmotionImage(emotion: emotion).first
+        self.emotionImageView.image = self.setEmotionImage(emotion: emotion).last
         self.dateLabel.text = date
         self.titleLabel.text = title
-        tag.forEach { dto in
-            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage, genre: Section.genreTitles[dto]))
+        if tag.isEmpty {
+            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .search, genre: "# 아직 설정되지 않았어요"))
+        } else {
+            tag.forEach { genreType in
+                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage, genre: Section.emotionTitles[genreType]))
+            }
         }
     }
     private func setEmotionImage(emotion: Int) -> [UIImage] {
         switch emotion {
         case 1:
-            return [RDDSKitAsset.Images.cardSYellow.image, RDDSKitAsset.Images.feelingMJoy.image]
+            return [RDDSKitAsset.Images.listYellow.image, RDDSKitAsset.Images.feelingMJoy.image]
         case 2:
-            return [RDDSKitAsset.Images.cardSBlue.image, RDDSKitAsset.Images.feelingMSad.image]
+            return [RDDSKitAsset.Images.listBlue.image, RDDSKitAsset.Images.feelingMSad.image]
         case 3:
-            return [RDDSKitAsset.Images.cardSRed.image, RDDSKitAsset.Images.feelingMScary.image]
+            return [RDDSKitAsset.Images.listRed.image, RDDSKitAsset.Images.feelingMScary.image]
         case 4:
-            return [RDDSKitAsset.Images.cardSPurple.image, RDDSKitAsset.Images.feelingMStrange.image]
+            return [RDDSKitAsset.Images.listPurple.image, RDDSKitAsset.Images.feelingMStrange.image]
         case 5:
-            return [RDDSKitAsset.Images.cardSPink.image, RDDSKitAsset.Images.feelingMShy.image]
+            return [RDDSKitAsset.Images.listPink.image, RDDSKitAsset.Images.feelingMShy.image]
         case 6:
-            return [UIImage(), RDDSKitAsset.Images.feelingLBlank.image]
+            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
         default:
-            return [RDDSKitAsset.Images.cardSWhite.image, RDDSKitAsset.Images.feelingMBlank.image]
+            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.feelingMBlank.image]
         }
     }
 }
