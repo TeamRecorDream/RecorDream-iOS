@@ -173,6 +173,7 @@ public class RDDateTimePickerView: UIView {
     lazy var timePicker: UIPickerView = {
         let timePicker = UIPickerView()
         timePicker.tintColor = .white
+        timePicker.setValue(UIColor.white, forKeyPath: "textColor")
         timePicker.delegate = self
         timePicker.dataSource = self
         return timePicker

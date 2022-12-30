@@ -1,19 +1,19 @@
 //
-//  DreamSearchResponse.swift
+//  DreamStorageResponse.swift
 //  RD-Network
 //
-//  Created by 정은희 on 2022/11/08.
-//  Copyright © 2022 RecorDream. All rights reserved.
+//  Created by 정은희 on 2022/12/27.
+//  Copyright © 2022 RecorDream-iOS. All rights reserved.
 //
 
 import Foundation
 
-public struct DreamSearchResponse: Codable {
+public struct DreamStorageResponse: Codable {
     public let recordsCount: Int
     public let records: [Records]
 }
 
-extension DreamSearchResponse {
+extension DreamStorageResponse {
     public struct Records: Codable {
         public let id: String?
         public let emotion: Int?

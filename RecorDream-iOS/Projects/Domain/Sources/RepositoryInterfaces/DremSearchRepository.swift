@@ -12,7 +12,5 @@ import RxSwift
 import RD_Core
 
 public protocol DreamSearchRepository {
-    @discardableResult
-    func fetchDreamSearchList(query: DreamSearchQuery,
-                              completion: @escaping(Result<DreamSearchEntity, Error>) -> Void) -> Cancellable?
+    func fetchDreamSearchList(query: DreamSearchQuery) -> Observable<DreamSearchEntity>
 }

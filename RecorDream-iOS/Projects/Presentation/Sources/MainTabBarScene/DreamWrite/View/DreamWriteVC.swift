@@ -23,6 +23,9 @@ public class DreamWriteVC: UIViewController {
     
     public var factory: ViewControllerFactory!
     public var viewModel: DreamWriteViewModel!
+    private var viewModelType: DreamWriteViewModel.DreamWriteViewModelType {
+        return viewModel.viewModelType
+    }
     
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
@@ -36,8 +39,17 @@ public class DreamWriteVC: UIViewController {
     
     // MARK: - UI Components
     
-    private lazy var naviBar = RDNaviBar()
-        .title("기록하기")
+    private lazy var naviBar: RDNaviBar = {
+        let naviBar = RDNaviBar()
+        var title: String {
+            if case .write = self.viewModelType {
+                return "기록하기"
+            } else {
+                return "수정하기"
+            }
+        }
+        return naviBar.title(title)
+    }()
     
     private lazy var dreamWriteCollectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
@@ -201,6 +213,10 @@ extension DreamWriteVC {
                 guard let self = self else { return }
                 self.dismiss(animated: true)
             }).disposed(by: self.disposeBag)
+        
+        output.loadingStatus
+            .bind(to: self.rx.isLoading)
+            .disposed(by: self.disposeBag)
     }
     
     private func bindViews() {
@@ -263,7 +279,10 @@ extension DreamWriteVC {
                                      deselectedImage: Section.emotionDeselectedImages[indexPath.row],
                                      text: Section.emotionTitles[indexPath.row])
                 if let model = itemIdentifier as? DreamWriteEntity.Emotion {
-                    if model.isSelected { collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally) }
+                    if model.isSelected {
+                        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .bottom)
+                        collectionView.scrollToItem(at: IndexPath.init(item: 0, section: 0), at: .top, animated: false)
+                    }
                 }
                 return emotionsCell
             case .genres:

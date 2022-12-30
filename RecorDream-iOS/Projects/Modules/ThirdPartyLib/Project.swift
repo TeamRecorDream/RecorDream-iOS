@@ -19,6 +19,7 @@ let project = Project.makeModule(
         .external(name: "SnapKit"),
         .external(name: "KakaoSDKUser"),
         .external(name: "KakaoSDKAuth"),
+        .SPM.KakaoCommon,
         .external(name: "HeeKit"),
         .external(name: "Lottie")
     ]

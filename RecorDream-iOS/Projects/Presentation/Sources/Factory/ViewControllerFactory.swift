@@ -19,10 +19,10 @@ public protocol MainTabBarControllerFactory {
     func instantiateMainTabBarController() -> MainTabBarController
     func instantiateHomeVC() -> HomeVC
     func instantiateStorageVC() -> StorageVC
-    
+
     func instantiateDreamWriteVC(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC
     func instantiateMyPageVC() -> MyPageVC
     
     func instantiateDetailVC(dreamId: String) -> DreamDetailVC
+    func instantiateSearchVC() -> DreamSearchVC
 }
-

@@ -8,30 +8,30 @@
 
 import Foundation
 
-public struct Records: Equatable, Identifiable {
-    public enum Genre: Int {
-        case comedy
-        case romance
-        case action
-        case thriller
-        case mystery
-        case fear
-        case sf
-        case fantasy
-        case family
-        case etc
-        case none
-    }
-    
-    public let id: String
-    public let dreamColor: Int?
-    public let emotion: Int?
-    public let date: String?
-    public let title: String?
-    public let genre: Genre?
-}
-
 public struct DreamSearchEntity: Equatable {
     public let recordsCount: Int
-    public let records: [Records]
+    public let records: [Record]
+    
+    public init(recordsCount: Int, records: [Record]) {
+        self.recordsCount = recordsCount
+        self.records = records
+    }
+}
+
+extension DreamSearchEntity {
+    public struct Record: Hashable {
+        public let id: String?
+        public let emotion: Int?
+        public let date: String?
+        public let title: String?
+        public let genre: [Int]?
+        
+        public init(id: String?, emotion: Int?, date: String?, title: String?, genre: [Int]?) {
+            self.id = id
+            self.emotion = emotion
+            self.date = date
+            self.title = title
+            self.genre = genre
+        }
+    }
 }

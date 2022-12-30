@@ -72,7 +72,11 @@ extension DependencyContainer: MainTabBarControllerFactory {
     
     public func instantiateStorageVC() -> Presentation.StorageVC {
         let storageVC = StorageVC()
-        storageVC.factory = self
+        let repository = DefaultStorageRepository(recordService: self.recordService)
+        let useCase = DefaultDreamStorageUseCase(repository: repository)
+        let viewModel = DreamStorageViewModel(useCase: useCase)
+//        storageVC.factory = self
+        storageVC.viewModel = viewModel
         
         return storageVC
     }
@@ -108,27 +112,14 @@ extension DependencyContainer: MainTabBarControllerFactory {
         return myPageVC
     }
     
-    // MARK: - Examples
-    // 아래에 예시를 첨부합니다
-//    func makeFeedListVC(isMyPage: Bool) -> FeedListVC {
-//      let feedRepository = DefaultFeedListRepository(service: BaseService.default)
-//      let myPageRepository = DefaultMyPageRepository(service: BaseService.default)
-//      let useCase = DefaultFeedListUseCase(
-//        myPageRepository: myPageRepository,
-//        feedrepository: feedRepository)
-//      let viewModel = FeedListViewModel(useCase: useCase,
-//                                        isMyPage: isMyPage)
-//      let feedListVC =  FeedListVC.controllerFromStoryboard(.feedList)
-//      feedListVC.viewModel = viewModel
-//      return feedListVC
-//    }
-//
-//    func makeFeedReportVC(isMyPage: Bool) -> FeedReportVC {
-//      let repository = DefaultFeedReportRepository()
-//      let useCase = DefaultFeedReportUseCase(repository: repository)
-//      let viewModel = FeedReportViewModel(useCase: useCase, isMyPage: isMyPage)
-//      let feedReportVC = FeedReportVC.controllerFromStoryboard(.feedReport)
-//      feedReportVC.viewModel = viewModel
-//      return feedReportVC
-//    }
+    public func instantiateSearchVC() -> DreamSearchVC {
+        let repository = DefaultSearchRepository(recordService: self.recordService)
+        let useCase = DefaultDreamSearchUseCase(dreamSearchRepository: repository)
+        let viewModel = DreamSearchViewModel(useCase: useCase)
+        let dreamSearchVC = DreamSearchVC()
+        dreamSearchVC.viewModel = viewModel
+        dreamSearchVC.factory = self
+        
+        return dreamSearchVC
+    }
 }

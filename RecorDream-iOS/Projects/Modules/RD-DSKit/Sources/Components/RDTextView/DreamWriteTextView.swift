@@ -79,6 +79,15 @@ extension DreamWriteTextView {
                     self.textColor = .white.withAlphaComponent(0.4)
                 }
             }).disposed(by: disposeBag)
+        
+        self.rx.text
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+                if text == self.placeHolderText {
+                    self.textColor = .white.withAlphaComponent(0.4)
+                }
+            }).disposed(by: disposeBag)
     }
     
     @discardableResult

@@ -1,5 +1,5 @@
 //
-//  DreamSearchCountCVC.swift
+//  DreamSearchHeaderCVC.swift
 //  Presentation
 //
 //  Created by 정은희 on 2022/10/11.
@@ -8,9 +8,10 @@
 
 import UIKit
 
+import Domain
 import RD_DSKit
 
-final class DreamSearchCountCVC: DreamReusableView {
+final class DreamSearchHeaderCVC: UICollectionReusableView {
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
         lb.textColor = RDDSKitColors.Color.white
@@ -23,16 +24,26 @@ final class DreamSearchCountCVC: DreamReusableView {
         return v
     }()
     
-    override func setupView() {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.setupView()
+        self.setupConstraint()
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupView() {
         self.addSubviews(countLabel, lineView)
     }
-    override func setupConstraint() {
-        countLabel.snp.makeConstraints { make in
+    private func setupConstraint() {
+        self.countLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(1)
         }
-        lineView.snp.makeConstraints { make in
+        self.lineView.snp.makeConstraints { make in
             make.height.equalTo(1.adjustedHeight)
             make.centerY.equalTo(countLabel)
             make.leading.equalTo(countLabel.snp.trailing).offset(7)
@@ -41,8 +52,8 @@ final class DreamSearchCountCVC: DreamReusableView {
     }
 }
 
-extension DreamSearchCountCVC {
-    func configureCell(viewModel: DreamSearchResultViewModel) {
-        self.countLabel.text = "\(viewModel.recordsCount)개의 기록"
+extension DreamSearchHeaderCVC {
+    func configureCell(counts: Int) {
+        self.countLabel.text = "\(counts)개의 기록"
     }
 }

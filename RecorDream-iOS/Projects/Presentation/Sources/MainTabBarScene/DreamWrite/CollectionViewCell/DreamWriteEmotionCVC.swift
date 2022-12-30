@@ -11,6 +11,8 @@ import UIKit
 import RD_Core
 import RD_DSKit
 
+import RxRelay
+
 final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegisterable {
     
     // MARK: - Properties
@@ -45,11 +47,15 @@ final class DreamWriteEmotionCVC: UICollectionViewCell, UICollectionViewRegister
         return lb
     }()
     
+    // MARK: - Reactive Stuff
+    var emotionImageViewTapped = PublishRelay<DreamStorageSection>()
+    
     // MARK: - View Life Cycles
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setLayout()
+        self.setGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -93,3 +99,16 @@ extension DreamWriteEmotionCVC {
     }
 }
 
+// MARK: - Methods
+extension DreamWriteEmotionCVC {
+    private func setGesture() {
+        let emotionImageViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(filterButtonTapped))
+        self.emotionImageView.addGestureRecognizer(emotionImageViewTapGesture)
+    }
+    @objc
+    private func filterButtonTapped(_ sender: UITapGestureRecognizer) {
+        if self.isSelected {
+            self.emotionImageViewTapped.accept(.filters)
+        }
+    }
+}
