@@ -11,9 +11,6 @@ import RD_Network
 
 
 extension DreamStorageResponse {
-//    func toDomainEntity() -> DreamStorageEntity {
-//        return .init(filterList: self., recordList: <#T##DreamStorageEntity.RecordList#>)
-//    }
     func toDomain() -> DreamStorageEntity.RecordList {
         return .init(recordsCount: self.recordsCount, records: self.records.map { $0.toDomain() })
     }
