@@ -36,8 +36,6 @@ public class DreamDetailViewModel: ViewModelType {
     public init(useCase: DreamDetailUseCase, dreamId: String) {
         self.useCase = useCase
         self.dreamId = dreamId
-
-        print(dreamId)
     }
 }
 
