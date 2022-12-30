@@ -189,10 +189,12 @@ extension HomeVC {
     
     private func checkShowDreamWrite() {
         if DefaultUserDefaultManager.shouldShowWrite ?? false {
-            DefaultUserDefaultManager.set(value: false, keyPath: .shouldShowWrite)
-            let vc = self.factory.instantiateDreamWriteVC(.write)
-            vc.modalPresentationStyle = .overFullScreen
-            self.present(vc, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
+                DefaultUserDefaultManager.set(value: false, keyPath: .shouldShowWrite)
+                let vc = self.factory.instantiateDreamWriteVC(.write)
+                vc.modalPresentationStyle = .overFullScreen
+                self.present(vc, animated: true)
+            }
         }
     }
 }
