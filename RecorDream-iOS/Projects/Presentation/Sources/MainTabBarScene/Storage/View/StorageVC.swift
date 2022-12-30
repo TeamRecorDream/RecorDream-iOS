@@ -8,16 +8,13 @@
 
 import UIKit
 
-import RD_Core
+import Domain
 import RD_DSKit
 
-import SnapKit
+import RxSwift
+import RxCocoa
 
 public class StorageVC: UIViewController {
-    // MARK: - Properties
-    public var factory: ViewControllerFactory!
-    lazy var dataSource: UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>! = nil
-    
     // MARK: - UI Components
     private lazy var logoView = DreamLogoView()
     private lazy var dreamStorageCollectionView: UICollectionView = {
@@ -29,7 +26,17 @@ public class StorageVC: UIViewController {
         return cv
     }()
     
+    // MARK: - Reactive Stuff
+    private let filterButtonTapped = PublishRelay<Int>()
+    private let fetchedCount = BehaviorRelay<Int>(value: 0)
+    private var disposeBag = DisposeBag()
+    public var factory: ViewControllerFactory!
+    public var viewModel: DreamStorageViewModel!
     var dataSource: UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>! = nil
+    
+    // MARK: - Properties
+    private var filterList: [DreamStorageEntity.FilterList] = []
+    
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +46,7 @@ public class StorageVC: UIViewController {
         self.registerView()
         self.setDelegate()
         self.setDataSource()
+        self.bindViewModels()
     }
 }
 
@@ -136,6 +144,52 @@ extension StorageVC {
     }
 }
 
-extension StorageVC: UICollectionViewDelegate {
+// MARK: - Bind
+extension StorageVC {
+    private func bindViewModels() {
+        let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()), filterButtonTapped: self.filterButtonTapped.asObservable())
+        let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        
+        output.storageDataFetched
+            .withUnretained(self)
+            .subscribe(onNext: { owner, entity in
+                owner.applySnapshot(model: entity)
+            }).disposed(by: self.disposeBag)
+        
+        output.loadingStatus
+            .bind(to: self.rx.isLoading)
+            .disposed(by: disposeBag)
+    }
     
+}
+
+extension StorageVC: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        switch DreamStorageSection.type(indexPath.section) {
+        case .filters:
+            var selectedIndexPath: IndexPath? = nil
+            selectedIndexPath = collectionView.indexPathsForSelectedItems?
+                .first { $0.section == indexPath.section }
+            self.filterButtonTapped.accept(indexPath.item + 1)
+            guard let selected = selectedIndexPath else { return true }
+            collectionView.deselectItem(at: selected, animated: false)
+            return true
+        case .records:
+            let detailVC = self.factory.instantiateDetailVC()
+            detailVC.modalTransitionStyle = .coverVertical
+            detailVC.modalPresentationStyle = .fullScreen
+            guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return false }
+            rdtabbarController.rdTabBar.isHidden = true
+            self.present(detailVC, animated: true)
+            return true
+        }
+    }
+    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        switch DreamStorageSection.type(indexPath.section) {
+        case .filters:
+            return true
+        default:
+            return false
+        }
+    }
 }

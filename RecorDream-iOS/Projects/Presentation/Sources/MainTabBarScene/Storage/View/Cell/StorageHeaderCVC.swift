@@ -13,7 +13,10 @@ import RD_DSKit
 
 import SnapKit
 
-final class StorageHeaderCVC: UICollectionReusableView {
+final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableViewRegisterable {
+    // MARK: - Properties
+    public static var isFromNib: Bool = false
+    
     // MARK: - UI Components
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
@@ -37,6 +40,7 @@ final class StorageHeaderCVC: UICollectionReusableView {
 
     // MARK: - Functions
     private func setupView() {
+        self.isUserInteractionEnabled = false
         self.addSubviews(countLabel, segmentControl)
         self.backgroundColor = .clear
     }

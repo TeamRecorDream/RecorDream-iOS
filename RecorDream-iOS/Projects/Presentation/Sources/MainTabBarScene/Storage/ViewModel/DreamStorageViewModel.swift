@@ -57,7 +57,6 @@ extension DreamStorageViewModel: ViewModelType {
         let storageFetchError = self.useCase.fetchFail
         
         storageFetchedData
-            .compactMap { $0 }
             .subscribe(onNext: { entity in
                 output.storageDataFetched.accept(entity)
                 output.loadingStatus.accept(false)
