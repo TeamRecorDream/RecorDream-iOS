@@ -30,7 +30,7 @@ public final class DreamDetailHeaderView: UIView {
         return button
     }()
 
-    private lazy var moreButton: UIButton = {
+    lazy var moreButton: UIButton = {
         let button = UIButton()
         button.setImage(RDDSKitAsset.Images.icnMore.image, for: .normal)
         return button
@@ -78,5 +78,11 @@ public final class DreamDetailHeaderView: UIView {
             $0.trailing.equalToSuperview().inset(Metric.moreButtontrailing)
             $0.width.height.equalTo(Metric.moreButtonSize)
         }
+    }
+}
+
+extension Reactive where Base: DreamDetailHeaderView {
+    public var moreButtonTapped: ControlEvent<Void> {
+        return base.moreButton.rx.tap
     }
 }

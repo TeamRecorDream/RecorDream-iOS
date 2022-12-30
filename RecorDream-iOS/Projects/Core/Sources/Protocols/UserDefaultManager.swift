@@ -12,19 +12,23 @@ public protocol UserDefaultManager {
     static func set(value: Any, keyPath: UserDefaultKey)
     static func string(key: UserDefaultKey) -> String?
     static func int(key: UserDefaultKey) -> Int?
+    static func bool(key: UserDefaultKey) -> Bool?
     static func remove(key: UserDefaultKey)
     static func clearUserData()
 }
 
 public class DefaultUserDefaultManager: UserDefaultManager {
     public static func set(value: Any, keyPath: UserDefaultKey) {
-        UserDefaults.standard.setValue(value, forKeyPath: keyPath.rawValue)
+        UserDefaults.standard.setValue(value, forKey: keyPath.rawValue)
     }
     public static func string(key: UserDefaultKey) -> String? {
         return UserDefaults.standard.string(forKey: key.rawValue)
     }
     public static func int(key: UserDefaultKey) -> Int? {
         return UserDefaults.standard.integer(forKey: key.rawValue)
+    }
+    public static func bool(key: UserDefaultKey) -> Bool? {
+        return UserDefaults.standard.bool(forKey: key.rawValue)
     }
     public static func remove(key: UserDefaultKey) {
         UserDefaults.standard.removeObject(forKey: key.rawValue)
@@ -48,5 +52,9 @@ public extension DefaultUserDefaultManager {
     
     static var isKakaoUser: Bool {
         return string(key: .platform) == UserDefaultKey.Constants.kakao
+    }
+    
+    static var shouldShowWrite: Bool? {
+        return bool(key: .shouldShowWrite)
     }
 }

@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import UserNotifications
 
-import RD_Navigator
 import Presentation
+import RD_Navigator
+import RD_Core
 
 import KakaoSDKAuth
 
@@ -26,22 +28,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        // MARK: - Debug 관련
-//         Coordinator를 사용하기 위한 코드
-//        self.window = UIWindow(windowScene: windowScene)
-//
-//        rootController = CoordinatorNavigationController(rootViewController: UIViewController())
-//        self.window?.rootViewController = rootController
-//        self.window?.makeKeyAndVisible()
-//
-        dependencyConatiner = DependencyContainer()
-//
-//        self.dependencyConatiner?.start()
+        //         Coordinator를 사용하기 위한 코드
+        //        self.window = UIWindow(windowScene: windowScene)
+        //
+        //        rootController = CoordinatorNavigationController(rootViewController: UIViewController())
+        //        self.window?.rootViewController = rootController
+        //        self.window?.makeKeyAndVisible()
+        //        self.dependencyConatiner?.start()
+        
+        self.checkEnteredWithPushNotice(connectionOptions)
+        self.dependencyConatiner = DependencyContainer()
         let rootViewController = dependencyConatiner?.instantiateSpalshVC()
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = rootViewController
         self.window = window
-        window.backgroundColor = .white
+        window.backgroundColor = .black
         window.makeKeyAndVisible()
     }
     
@@ -55,7 +56,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneWillEnterForeground(_ scene: UIScene) {}
     
-    func sceneDidEnterBackground(_ scene: UIScene) {}
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        DefaultUserDefaultManager.set(value: false, keyPath: .shouldShowWrite)
+    }
 }
 
 extension SceneDelegate {
@@ -64,6 +67,14 @@ extension SceneDelegate {
             if AuthApi.isKakaoTalkLoginUrl(url) {
                 _ = AuthController.handleOpenUrl(url: url)
             }
+        }
+    }
+}
+
+extension SceneDelegate {
+    private func checkEnteredWithPushNotice(_ connectionOptions: UIScene.ConnectionOptions) {
+        if connectionOptions.notificationResponse != nil {
+            DefaultUserDefaultManager.set(value: true, keyPath: .shouldShowWrite)
         }
     }
 }
