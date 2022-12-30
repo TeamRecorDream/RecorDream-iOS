@@ -32,13 +32,13 @@ extension DreamSearchVC {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(88.adjustedHeight)
+            heightDimension: .estimated(400.adjustedHeight)
         )
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         let sectionFooter = self.createSectionFooter()
-        section.orthogonalScrollingBehavior = .continuous
+        section.orthogonalScrollingBehavior = .none
         section.boundarySupplementaryItems = [sectionFooter]
         section.contentInsets = .init(
             top: 8, leading: 20, bottom: 0, trailing: 21

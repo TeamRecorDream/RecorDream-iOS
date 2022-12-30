@@ -52,8 +52,6 @@ extension DramSearchTextField {
             .disposed(by: disposeBag)
         self.shouldLoadResult = returnKeyTapped
             .withLatestFrom(self.rx.text) { $1 ?? "" }
-            .filter { !$0.isEmpty }
-            .distinctUntilChanged()
     }
     private func setupView() {
         self.backgroundColor = .white.withAlphaComponent(0.05)

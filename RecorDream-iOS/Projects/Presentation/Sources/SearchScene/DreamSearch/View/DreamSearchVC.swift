@@ -36,7 +36,7 @@ public class DreamSearchVC: UIViewController {
     
     // MARK: - Reactive Properties
     private let searchKeyword = PublishRelay<String>()
-    private let fetchedCount = PublishRelay<Int>()
+    private let fetchedCount = BehaviorRelay<Int>(value: 0)
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamSearchViewModel!
@@ -46,8 +46,11 @@ public class DreamSearchVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.setDelegate()
         self.bindCollectionView()
         self.bindDismissButton()
+        self.bindTextField()
+        self.bindViewModels()
         self.setupView()
         self.setupConstraint()
         self.setDataSource()
@@ -60,8 +63,14 @@ extension DreamSearchVC {
     public func setupView() {
         self.view.backgroundColor = .black
         self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView)
-        self.searchTextField.addTarget(self, action: #selector(bindViewModels), for: .editingChanged)
     }
+    
+    private func setDelegate() {
+        self.dreamSearchCollectionView.rx
+            .setDelegate(self)
+            .disposed(by: self.disposeBag)
+    }
+    
     public func setupConstraint() {
         navigationBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -91,40 +100,28 @@ extension DreamSearchVC {
     }
 }
 // MARK: - DataSource
-extension DreamSearchVC {
+extension DreamSearchVC: UICollectionViewDelegate {
     private func setDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource<DreamSearchResultType, AnyHashable>(collectionView: dreamSearchCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-            if let model = itemIdentifier as? DreamSearchEntity {
-                switch DreamSearchResultType.type(indexPath.section) {
-                case .non:
-                    guard let emptyCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier, for: indexPath) as? DreamSearchEmptyCVC else { return UICollectionViewCell() }
-                    self.fetchedCount.accept(0)
-                    return emptyCell
-                case .exist:
-                    guard let resultCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
-                    resultCell.setData(emotion: model.records[indexPath.row].emotion ?? 0, date: model.records[indexPath.row].date ?? "", title: model.records[indexPath.row].title ?? "", tag: model.records[indexPath.row].genre ?? [])
-                    self.searchTextField.shouldLoadResult
-                        .bind(to: self.searchKeyword)
-                        .disposed(by: self.disposeBag)
-                    self.fetchedCount.accept(model.recordsCount)
-                    return resultCell
-                }
+            if let model = itemIdentifier as? DreamSearchEntity.Record {
+                guard let resultCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
+                resultCell.setData(emotion: model.emotion ?? 0, date: model.date ?? "", title: model.title ?? "", tag: model.genre ?? [])
+                return resultCell
             }
             else {
-                return UICollectionViewCell()
+                guard let emptyCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier, for: indexPath) as? DreamSearchEmptyCVC else { return UICollectionViewCell() }
+                return emptyCell
             }
         })
         
         self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
             switch kind {
-            case DreamSearchHeaderCVC.className:
+            case UICollectionView.elementKindSectionHeader:
                 guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier, for: indexPath) as? DreamSearchHeaderCVC else { return UICollectionReusableView() }
-                self.fetchedCount.subscribe(onNext: { counts in
-                    header.configureCell(counts: counts)
-                }).disposed(by: self.disposeBag)
+                header.configureCell(counts: self.fetchedCount.value)
                 return header
-            case DreamSearchEmptyCVC.className:
-                guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier, for: indexPath) as? DreamSearchEmptyCVC else { return UICollectionReusableView() }
+            case UICollectionView.elementKindSectionFooter:
+                guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier, for: indexPath) as? DreamSearchBottomCVC else { return UICollectionReusableView() }
                 return footer
             default:
                 return UICollectionReusableView()
@@ -133,27 +130,24 @@ extension DreamSearchVC {
     }
     private func applySnapShot(model: DreamSearchEntity) {
         var snapshot = NSDiffableDataSourceSnapshot<DreamSearchResultType, AnyHashable>()
-        let previousItems = snapshot.itemIdentifiers(inSection: .non)
-        
-        snapshot.appendSections([.exist, .non])
-        
+        self.fetchedCount.accept(model.recordsCount)
         if model.recordsCount == 0 {
-            snapshot.appendItems([], toSection: .non)
-            snapshot.deleteItems(previousItems)
+            snapshot.appendSections([.non])
+            snapshot.appendItems([1], toSection: .non)
         } else {
-            snapshot.appendItems([], toSection: .exist)
+            snapshot.appendSections([.exist])
+            print(model.records)
+            snapshot.appendItems(model.records, toSection: .exist)
         }
-        
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
     }
 }
 // MARK: - Bind
 extension DreamSearchVC {
-    @objc
-    private func bindViewModels(_ sender: Any?) {
+    private func bindViewModels() {
         let input = DreamSearchViewModel.Input(currentSearchQuery: self.searchTextField.shouldLoadResult, returnButtonTapped: self.searchTextField.returnKeyTapped.asObservable())
-
+        
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.searchResultModelFetched
@@ -162,7 +156,7 @@ extension DreamSearchVC {
             .subscribe(onNext: { owner, entity in
                 owner.applySnapShot(model: entity)
             }).disposed(by: self.disposeBag)
-                
+        
         output.loadingStatus
             .bind(to: self.rx.isLoading)
             .disposed(by: disposeBag)
@@ -171,9 +165,9 @@ extension DreamSearchVC {
     private func bindCollectionView() {
         self.dreamSearchCollectionView.rx.itemSelected
             .withUnretained(self)
-            .subscribe(onNext: { (owner, _) in
+            .subscribe(onNext: { (owner, item) in
                 let detailVC = owner.factory.instantiateDetailVC()
-                owner.navigationController?.pushViewController(detailVC, animated: true)
+                owner.present(detailVC, animated: true)
             }).disposed(by: disposeBag)
     }
     private func bindDismissButton() {
@@ -182,5 +176,11 @@ extension DreamSearchVC {
             .subscribe(onNext: { owner in
                 self.dismiss(animated: true)
             }).disposed(by: disposeBag)
+    }
+    
+    private func bindTextField() {
+        self.searchTextField.shouldLoadResult
+            .bind(to: self.searchKeyword)
+            .disposed(by: self.disposeBag)
     }
 }
