@@ -11,6 +11,7 @@ import Domain
 import RD_DSKit
 
 import RxSwift
+import RxCocoa
 import SnapKit
 
 /*
@@ -154,6 +155,14 @@ extension HomeVC {
             .withUnretained(self)
             .bind { strongSelf, entity in
                 strongSelf.fetchHomeData(model: entity)
+            }.disposed(by: self.disposeBag)
+
+        output.selectedIndex
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { index in
+                let detail = self.factory.instantiateDetailVC()
+                self.present(detail, animated: true)
             }.disposed(by: self.disposeBag)
     }
 

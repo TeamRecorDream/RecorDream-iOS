@@ -13,6 +13,9 @@ import Domain
 import RD_Core
 import RD_DSKit
 
+import RxSwift
+import RxCocoa
+
 /*
  DreamCardCollectionViewAdapter : MVVM에서 분류하자면 View에 해당
  ViewController의 부담을 줄여주기 위해 Class를 분리한 것 일뿐 따로 ViewModel을 가지고 있지 않습니다.
@@ -25,6 +28,7 @@ protocol DreamCardCollectionViewAdapterDataSource: AnyObject {
     // ViewModel이 채택하여 관련 데이터 넘겨주기 , DataSource에 들어갈 정보들
     var numberOfItems: Int { get }
     var fetchedDreamRecord: HomeEntity { get }
+    var selectedIndex: BehaviorRelay<Int?> { get set }
 }
 
 final class DreamCardCollectionViewAdapter: NSObject {
@@ -34,6 +38,7 @@ final class DreamCardCollectionViewAdapter: NSObject {
         static let cellHeight = 392.f
     }
 
+    private let disposeBag = DisposeBag()
     weak var adapterDataSource: DreamCardCollectionViewAdapterDataSource?
 
     init(collectionView: UICollectionView, adapterDataSource: DreamCardCollectionViewAdapterDataSource) {
@@ -78,7 +83,11 @@ extension DreamCardCollectionViewAdapter: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        if let dreamRecord = adapterDataSource?.fetchedDreamRecord.records?.safeget(index: indexPath.row) {
+//            let dreamId = dreamRecord.recordId
+//        }
 
+        adapterDataSource?.selectedIndex.accept(indexPath.row)
     }
 }
 
