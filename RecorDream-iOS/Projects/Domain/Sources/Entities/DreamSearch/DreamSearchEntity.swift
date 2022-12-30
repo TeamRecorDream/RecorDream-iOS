@@ -10,16 +10,16 @@ import Foundation
 
 public struct DreamSearchEntity: Equatable {
     public let recordsCount: Int
-    public let records: [Records]
+    public let records: [Record]
     
-    public init(recordsCount: Int, records: [Records]) {
+    public init(recordsCount: Int, records: [Record]) {
         self.recordsCount = recordsCount
         self.records = records
     }
 }
 
 extension DreamSearchEntity {
-    public struct Records: Equatable {
+    public struct Record: Hashable {
         public let id: String?
         public let emotion: Int?
         public let date: String?

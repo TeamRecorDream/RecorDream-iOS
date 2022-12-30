@@ -9,7 +9,7 @@
 import Foundation
 
 public struct DreamWriteEntity {
-    public let main: Main
+    public var main: Main
     public let emotions: [Emotion]
     public let genres: [Genre]
     public let note: Note
@@ -43,26 +43,34 @@ public struct DreamWriteEntity {
                                       note: self.note.noteText,
                                       voice: nil)
     }
+    
+    public mutating func changeRecordTime(time: Double) {
+        self.main.changeRecordTime(time: time)
+    }
 }
 
 public extension DreamWriteEntity {
     struct Main: Hashable {
         public let titleText: String
         public let contentText: String
-        public let recordTime: String?
+        public var recordTime: Double
         public let date: String
         
-        public init(titleText: String, contentText: String, recordTime: String?, date: String) {
+        public init(titleText: String, contentText: String, recordTime: Double, date: String) {
             self.titleText = titleText
             self.contentText = contentText
             self.recordTime = recordTime
             self.date = date
         }
+        
+        public mutating func changeRecordTime(time: Double) {
+            self.recordTime = time
+        }
     }
 }
 
 public extension DreamWriteEntity {
-    struct Emotion: Hashable {
+    public struct Emotion: Hashable {
         let id = UUID()
         public let isSelected: Bool
         
@@ -73,7 +81,7 @@ public extension DreamWriteEntity {
 }
 
 public extension DreamWriteEntity {
-    struct Genre: Hashable {
+    public struct Genre: Hashable {
         let id = UUID()
         public let isSelected: Bool
         
@@ -84,7 +92,7 @@ public extension DreamWriteEntity {
 }
 
 public extension DreamWriteEntity {
-    struct Note: Hashable {
+    public struct Note: Hashable {
         public let noteText: String
         
         public init(noteText: String) {

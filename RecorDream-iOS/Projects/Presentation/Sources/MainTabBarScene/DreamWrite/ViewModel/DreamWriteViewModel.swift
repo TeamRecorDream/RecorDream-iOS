@@ -50,7 +50,7 @@ public class DreamWriteViewModel: ViewModelType {
         case modify(postId: String)
     }
     
-    private var viewModelType = DreamWriteViewModelType.write
+    public var viewModelType = DreamWriteViewModelType.write
     
     let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: nil, note: nil, voice: nil))
     var voiceId: String? = nil
@@ -90,8 +90,10 @@ extension DreamWriteViewModel {
         
         input.viewDidLoad.subscribe(onNext: { _ in
             if case let .modify(postId) = self.viewModelType {
+                DispatchQueue.main.async {
+                    output.loadingStatus.accept(true)
+                }
                 self.useCase.fetchDreamRecord(recordId: postId)
-                output.loadingStatus.accept(true)
             }
         }).disposed(by: disposeBag)
         
@@ -108,9 +110,16 @@ extension DreamWriteViewModel {
             self.useCase.genreListCautionValidate(genreList: $0)
         }).disposed(by: disposeBag)
         
-        input.saveButtonTapped.subscribe(onNext: { _ in
+        input.saveButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
             output.loadingStatus.accept(true)
-            self.useCase.writeDreamRecord(request: self.writeRequestEntity.value, voiceId: self.voiceId)
+            switch owner.viewModelType {
+            case .write:
+                owner.useCase.writeDreamRecord(request: owner.writeRequestEntity.value, voiceId: owner.voiceId)
+            case .modify(postId: let postId):
+                owner.useCase.modifyDreamRecord(request: owner.writeRequestEntity.value, voiceId: owner.voiceId, recordId: postId)
+            }
         }).disposed(by: disposeBag)
         
         return output
@@ -119,9 +128,12 @@ extension DreamWriteViewModel {
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
         let fetchedModel = useCase.fetchedRecord
         fetchedModel.subscribe(onNext: { entity in
+            output.loadingStatus.accept(false)
+            guard let entity = entity else {
+                return
+            }
             self.shouldShowWarningForInit = entity.shouldeShowWarning
             output.dreamWriteModelFetched.accept(entity)
-            output.loadingStatus.accept(false)
             self.writeRequestEntity.accept(entity.toRequest())
         }).disposed(by: disposeBag)
         
