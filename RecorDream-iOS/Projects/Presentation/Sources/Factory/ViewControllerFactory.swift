@@ -24,4 +24,5 @@ public protocol MainTabBarControllerFactory {
     func instantiateMyPageVC() -> MyPageVC
     func instantiateSearchVC() -> DreamSearchVC
     func instantiateDetailVC() -> DreamDetailVC
+    func instantiateDetailMoreVC() -> DreamDetailMoreVC
 }

@@ -19,6 +19,7 @@ public final class DreamDetailVC: UIViewController {
     
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailViewModel!
+    public var factory: ViewControllerFactory!
   
     // MARK: - UI Components
 
@@ -101,6 +102,7 @@ public final class DreamDetailVC: UIViewController {
         self.setUI()
         self.setLayout()
         self.bindViewModels()
+        self.bindViews()
         self.setData(model: HomeEntity.Record(recordId: "id어쩌구", emotion: 1, date: "2022/11/22 SUN", title: "제목입니다 혹시 제목이 두줄이면 어떻게 될까요ㅍ 아아아아아아아아?", genres: [.로맨스,.코미디], content: "내용입니다"))
         self.setupTabbarControllersChild()
     }
@@ -200,5 +202,14 @@ extension DreamDetailVC {
 extension DreamDetailVC {
     private func setupTabbarControllersChild() {
         pageViewController.setTabContentsItem(contentPages: [DreamRecordViewController(), DreamNoteViewController()])
+    }
+
+    private func bindViews() {
+        self.headerView.rx.moreButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                let detailMoreVC = owner.factory.instantiateDetailMoreVC()
+                owner.present(detailMoreVC, animated: false)
+            }).disposed(by: self.disposeBag)
     }
 }
