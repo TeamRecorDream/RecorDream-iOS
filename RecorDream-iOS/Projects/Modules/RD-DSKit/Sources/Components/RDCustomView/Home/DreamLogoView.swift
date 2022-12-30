@@ -20,6 +20,7 @@ public final class DreamLogoView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.image = RDDSKitAsset.Images.rdHomeLogo.image
+        imageView.tintColor = .white
         return imageView
     }()
 

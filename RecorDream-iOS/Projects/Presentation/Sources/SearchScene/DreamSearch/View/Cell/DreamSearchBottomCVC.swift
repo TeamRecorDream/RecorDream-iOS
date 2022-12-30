@@ -15,6 +15,7 @@ final class DreamSearchBottomCVC: UICollectionReusableView {
         let iv = UIImageView()
         iv.image = RDDSKitAsset.Images.rdHomeLogo.image
         iv.contentMode = .scaleAspectFit
+        iv.tintColor = .white.withAlphaComponent(0.4)
         return iv
     }()
     
