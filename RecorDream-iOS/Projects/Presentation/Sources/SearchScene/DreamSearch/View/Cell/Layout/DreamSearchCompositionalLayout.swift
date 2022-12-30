@@ -13,47 +13,46 @@ extension DreamSearchVC {
         return UICollectionViewCompositionalLayout { [weak self] sectionNumber, environment -> NSCollectionLayoutSection? in
             guard let self = self else { return nil }
             
-            let resultHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(38))
-            let resultHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: resultHeaderSize, elementKind: DreamSearchHeaderCVC.className, alignment: .top)
-
             switch DreamSearchResultType.type(sectionNumber) {
             case .exist:
-                return self.createExistSection(resultHeader)
+                return self.createExistSection()
             case .non:
                 return self.createNoneSection()
             }
         }
     }
-    private func createExistSection(_ header: NSCollectionLayoutBoundarySupplementaryItem) -> NSCollectionLayoutSection {
+    private func createExistSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(400.adjustedHeight)
+            heightDimension: .absolute(88.adjustedHeight)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(400.adjustedHeight)
+            heightDimension: .absolute(88.adjustedHeight)
         )
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
+        let sectionHeader = self.createSectionHeader()
         let sectionFooter = self.createSectionFooter()
         section.orthogonalScrollingBehavior = .none
-        section.boundarySupplementaryItems = [sectionFooter]
+        section.boundarySupplementaryItems = [sectionHeader, sectionFooter]
         section.contentInsets = .init(
-            top: 8, leading: 20, bottom: 0, trailing: 21
+            top: 20, leading: 20, bottom: 0, trailing: 21
         )
+        section.interGroupSpacing = 8
         return section
     }
     private func createNoneSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(1.0)
+            heightDimension: .estimated(1.0)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .fractionalHeight(1.0)
+            heightDimension: .estimated(1.0)
         )
         let group = NSCollectionLayoutGroup.vertical(
             layoutSize: groupSize, subitems: [item]
@@ -67,6 +66,16 @@ extension DreamSearchVC {
         )
         return section
     }
+    private func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
+        let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(152.adjustedHeight))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: layoutSectionHeaderSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        sectionHeader.contentInsets = .init(top: 20, leading: 0, bottom: 12, trailing: 18)
+        return sectionHeader
+    }
     private func createSectionFooter() -> NSCollectionLayoutBoundarySupplementaryItem {
         let layoutSectionFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(152.adjustedHeight))
         let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
@@ -74,7 +83,7 @@ extension DreamSearchVC {
             elementKind: UICollectionView.elementKindSectionFooter,
             alignment: .bottom
         )
-        sectionFooter.contentInsets = .init(top: 0, leading: 0, bottom: 54, trailing: 0)
+        sectionFooter.contentInsets = .init(top: 0, leading: 0, bottom: 20, trailing: 0)
         return sectionFooter
     }
 }
