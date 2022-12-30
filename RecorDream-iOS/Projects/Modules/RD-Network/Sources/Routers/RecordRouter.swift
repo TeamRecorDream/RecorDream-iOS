@@ -15,6 +15,7 @@ enum RecordRouter {
     case fetchModifyRecord(recordId: String)
     case modifyRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?, recordId: String)
     case searchRecord(keyword: String)
+    case fetchStorage(filter: Int)
 }
 
 extension RecordRouter: BaseRouter {
@@ -24,11 +25,12 @@ extension RecordRouter: BaseRouter {
             return .post
         case .modifyRecord:
             return .patch
-        default:
+        case .fetchStorage:
             return .get
+        default: return .get
         }
     }
-    
+
     var path: String {
         switch self {
         case .writeRecord:
@@ -39,9 +41,12 @@ extension RecordRouter: BaseRouter {
             return "/record/\(recordId)"
         case .searchRecord:
             return "/record/storage/search"
+        case .fetchStorage:
+            return "/record/storage/list"
+        default: return ""
         }
     }
-    
+
     var parameters: RequestParams {
         switch self {
         case .writeRecord(let title, let date, let content, let emotion, let genre, let note, let voice):
@@ -81,13 +86,18 @@ extension RecordRouter: BaseRouter {
                 "keyword": keyword
             ]
             return .query(query, parameterEncoding: parameterEncoding)
+        case .fetchStorage(let filter):
+            let query: [String: Any] = [
+                "filter": filter
+            ]
+            return .query(query, parameterEncoding: parameterEncoding)
         default: return .requestPlain
         }
     }
-    
+
     var parameterEncoding: ParameterEncoding {
         switch self {
-        case .searchRecord:
+        case .searchRecord, .fetchStorage:
             return URLEncoding.init(destination: .queryString)
         default:
             return JSONEncoding.default
