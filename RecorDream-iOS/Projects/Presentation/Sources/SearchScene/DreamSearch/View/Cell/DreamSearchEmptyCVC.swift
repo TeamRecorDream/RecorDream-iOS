@@ -30,6 +30,7 @@ final class DreamSearchEmptyCVC: UICollectionViewCell {
     }
     
     private func setupView() {
+        self.isUserInteractionEnabled = false
         self.addSubview(emptyLabel)
     }
     private func setupConstraint() {

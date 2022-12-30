@@ -27,7 +27,7 @@ extension DreamSearchVC {
     private func createExistSection(_ header: NSCollectionLayoutBoundarySupplementaryItem) -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(88.adjustedHeight)
+            heightDimension: .estimated(400.adjustedHeight)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(
