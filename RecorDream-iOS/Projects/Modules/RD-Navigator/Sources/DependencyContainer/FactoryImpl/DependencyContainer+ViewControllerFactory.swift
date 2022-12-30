@@ -72,7 +72,11 @@ extension DependencyContainer: MainTabBarControllerFactory {
     
     public func instantiateStorageVC() -> Presentation.StorageVC {
         let storageVC = StorageVC()
-        storageVC.factory = self
+        let repository = DefaultStorageRepository(recordService: self.recordService)
+        let useCase = DefaultDreamStorageUseCase(repository: repository)
+        let viewModel = DreamStorageViewModel(useCase: useCase)
+//        storageVC.factory = self
+        storageVC.viewModel = viewModel
         
         return storageVC
     }

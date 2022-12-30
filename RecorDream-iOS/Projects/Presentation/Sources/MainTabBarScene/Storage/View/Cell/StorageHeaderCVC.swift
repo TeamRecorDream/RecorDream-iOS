@@ -13,7 +13,10 @@ import RD_DSKit
 
 import SnapKit
 
-final class StorageHeaderCVC: UICollectionReusableView {
+final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableViewRegisterable {
+    // MARK: - Properties
+    public static var isFromNib: Bool = false
+    
     // MARK: - UI Components
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
@@ -23,20 +26,21 @@ final class StorageHeaderCVC: UICollectionReusableView {
         return lb
     }()
     private lazy var segmentControl = RDStorageSegmentControl(items: ["", ""])
-    
+
     // MARK: - View Life Cycle
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         self.setupView()
         self.setupConstraint()
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Functions
     private func setupView() {
+        self.isUserInteractionEnabled = false
         self.addSubviews(countLabel, segmentControl)
         self.backgroundColor = .clear
     }

@@ -1,9 +1,9 @@
 //
-//  StorageExistCVC.swift
+//  DreamSearchExistCVC.swift
 //  Presentation
 //
-//  Created by 정은희 on 2022/12/08.
-//  Copyright © 2022 RecorDream. All rights reserved.
+//  Created by 정은희 on 2022/12/30.
+//  Copyright © 2022 RecorDream-iOS. All rights reserved.
 //
 
 import UIKit
@@ -11,13 +11,12 @@ import UIKit
 import RD_Core
 import RD_DSKit
 
-final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable {
+final class DreamSearchExistCVC: UICollectionViewCell, UICollectionViewRegisterable {
     
     // MARK: - Properties
     public static var isFromNib: Bool = false
     
     // MARK: - UI Components
-    private let section: RDCollectionViewFlowLayout.CollectionDisplay = .list
     private var backgroundImageView = UIImageView()
     private var emotionImageView: UIImageView = {
         let iv = UIImageView()
@@ -47,7 +46,7 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         sv.spacing = 4
         return sv
     }()
-
+    
     // MARK: - View Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -59,74 +58,53 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Functions
+}
+
+// MARK: - Extensions
+extension DreamSearchExistCVC {
     private func setupView() {
         self.addSubviews(backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView)
+        self.makeRounded(radius: 20)
         self.backgroundColor = .none
         self.titleLabel.addLabelSpacing(kernValue: -0.22)
     }
     private func setupConstraint() {
-        self.backgroundImageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        self.backgroundImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
-        switch section {
-        case .list:
-            self.emotionImageView.snp.makeConstraints {
-                $0.top.equalToSuperview().offset(21)
-                $0.leading.equalToSuperview().inset(32)
-                $0.size.equalTo(46)
-            }
-            self.dateLabel.snp.makeConstraints {
-                $0.top.equalToSuperview().offset(12)
-                $0.leading.equalTo(emotionImageView.snp.trailing).offset(24)
-            }
-            self.titleLabel.snp.makeConstraints {
-                $0.top.equalTo(dateLabel.snp.bottom).offset(3)
-                $0.centerX.equalTo(emotionImageView.snp.trailing).offset(24)
-            }
-            self.genreStackView.snp.makeConstraints {
-                $0.height.equalTo(16)
-                $0.top.equalTo(titleLabel.snp.bottom).offset(3)
-                $0.leading.equalToSuperview().offset(102)
-            }
-        case .grid:
-            self.emotionImageView.snp.makeConstraints {
-                $0.top.equalToSuperview().inset(23)
-                $0.centerX.equalToSuperview().inset(52)
-                $0.size.equalTo(60)
-            }
-            self.dateLabel.snp.makeConstraints {
-                $0.top.equalTo(emotionImageView.snp.bottom).offset(14)
-                $0.centerX.equalToSuperview()
-            }
-            self.titleLabel.snp.makeConstraints {
-                $0.top.equalTo(dateLabel.snp.bottom).offset(8)
-                $0.centerX.equalTo(emotionImageView)
-            }
-            self.genreStackView.snp.makeConstraints {
-                $0.top.equalTo(titleLabel.snp.bottom).offset(8)
-                $0.centerX.equalToSuperview()
-                $0.height.equalTo(16)
-            }
+        self.emotionImageView.snp.makeConstraints { make in
+            make.top.equalTo(backgroundImageView.snp.top).offset(21)
+            make.leading.equalTo(backgroundImageView.snp.leading).inset(32)
+            make.size.equalTo(46)
+        }
+        self.dateLabel.snp.makeConstraints { make in
+            make.top.equalTo(backgroundImageView.snp.top).offset(12)
+            make.leading.equalTo(emotionImageView.snp.trailing).offset(24)
+        }
+        self.titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(dateLabel.snp.bottom).offset(3)
+            make.leading.equalTo(emotionImageView.snp.trailing).offset(24)
+        }
+        self.genreStackView.snp.makeConstraints { make in
+            make.height.equalTo(16)
+            make.top.equalTo(titleLabel.snp.bottom).offset(3)
+            make.leading.equalToSuperview().offset(102)
         }
     }
-}
-
-extension StorageExistCVC {
-    func setData(emotion: Int, date: String, title: String, tag: [Int]) {
-        self.backgroundImageView.image = self.setEmotionImage(emotion: emotion).first
-        self.emotionImageView.image = self.setEmotionImage(emotion: emotion).last
-        self.dateLabel.text = date
+    func setData(emotion: Int, date: String, title: String, genre: [Int]) {
+        self.backgroundImageView.image = self.setEmotionImageView(emotion: emotion).first
+        self.emotionImageView.image = self.setEmotionImageView(emotion: emotion).last
         self.titleLabel.text = title
-        if tag.isEmpty {
+        self.dateLabel.text = date
+        if genre.isEmpty {
             self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .search, genre: "# 아직 설정되지 않았어요"))
         } else {
-            tag.forEach { genreType in
-                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage, genre: Section.emotionTitles[genreType]))
+            genre.forEach { genreType in
+                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .search, genre: Section.genreTitles[genreType - 1]))
             }
         }
     }
-    private func setEmotionImage(emotion: Int) -> [UIImage] {
+    private func setEmotionImageView(emotion: Int) -> [UIImage] {
         switch emotion {
         case 1:
             return [RDDSKitAsset.Images.listYellow.image, RDDSKitAsset.Images.feelingMJoy.image]
