@@ -28,7 +28,6 @@ protocol DreamCardCollectionViewAdapterDataSource: AnyObject {
     // ViewModel이 채택하여 관련 데이터 넘겨주기 , DataSource에 들어갈 정보들
     var numberOfItems: Int { get }
     var fetchedDreamRecord: HomeEntity { get }
-    var selectedIndex: BehaviorRelay<Int?> { get set }
 }
 
 final class DreamCardCollectionViewAdapter: NSObject {
@@ -39,7 +38,9 @@ final class DreamCardCollectionViewAdapter: NSObject {
     }
 
     private let disposeBag = DisposeBag()
+    
     weak var adapterDataSource: DreamCardCollectionViewAdapterDataSource?
+    var selectedIndex = BehaviorRelay<Int?>(value: nil)
 
     init(collectionView: UICollectionView, adapterDataSource: DreamCardCollectionViewAdapterDataSource) {
         super.init()
@@ -86,8 +87,7 @@ extension DreamCardCollectionViewAdapter: UICollectionViewDelegate {
 //        if let dreamRecord = adapterDataSource?.fetchedDreamRecord.records?.safeget(index: indexPath.row) {
 //            let dreamId = dreamRecord.recordId
 //        }
-
-        adapterDataSource?.selectedIndex.accept(indexPath.row)
+        selectedIndex.accept(indexPath.row)
     }
 }
 

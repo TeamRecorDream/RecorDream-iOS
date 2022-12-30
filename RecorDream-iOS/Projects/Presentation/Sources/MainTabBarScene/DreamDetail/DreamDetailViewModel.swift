@@ -15,6 +15,7 @@ public class DreamDetailViewModel: ViewModelType {
 
     private let useCase: DreamDetailUseCase
     private let disposeBag = DisposeBag()
+    private let dreamId: String
   
     // MARK: - Inputs
     
@@ -32,8 +33,9 @@ public class DreamDetailViewModel: ViewModelType {
     
     // MARK: - Coordination
   
-    public init(useCase: DreamDetailUseCase) {
+    public init(useCase: DreamDetailUseCase, dreamId: String) {
         self.useCase = useCase
+        self.dreamId = dreamId
     }
 }
 

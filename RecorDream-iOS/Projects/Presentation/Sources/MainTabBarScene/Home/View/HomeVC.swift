@@ -169,14 +169,6 @@ extension HomeVC {
             .bind { strongSelf, entity in
                 strongSelf.fetchHomeData(model: entity)
             }.disposed(by: self.disposeBag)
-
-        output.selectedIndex
-            .compactMap { $0 }
-            .withUnretained(self)
-            .bind { index in
-                let detail = self.factory.instantiateDetailVC()
-                self.present(detail, animated: true)
-            }.disposed(by: self.disposeBag)
     }
 
     private func fetchHomeData(model: HomeEntity) {
@@ -187,6 +179,16 @@ extension HomeVC {
     private func setCollectionViewAdapter() {
         self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
             collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
+
+        self.dreamCardCollectionViewAdapter?.selectedIndex
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { (owner, index) in
+                guard let records = owner.viewModel.fetchedDreamRecord.records?.safeget(index: index) else { return }
+
+                let detail = owner.factory.instantiateDetailVC(dreamId: records.recordId)
+                owner.present(detail, animated: true)
+            }.disposed(by: self.disposeBag)
     }
     
     private func resetView() {
