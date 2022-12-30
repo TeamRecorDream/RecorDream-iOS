@@ -166,8 +166,8 @@ extension HomeVC {
         output.fetchedHomeData
             .compactMap { $0 }
             .withUnretained(self)
-            .bind { strongSelf, entity in
-                strongSelf.fetchHomeData(model: entity)
+            .bind { (owner, entity) in
+                owner.fetchHomeData(model: entity)
             }.disposed(by: self.disposeBag)
     }
 

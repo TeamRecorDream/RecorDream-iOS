@@ -175,7 +175,7 @@ extension StorageVC: UICollectionViewDelegate {
             collectionView.deselectItem(at: selected, animated: false)
             return true
         case .records:
-            let detailVC = self.factory.instantiateDetailVC()
+            let detailVC = self.factory.instantiateDetailVC(dreamId: "")
             detailVC.modalTransitionStyle = .coverVertical
             detailVC.modalPresentationStyle = .fullScreen
             guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return false }
