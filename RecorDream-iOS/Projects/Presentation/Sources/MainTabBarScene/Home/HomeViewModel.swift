@@ -18,7 +18,6 @@ public class HomeViewModel: ViewModelType {
     
     internal var numberOfItems: Int = 0
     internal var fetchedDreamRecord = HomeEntity(nickname: "", records: [])
-    internal var selectedIndex = BehaviorRelay<Int?>(value: nil)
   
     // MARK: - Inputs
     
@@ -30,7 +29,6 @@ public class HomeViewModel: ViewModelType {
     
     public struct Output {
         var fetchedHomeData = BehaviorRelay<HomeEntity?>(value: nil)
-        var selectedIndex = BehaviorRelay<Int?>(value: nil)
     }
     
     // MARK: - Coordination
@@ -66,9 +64,5 @@ extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
                 }
                 self.fetchedDreamRecord = entity
             }).disposed(by: disposeBag)
-
-        self.selectedIndex.subscribe(onNext: { index in
-            output.selectedIndex.accept(index)
-        }).disposed(by: self.disposeBag)
     }
 }
