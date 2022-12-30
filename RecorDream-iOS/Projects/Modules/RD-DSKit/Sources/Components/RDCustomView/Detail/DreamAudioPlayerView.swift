@@ -35,18 +35,25 @@ public final class DreamAudioPlayerView: UIView {
         static let playSliderHeight = 4.f
     }
 
+    private let disposeBag = DisposeBag()
+
+    private var audioPlayer: AVAudioPlayer!
+    private var audioTimer: Timer!
+    private var audioFile: URL!
+    private let timePlayerSelector: Selector = #selector(updatePlayTime)
+
     private var playStatus = playStatus.notStart
 
     private lazy var playAndPauseButton: UIButton = {
         let button = UIButton()
         button.setImage(RDDSKitAsset.Images.icnStart.image, for: .normal)
         button.setImage(RDDSKitAsset.Images.icnStop.image, for: .selected)
-
         return button
     }()
 
     private var audioPlayTimeLabel: UILabel = {
         let label = UILabel()
+        label.text = "03:00"
         label.font = RDDSKitFontFamily.Pretendard.medium.font(size: 12)
         label.textColor = RDDSKitAsset.Colors.white01.color
         return label
@@ -65,8 +72,11 @@ public final class DreamAudioPlayerView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+
         setUI()
         setLayout()
+        bind()
+        initPlay()
     }
 
     required init?(coder: NSCoder) {
@@ -102,5 +112,81 @@ public final class DreamAudioPlayerView: UIView {
             $0.trailing.equalToSuperview().inset(Metric.playSliderTrailing)
             $0.height.equalTo(Metric.playSliderHeight)
         }
+    }
+}
+
+extension DreamAudioPlayerView {
+    private func initPlay() {
+        // test를 위한 임시 url
+        audioFile = RDDSKitResources.bundle.url(forResource: "min", withExtension: "mp3")
+        print(audioFile)
+
+        // 앞서 초기화한 audioFile을 URL로 하는 audioPlayer 인스턴스 생성.
+        // AVAudioPlayer 함수는 입력 파라미터인 오디오 파일이 없을 때에 대비하여 do-try-catch문 사용
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: audioFile)
+
+            audioPlayer.delegate = self
+            audioPlayer.prepareToPlay()
+            audioPlayer.volume = 1.0
+            audioPlayTimeLabel.text = convertNSTimeInterval2String(audioPlayer.duration)
+
+        } catch let error as NSError {
+            print("Error-initPlay : \(error)")
+        }
+
+        playSlider.progress = 0
+
+        // 녹음 파일의 총 재생시간
+        playAndPauseButton.isSelected = false
+    }
+
+    private func convertNSTimeInterval2String(_ time: TimeInterval) -> String {
+        let minute = Int(time/60)
+        let second = Int(time.truncatingRemainder(dividingBy: 60))
+        let strTime = String(format: "%02d:%02d", minute, second)
+        return strTime
+    }
+
+    private func setPlayStatus(_ play: Bool) {
+        playAndPauseButton.isSelected = play
+    }
+
+    private func setTimer() {
+        audioTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: timePlayerSelector, userInfo: nil, repeats: true)
+    }
+
+    @objc private func updatePlayTime() {
+        audioPlayTimeLabel.text = convertNSTimeInterval2String(audioPlayer.currentTime)
+        playSlider.progress = Float(audioPlayer.currentTime/audioPlayer.duration)
+    }
+
+    private func bind() {
+        playAndPauseButton.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                guard let self = self,
+                      let player = self.audioPlayer else { return }
+                self.setTimer()
+                if player.isPlaying {
+                    self.setPlayStatus(false)
+                    player.pause()
+                } else {
+                    self.setPlayStatus(true)
+                    player.play()
+                }
+            })
+            .disposed(by: self.disposeBag)
+    }
+}
+
+extension DreamAudioPlayerView: AVAudioPlayerDelegate {
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        audioTimer.invalidate()
+
+        self.playAndPauseButton.isSelected = false
+        self.playSlider.progress = 0
+        self.audioPlayTimeLabel.text = convertNSTimeInterval2String(audioPlayer.duration)
     }
 }
