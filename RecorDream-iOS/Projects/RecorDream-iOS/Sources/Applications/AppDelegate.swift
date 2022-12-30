@@ -8,6 +8,7 @@
 import UIKit
 
 import RD_Core
+import RD_Navigator
 
 import FirebaseCore
 import FirebaseMessaging
@@ -80,7 +81,38 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-        completionHandler()
+        let application = UIApplication.shared
+        
+        let scene = UIApplication.shared.connectedScenes.first
+        
+        //앱이 켜져있는 상태에서 푸쉬 알림을 눌렀을 때
+        if application.applicationState == .active {
+            guard let sceneDelegate = scene?.delegate as? SceneDelegate,
+                  let factory = sceneDelegate.dependencyConatiner else {
+                completionHandler()
+                return
+            }
+            
+            factory.coordinateDreamWriteVC()
+            completionHandler()
+        }
+        
+        //앱이 꺼져있는 상태에서 푸쉬 알림을 눌렀을 때
+        // - 앱이 완전히 꺼져있는 경우. 기존에 dependencyContainer가 없다.
+        // - 앱이 켜져있지만 백그라운드인 경우, 기존에 dependencyContainer가 있다.
+        else if application.applicationState == .inactive {
+            if let sceneDelegate = scene?.delegate as? SceneDelegate,
+               let factory = sceneDelegate.dependencyConatiner {
+                factory.coordinateDreamWriteVC()
+                completionHandler()
+            } else {
+                if let sceneDelegate = scene?.delegate as? SceneDelegate,
+                   let factory = sceneDelegate.dependencyConatiner {
+                    factory.coordinateDreamWriteVC()
+                }
+                completionHandler()
+            }
+        }
     }
 }
 
@@ -94,7 +126,7 @@ extension AppDelegate: MessagingDelegate {
     
     func configureFirebaseMessaging() {
         Messaging.messaging().delegate = self
-
+        
         Messaging.messaging().token { token, error in
             if let error = error {
                 print("FCM 등록토큰 가져오기 오류: \(error)")
