@@ -207,9 +207,13 @@ extension DreamDetailVC {
     private func bindViews() {
         self.headerView.rx.moreButtonTapped
             .withUnretained(self)
-            .subscribe(onNext: { (owner, _) in
-                let detailMoreVC = owner.factory.instantiateDetailMoreVC()
-                owner.present(detailMoreVC, animated: false)
+            .subscribe(onNext: { _ in
+                // TODO: 더 자연스러운 animation
+                let detailMoreVC = self.factory.instantiateDetailMoreVC()
+
+                self.modalPresentationStyle = .fullScreen
+                self.modalTransitionStyle = .crossDissolve
+                self.present(detailMoreVC, animated: true)
             }).disposed(by: self.disposeBag)
     }
 }
