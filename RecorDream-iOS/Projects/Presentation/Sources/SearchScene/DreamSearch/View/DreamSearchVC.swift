@@ -95,7 +95,6 @@ extension DreamSearchVC {
     private func registerXib() {
         dreamSearchCollectionView.register(DreamSearchBottomCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchHeaderCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier)
-        dreamSearchCollectionView.register(DreamSearchEmptyCVC.self, forCellWithReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchExistCVC.self, forCellWithReuseIdentifier: DreamSearchExistCVC.reuseIdentifier)
     }
 }
@@ -109,9 +108,9 @@ extension DreamSearchVC: UICollectionViewDelegate {
                 return resultCell
             }
             else {
-                guard let emptyCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamSearchEmptyCVC.reuseIdentifier, for: indexPath) as? DreamSearchEmptyCVC else { return UICollectionViewCell() }
-                return emptyCell
+                collectionView.setEmptyView()
             }
+            return UICollectionViewCell()
         })
         
         self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
@@ -132,9 +131,9 @@ extension DreamSearchVC: UICollectionViewDelegate {
         var snapshot = NSDiffableDataSourceSnapshot<DreamSearchResultType, AnyHashable>()
         self.fetchedCount.accept(model.recordsCount)
         if model.recordsCount == 0 {
-            snapshot.appendSections([.non])
-            snapshot.appendItems([1], toSection: .non)
+            self.dreamSearchCollectionView.setEmptyView()
         } else {
+            self.dreamSearchCollectionView.restore()
             snapshot.appendSections([.exist])
             print(model.records)
             snapshot.appendItems(model.records, toSection: .exist)
