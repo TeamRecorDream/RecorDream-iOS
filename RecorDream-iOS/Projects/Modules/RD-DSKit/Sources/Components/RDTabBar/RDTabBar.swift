@@ -25,6 +25,7 @@ open class RDTabBar: UIView {
     
     private var shapeLayer: CALayer?
     
+    /// Drawing Cycle에서 중복 추가를 막기 위한 CALayer의 Container
     private var layerContainer: [CALayer] = []
     
     private let writeLabel: UILabel = {
@@ -168,7 +169,8 @@ extension RDTabBar {
         shapeLayer.fillColor = UIColor(rgb: 0x000000).cgColor
 
         if let oldShapeLayer = self.shapeLayer {
-            self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
+            oldShapeLayer.removeFromSuperlayer()
+            self.layer.insertSublayer(shapeLayer, at: 0)
         } else {
             self.layer.insertSublayer(shapeLayer, at: 0)
         }
@@ -176,13 +178,20 @@ extension RDTabBar {
     }
     
     private func addShadowLayer() {
+        self.addDropShadow()
+        self.addInnerShadow()
+    }
+    
+    private func addDropShadow() {
         let outerDropShadowLayer = CAShapeLayer()
         outerDropShadowLayer.path = createLine()
         outerDropShadowLayer.fillColor = UIColor.clear.cgColor
         outerDropShadowLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
         self.layer.insertSublayer(outerDropShadowLayer, at: 0)
         layerContainer.append(outerDropShadowLayer)
-        
+    }
+    
+    private func addInnerShadow() {
         let innerShadowLayer = CAShapeLayer()
         let lineHeight: CGFloat = 1
         innerShadowLayer.path = createLine(lineHeight: lineHeight)
