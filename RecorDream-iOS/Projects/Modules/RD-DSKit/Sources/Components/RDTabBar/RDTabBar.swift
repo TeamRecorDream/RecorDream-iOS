@@ -176,20 +176,22 @@ extension RDTabBar {
     }
     
     private func addShadowLayer() {
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = createLine()
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
-        self.layer.insertSublayer(shapeLayer, at: 0)
-        layerContainer.append(shapeLayer)
+        let outerDropShadowLayer = CAShapeLayer()
+        outerDropShadowLayer.path = createLine()
+        outerDropShadowLayer.fillColor = UIColor.clear.cgColor
+        outerDropShadowLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
+        self.layer.insertSublayer(outerDropShadowLayer, at: 0)
+        layerContainer.append(outerDropShadowLayer)
         
-        let shapeLayer2 = CAShapeLayer()
-        shapeLayer2.path = createLine(lineHeight: 1)
-        shapeLayer2.bounds = self.shapeLayer!.bounds.offsetBy(dx: 0, dy: -2.6)
-        shapeLayer2.fillColor = UIColor.clear.cgColor
-        shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.2, x: 0, y: 1, blur: 7, spread: 0)
-        self.layer.insertSublayer(shapeLayer2, at: 2)
-        layerContainer.append(shapeLayer2)
+        let innerShadowLayer = CAShapeLayer()
+        let lineHeight: CGFloat = 1
+        innerShadowLayer.path = createLine(lineHeight: lineHeight)
+        innerShadowLayer.bounds = self.shapeLayer!.bounds.offsetBy(dx: 0, dy: lineHeight)
+        innerShadowLayer.fillColor = UIColor.clear.cgColor
+        innerShadowLayer.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.2, x: 0, y: 0.1, blur: 20, spread: 0)
+        innerShadowLayer.mask = self.shapeLayer
+        self.layer.insertSublayer(innerShadowLayer, at: 2)
+        layerContainer.append(innerShadowLayer)
     }
     
     private func resetLayer() {

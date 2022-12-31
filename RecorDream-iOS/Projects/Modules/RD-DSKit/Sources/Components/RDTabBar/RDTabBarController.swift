@@ -85,27 +85,27 @@ extension RDTabBarController {
     }
     
     private func addShadowLayer(at btn: UIButton) {
-        let shadowLayer = CAShapeLayer()
-        shadowLayer.frame = btn.bounds
-        shadowLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.2, x: 0, y: -5, blur: 20, spread: 0)
-        btn.layer.insertSublayer(shadowLayer, at: 1)
+        let outerDropShadowLayer = CAShapeLayer()
+        outerDropShadowLayer.frame = btn.bounds
+        outerDropShadowLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.2, x: 0, y: -5, blur: 20, spread: 0)
+        btn.layer.insertSublayer(outerDropShadowLayer, at: 1)
         
-        let shadowLayer2 = CAShapeLayer()
-        shadowLayer2.frame = btn.bounds
-        shadowLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.25, x: 0, y: 0, blur: 13, spread: 0)
-        shadowLayer2.masksToBounds = true
-        shadowLayer2.cornerRadius = 28
-        btn.layer.insertSublayer(shadowLayer2, at: 2)
+        let innerShadowLayer = CAShapeLayer()
+        innerShadowLayer.frame = btn.bounds
+        innerShadowLayer.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.28, x: 0, y: 0, blur: 13, spread: 0)
+        innerShadowLayer.masksToBounds = true
+        innerShadowLayer.cornerRadius = 28
+        btn.layer.insertSublayer(innerShadowLayer, at: 2)
 
         self.view.layoutIfNeeded()
         btn.layoutSubviews()
         
-        shadowLayer.shadowPath = UIBezierPath(roundedRect: btn.bounds, cornerRadius: 28).cgPath
+        outerDropShadowLayer.shadowPath = UIBezierPath(roundedRect: btn.bounds, cornerRadius: 28).cgPath
         
         let innerPath = UIBezierPath(roundedRect: btn.bounds.insetBy(dx: -5, dy: -5), cornerRadius: 28)
         let cutout = UIBezierPath(roundedRect: btn.bounds, cornerRadius: 28).reversing()
         innerPath.append(cutout)
-        shadowLayer2.shadowPath = innerPath.cgPath
+        innerShadowLayer.shadowPath = innerPath.cgPath
     }
 
     @objc func menuButtonAction(sender: UIButton) {
