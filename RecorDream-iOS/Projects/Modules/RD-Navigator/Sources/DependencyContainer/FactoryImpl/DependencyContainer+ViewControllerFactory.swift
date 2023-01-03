@@ -87,7 +87,7 @@ extension DependencyContainer: MainTabBarControllerFactory {
         let repository = DefaultStorageRepository(recordService: self.recordService)
         let useCase = DefaultDreamStorageUseCase(repository: repository)
         let viewModel = DreamStorageViewModel(useCase: useCase)
-//        storageVC.factory = self
+        storageVC.factory = self
         storageVC.viewModel = viewModel
         
         return storageVC

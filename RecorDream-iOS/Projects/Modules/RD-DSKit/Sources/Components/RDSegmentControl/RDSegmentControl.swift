@@ -42,7 +42,7 @@ extension RDStorageSegmentControl {
     public func setupView() {
         self.addSubview(lineView)
         self.backgroundColor = .clear
-        self.selectedSegmentIndex = 1
+        self.selectedSegmentIndex = 0
         self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 0)
         self.setImage(RDDSKitAsset.Images.icnListOff.image, forSegmentAt: 1)
         self.selectedSegmentTintColor = RDDSKitAsset.Colors.white01.color
