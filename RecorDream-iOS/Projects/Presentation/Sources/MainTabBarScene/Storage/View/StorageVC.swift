@@ -36,7 +36,7 @@ public class StorageVC: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>! = nil
     
     // MARK: - Properties
-    private var filterList: [DreamStorageEntity.FilterList] = []
+    private var currentLayoutType = RDCollectionViewFlowLayout.CollectionDisplay.grid
     
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
@@ -94,6 +94,7 @@ extension StorageVC {
                 if let model = itemIdentifier as? DreamStorageEntity.RecordList.Record {
                     guard let existCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
                     let currentRecord = model
+                    existCell.setupConstraint(layoutType: self.currentLayoutType)
                     existCell.setData(emotion: currentRecord.emotion ?? 0,
                                       date: currentRecord.date ?? "",
                                       title: currentRecord.title ?? "",
@@ -114,6 +115,10 @@ extension StorageVC {
             case StorageHeaderCVC.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.className, for: indexPath) as? StorageHeaderCVC else { return UICollectionReusableView() }
                 self.storageHeader = view
+                view.layoutTypeChanged
+                    .drive(onNext: {
+                        self.changeLayoutType(type: $0)
+                    }).disposed(by: view.disposeBag)
                 return view
             default: return UICollectionReusableView()
             }
@@ -134,6 +139,21 @@ extension StorageVC {
         }
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
+    }
+    
+    private func changeLayoutType(type: RDCollectionViewFlowLayout.CollectionDisplay) {
+        self.currentLayoutType = type
+        var snapshot = self.dataSource.snapshot()
+        guard var items = snapshot.itemIdentifiers(inSection: .records) as? [DreamStorageEntity.RecordList.Record] else { return }
+        let newItems: [DreamStorageEntity.RecordList.Record] = items.map { item in
+            var changedItem = item
+            changedItem.toggleLayoutHandler()
+            return changedItem
+        }
+        snapshot.deleteSections([.records])
+        snapshot.appendSections([.records])
+        snapshot.appendItems(newItems, toSection: .records)
+        self.dataSource.apply(snapshot)
     }
 }
 

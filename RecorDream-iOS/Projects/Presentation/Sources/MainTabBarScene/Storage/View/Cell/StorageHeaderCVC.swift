@@ -11,6 +11,8 @@ import UIKit
 import RD_Core
 import RD_DSKit
 
+import RxSwift
+import RxCocoa
 import SnapKit
 
 final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableViewRegisterable {
@@ -23,6 +25,8 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
         }
     }
     
+    public var disposeBag = DisposeBag()
+    
     // MARK: - UI Components
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
@@ -32,6 +36,15 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
         return lb
     }()
     private lazy var segmentControl = RDStorageSegmentControl(items: ["", ""])
+    
+    public lazy var layoutTypeChanged: Driver<RDCollectionViewFlowLayout.CollectionDisplay> = {
+        return segmentControl.rx.selectedSegmentIndex
+            .map {
+                return ($0 == 0)
+                ? RDCollectionViewFlowLayout.CollectionDisplay.grid
+                : RDCollectionViewFlowLayout.CollectionDisplay.list
+            }.asDriver(onErrorJustReturn: .list)
+    }()
 
     // MARK: - View Life Cycle
     override public init(frame: CGRect) {
@@ -42,6 +55,11 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.disposeBag = DisposeBag()
     }
 
     // MARK: - Functions

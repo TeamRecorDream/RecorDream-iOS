@@ -13,7 +13,6 @@ import SnapKit
 public protocol RDSegmentControl {
     func setupView()
     func setupConstraint()
-    func setTarget()
 }
 
 public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
@@ -29,7 +28,6 @@ public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
         
         self.setupView()
         self.setupConstraint()
-        self.setTarget()
     }
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,9 +38,7 @@ public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
 }
 
 extension RDStorageSegmentControl {
-    public func setTarget() {
-        self.addTarget(self, action: #selector(layoutValueChanged), for: .valueChanged)
-    }
+    
     public func setupView() {
         self.addSubview(lineView)
         self.backgroundColor = .clear
@@ -57,15 +53,6 @@ extension RDStorageSegmentControl {
             make.width.equalTo(1.adjustedWidth)
             make.height.equalTo(10.adjustedHeight)
             make.centerX.centerY.equalToSuperview()
-        }
-    }
-    @objc
-    private func layoutValueChanged(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 1:
-            self.rdCollectionViewFlowLayout.display = .list
-        default:
-            self.rdCollectionViewFlowLayout.display = .grid
         }
     }
 }

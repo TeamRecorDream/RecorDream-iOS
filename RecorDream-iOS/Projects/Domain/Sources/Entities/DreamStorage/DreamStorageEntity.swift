@@ -56,6 +56,8 @@ extension DreamStorageEntity.RecordList {
         public let title: String?
         public let genre: [Int]?
         
+        public var layoutChagneHandler = true
+        
         public init(id: String?, emotion: Int?, date: String?, title: String?, genre: [Int]?) {
             self.id = id
             self.emotion = emotion
@@ -63,5 +65,12 @@ extension DreamStorageEntity.RecordList {
             self.title = title
             self.genre = genre
         }
+    }
+}
+
+extension DreamStorageEntity.RecordList.Record {
+    public
+    mutating func toggleLayoutHandler() {
+        self.layoutChagneHandler.toggle()
     }
 }

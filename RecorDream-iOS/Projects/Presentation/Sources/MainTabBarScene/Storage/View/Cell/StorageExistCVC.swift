@@ -17,7 +17,7 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
     public static var isFromNib: Bool = false
     
     // MARK: - UI Components
-    private let section: RDCollectionViewFlowLayout.CollectionDisplay = .list
+    private var layoutType: RDCollectionViewFlowLayout.CollectionDisplay = .grid
     private var backgroundImageView = UIImageView()
     private var emotionImageView: UIImageView = {
         let iv = UIImageView()
@@ -53,7 +53,6 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         super.init(frame: frame)
         
         self.setupView()
-        self.setupConstraint()
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -69,11 +68,11 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         self.backgroundColor = .none
         self.titleLabel.addLabelSpacing(kernValue: -0.22)
     }
-    private func setupConstraint() {
+    public func setupConstraint(layoutType: RDCollectionViewFlowLayout.CollectionDisplay) {
         self.backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        switch section {
+        switch layoutType {
         case .list:
             self.emotionImageView.snp.makeConstraints {
                 $0.top.equalToSuperview().offset(21)
