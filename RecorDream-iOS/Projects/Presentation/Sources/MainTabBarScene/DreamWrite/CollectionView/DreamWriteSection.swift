@@ -42,6 +42,6 @@ enum Section: String, CaseIterable {
     
     // MARK: - Genres
     
-    static let genreTitles = ["코미디", "로맨스", "판타지", "가족", "친구", "공포", "동물", "음식", "일", "기타"]
+    static let genreTitles = ["코미디", "로맨스", "판타지", "공포", "동물", "친구", "가족", "음식", "일", "기타"]
         .map { "# " + $0 }
 }

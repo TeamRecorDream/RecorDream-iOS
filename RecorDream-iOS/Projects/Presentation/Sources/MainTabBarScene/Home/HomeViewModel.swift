@@ -22,7 +22,7 @@ public class HomeViewModel: ViewModelType {
     // MARK: - Inputs
     
     public struct Input {
-        let viewDidLoad: Observable<Void>
+        let viewWillAppear: Observable<Void>
     }
     
     // MARK: - Outputs
@@ -44,7 +44,7 @@ extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
         let output = Output()
         self.bindOutput(output: output, disposeBag: disposeBag)
 
-        input.viewDidLoad.subscribe(onNext: { _ in
+        input.viewWillAppear.subscribe(onNext: { _ in
             self.useCase.fetchDreamRecord()
         }).disposed(by: disposeBag)
 
@@ -59,9 +59,8 @@ extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
             .subscribe(onNext: { entity in
                 output.fetchedHomeData.accept(entity)
 
-                if let count = entity.records?.count {
-                    self.numberOfItems = count
-                }
+                let count = entity.records.count
+                self.numberOfItems = count
                 self.fetchedDreamRecord = entity
             }).disposed(by: disposeBag)
     }
