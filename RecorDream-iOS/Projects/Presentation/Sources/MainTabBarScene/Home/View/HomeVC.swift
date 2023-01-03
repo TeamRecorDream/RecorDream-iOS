@@ -81,15 +81,16 @@ public class HomeVC: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+
         self.bindViews()
-        self.bindViewModels()
         self.setUI()
         self.setLayout()
-        self.setCollectionViewAdapter()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        self.bindViewModels()
         self.resetView()
     }
 
@@ -158,7 +159,7 @@ extension HomeVC {
     }
     
     private func bindViewModels() {
-        let input = HomeViewModel.Input(viewDidLoad: Observable.just(()))
+        let input = HomeViewModel.Input(viewWillAppear: Observable.just(()))
 
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
 
@@ -174,17 +175,17 @@ extension HomeVC {
     private func fetchHomeData(model: HomeEntity) {
         self.welcomeLabel.text = "반가워요, \(model.nickname)님!"
         self.viewModel.fetchedDreamRecord = model
+        self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
+            collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
+        self.setCollectionViewAdapter()
     }
 
     private func setCollectionViewAdapter() {
-        self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
-            collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
-
         self.dreamCardCollectionViewAdapter?.selectedIndex
             .compactMap { $0 }
             .withUnretained(self)
             .bind { (owner, index) in
-                guard let records = owner.viewModel.fetchedDreamRecord.records?.safeget(index: index) else { return }
+                guard let records = owner.viewModel.fetchedDreamRecord.records.safeget(index: index) else { return }
 
                 let detail = owner.factory.instantiateDetailVC(dreamId: records.recordId)
                 owner.present(detail, animated: true)
