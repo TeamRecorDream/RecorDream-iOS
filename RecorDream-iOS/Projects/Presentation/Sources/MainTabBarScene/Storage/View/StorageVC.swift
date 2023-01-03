@@ -25,6 +25,8 @@ public class StorageVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
+    private var storageHeader: StorageHeaderCVC?
+    private let fetchedCount = PublishRelay<Int>()
     
     // MARK: - Reactive Stuff
     private let filterButtonTapped = PublishRelay<Int>()
@@ -44,6 +46,7 @@ public class StorageVC: UIViewController {
         self.registerView()
         self.setDelegate()
         self.setDataSource()
+        self.bindViews()
         self.bindViewModels()
     }
 }
@@ -110,8 +113,7 @@ extension StorageVC {
                 return view
             case StorageHeaderCVC.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.className, for: indexPath) as? StorageHeaderCVC else { return UICollectionReusableView() }
-                let itemCount = self.dataSource.snapshot(for: .records).items.count
-                view.title = "\(itemCount)개의 기록"
+                self.storageHeader = view
                 return view
             default: return UICollectionReusableView()
             }
@@ -120,6 +122,7 @@ extension StorageVC {
     
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
+        self.fetchedCount.accept(model.recordsCount)
         if model.recordsCount == 0 {
             self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
         } else {
@@ -152,6 +155,15 @@ extension StorageVC {
             .disposed(by: disposeBag)
     }
     
+    private func bindViews() {
+        self.fetchedCount
+            .asDriver(onErrorJustReturn: 0)
+            .drive { [weak self] count in
+                guard let self = self,
+                    let header = self.storageHeader else { return }
+                header.title = "\(count)개의 기록"
+            }.disposed(by: self.disposeBag)
+    }
 }
 
 extension StorageVC: UICollectionViewDelegate {
