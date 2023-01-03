@@ -83,6 +83,9 @@ extension StorageVC {
             switch indexPath.section {
             case 0:
                 guard let filterCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.reuseIdentifier, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
+                filterCell.setData(selectedImage: DreamStorageSection.icons[indexPath.row],
+                                   deselectedImage: DreamStorageSection.deselectedIcons[indexPath.row],
+                                   text: DreamStorageSection.titles[indexPath.row])
                 return filterCell
             case 1:
                 if let model = itemIdentifier as? DreamStorageEntity.RecordList.Record {
@@ -158,7 +161,7 @@ extension StorageVC: UICollectionViewDelegate {
             var selectedIndexPath: IndexPath? = nil
             selectedIndexPath = collectionView.indexPathsForSelectedItems?
                 .first { $0.section == indexPath.section }
-            self.filterButtonTapped.accept(indexPath.item + 1)
+            self.filterButtonTapped.accept(indexPath.item)
             guard let selected = selectedIndexPath else { return true }
             collectionView.deselectItem(at: selected, animated: false)
             return true

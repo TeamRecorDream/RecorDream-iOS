@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "feeling_xs_blank_unselected.png",
+      "filename" : "feeling_xs_blank.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "feeling_xs_blank_unselected@2x.png",
+      "filename" : "feeling_xs_blank@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "feeling_xs_blank_unselected@3x.png",
+      "filename" : "feeling_xs_blank@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
