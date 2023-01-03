@@ -70,7 +70,7 @@ extension DreamCardCollectionViewAdapter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamCardCVC.className, for: indexPath) as? DreamCardCVC else { return .init() }
 
-        if let dreamRecord = adapterDataSource?.fetchedDreamRecord.records?.safeget(index: indexPath.row) {
+        if let dreamRecord = adapterDataSource?.fetchedDreamRecord.records.safeget(index: indexPath.row) {
             cell.setData(model: dreamRecord)
         }
 
@@ -84,9 +84,6 @@ extension DreamCardCollectionViewAdapter: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        if let dreamRecord = adapterDataSource?.fetchedDreamRecord.records?.safeget(index: indexPath.row) {
-//            let dreamId = dreamRecord.recordId
-//        }
         selectedIndex.accept(indexPath.row)
     }
 }

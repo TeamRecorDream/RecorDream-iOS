@@ -103,7 +103,6 @@ public final class DreamDetailVC: UIViewController {
         self.setLayout()
         self.bindViewModels()
         self.bindViews()
-        self.setData(model: HomeEntity.Record(recordId: "id어쩌구", emotion: 1, date: "2022/11/22 SUN", title: "제목입니다 혹시 제목이 두줄이면 어떻게 될까요ㅍ 아아아아아아아아?", genres: [.로맨스,.코미디], content: "내용입니다"))
         self.setupTabbarControllersChild()
     }
 
@@ -178,12 +177,8 @@ public final class DreamDetailVC: UIViewController {
         dateLabel.text = model.date
         titleLabel.text = model.title
 
-        if model.genres.isEmpty {
-            genreStackView.addArrangedSubview(DreamGenreTagView(type: .detail, genre: "# 아직 설정되지 않았어요"))
-        } else {
-            model.genres.forEach {
-                genreStackView.addArrangedSubview(DreamGenreTagView(type: .detail, genre: $0.rawValue))
-            }
+        model.genres.forEach {
+            genreStackView.addArrangedSubview(DreamGenreTagView(type: .detail, genre: $0))
         }
     }
 }
