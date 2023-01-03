@@ -147,7 +147,8 @@ extension StorageVC {
 // MARK: - Bind
 extension StorageVC {
     private func bindViewModels() {
-        let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()), filterButtonTapped: self.filterButtonTapped.asObservable())
+        let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()),
+                                                filterButtonTapped: self.filterButtonTapped.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.storageDataFetched

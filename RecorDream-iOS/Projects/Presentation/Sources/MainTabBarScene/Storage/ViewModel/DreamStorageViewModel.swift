@@ -54,16 +54,15 @@ extension DreamStorageViewModel: ViewModelType {
     }
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
         let storageFetchedData = self.useCase.fetchSuccess
-        let storageFetchError = self.useCase.fetchFail
         
         storageFetchedData
             .subscribe(onNext: { entity in
-                output.storageDataFetched.accept(entity)
+                // 에러 처리 용도
+                let emptyResponse = entity == nil
+                
                 output.loadingStatus.accept(false)
+                guard let model = entity else { return }
+                output.storageDataFetched.accept(model)
             }).disposed(by: disposeBag)
-        
-        storageFetchError.subscribe(onNext: { _ in
-            output.loadingStatus.accept(true)
-        }).disposed(by: disposeBag)
     }
 }
