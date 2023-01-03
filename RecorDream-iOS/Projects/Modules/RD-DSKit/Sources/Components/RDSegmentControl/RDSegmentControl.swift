@@ -24,8 +24,8 @@ public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
         return v
     }()
     
-    public convenience override init(items: [Any]?) {
-        self.init(frame: .zero)
+    public override init(items: [Any]?) {
+        super.init(items: items)
         
         self.setupView()
         self.setupConstraint()
@@ -47,8 +47,8 @@ extension RDStorageSegmentControl {
         self.addSubview(lineView)
         self.backgroundColor = .clear
         self.selectedSegmentIndex = 1
-        self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 1)
-        self.setImage(RDDSKitAsset.Images.icnListOff.image, forSegmentAt: 2)
+        self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 0)
+        self.setImage(RDDSKitAsset.Images.icnListOff.image, forSegmentAt: 1)
         self.selectedSegmentTintColor = RDDSKitAsset.Colors.white01.color
         self.tintColor = RDDSKitAsset.Colors.white04.color
     }
