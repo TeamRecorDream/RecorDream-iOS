@@ -41,7 +41,7 @@ extension DefaultHomeUseCase: HomeUseCase {
     public func vaildateRecordExistence() {
         self.repository.fetchDreamRecord()
             .subscribe(onNext: { entity in
-                guard let records = entity.records else { return }
+                let records = entity.records
                 let isExistRecords = !records.isEmpty
                 self.isExistRecord.onNext(isExistRecords)
             }).disposed(by: self.disposeBag)
