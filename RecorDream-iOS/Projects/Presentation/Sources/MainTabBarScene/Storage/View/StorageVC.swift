@@ -98,7 +98,8 @@ extension StorageVC {
                     existCell.setData(emotion: currentRecord.emotion ?? 0,
                                       date: currentRecord.date ?? "",
                                       title: currentRecord.title ?? "",
-                                      tag: currentRecord.genre ?? [])
+                                      tag: currentRecord.genre ?? [],
+                                      layoutType: self.currentLayoutType)
                     return existCell
                 } else { return UICollectionViewCell() }
             default: return UICollectionViewCell()
@@ -143,8 +144,13 @@ extension StorageVC {
     
     private func changeLayoutType(type: RDCollectionViewFlowLayout.CollectionDisplay) {
         self.currentLayoutType = type
+        self.reapplySnapShot()
+        self.view.setNeedsLayout()
+    }
+    
+    private func reapplySnapShot() {
         var snapshot = self.dataSource.snapshot()
-        guard var items = snapshot.itemIdentifiers(inSection: .records) as? [DreamStorageEntity.RecordList.Record] else { return }
+        guard let items = snapshot.itemIdentifiers(inSection: .records) as? [DreamStorageEntity.RecordList.Record] else { return }
         let newItems: [DreamStorageEntity.RecordList.Record] = items.map { item in
             var changedItem = item
             changedItem.toggleLayoutHandler()

@@ -15,6 +15,7 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
     
     // MARK: - Properties
     public static var isFromNib: Bool = false
+    private var emotion = 0
     
     // MARK: - UI Components
     private var layoutType: RDCollectionViewFlowLayout.CollectionDisplay = .grid
@@ -68,7 +69,16 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         self.backgroundColor = .none
         self.titleLabel.addLabelSpacing(kernValue: -0.22)
     }
+    private func removeView() {
+        [backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView]
+            .forEach { view in
+                view.removeFromSuperview()
+            }
+    }
     public func setupConstraint(layoutType: RDCollectionViewFlowLayout.CollectionDisplay) {
+        removeView()
+        setupView()
+        
         self.backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -110,14 +120,20 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
                 $0.top.equalTo(titleLabel.snp.bottom).offset(8)
                 $0.centerX.equalToSuperview()
                 $0.height.equalTo(16)
+                $0.bottom.equalToSuperview().inset(22)
             }
         }
     }
 }
 
 extension StorageExistCVC {
-    func setData(emotion: Int, date: String, title: String, tag: [Int]) {
-        self.backgroundImageView.image = self.setEmotionImage(emotion: emotion).first
+    func setData(emotion: Int, date: String, title: String, tag: [Int], layoutType: RDCollectionViewFlowLayout.CollectionDisplay) {
+        switch layoutType {
+        case .grid:
+            self.backgroundImageView.image = self.setEmotionImage(emotion: emotion)[1]
+        case .list:
+            self.backgroundImageView.image = self.setEmotionImage(emotion: emotion).first
+        }
         self.emotionImageView.image = self.setEmotionImage(emotion: emotion).last
         self.dateLabel.text = date
         self.titleLabel.text = title
@@ -131,24 +147,25 @@ extension StorageExistCVC {
                                                                          genre: Section.genreTitles[genreType-1]))
             }
         }
+        self.emotion = emotion
         self.layoutSubviews()
     }
     private func setEmotionImage(emotion: Int) -> [UIImage] {
         switch emotion {
         case 1:
-            return [RDDSKitAsset.Images.listYellow.image, RDDSKitAsset.Images.feelingMJoy.image]
+            return [RDDSKitAsset.Images.listYellow.image, RDDSKitAsset.Images.cardSYellow.image ,RDDSKitAsset.Images.feelingMJoy.image]
         case 2:
-            return [RDDSKitAsset.Images.listBlue.image, RDDSKitAsset.Images.feelingMSad.image]
+            return [RDDSKitAsset.Images.listBlue.image, RDDSKitAsset.Images.cardSBlue.image, RDDSKitAsset.Images.feelingMSad.image]
         case 3:
-            return [RDDSKitAsset.Images.listRed.image, RDDSKitAsset.Images.feelingMScary.image]
+            return [RDDSKitAsset.Images.listRed.image, RDDSKitAsset.Images.cardSRed.image, RDDSKitAsset.Images.feelingMScary.image]
         case 4:
-            return [RDDSKitAsset.Images.listPurple.image, RDDSKitAsset.Images.feelingMStrange.image]
+            return [RDDSKitAsset.Images.listPurple.image, RDDSKitAsset.Images.cardSPurple.image, RDDSKitAsset.Images.feelingMStrange.image]
         case 5:
-            return [RDDSKitAsset.Images.listPink.image, RDDSKitAsset.Images.feelingMShy.image]
+            return [RDDSKitAsset.Images.listPink.image, RDDSKitAsset.Images.cardSPink.image, RDDSKitAsset.Images.feelingMShy.image]
         case 6:
-            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
+            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.cardSWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
         default:
-            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.feelingMBlank.image]
+            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.cardSWhite.image, RDDSKitAsset.Images.feelingMBlank.image]
         }
     }
 }
