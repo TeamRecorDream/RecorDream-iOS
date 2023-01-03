@@ -123,17 +123,17 @@ extension StorageVC {
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
         self.fetchedCount.accept(model.recordsCount)
+        var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
+        snapshot.appendSections([.filters, .records])
+        snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
         if model.recordsCount == 0 {
             self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
         } else {
             self.dreamStorageCollectionView.restore()
-            var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
-            snapshot.appendSections([.filters, .records])
-            snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
             snapshot.appendItems(model.records, toSection: .records)
-            self.dataSource.apply(snapshot)
-            self.view.setNeedsLayout()
         }
+        self.dataSource.apply(snapshot)
+        self.view.setNeedsLayout()
     }
 }
 
