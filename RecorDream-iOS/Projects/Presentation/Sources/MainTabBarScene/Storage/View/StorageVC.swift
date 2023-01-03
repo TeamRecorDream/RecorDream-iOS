@@ -63,7 +63,7 @@ extension StorageVC {
             make.height.equalTo(23.adjustedHeight)
         }
         self.dreamStorageCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(logoView.snp.bottom)
+            make.top.equalTo(logoView.snp.bottom).offset(20)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -117,8 +117,9 @@ extension StorageVC {
                 view.title = sectionType.title
                 return view
             case StorageHeaderCVC.className:
-                guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.reuseIdentifier, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
-                view.title = "\(self.fetchedCount.value)개의 기록"
+                guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.className, for: indexPath) as? StorageHeaderCVC else { return UICollectionReusableView() }
+                let itemCount = self.dataSource.snapshot(for: .records).items.count
+                view.title = "\(itemCount)개의 기록"
                 return view
             default: return UICollectionReusableView()
             }

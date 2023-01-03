@@ -17,6 +17,12 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
     // MARK: - Properties
     public static var isFromNib: Bool = false
     
+    public lazy var title = "" {
+        didSet {
+            self.countLabel.text = self.title
+        }
+    }
+    
     // MARK: - UI Components
     private lazy var countLabel: UILabel = {
         let lb = UILabel()
@@ -40,20 +46,20 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
 
     // MARK: - Functions
     private func setupView() {
-        self.isUserInteractionEnabled = false
         self.addSubviews(countLabel, segmentControl)
         self.backgroundColor = .clear
     }
     private func setupConstraint() {
         self.countLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(24)
-            make.centerX.equalToSuperview().inset(18)
+            make.leading.equalToSuperview()
         }
+        
         self.segmentControl.snp.makeConstraints { make in
             make.width.equalTo(55.adjustedWidth)
             make.height.equalTo(24.adjustedHeight)
-            make.top.equalToSuperview().offset(20)
-            make.centerX.equalTo(countLabel.snp.trailing).inset(233)
+            make.top.bottom.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview().inset(18)
         }
     }
 }
