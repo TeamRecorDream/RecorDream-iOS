@@ -12,6 +12,7 @@ public enum UserDefaultKey: String {
     case accessToken = "key.accessToken"
     case refreshToken = "key.refreshToken"
     case nickname = "key.nickname"
+    case shouldShowWrite = "key.shouldShowWrite"
 }
 
 public extension UserDefaultKey {

@@ -19,6 +19,7 @@ public final class DreamDetailVC: UIViewController {
     
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailViewModel!
+    public var factory: ViewControllerFactory!
   
     // MARK: - UI Components
 
@@ -101,6 +102,7 @@ public final class DreamDetailVC: UIViewController {
         self.setUI()
         self.setLayout()
         self.bindViewModels()
+        self.bindViews()
         self.setupTabbarControllersChild()
     }
 
@@ -195,5 +197,20 @@ extension DreamDetailVC {
 extension DreamDetailVC {
     private func setupTabbarControllersChild() {
         pageViewController.setTabContentsItem(contentPages: [DreamRecordViewController(), DreamNoteViewController()])
+    }
+
+    private func bindViews() {
+        self.headerView.rx.moreButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                // TODO: 더 자연스러운 animation
+                let detailMoreVC = owner.factory.instantiateDetailMoreVC()
+
+                let navigation = UINavigationController(rootViewController: detailMoreVC)
+                navigation.modalTransitionStyle = .coverVertical
+                navigation.modalPresentationStyle = .overFullScreen
+                navigation.isNavigationBarHidden = true
+                owner.present(navigation, animated: false)
+            }).disposed(by: self.disposeBag)
     }
 }

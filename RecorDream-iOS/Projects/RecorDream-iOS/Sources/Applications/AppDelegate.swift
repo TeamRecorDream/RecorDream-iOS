@@ -8,6 +8,7 @@
 import UIKit
 
 import RD_Core
+import RD_Navigator
 
 import FirebaseCore
 import FirebaseMessaging
@@ -69,18 +70,39 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         print("Device Token:", token)
     }
     
-    // foreground에 푸시을 받는 경우 처리
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.list, .banner, .sound, .badge])
     }
     
-    // background에서 푸시를 받는 경우 처리
+    // Push Notice를 탭한 경우의 처리
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
+        let application = UIApplication.shared
+        let scene = UIApplication.shared.connectedScenes.first
+        let state = application.applicationState
+        
+        // 앱이 실행중인 상태에서 푸쉬 알림을 눌렀을 때
+        // - active : 앱을 현재 활성화하여 사용중인 상태
+        // - inactive : 실행중이지만 비활성화 상태
+        if state == .active || state == .inactive {
+            guard let sceneDelegate = scene?.delegate as? SceneDelegate,
+                  let factory = sceneDelegate.dependencyConatiner else {
+                completionHandler()
+                return
+            }
+            
+            factory.coordinateDreamWriteVC()
+        }
         completionHandler()
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        completionHandler(UIBackgroundFetchResult.newData)
     }
 }
 
@@ -94,7 +116,7 @@ extension AppDelegate: MessagingDelegate {
     
     func configureFirebaseMessaging() {
         Messaging.messaging().delegate = self
-
+        
         Messaging.messaging().token { token, error in
             if let error = error {
                 print("FCM 등록토큰 가져오기 오류: \(error)")
