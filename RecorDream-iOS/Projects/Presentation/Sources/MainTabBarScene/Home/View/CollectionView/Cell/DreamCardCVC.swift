@@ -79,6 +79,11 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
 
     // MARK: - View Life Cycles
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.setAttributesForReuse()
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUI()
@@ -135,24 +140,31 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
     }
 
     func setData(model: HomeEntity.Record) {
-        // emotion: Int, date: String, title: String, tag: [String], note: String
         backgroundImage.image = setEmotionImage(emotion: model.emotion)[0]
         emotionImageView.image = setEmotionImage(emotion: model.emotion)[1]
 
         dateLabel.text = model.date
         titleLabel.text = model.title
+        noteLabel.text = model.content
 
-        if model.genres.isEmpty {
-            genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: "# 아직 설정되지 않았어요"))
-        } else {
+        if genreStackView.subviews.isEmpty {
             model.genres.forEach {
-                genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0.rawValue))
+                genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0))
             }
         }
-
-        noteLabel.text = model.content
     }
-    
+
+    func setAttributesForReuse() {
+        self.backgroundImage.image = nil
+        self.emotionImageView.image = nil
+        self.dateLabel.text = nil
+        self.titleLabel.text = nil
+        self.noteLabel.text = nil
+        self.genreStackView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+    }
+
     private func setEmotionImage(emotion: Int) -> [UIImage] {
         switch emotion {
         case 1:
