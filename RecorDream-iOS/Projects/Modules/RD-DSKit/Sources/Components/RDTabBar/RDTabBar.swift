@@ -25,6 +25,9 @@ open class RDTabBar: UIView {
     
     private var shapeLayer: CALayer?
     
+    /// Drawing Cycle에서 중복 추가를 막기 위한 CALayer의 Container
+    private var layerContainer: [CALayer] = []
+    
     private let writeLabel: UILabel = {
         let label = UILabel()
         label.text = "기록하기"
@@ -36,6 +39,7 @@ open class RDTabBar: UIView {
     
     public override func draw(_ rect: CGRect) {
         self.addShape()
+        self.resetLayer()
         self.addShadowLayer()
     }
     
@@ -165,7 +169,8 @@ extension RDTabBar {
         shapeLayer.fillColor = UIColor(rgb: 0x000000).cgColor
 
         if let oldShapeLayer = self.shapeLayer {
-            self.layer.replaceSublayer(oldShapeLayer, with: shapeLayer)
+            oldShapeLayer.removeFromSuperlayer()
+            self.layer.insertSublayer(shapeLayer, at: 0)
         } else {
             self.layer.insertSublayer(shapeLayer, at: 0)
         }
@@ -173,17 +178,36 @@ extension RDTabBar {
     }
     
     private func addShadowLayer() {
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = createLine()
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
-        self.layer.insertSublayer(shapeLayer, at: 1)
-        
-        let shapeLayer2 = CAShapeLayer()
-        shapeLayer2.path = createLine()
-        shapeLayer2.fillColor = UIColor.clear.cgColor
-        shapeLayer2.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.4, x: 0, y: 0.5, blur: 10, spread: 0)
-        self.layer.insertSublayer(shapeLayer2, at: 2)
+        self.addDropShadow()
+        self.addInnerShadow()
+    }
+    
+    private func addDropShadow() {
+        let outerDropShadowLayer = CAShapeLayer()
+        outerDropShadowLayer.path = createLine()
+        outerDropShadowLayer.fillColor = UIColor.clear.cgColor
+        outerDropShadowLayer.applyShadow(color: UIColor(rgb: 0x000000), alpha: 0.6, x: 0, y: -5, blur: 15, spread: 0)
+        self.layer.insertSublayer(outerDropShadowLayer, at: 0)
+        layerContainer.append(outerDropShadowLayer)
+    }
+    
+    private func addInnerShadow() {
+        let innerShadowLayer = CAShapeLayer()
+        let lineHeight: CGFloat = 1
+        innerShadowLayer.path = createLine(lineHeight: lineHeight)
+        innerShadowLayer.bounds = self.shapeLayer!.bounds.offsetBy(dx: 0, dy: lineHeight)
+        innerShadowLayer.fillColor = UIColor.clear.cgColor
+        innerShadowLayer.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.2, x: 0, y: 0.1, blur: 20, spread: 0)
+        innerShadowLayer.mask = self.shapeLayer
+        self.layer.insertSublayer(innerShadowLayer, at: 2)
+        layerContainer.append(innerShadowLayer)
+    }
+    
+    private func resetLayer() {
+        self.layerContainer.forEach {
+            $0.removeFromSuperlayer()
+        }
+        layerContainer = []
     }
 
     func createPath() -> CGPath {
@@ -207,11 +231,11 @@ extension RDTabBar {
         return path.cgPath
     }
     
-    func createLine() -> CGPath {
+    func createLine(lineHeight: CGFloat = 5) -> CGPath {
         let height: CGFloat = 37.0
         let path = UIBezierPath()
         let centerWidth = self.frame.width / 2
-        let lineHeight: CGFloat = 5
+        let lineHeight: CGFloat = lineHeight
         
         path.move(to: CGPoint(x: 0, y: 0)) // top left에서 시작하여 그린다
         
