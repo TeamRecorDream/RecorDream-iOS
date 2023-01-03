@@ -10,16 +10,16 @@ import Foundation
 
 public struct DreamStorageResponse: Codable {
     public let recordsCount: Int
-    public let records: [Records]
+    public let records: [Record]
 }
 
 extension DreamStorageResponse {
-    public struct Records: Codable {
-        public let id: String?
-        public let emotion: Int?
-        public let date: String?
-        public let title: String?
-        public let genre: [Int]?
+    public struct Record: Codable {
+        public let id: String
+        public let emotion: Int
+        public let date: String
+        public let title: String
+        public let genre: [Int]
         
         private enum CodingKeys: String, CodingKey {
             case id = "_id"
