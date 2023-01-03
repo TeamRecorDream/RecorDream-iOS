@@ -47,17 +47,17 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
     }()
     
     public var currentType: RDCollectionViewFlowLayout.CollectionDisplay = .grid {
-        didSet { if self.currentType == .grid {
-            self.segmentControl.selectedSegmentIndex = 0
-        } else {
-            self.segmentControl.selectedSegmentIndex = 1 }
+        didSet {
+            if self.currentType == .grid {
+                self.segmentControl.selectedSegmentIndex = 0
+            } else {
+                self.segmentControl.selectedSegmentIndex = 1 }
         }
     }
-
+    
     // MARK: - View Life Cycle
     override public init(frame: CGRect) {
         super.init(frame: frame)
-
         self.setupView()
         self.setupConstraint()
     }
@@ -69,7 +69,7 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
         super.prepareForReuse()
         self.disposeBag = DisposeBag()
     }
-
+    
     // MARK: - Functions
     private func setupView() {
         self.addSubviews(countLabel, segmentControl)
