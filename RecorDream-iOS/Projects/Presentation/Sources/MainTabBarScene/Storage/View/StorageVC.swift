@@ -28,7 +28,6 @@ public class StorageVC: UIViewController {
     
     // MARK: - Reactive Stuff
     private let filterButtonTapped = PublishRelay<Int>()
-    private let fetchedCount = BehaviorRelay<Int>(value: 0)
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -40,7 +39,6 @@ public class StorageVC: UIViewController {
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.setupView()
         self.setupConstraint()
         self.registerView()
@@ -82,31 +80,23 @@ extension StorageVC {
 extension StorageVC {
     private func setDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>(collectionView: dreamStorageCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-            if let model = itemIdentifier as? DreamStorageEntity.RecordList {
-                if model.records.isEmpty {
-                    self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
-                }
-                else {
-                    self.dreamStorageCollectionView.restore()
+            switch indexPath.section {
+            case 0:
+                guard let filterCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.reuseIdentifier, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
+                return filterCell
+            case 1:
+                if let model = itemIdentifier as? DreamStorageEntity.RecordList.Record {
                     guard let existCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
                     
-                    let currentRecord = model.records[indexPath.row]
-                    existCell.setData(emotion: currentRecord.emotion ?? 0, date: currentRecord.date ?? "", title: currentRecord.title ?? "", tag: currentRecord.genre ?? [])
+                        let currentRecord = model
+                        existCell.setData(emotion: currentRecord.emotion ?? 0,
+                                          date: currentRecord.date ?? "",
+                                          title: currentRecord.title ?? "",
+                                          tag: currentRecord.genre ?? [])
                     return existCell
+                } else { return UICollectionViewCell() }
+            default: return UICollectionViewCell()
                 }
-            }
-            else {
-                guard let filterCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.reuseIdentifier, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
-                if let model = itemIdentifier as? DreamStorageEntity.FilterList {
-                    if model.isSelected {
-                        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .right)
-                        collectionView.scrollToItem(at: IndexPath.init(item: 0, section: 0), at: .left, animated: false)
-                        self.filterSnapShot()
-                    }
-                }
-                return filterCell
-            }
-            return UICollectionViewCell()
         })
         
         self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
@@ -125,20 +115,16 @@ extension StorageVC {
             }
         }
     }
-    private func filterSnapShot() {
-        var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
-        snapshot.appendSections([.filters])
-        snapshot.appendItems(self.filterList, toSection: .filters)
-        self.dataSource.apply(snapshot)
-    }
+    
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
-        print("얍", model)
+        if model.recordsCount == 0 {
+            self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
+        } else {
+            self.dreamStorageCollectionView.restore()
         var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
-        print("얍 개수?", model.recordsCount)
-        self.fetchedCount.accept(model.recordsCount)
-        snapshot.appendSections([.records])
-        
+            snapshot.appendSections([.filters, .records])
+            snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
         snapshot.appendItems(model.records, toSection: .records)
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
