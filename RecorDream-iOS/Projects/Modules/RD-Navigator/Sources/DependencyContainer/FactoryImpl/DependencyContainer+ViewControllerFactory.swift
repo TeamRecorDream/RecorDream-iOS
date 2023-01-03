@@ -48,7 +48,7 @@ extension DependencyContainer: MainTabBarControllerFactory {
     
     public func instantiateHomeVC() -> Presentation.HomeVC {
         let homeVC = HomeVC()
-        let repository = DefaultHomeRepository()
+        let repository = DefaultHomeRepository(recordService: self.recordService)
         let useCase = DefaultHomeUseCase(repository: repository)
         let viewModel = HomeViewModel(useCase: useCase)
         
