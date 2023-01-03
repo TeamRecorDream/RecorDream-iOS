@@ -165,7 +165,7 @@ extension DreamSearchVC {
         self.dreamSearchCollectionView.rx.itemSelected
             .withUnretained(self)
             .subscribe(onNext: { (owner, item) in
-                let detailVC = owner.factory.instantiateDetailVC()
+                let detailVC = owner.factory.instantiateDetailVC(dreamId: "")
                 owner.present(detailVC, animated: true)
             }).disposed(by: disposeBag)
     }
