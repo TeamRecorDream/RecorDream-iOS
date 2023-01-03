@@ -25,7 +25,7 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
         }
     }
     
-    public var disposeBag = DisposeBag()
+    public var disposeBag: DisposeBag = DisposeBag()
     
     // MARK: - UI Components
     private lazy var countLabel: UILabel = {
@@ -45,6 +45,14 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
                 : RDCollectionViewFlowLayout.CollectionDisplay.list
             }.asDriver(onErrorJustReturn: .list)
     }()
+    
+    public var currentType: RDCollectionViewFlowLayout.CollectionDisplay = .grid {
+        didSet { if self.currentType == .grid {
+            self.segmentControl.selectedSegmentIndex = 0
+        } else {
+            self.segmentControl.selectedSegmentIndex = 1 }
+        }
+    }
 
     // MARK: - View Life Cycle
     override public init(frame: CGRect) {

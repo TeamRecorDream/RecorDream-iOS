@@ -116,8 +116,11 @@ extension StorageVC {
             case StorageHeaderCVC.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.className, for: indexPath) as? StorageHeaderCVC else { return UICollectionReusableView() }
                 self.storageHeader = view
+                view.currentType = self.currentLayoutType
+                view.title = "\(self.dataSource.snapshot(for: .records).items.count)개의 기록"
                 view.layoutTypeChanged
-                    .drive(onNext: {
+                    .drive(onNext: { [weak self] in
+                        guard let self = self else { return }
                         self.changeLayoutType(type: $0)
                     }).disposed(by: view.disposeBag)
                 return view
