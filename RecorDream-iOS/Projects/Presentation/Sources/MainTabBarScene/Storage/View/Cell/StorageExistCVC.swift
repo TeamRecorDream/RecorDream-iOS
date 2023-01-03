@@ -47,18 +47,22 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         sv.spacing = 4
         return sv
     }()
-
+    
     // MARK: - View Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        
         self.setupView()
         self.setupConstraint()
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    override func prepareForReuse() {
+        self.genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    }
+    
     // MARK: - Functions
     private func setupView() {
         self.addSubviews(backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView)
@@ -82,12 +86,12 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
             }
             self.titleLabel.snp.makeConstraints {
                 $0.top.equalTo(dateLabel.snp.bottom).offset(3)
-                $0.centerX.equalTo(emotionImageView.snp.trailing).offset(24)
+                $0.leading.equalTo(dateLabel)
             }
             self.genreStackView.snp.makeConstraints {
-                $0.height.equalTo(16)
+                $0.height.equalTo(30)
                 $0.top.equalTo(titleLabel.snp.bottom).offset(3)
-                $0.leading.equalToSuperview().offset(102)
+                $0.leading.equalTo(dateLabel)
             }
         case .grid:
             self.emotionImageView.snp.makeConstraints {
@@ -118,13 +122,17 @@ extension StorageExistCVC {
         self.emotionImageView.image = self.setEmotionImage(emotion: emotion).last
         self.dateLabel.text = date
         self.titleLabel.text = title
-        if tag.isEmpty {
-            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .search, genre: "# 아직 설정되지 않았어요"))
+        let hasNoTag = tag.first == 0
+        if hasNoTag {
+            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage,
+                                                                     genre: "# 아직 설정되지 않았어요"))
         } else {
             tag.forEach { genreType in
-                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage, genre: Section.emotionTitles[genreType]))
+                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage,
+                                                                         genre: Section.genreTitles[genreType-1]))
             }
         }
+        self.layoutSubviews()
     }
     private func setEmotionImage(emotion: Int) -> [UIImage] {
         switch emotion {

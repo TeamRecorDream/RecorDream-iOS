@@ -87,16 +87,15 @@ extension StorageVC {
             case 1:
                 if let model = itemIdentifier as? DreamStorageEntity.RecordList.Record {
                     guard let existCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
-                    
-                        let currentRecord = model
-                        existCell.setData(emotion: currentRecord.emotion ?? 0,
-                                          date: currentRecord.date ?? "",
-                                          title: currentRecord.title ?? "",
-                                          tag: currentRecord.genre ?? [])
+                    let currentRecord = model
+                    existCell.setData(emotion: currentRecord.emotion ?? 0,
+                                      date: currentRecord.date ?? "",
+                                      title: currentRecord.title ?? "",
+                                      tag: currentRecord.genre ?? [])
                     return existCell
                 } else { return UICollectionViewCell() }
             default: return UICollectionViewCell()
-                }
+            }
         })
         
         self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
@@ -122,12 +121,13 @@ extension StorageVC {
             self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
         } else {
             self.dreamStorageCollectionView.restore()
-        var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
+            var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
             snapshot.appendSections([.filters, .records])
             snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
-        snapshot.appendItems(model.records, toSection: .records)
-        self.dataSource.apply(snapshot)
-        self.view.setNeedsLayout()
+            snapshot.appendItems(model.records, toSection: .records)
+            self.dataSource.apply(snapshot)
+            self.view.setNeedsLayout()
+        }
     }
 }
 
