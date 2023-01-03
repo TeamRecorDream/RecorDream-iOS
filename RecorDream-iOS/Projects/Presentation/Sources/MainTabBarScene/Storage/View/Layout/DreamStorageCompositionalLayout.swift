@@ -20,10 +20,14 @@ extension StorageVC {
             case .filters:
                 return self.createFilterSection(filterHeader)
             case .records:
-                return self.createRecordsSection()
+                return self.currentLayoutType == .list
+                ? self.createListRecordsSection()
+                : self.createGridRecordsSection()
             }
         }
     }
+    
+    // MARK: - Filter Section
     
     private func createFilterSection(_ header: NSCollectionLayoutBoundarySupplementaryItem) -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(32.adjusted), heightDimension: .fractionalWidth(1))
@@ -39,7 +43,9 @@ extension StorageVC {
         return section
     }
     
-    private func createRecordsSection() -> NSCollectionLayoutSection {
+    // MARK: - Records Section
+    
+    private func createListRecordsSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(80))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(500))
@@ -47,6 +53,23 @@ extension StorageVC {
         let header = self.createRecordHeader()
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 8
+        section.boundarySupplementaryItems = [header]
+        section.orthogonalScrollingBehavior = .none
+        section.contentInsets = .init(top: 0, leading: 19, bottom: 9, trailing: 19)
+        return section
+    }
+    
+    private func createGridRecordsSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(164.adjusted),
+                                              heightDimension: .absolute(196.adjusted))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(UIScreen.main.bounds.width),
+                                               heightDimension: .estimated(196.adjusted))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = NSCollectionLayoutSpacing.fixed(9)
+        let header = self.createRecordHeader()
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 9
         section.boundarySupplementaryItems = [header]
         section.orthogonalScrollingBehavior = .none
         section.contentInsets = .init(top: 0, leading: 19, bottom: 9, trailing: 19)

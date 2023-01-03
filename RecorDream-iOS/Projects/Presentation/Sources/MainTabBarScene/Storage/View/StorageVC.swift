@@ -36,7 +36,7 @@ public class StorageVC: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>! = nil
     
     // MARK: - Properties
-    private var currentLayoutType = RDCollectionViewFlowLayout.CollectionDisplay.grid
+    public var currentLayoutType = RDCollectionViewFlowLayout.CollectionDisplay.grid
     
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
