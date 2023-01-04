@@ -84,7 +84,6 @@ public class HomeVC: UIViewController {
         super.viewDidLoad()
 
         self.bindViews()
-        self.bindViewModels()
         self.checkShowDreamWrite()
         self.setUI()
         self.setLayout()
