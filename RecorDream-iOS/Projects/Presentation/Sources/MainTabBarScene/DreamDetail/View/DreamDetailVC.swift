@@ -103,7 +103,6 @@ public final class DreamDetailVC: UIViewController {
         self.setLayout()
         self.bindViewModels()
         self.bindViews()
-        self.setupTabbarControllersChild()
     }
 
     // MARK: - UI & Layout
@@ -168,35 +167,62 @@ public final class DreamDetailVC: UIViewController {
             $0.bottom.equalTo(logoMark.snp.top).offset(Metric.pageContollerBottom)
         }
     }
-
-    func setData(model: HomeEntity.Record) {
-        // emotion: Int, date: String, title: String, tag: [String], note: String
-        backgroundCardImage.image = RDDSKitAsset.Images.backgroundPurple.image
-        emotionImageView.image = RDDSKitAsset.Images.feelingLStrange.image
-        
-        dateLabel.text = model.date
-        titleLabel.text = model.title
-
-        model.genres.forEach {
-            genreStackView.addArrangedSubview(DreamGenreTagView(type: .detail, genre: $0))
-        }
-    }
 }
 
 // MARK: - Methods
 
 extension DreamDetailVC {
     private func bindViewModels() {
-        let input = DreamDetailViewModel.Input()
+        let input = DreamDetailViewModel.Input(viewWillAppear: Observable.just(()))
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+
+        output.fetchedDetailData
+            .compactMap { $0 }
+            .withUnretained(self)
+            .bind { (owner, entity) in
+                owner.fetchDetailDreamData(model: entity)
+                print(entity)
+            }.disposed(by: self.disposeBag)
+    }
+
+    private func fetchDetailDreamData(model: DreamDetailEntity) {
+        self.backgroundCardImage.image = setEmotionImage(emotion: model.emotion)[0]
+        self.emotionImageView.image = setEmotionImage(emotion: model.emotion)[1]
+
+        self.titleLabel.text = model.title
+        self.dateLabel.text = model.date
+
+        if genreStackView.subviews.isEmpty {
+            model.genre.forEach {
+                genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0))
+            }
+        }
+        self.setupTabbarControllersChild(voiceUrl: model.voiceUrl, content: model.content, note: model.note)
+    }
+
+    private func setEmotionImage(emotion: Int) -> [UIImage] {
+        switch emotion {
+        case 1:
+            return [RDDSKitAsset.Images.backgroundYellow.image, RDDSKitAsset.Images.feelingLJoy.image]
+        case 2:
+            return [RDDSKitAsset.Images.backgroundBlue.image, RDDSKitAsset.Images.feelingLSad.image]
+        case 3:
+            return [RDDSKitAsset.Images.backgroundRed.image, RDDSKitAsset.Images.feelingLScary.image]
+        case 4:
+            return [RDDSKitAsset.Images.backgroundPurple.image, RDDSKitAsset.Images.feelingLStrange.image]
+        case 5:
+            return [RDDSKitAsset.Images.backgroundPink.image, RDDSKitAsset.Images.feelingLShy.image]
+        default:
+            return [RDDSKitAsset.Images.backgroundWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
+        }
     }
 }
 
 // MARK: - PageController Methods
 
 extension DreamDetailVC {
-    private func setupTabbarControllersChild() {
-        pageViewController.setTabContentsItem(contentPages: [DreamRecordViewController(), DreamNoteViewController()])
+    private func setupTabbarControllersChild(voiceUrl: URL?, content: String, note: String) {
+        pageViewController.setTabContentsItem(contentPages: [DreamRecordViewController(voiceUrl: voiceUrl, content: content), DreamNoteViewController(noteContent: note)])
     }
 
     private func bindViews() {
@@ -211,6 +237,12 @@ extension DreamDetailVC {
                 navigation.modalPresentationStyle = .overFullScreen
                 navigation.isNavigationBarHidden = true
                 owner.present(navigation, animated: false)
+            }).disposed(by: self.disposeBag)
+
+        self.headerView.rx.closeButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                owner.dismiss(animated: true)
             }).disposed(by: self.disposeBag)
     }
 }
