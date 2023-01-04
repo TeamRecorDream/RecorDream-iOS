@@ -26,9 +26,9 @@ extension DetailDreamResponse {
         case .동물: return "#동물"
         case .친구: return "#친구"
         case .가족: return "#가족"
-        case .음식: return "음식"
-        case .일: return "일"
-        case .기타: return "기타"
+        case .음식: return "#음식"
+        case .일: return "#일"
+        case .기타: return "#기타"
         case .none: return ""
         }
     }
