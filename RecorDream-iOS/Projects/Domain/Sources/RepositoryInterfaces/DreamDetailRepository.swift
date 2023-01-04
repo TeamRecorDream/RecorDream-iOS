@@ -8,5 +8,5 @@
 import RxSwift
 
 public protocol DreamDetailRepository {
-  
+    func fetchDetailRecord(recordId: String) -> Observable<DreamDetailEntity>
 }

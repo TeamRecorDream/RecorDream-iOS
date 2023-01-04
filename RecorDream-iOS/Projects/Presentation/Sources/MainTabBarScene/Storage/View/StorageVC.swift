@@ -132,9 +132,8 @@ extension StorageVC {
     }
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
-        print("얍", model)
+        
         var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
-        print("얍 개수?", model.recordsCount)
         self.fetchedCount.accept(model.recordsCount)
         snapshot.appendSections([.records])
         
