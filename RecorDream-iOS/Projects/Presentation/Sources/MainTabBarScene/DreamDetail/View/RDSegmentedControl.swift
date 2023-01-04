@@ -34,7 +34,7 @@ final class RDSegmentedControl: UIControl {
 
     private let buttonTitles: [String]
     private var selectorButtons: [UIButton] = []
-    private lazy var selectorView: UIControl = {
+    public lazy var selectorView: UIControl = {
         let control = UIControl(frame: CGRect(x: .zero, y: -1,
                                               width: segmentInfo.selectWidth,
                                               height: segmentInfo.selectHeight))
@@ -45,7 +45,7 @@ final class RDSegmentedControl: UIControl {
     }()
 
     private var buttonWidth: CGFloat { (self.bounds.width / buttonTitles.count.f) }
-    public private(set) var selectedIndex: Int = 0
+    public var selectedIndex: Int = 0
 
     weak var delegate: SegmentedControlDelegate?
 
@@ -83,6 +83,11 @@ extension RDSegmentedControl {
 
         guard shouldAnimate else { return }
         animateSelectedItem(to: buttonWidth * index.f)
+    }
+    
+    
+    func setSelectorOrigin(x: CGFloat) {
+        self.selectorView.frame.origin.x = x
     }
 }
 
