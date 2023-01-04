@@ -18,6 +18,7 @@ enum RecordRouter {
     case fetchStorage(filter: Int)
     case fetchHomeRecord
     case fetchDetailRecord(recordId: String)
+    case deleteRecord(recordId: String)
 }
 
 extension RecordRouter: BaseRouter {
@@ -29,6 +30,8 @@ extension RecordRouter: BaseRouter {
             return .patch
         case .fetchStorage, .fetchHomeRecord, .fetchDetailRecord:
             return .get
+        case .deleteRecord:
+            return .delete
         default: return .get
         }
     }
@@ -48,6 +51,8 @@ extension RecordRouter: BaseRouter {
         case .fetchHomeRecord:
             return "/record"
         case .fetchDetailRecord(let recordId):
+            return "/record/\(recordId)"
+        case .deleteRecord(let recordId):
             return "/record/\(recordId)"
         default: return ""
         }
