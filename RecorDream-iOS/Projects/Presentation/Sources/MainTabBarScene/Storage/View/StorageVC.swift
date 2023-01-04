@@ -29,7 +29,7 @@ public class StorageVC: UIViewController {
     private let fetchedCount = PublishRelay<Int>()
     
     // MARK: - Reactive Stuff
-    private let filterButtonTapped = PublishRelay<Int>()
+    private let emotionTapped = BehaviorRelay<Int>(value: 0)
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -89,6 +89,8 @@ extension StorageVC {
                 filterCell.setData(selectedImage: DreamStorageSection.icons[indexPath.row],
                                    deselectedImage: DreamStorageSection.deselectedIcons[indexPath.row],
                                    text: DreamStorageSection.titles[indexPath.row])
+                let isSelected = indexPath.row == self.emotionTapped.value
+                filterCell.isSelected = isSelected
                 return filterCell
             case 1:
                 if let model = itemIdentifier as? DreamStorageEntity.RecordList.Record {
@@ -172,7 +174,7 @@ extension StorageVC {
 extension StorageVC {
     private func bindViewModels() {
         let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()),
-                                                filterButtonTapped: self.filterButtonTapped.asObservable())
+                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.storageDataFetched
@@ -204,7 +206,7 @@ extension StorageVC: UICollectionViewDelegate {
             var selectedIndexPath: IndexPath? = nil
             selectedIndexPath = collectionView.indexPathsForSelectedItems?
                 .first { $0.section == indexPath.section }
-            self.filterButtonTapped.accept(indexPath.item)
+            self.emotionTapped.accept(indexPath.item)
             guard let selected = selectedIndexPath else { return true }
             collectionView.deselectItem(at: selected, animated: false)
             return true

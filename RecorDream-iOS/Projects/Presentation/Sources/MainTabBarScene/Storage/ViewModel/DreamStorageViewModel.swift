@@ -47,7 +47,6 @@ extension DreamStorageViewModel: ViewModelType {
         
         input.filterButtonTapped.subscribe(onNext: { selectedType in
             self.useCase.execute(requestValue: .init(filterType: selectedType))
-            output.loadingStatus.accept(true)
         }).disposed(by: disposeBag)
         
         return output
