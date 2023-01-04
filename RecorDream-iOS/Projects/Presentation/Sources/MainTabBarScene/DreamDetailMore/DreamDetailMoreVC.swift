@@ -11,6 +11,7 @@ import UIKit
 import RD_DSKit
 
 import RxSwift
+import RxRelay
 import SnapKit
 
 public class DreamDetailMoreVC: UIViewController {
@@ -20,6 +21,8 @@ public class DreamDetailMoreVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailMoreViewModel!
     public var factory: ViewControllerFactory!
+
+    private let deleteAlertOkActionTapped = PublishRelay<Void>()
   
     // MARK: - UI Components
 
@@ -177,14 +180,20 @@ extension DreamDetailMoreVC {
                                                     message: "꿈 기록을 삭제하시겠습니까?",
                                                     okActionTitle: "삭제",
                                                     okAction:  { _ in
-                    // 삭제 로직 실행 todo
+                    self.deleteAlertOkActionTapped.accept(())
                 })
             }).disposed(by: self.disposeBag)
     }
   
     private func bindViewModels() {
-        let input = DreamDetailMoreViewModel.Input()
+        let input = DreamDetailMoreViewModel.Input(deleteButtonTapped: deleteAlertOkActionTapped.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+
+        output.popToHome
+            .withUnretained(self)
+            .subscribe { owner, _ in
+                owner.dismiss(animated: true)
+            }.disposed(by: self.disposeBag)
     }
 
 }

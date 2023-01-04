@@ -230,7 +230,7 @@ extension DreamDetailVC {
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
                 // TODO: 더 자연스러운 animation
-                let detailMoreVC = owner.factory.instantiateDetailMoreVC()
+                let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamId: self.viewModel.dreamId)
 
                 let navigation = UINavigationController(rootViewController: detailMoreVC)
                 navigation.modalTransitionStyle = .coverVertical

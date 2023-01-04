@@ -15,7 +15,7 @@ public class DreamDetailViewModel: ViewModelType {
 
     private let useCase: DreamDetailUseCase
     private let disposeBag = DisposeBag()
-    private let dreamId: String
+    let dreamId: String
   
     // MARK: - Inputs
     
