@@ -9,5 +9,5 @@
 import RxSwift
 
 public protocol DreamDetailMoreRepository {
-  
+    func deleteRecord(recordId: String) -> Observable<Bool>
 }
