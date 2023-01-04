@@ -181,7 +181,6 @@ extension DreamDetailVC {
             .withUnretained(self)
             .bind { (owner, entity) in
                 owner.fetchDetailDreamData(model: entity)
-                print(entity)
             }.disposed(by: self.disposeBag)
     }
 
