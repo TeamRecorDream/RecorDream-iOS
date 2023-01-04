@@ -10,13 +10,17 @@ import RxSwift
 import RxRelay
 
 public protocol DreamDetailMoreUseCase {
+    func deleteRecord(recordId: String)
 
+    var deleteRecordSuccess: PublishSubject<Bool> { get set }
 }
 
 public class DefaultDreamDetailMoreUseCase {
   
     private let repository: DreamDetailMoreRepository
     private let disposeBag = DisposeBag()
+
+    public var deleteRecordSuccess = PublishSubject<Bool>()
   
     public init(repository: DreamDetailMoreRepository) {
         self.repository = repository
@@ -24,5 +28,11 @@ public class DefaultDreamDetailMoreUseCase {
 }
 
 extension DefaultDreamDetailMoreUseCase: DreamDetailMoreUseCase {
-  
+    public func deleteRecord(recordId: String) {
+        self.repository.deleteRecord(recordId: recordId)
+            .withUnretained(self)
+            .subscribe(onNext: { owner, deleteRecordSuccess in
+                owner.deleteRecordSuccess.onNext(deleteRecordSuccess)
+            }).disposed(by: self.disposeBag)
+    }
 }
