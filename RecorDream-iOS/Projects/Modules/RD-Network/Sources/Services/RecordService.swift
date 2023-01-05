@@ -57,6 +57,6 @@ extension DefaultRecordService: RecordService {
         requestObjectInRx(RecordRouter.fetchDetailRecord(recordId: recordId))
     }
     public func deleteRecord(recordId: String) -> Observable<Bool> {
-        requestObjectInRxWithEmptyResponse(RecordRouter.deleteRecord(recordId: recordId))
+        requestObjectInRxWithEmptyJson(RecordRouter.deleteRecord(recordId: recordId))
     }
 }

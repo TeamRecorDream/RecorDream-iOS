@@ -166,6 +166,28 @@ extension BaseService {
             return Disposables.create()
         }
     }
+
+    func requestObjectInRxWithEmptyJson(_ target: BaseRouter) -> Observable<Bool> {
+        return Observable<Bool>.create { observer in
+            self.AFManager.request(target).responseData { response in
+                switch response.result {
+                case .success:
+                    do {
+                        guard response.response?.statusCode ?? 0 <= 299 else {
+                            observer.onNext(false)
+                            observer.onCompleted()
+                            return
+                        }
+                        observer.onNext(true)
+                        observer.onCompleted()
+                    }
+                case .failure(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+    }
     
     func uploadMultipartInRx<T: Codable>(_ target: BaseRouter) -> Observable<T?> {
         return Observable<T?>.create { observer in
