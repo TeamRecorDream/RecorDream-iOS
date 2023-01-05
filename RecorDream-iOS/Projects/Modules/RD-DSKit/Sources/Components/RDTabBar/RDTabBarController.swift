@@ -70,6 +70,11 @@ extension RDTabBarController {
             }
         }
     }
+    
+    public func setTabBarHidden(_ isHidden: Bool = true) {
+        self.rdTabBar.isHidden = isHidden
+        self.backgroundView.isHidden = isHidden
+    }
 }
 
 // MARK: - Methods
@@ -80,7 +85,7 @@ extension RDTabBarController {
         self.rdTabBar.delegate = self
     }
     
-    func setMiddleButton() {
+    private func setMiddleButton() {
 
         let middleBtn = UIButton(frame: CGRect(x: (self.view.bounds.width / 2)-28, y: -28-8, width: 56, height: 56))
         middleBtn.backgroundColor = .black
@@ -119,7 +124,7 @@ extension RDTabBarController {
         innerShadowLayer.shadowPath = innerPath.cgPath
     }
     
-    func createPath() -> CGPath {
+    private func createPath() -> CGPath {
         let curveHeight: CGFloat = 37.0
         let path = UIBezierPath()
         let centerWidth = UIScreen.main.bounds.width / 2
