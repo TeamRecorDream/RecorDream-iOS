@@ -178,7 +178,7 @@ extension StorageVC: UICollectionViewDelegate {
             detailVC.modalTransitionStyle = .coverVertical
             detailVC.modalPresentationStyle = .fullScreen
             guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return false }
-            rdtabbarController.rdTabBar.isHidden = true
+            rdtabbarController.setTabBarHidden()
             self.present(detailVC, animated: true)
             return true
         }

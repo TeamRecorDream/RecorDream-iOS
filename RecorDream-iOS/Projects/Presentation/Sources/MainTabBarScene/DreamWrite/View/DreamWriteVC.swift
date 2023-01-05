@@ -255,7 +255,8 @@ extension DreamWriteVC {
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
                 self.mainCell = mainCell
                 if let model = itemIdentifier as? DreamWriteEntity.Main {
-                    mainCell.setData(model: model)
+                    mainCell.setData(model: model,
+                                     isModifyView: self.viewModelType.isModifyView)
                 }
                 mainCell.titleTextChanged
                     .bind(to: self.titleTextChanged)
@@ -268,8 +269,12 @@ extension DreamWriteVC {
                     switch viewType {
                     case .date:
                         self.dateInteractionViewTapped()
-                    case .voiceRecord:
-                        self.voiceRecordInteractionViewTapped()
+                    case .voiceRecord(let isEnabled):
+                        if isEnabled {
+                            self.voiceRecordInteractionViewTapped()
+                        } else if self.viewModelType.isModifyView {
+                            self.showToast(message: "수정하기에서는 녹음할 수 없어요.")
+                        }
                     }
                 }).disposed(by: self.disposeBag)
                 return mainCell

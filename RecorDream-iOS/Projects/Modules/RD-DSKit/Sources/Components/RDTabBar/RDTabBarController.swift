@@ -19,6 +19,15 @@ open class RDTabBarController: UITabBarController {
     
     public let rdTabBar = RDTabBar()
     
+    private lazy var backgroundView: UIView = {
+        let view = UIView()
+        let layer = CAShapeLayer()
+        layer.fillColor = UIColor.black.cgColor
+        layer.path = self.createPath()
+        view.layer.addSublayer(layer)
+        return view
+    }()
+    
     open override var selectedIndex: Int {
         didSet {
             self.rdTabBar.select(at: selectedIndex, notifyDelegate: false)
@@ -52,12 +61,19 @@ extension RDTabBarController {
     }
     
     private func setLayout() {
-        self.view.addSubview(rdTabBar)
+        self.view.addSubviews(backgroundView, rdTabBar)
         
-        rdTabBar.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalToSuperview()
-            $0.height.equalTo(self.tabBarHeight + self.bottomSafeArea)
+        [backgroundView, rdTabBar].forEach {
+            $0.snp.makeConstraints {
+                $0.leading.trailing.bottom.equalToSuperview()
+                $0.height.equalTo(self.tabBarHeight + self.bottomSafeArea)
+            }
         }
+    }
+    
+    public func setTabBarHidden(_ isHidden: Bool = true) {
+        self.rdTabBar.isHidden = isHidden
+        self.backgroundView.isHidden = isHidden
     }
 }
 
@@ -69,7 +85,7 @@ extension RDTabBarController {
         self.rdTabBar.delegate = self
     }
     
-    func setMiddleButton() {
+    private func setMiddleButton() {
 
         let middleBtn = UIButton(frame: CGRect(x: (self.view.bounds.width / 2)-28, y: -28-8, width: 56, height: 56))
         middleBtn.backgroundColor = .black
@@ -106,6 +122,29 @@ extension RDTabBarController {
         let cutout = UIBezierPath(roundedRect: btn.bounds, cornerRadius: 28).reversing()
         innerPath.append(cutout)
         innerShadowLayer.shadowPath = innerPath.cgPath
+    }
+    
+    private func createPath() -> CGPath {
+        let curveHeight: CGFloat = 37.0
+        let path = UIBezierPath()
+        let centerWidth = UIScreen.main.bounds.width / 2
+        let tabBarheight = self.tabBarHeight + self.bottomSafeArea
+        
+        path.move(to: CGPoint(x: 0, y: 0)) // top left에서 시작하여 그린다
+        path.addLine(to: CGPoint(x: (centerWidth - curveHeight * 2), y: 0))
+
+        path.addCurve(to: CGPoint(x: centerWidth, y: curveHeight),
+        controlPoint1: CGPoint(x: (centerWidth - 30), y: 0), controlPoint2: CGPoint(x: centerWidth - 40, y: curveHeight))
+
+        path.addCurve(to: CGPoint(x: (centerWidth + curveHeight * 2), y: 0),
+        controlPoint1: CGPoint(x: centerWidth + 40, y: curveHeight), controlPoint2: CGPoint(x: (centerWidth + 30), y: 0))
+
+        path.addLine(to: CGPoint(x: UIScreen.main.bounds.width, y: 0))
+        path.addLine(to: CGPoint(x: UIScreen.main.bounds.width, y: tabBarheight))
+        path.addLine(to: CGPoint(x: 0, y: tabBarheight))
+        path.close()
+
+        return path.cgPath
     }
 
     @objc func menuButtonAction(sender: UIButton) {
