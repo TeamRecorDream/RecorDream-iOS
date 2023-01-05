@@ -193,6 +193,9 @@ extension DreamDetailMoreVC {
             .withUnretained(self)
             .subscribe { owner, _ in
                 owner.dismiss(animated: true)
+
+                let presentingVC = self.presentingViewController
+                presentingVC?.dismiss(animated: true)
             }.disposed(by: self.disposeBag)
     }
 

@@ -87,6 +87,7 @@ public class HomeVC: UIViewController {
         self.checkShowDreamWrite()
         self.setUI()
         self.setLayout()
+        self.detailDismissNotification()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +95,10 @@ public class HomeVC: UIViewController {
 
         self.bindViewModels()
         self.resetView()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - UI & Layout
@@ -208,5 +213,13 @@ extension HomeVC {
                 self.present(vc, animated: true)
             }
         }
+    }
+
+    private func detailDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissDetailVC(_:)), name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+
+    @objc private func didDismissDetailVC(_ notification: Notification) {
+        self.viewWillAppear(true)
     }
 }

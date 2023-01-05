@@ -11,6 +11,7 @@ import Domain
 import RD_DSKit
 
 import RxSwift
+import RxRelay
 import SnapKit
 
 public final class DreamDetailVC: UIViewController {
@@ -20,7 +21,7 @@ public final class DreamDetailVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailViewModel!
     public var factory: ViewControllerFactory!
-  
+    
     // MARK: - UI Components
 
     private enum Metric {
@@ -103,6 +104,11 @@ public final class DreamDetailVC: UIViewController {
         self.setLayout()
         self.bindViewModels()
         self.bindViews()
+    }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+
+        self.notificateDismiss()
     }
 
     // MARK: - UI & Layout
@@ -244,5 +250,9 @@ extension DreamDetailVC {
             .subscribe(onNext: { (owner, _) in
                 owner.dismiss(animated: true)
             }).disposed(by: self.disposeBag)
+    }
+
+    private func notificateDismiss() {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
     }
 }
