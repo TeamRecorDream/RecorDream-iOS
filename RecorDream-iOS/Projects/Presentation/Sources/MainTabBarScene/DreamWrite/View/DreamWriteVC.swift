@@ -172,6 +172,10 @@ extension DreamWriteVC {
         }
         sender.cancelsTouchesInView = false
     }
+
+    private func notificateDismiss() {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "dismissModify"), object: nil)
+    }
 }
 
 // MARK: - Bind
@@ -214,7 +218,9 @@ extension DreamWriteVC {
 
                 switch self.viewModelType {
                 case .modify:
+                    self.notificateDismiss()
                     self.dismiss(animated: true)
+
                     let presentingVC = self.presentingViewController
                     presentingVC?.dismiss(animated: true)
                 case .write:

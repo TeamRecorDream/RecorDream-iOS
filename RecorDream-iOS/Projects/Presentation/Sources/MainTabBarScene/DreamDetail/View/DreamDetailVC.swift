@@ -103,6 +103,7 @@ public final class DreamDetailVC: UIViewController {
         self.setUI()
         self.setLayout()
         self.bindViews()
+        self.modifyDismissNotification()
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -257,5 +258,13 @@ extension DreamDetailVC {
 
     private func notificateDismiss() {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+
+    private func modifyDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissModifyVC(_:)), name: NSNotification.Name(rawValue: "dismissModify"), object: nil)
+    }
+
+    @objc private func didDismissModifyVC(_ notification: Notification) {
+        self.viewWillAppear(true)
     }
 }
