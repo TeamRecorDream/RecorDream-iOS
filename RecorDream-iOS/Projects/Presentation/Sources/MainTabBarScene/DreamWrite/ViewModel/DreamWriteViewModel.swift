@@ -48,6 +48,13 @@ public class DreamWriteViewModel: ViewModelType {
     public enum DreamWriteViewModelType {
         case write
         case modify(postId: String)
+        
+        var isModifyView: Bool {
+            switch self {
+            case .write: return false
+            case .modify: return true
+            }
+        }
     }
     
     public var viewModelType = DreamWriteViewModelType.write

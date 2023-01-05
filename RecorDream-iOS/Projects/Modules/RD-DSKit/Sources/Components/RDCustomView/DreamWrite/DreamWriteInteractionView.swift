@@ -18,7 +18,7 @@ public class DreamWriteInteractionView: UIView {
     
     public enum InteractionType {
         case date
-        case voiceRecord
+        case voiceRecord(isEnabled: Bool)
     }
     
     public var viewType = InteractionType.date
