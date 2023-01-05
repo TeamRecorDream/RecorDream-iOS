@@ -211,7 +211,15 @@ extension DreamWriteVC {
         output.writeRequestSuccess
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.dismiss(animated: true)
+
+                switch self.viewModelType {
+                case .modify:
+                    self.dismiss(animated: true)
+                    let presentingVC = self.presentingViewController
+                    presentingVC?.dismiss(animated: true)
+                case .write:
+                    self.dismiss(animated: true)
+                }
             }).disposed(by: self.disposeBag)
         
         output.loadingStatus

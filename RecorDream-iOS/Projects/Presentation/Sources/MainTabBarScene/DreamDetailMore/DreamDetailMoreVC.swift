@@ -183,6 +183,15 @@ extension DreamDetailMoreVC {
                     self.deleteAlertOkActionTapped.accept(())
                 })
             }).disposed(by: self.disposeBag)
+
+        self.editButton.rx.tap
+            .asDriver()
+            .drive(onNext: {
+                let dreamModifyVC = self.factory.instantiateDreamWriteVC(.modify(postId: self.viewModel.dreamId))
+
+                self.modalPresentationStyle = .overFullScreen
+                self.present(dreamModifyVC, animated: true)
+            }).disposed(by: self.disposeBag)
     }
   
     private func bindViewModels() {

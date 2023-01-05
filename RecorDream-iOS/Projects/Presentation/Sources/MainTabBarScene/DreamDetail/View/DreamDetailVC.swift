@@ -102,8 +102,13 @@ public final class DreamDetailVC: UIViewController {
         
         self.setUI()
         self.setLayout()
-        self.bindViewModels()
         self.bindViews()
+    }
+
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.bindViewModels()
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
@@ -234,7 +239,6 @@ extension DreamDetailVC {
         self.headerView.rx.moreButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
-                // TODO: 더 자연스러운 animation
                 let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamId: self.viewModel.dreamId)
 
                 let navigation = UINavigationController(rootViewController: detailMoreVC)
