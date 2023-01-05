@@ -197,7 +197,7 @@ extension RDTabBar {
         innerShadowLayer.path = createLine(lineHeight: lineHeight)
         innerShadowLayer.bounds = self.shapeLayer!.bounds.offsetBy(dx: 0, dy: lineHeight)
         innerShadowLayer.fillColor = UIColor.clear.cgColor
-        innerShadowLayer.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.2, x: 0, y: 0.1, blur: 20, spread: 0)
+        innerShadowLayer.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.3, x: 0, y: 0.1, blur: 20, spread: 0)
         innerShadowLayer.mask = self.shapeLayer
         self.layer.insertSublayer(innerShadowLayer, at: 2)
         layerContainer.append(innerShadowLayer)
