@@ -135,7 +135,6 @@ extension DreamSearchVC: UICollectionViewDelegate {
         } else {
             self.dreamSearchCollectionView.restore()
             snapshot.appendSections([.exist])
-            print(model.records)
             snapshot.appendItems(model.records, toSection: .exist)
         }
         self.dataSource.apply(snapshot)

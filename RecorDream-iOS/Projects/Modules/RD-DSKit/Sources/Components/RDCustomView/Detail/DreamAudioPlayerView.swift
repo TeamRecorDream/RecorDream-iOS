@@ -39,7 +39,7 @@ public final class DreamAudioPlayerView: UIView {
 
     private var audioPlayer: AVAudioPlayer!
     private var audioTimer: Timer!
-    private var audioFile: URL!
+    private var audioFile: URL?
     private let timePlayerSelector: Selector = #selector(updatePlayTime)
 
     private var playStatus = playStatus.notStart
@@ -70,13 +70,15 @@ public final class DreamAudioPlayerView: UIView {
 
     // MARK: - View Life Cycle
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    public init(voiceUrl: URL?, frame: CGRect) {
+        self.audioFile = voiceUrl
 
-        setUI()
-        setLayout()
-        bind()
-        initPlay()
+        super.init(frame: .zero)
+
+        self.setUI()
+        self.setLayout()
+        self.bind()
+        self.initPlay()
     }
 
     required init?(coder: NSCoder) {
@@ -117,12 +119,7 @@ public final class DreamAudioPlayerView: UIView {
 
 extension DreamAudioPlayerView {
     private func initPlay() {
-        // test를 위한 임시 url
-        audioFile = RDDSKitResources.bundle.url(forResource: "min", withExtension: "mp3")
-        print(audioFile)
-
-        // 앞서 초기화한 audioFile을 URL로 하는 audioPlayer 인스턴스 생성.
-        // AVAudioPlayer 함수는 입력 파라미터인 오디오 파일이 없을 때에 대비하여 do-try-catch문 사용
+        guard let audioFile = self.audioFile else { return }
 
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: audioFile)

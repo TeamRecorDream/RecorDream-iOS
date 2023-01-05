@@ -24,7 +24,7 @@ public final class DreamDetailHeaderView: UIView {
 
     // MARK: - UI Components
 
-    private lazy var closeButton: UIButton = {
+    lazy var closeButton: UIButton = {
         let button = UIButton()
         button.setImage(RDDSKitAsset.Images.icnClose.image, for: .normal)
         return button
@@ -84,5 +84,9 @@ public final class DreamDetailHeaderView: UIView {
 extension Reactive where Base: DreamDetailHeaderView {
     public var moreButtonTapped: ControlEvent<Void> {
         return base.moreButton.rx.tap
+    }
+
+    public var closeButtonTapped: ControlEvent<Void> {
+        return base.closeButton.rx.tap
     }
 }

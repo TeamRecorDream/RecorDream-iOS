@@ -19,6 +19,7 @@ public protocol RecordService {
     func modifyRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?, recordId: String) -> Observable<Bool>
     func downloadVoiceRecord(url: String) -> Observable<String>
     func fetchHomeRecord() -> Observable<HomeDreamResponse?>
+    func fetchDetailRecord(recordId: String) -> Observable<DetailDreamResponse?>
 }
 
 public class DefaultRecordService: BaseService {
@@ -49,6 +50,9 @@ extension DefaultRecordService: RecordService {
         requestObjectInRx(RecordRouter.fetchModifyRecord(recordId: recordId))
     }
     public func fetchHomeRecord() -> Observable<HomeDreamResponse?> {
-        requestObjectInRx(RecordRouter.homeRecord)
+        requestObjectInRx(RecordRouter.fetchHomeRecord)
+    }
+    public func fetchDetailRecord(recordId: String) -> Observable<DetailDreamResponse?> {
+        requestObjectInRx(RecordRouter.fetchDetailRecord(recordId: recordId))
     }
 }
