@@ -103,18 +103,17 @@ public final class DreamDetailVC: UIViewController {
         self.setUI()
         self.setLayout()
         self.bindViews()
+        self.bindViewModels()
         self.modifyDismissNotification()
     }
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        self.bindViewModels()
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         self.notificateDismiss()
     }
 
@@ -186,7 +185,7 @@ public final class DreamDetailVC: UIViewController {
 
 extension DreamDetailVC {
     private func bindViewModels() {
-        let input = DreamDetailViewModel.Input(viewWillAppear: Observable.just(()))
+        let input = DreamDetailViewModel.Input(viewWillAppear: self.rx.viewWillAppear)
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
 
         output.fetchedDetailData

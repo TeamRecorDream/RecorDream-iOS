@@ -84,6 +84,7 @@ public class HomeVC: UIViewController {
         super.viewDidLoad()
 
         self.bindViews()
+        self.bindViewModels()
         self.checkShowDreamWrite()
         self.setUI()
         self.setLayout()
@@ -92,8 +93,7 @@ public class HomeVC: UIViewController {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        self.bindViewModels()
+        
         self.resetView()
     }
 
@@ -166,7 +166,7 @@ extension HomeVC {
     }
     
     private func bindViewModels() {
-        let input = HomeViewModel.Input(viewWillAppear: Observable.just(()))
+        let input = HomeViewModel.Input(viewWillAppear: self.rx.viewWillAppear)
 
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
