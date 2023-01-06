@@ -29,6 +29,8 @@ public class HomeVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: HomeViewModel!
     public var factory: ViewControllerFactory!
+
+    private let isDetailDismissed = PublishRelay<Bool>()
     
     private var dreamCardCollectionViewAdapter: DreamCardCollectionViewAdapter?
     
@@ -166,7 +168,7 @@ extension HomeVC {
     }
     
     private func bindViewModels() {
-        let input = HomeViewModel.Input(viewWillAppear: self.rx.viewWillAppear)
+        let input = HomeViewModel.Input(viewWillAppear: Observable.merge(self.rx.viewWillAppear, self.isDetailDismissed.asObservable()))
 
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
@@ -220,6 +222,6 @@ extension HomeVC {
     }
 
     @objc private func didDismissDetailVC(_ notification: Notification) {
-        self.viewWillAppear(true)
+        self.isDetailDismissed.accept(true)
     }
 }

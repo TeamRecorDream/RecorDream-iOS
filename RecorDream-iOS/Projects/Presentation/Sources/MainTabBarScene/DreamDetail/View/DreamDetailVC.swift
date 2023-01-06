@@ -21,6 +21,8 @@ public final class DreamDetailVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailViewModel!
     public var factory: ViewControllerFactory!
+
+    private let isModifyDismissed = PublishRelay<Bool>()
     
     // MARK: - UI Components
 
@@ -117,6 +119,10 @@ public final class DreamDetailVC: UIViewController {
         self.notificateDismiss()
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     // MARK: - UI & Layout
     private func setUI() {
         self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
@@ -185,7 +191,7 @@ public final class DreamDetailVC: UIViewController {
 
 extension DreamDetailVC {
     private func bindViewModels() {
-        let input = DreamDetailViewModel.Input(viewWillAppear: self.rx.viewWillAppear)
+        let input = DreamDetailViewModel.Input(viewWillAppear: Observable.merge(self.rx.viewWillAppear, self.isModifyDismissed.asObservable()))
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
 
         output.fetchedDetailData
@@ -265,6 +271,6 @@ extension DreamDetailVC {
     }
 
     @objc private func didDismissModifyVC(_ notification: Notification) {
-        self.viewWillAppear(true)
+        self.isModifyDismissed.accept(true)
     }
 }
