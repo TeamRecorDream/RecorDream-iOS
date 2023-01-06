@@ -37,7 +37,7 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
         .viewType(.date)
     
     private let voiceRecordInteractionView = DreamWriteInteractionView()
-        .viewType(.voiceRecord(isEnabled: false))
+        .viewType(.voiceRecord(isEnabled: false, voiceExist: false))
     
     private let titleTextView = DreamWriteTextView()
         .placeHolder("꿈의 제목을 남겨주세요")
@@ -114,8 +114,8 @@ extension DreamWriteMainCVC {
         self.dateChanged(date: model.date)
         self.recordUpdated(record: CGFloat(model.recordTime))
         
-        guard isModifyView else { return }
-        self.voiceRecordInteractionView.rx.isInteractionEnabled.onNext(false)
+        let voiceRecordEnabled = !isModifyView
+        self.voiceRecordInteractionView.rx.isInteractionEnabled.onNext(voiceRecordEnabled)
     }
     
     public func dateChanged(date: String) {
@@ -139,7 +139,8 @@ extension DreamWriteMainCVC {
                 self.interactionViewTapped.accept(.date)
             }
         case .voiceRecord:
-            self.interactionViewTapped.accept(.voiceRecord(isEnabled: voiceRecordInteractionView.isEnabled))
+            self.interactionViewTapped.accept(.voiceRecord(isEnabled: voiceRecordInteractionView.isEnabled,
+                                                           voiceExist: voiceRecordInteractionView.voiceExist))
         }
     }
 }

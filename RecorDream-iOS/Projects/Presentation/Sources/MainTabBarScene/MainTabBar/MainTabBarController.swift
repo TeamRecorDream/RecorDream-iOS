@@ -71,7 +71,7 @@ extension MainTabBarController {
     private func setMiddleButtonAction() {
         self.middleButtonAction = { [weak self] in
             guard let self = self else { return }
-            let dreamWriteVC = self.factory.instantiateDreamWriteVC(.write)
+            let dreamWriteVC = self.factory.instantiateDreamWriteVC(.modify(postId: "63b47efa8030b7207e060b0d"))
             dreamWriteVC.modalPresentationStyle = .fullScreen
             self.present(dreamWriteVC, animated: true)
         }

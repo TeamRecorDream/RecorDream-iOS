@@ -228,8 +228,7 @@ extension DreamWriteVC {
         recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
             guard let self = self else { return }
             self.dismissVoiceRecordView()
-            guard let voiceData = dataTimeTuple?.0,
-                  let totalTime = dataTimeTuple?.1 else { return }
+            guard let (voiceData, totalTime) = dataTimeTuple else { return }
             self.voiceRecorded.accept(voiceData)
             self.mainCell?.recordUpdated(record: totalTime)
         }).disposed(by: self.disposeBag)
@@ -269,11 +268,14 @@ extension DreamWriteVC {
                     switch viewType {
                     case .date:
                         self.dateInteractionViewTapped()
-                    case .voiceRecord(let isEnabled):
-                        if isEnabled {
+                    case .voiceRecord(let isEnabled, let voiceExist):
+                        switch (isEnabled, voiceExist) {
+                        case (true, _):
                             self.voiceRecordInteractionViewTapped()
-                        } else if self.viewModelType.isModifyView {
-                            self.showToast(message: "수정하기에서는 녹음할 수 없어요.")
+                        case (false, true):
+                            self.showToast(message: "녹음은 수정할 수 없어요")
+                        case (false, false):
+                            self.showToast(message: "수정하기에서는 녹음할 수 없어요")
                         }
                     }
                 }).disposed(by: self.disposeBag)
