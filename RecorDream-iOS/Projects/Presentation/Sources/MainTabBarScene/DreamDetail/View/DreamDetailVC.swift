@@ -113,7 +113,8 @@ public final class DreamDetailVC: UIViewController {
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
-
+        super.viewWillDisappear(animated)
+        
         self.notificateDismiss()
     }
 
