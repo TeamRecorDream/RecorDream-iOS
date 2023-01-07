@@ -30,6 +30,8 @@ public class StorageVC: UIViewController {
     
     // MARK: - Reactive Stuff
     private let emotionTapped = BehaviorRelay<Int>(value: 0)
+    private var selectedIndex = PublishRelay<Int>()
+    private let dreamId = PublishRelay<String>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -48,6 +50,7 @@ public class StorageVC: UIViewController {
         self.setDataSource()
         self.bindViews()
         self.bindViewModels()
+        self.bindCollectionView()
     }
 }
 
@@ -196,8 +199,7 @@ extension StorageVC {
                     let header = self.storageHeader else { return }
                 header.title = "\(count)개의 기록"
             }.disposed(by: self.disposeBag)
-    }
-    private func bindViews() {
+
         self.logoView.rx.searchButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
@@ -208,6 +210,7 @@ extension StorageVC {
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
                 owner.present(navigation, animated: true)
             }).disposed(by: self.disposeBag)
+        
         self.logoView.rx.mypageButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
@@ -215,6 +218,24 @@ extension StorageVC {
                 owner.navigationController?.pushViewController(mypageVC, animated: true)
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
                 rdtabbarController.setTabBarHidden()
+            }).disposed(by: self.disposeBag)
+    }
+    private func bindCollectionView() {
+        self.selectedIndex
+            .bind(onNext: { idx in
+                guard let id = self.viewModel.fetchedDreamRecord.records.safeget(index: idx)?.id else { return }
+                self.dreamId.accept(id)
+            }).disposed(by: self.disposeBag)
+        
+        self.dreamId
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { id in
+                let detailVC = self.factory.instantiateDetailVC(dreamId: id)
+                detailVC.modalTransitionStyle = .coverVertical
+                detailVC.modalPresentationStyle = .pageSheet
+                guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.setTabBarHidden()
+                self.present(detailVC, animated: true)
             }).disposed(by: self.disposeBag)
     }
 }
@@ -231,12 +252,7 @@ extension StorageVC: UICollectionViewDelegate {
             collectionView.deselectItem(at: selected, animated: false)
             return true
         case .records:
-            let detailVC = self.factory.instantiateDetailVC(dreamId: "")
-            detailVC.modalTransitionStyle = .coverVertical
-            detailVC.modalPresentationStyle = .pageSheet
-            guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return false }
-            rdtabbarController.setTabBarHidden()
-            self.present(detailVC, animated: true)
+            self.selectedIndex.accept(indexPath.row)
             return true
         }
     }

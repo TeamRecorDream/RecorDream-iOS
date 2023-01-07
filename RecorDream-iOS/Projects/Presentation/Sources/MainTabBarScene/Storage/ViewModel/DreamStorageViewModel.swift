@@ -16,6 +16,7 @@ import RxCocoa
 public final class DreamStorageViewModel {
     // MARK: - Properties
     let fetchRequestEntity = BehaviorRelay<StorageFetchQuery>(value: .init(filterType: 0))
+    var fetchedDreamRecord = DreamStorageEntity.RecordList(recordsCount: 0, records: [])
     private let useCase: DreamStorageUseCase
     private let disposeBag = DisposeBag()
     
@@ -62,6 +63,7 @@ extension DreamStorageViewModel: ViewModelType {
                 output.loadingStatus.accept(false)
                 guard let model = entity else { return }
                 output.storageDataFetched.accept(model)
+                self.fetchedDreamRecord = model
             }).disposed(by: disposeBag)
     }
 }
