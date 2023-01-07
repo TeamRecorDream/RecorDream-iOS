@@ -191,7 +191,7 @@ public final class DreamDetailVC: UIViewController {
 
 extension DreamDetailVC {
     private func bindViewModels() {
-        let input = DreamDetailViewModel.Input(viewWillAppear: Observable.merge(self.rx.viewWillAppear, self.isModifyDismissed.asObservable()))
+        let input = DreamDetailViewModel.Input(viewDidLoad: Observable.just(()), isModifyDismissed: self.isModifyDismissed.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
 
         output.fetchedDetailData

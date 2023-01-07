@@ -20,7 +20,8 @@ public class DreamDetailViewModel: ViewModelType {
     // MARK: - Inputs
     
     public struct Input {
-        let viewWillAppear: Observable<Bool>
+        let viewDidLoad: Observable<Void>
+        let isModifyDismissed: Observable<Bool>
     }
   
     // MARK: - Outputs
@@ -42,8 +43,14 @@ extension DreamDetailViewModel {
         let output = Output()
         self.bindOutput(output: output, disposeBag: disposeBag)
 
-        input.viewWillAppear.subscribe(onNext: { _ in
+        input.viewDidLoad.subscribe(onNext: { _ in
             self.useCase.fetchDetailRecord(recordId: self.dreamId)
+        }).disposed(by: disposeBag)
+
+        input.isModifyDismissed.subscribe(onNext: { isModifyDismissed in
+            if isModifyDismissed {
+                self.useCase.fetchDetailRecord(recordId: self.dreamId)
+            }
         }).disposed(by: disposeBag)
     
         return output
