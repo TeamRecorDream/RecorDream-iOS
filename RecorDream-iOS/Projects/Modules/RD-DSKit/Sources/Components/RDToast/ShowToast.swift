@@ -20,15 +20,15 @@ public class Toast {
         let toastContainer = UIView()
         let toastLabel = UILabel()
         
-        toastContainer.backgroundColor = RDDSKitAsset.Colors.grey02.color
+        toastContainer.backgroundColor = RDDSKitAsset.Colors.white01.color
         toastContainer.alpha = 1
-        toastContainer.layer.cornerRadius = 9
+        toastContainer.layer.cornerRadius = 10
         toastContainer.clipsToBounds = true
         toastContainer.isUserInteractionEnabled = false
         
-        toastLabel.textColor = .white
+        toastLabel.textColor = RDDSKitAsset.Colors.grey02.color
         toastLabel.textAlignment = .center
-        toastLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 12)
+        toastLabel.font = RDDSKitFontFamily.Pretendard.medium.font(size: 14)
         toastLabel.text = message
         toastLabel.clipsToBounds = true
         toastLabel.numberOfLines = 0
@@ -39,9 +39,9 @@ public class Toast {
         
         toastContainer.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(controller.safeAreaBottomInset()+40)
-            $0.width.equalTo(213)
-            $0.height.equalTo(44)
+            $0.bottom.equalToSuperview().inset(controller.safeAreaBottomInset()+94)
+            $0.width.equalTo(250)
+            $0.height.equalTo(46)
         }
         
         toastLabel.snp.makeConstraints {

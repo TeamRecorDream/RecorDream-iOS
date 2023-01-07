@@ -18,7 +18,7 @@ public class DreamWriteInteractionView: UIView {
     
     public enum InteractionType {
         case date
-        case voiceRecord(isEnabled: Bool)
+        case voiceRecord(isEnabled: Bool, voiceExist: Bool)
     }
     
     public var viewType = InteractionType.date
@@ -27,6 +27,10 @@ public class DreamWriteInteractionView: UIView {
     private var disabledColor = UIColor.white.withAlphaComponent(0.4)
     
     public var isEnabled = true
+    
+    public var voiceExist: Bool {
+        return !(self.dataLabel.text == "00:00")
+    }
     
     // MARK: - UI Components
     
@@ -167,9 +171,6 @@ extension DreamWriteInteractionView {
             return String(format: "%02d:%02d", intTime.miniuteDigitInt, intTime.secondsDigitInt)
         }()
         self.dataLabel.text = totalTimeText
-        
-        let hasNoRecord = record == 0.0
-        self.updateEnabledStatus(hasNoRecord)
     }
 }
 
