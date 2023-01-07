@@ -34,8 +34,8 @@ extension SplashVC: AuthControllable {
     func setupView() {
         self.view.addSubview(authView)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            UIView.animate(withDuration: 1.0, delay: 0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+            UIView.animate(withDuration: 0.8, delay: 1) {
                 self.modalTransitionStyle = .partialCurl
                 self.setupViewState()
             }
