@@ -85,6 +85,7 @@ public enum RDDSKitAsset {
     public static let feelingSShy = RDDSKitImages(name: "feeling_s_shy")
     public static let feelingSStrange = RDDSKitImages(name: "feeling_s_strange")
     public static let feelingXsAll = RDDSKitImages(name: "feeling_xs_all")
+    public static let feelingXsAllSelected = RDDSKitImages(name: "feeling_xs_all_selected")
     public static let feelingXsBlank = RDDSKitImages(name: "feeling_xs_blank")
     public static let feelingXsBlankSelected = RDDSKitImages(name: "feeling_xs_blank_selected")
     public static let feelingXsJoy = RDDSKitImages(name: "feeling_xs_joy")
