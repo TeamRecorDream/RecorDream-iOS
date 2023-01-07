@@ -17,6 +17,7 @@ import RxRelay
 public final class DreamSearchViewModel {
     // MARK: - Properties
     let fetchRequestEntity = BehaviorRelay<DreamSearchQuery>(value: .init(keyword: ""))
+    var fetchedDreamRecord = DreamSearchEntity(recordsCount: 0, records: [])
     private let useCase: DreamSearchUseCase
     private let disposeBag = DisposeBag()
 
@@ -62,6 +63,7 @@ extension DreamSearchViewModel {
         searchRelay.subscribe(onNext: { entity in
             output.searchResultModelFetched.accept(entity)
             output.loadingStatus.accept(false)
+            self.fetchedDreamRecord = entity
         }).disposed(by: disposeBag)
         
         searchError.subscribe(onNext: { _ in
