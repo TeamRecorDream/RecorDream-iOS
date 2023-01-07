@@ -90,16 +90,18 @@ public class HomeVC: UIViewController {
         self.checkShowDreamWrite()
         self.setUI()
         self.setLayout()
-        self.detailDismissNotification()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
+        self.detailDismissNotification()
         self.resetView()
     }
 
-    deinit {
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
         NotificationCenter.default.removeObserver(self)
     }
     

@@ -47,8 +47,8 @@ extension DreamDetailViewModel {
             self.useCase.fetchDetailRecord(recordId: self.dreamId)
         }).disposed(by: disposeBag)
 
-        input.isModifyDismissed.subscribe(onNext: { isModifyDismissed in
-            if isModifyDismissed {
+        input.isModifyDismissed.subscribe(onNext: { isDismissed in
+            if isDismissed {
                 self.useCase.fetchDetailRecord(recordId: self.dreamId)
             }
         }).disposed(by: disposeBag)

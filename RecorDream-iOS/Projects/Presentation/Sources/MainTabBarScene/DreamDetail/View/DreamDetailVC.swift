@@ -106,21 +106,19 @@ public final class DreamDetailVC: UIViewController {
         self.setLayout()
         self.bindViews()
         self.bindViewModels()
-        self.modifyDismissNotification()
     }
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        self.modifyDismissNotification()
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        self.notificateDismiss()
-    }
-
-    deinit {
         NotificationCenter.default.removeObserver(self)
+        self.notificateDismiss()
     }
 
     // MARK: - UI & Layout
