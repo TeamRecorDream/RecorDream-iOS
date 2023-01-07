@@ -23,6 +23,9 @@ public final class DreamRecordViewController: UIViewController {
         static let noteLabelTop = 12.f
     }
 
+    private var voiceUrl: URL?
+    private var content: String
+
     // MARK: - UI Components
 
     private let titleLabel: UILabel = {
@@ -41,19 +44,32 @@ public final class DreamRecordViewController: UIViewController {
         return label
     }()
 
-    private let dreamAudioPlayerView = DreamAudioPlayerView()
+    private lazy var dreamAudioPlayerView: DreamAudioPlayerView = {
+        let recordView = DreamAudioPlayerView(voiceUrl: self.voiceUrl, frame: .zero)
+        return recordView
+    }()
 
-    private let noteLabel: UILabel = {
+    private let contentLabel: UILabel = {
         let label = UILabel()
         label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
         label.textColor = RDDSKitAsset.Colors.white01.color
         label.numberOfLines = 0
-        label.text = "우리 학교 앞에 떡볶이집이 하나있음 그래서 군것질이나 할 겸 그 가게에 갔는데 메뉴들이 엄청 맛있어보였음. 막 호떡, 핫도그, 떡볶이, 오뎅 뭐가 많았는데 갑자기 내가 식욕이 터지는거임. 분식집 아줌마는 여유롭게 스몰토크 하면서 핫도그 튀기고 있고. 초조한 시간과 지금이라도 버리고 타야되나? 이런 생각을 했음. "
         return label
     }()
     
 
     // MARK: - View Life Cycle
+
+    init(voiceUrl: URL?, content: String) {
+        self.voiceUrl = voiceUrl
+        self.content = content
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,24 +81,73 @@ public final class DreamRecordViewController: UIViewController {
     // MARK: - UI & Layout
     private func setUI() {
         self.view.backgroundColor = .none
-        self.noteLabel.addLabelSpacing(kernValue: -0.14, lineSpacing: 5.6)
+        self.contentLabel.addLabelSpacing(kernValue: -0.14, lineSpacing: 5.6)
     }
 
     private func setLayout() {
-        self.view.addSubviews(titleLabel, dreamAudioPlayerView, noteLabel)
+        self.view.addSubviews(titleLabel)
 
         titleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
         }
 
+        // 1. 녹음 x, 내용 x
+        if voiceUrl == nil && content.isEmpty {
+            setPlaceHolder(isExistAudio: false)
+        } else if voiceUrl == nil && !content.isEmpty {
+            // 2. 녹음 x, 내용 o
+            setContentLabel(isExistAudio: false)
+        } else if voiceUrl != nil && content.isEmpty {
+            // 3. 녹음 o, 내용 x
+            setAudioPlayer()
+            setPlaceHolder(isExistAudio: true)
+        } else if voiceUrl != nil && !content.isEmpty {
+            // 4. 녹음 o, 내용 o
+            setAudioPlayer()
+            setContentLabel(isExistAudio: true)
+        }
+    }
+
+    private func setContentLabel(isExistAudio: Bool) {
+        self.view.addSubview(contentLabel)
+
+        if isExistAudio {
+            contentLabel.snp.makeConstraints {
+                $0.top.equalTo(dreamAudioPlayerView.snp.bottom).offset(Metric.noteLabelTop)
+                $0.leading.trailing.equalToSuperview()
+            }
+        } else {
+            contentLabel.snp.makeConstraints {
+                $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
+                $0.leading.trailing.equalToSuperview()
+            }
+        }
+
+        self.contentLabel.text = content
+    }
+
+    private func setAudioPlayer() {
+        self.view.addSubview(dreamAudioPlayerView)
+
         dreamAudioPlayerView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.audioViewTop)
             $0.leading.trailing.equalToSuperview().inset(Metric.audioViewLeadingTrailing)
         }
+    }
 
-        noteLabel.snp.makeConstraints {
-            $0.top.equalTo(dreamAudioPlayerView.snp.bottom).offset(Metric.noteLabelTop)
-            $0.leading.trailing.equalToSuperview()
+    private func setPlaceHolder(isExistAudio: Bool) {
+        self.view.addSubview(placeHolder)
+
+        if isExistAudio {
+            placeHolder.snp.makeConstraints {
+                $0.top.equalTo(dreamAudioPlayerView.snp.bottom).offset(Metric.noteLabelTop)
+                $0.leading.trailing.equalToSuperview()
+            }
+        } else {
+            placeHolder.snp.makeConstraints {
+                $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
+                $0.leading.trailing.equalToSuperview()
+            }
         }
     }
 }

@@ -143,7 +143,7 @@ extension HomeVC {
                 let myPageVC = owner.factory.instantiateMyPageVC()
                 owner.navigationController?.pushViewController(myPageVC, animated: true)
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
-                rdtabbarController.rdTabBar.isHidden = true
+                rdtabbarController.setTabBarHidden()
             }).disposed(by: self.disposeBag)
         
         self.logoView.rx.searchButtonTapped
@@ -155,7 +155,7 @@ extension HomeVC {
                 navigation.modalPresentationStyle = .fullScreen
                 navigation.isNavigationBarHidden = true
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
-                rdtabbarController.rdTabBar.isHidden = true
+                rdtabbarController.setTabBarHidden(false)
                 owner.present(navigation, animated: true)
             }).disposed(by: disposeBag)
     }
@@ -196,7 +196,7 @@ extension HomeVC {
     
     private func resetView() {
         guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
-        rdtabbarController.rdTabBar.isHidden = false
+        rdtabbarController.setTabBarHidden(false)
     }
     
     private func checkShowDreamWrite() {

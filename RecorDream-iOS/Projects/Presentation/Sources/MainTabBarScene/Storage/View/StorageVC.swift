@@ -135,8 +135,8 @@ extension StorageVC {
     
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
-        self.fetchedCount.accept(model.recordsCount)
         var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
+        self.fetchedCount.accept(model.recordsCount)
         snapshot.appendSections([.filters, .records])
         snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
         if model.recordsCount == 0 {
@@ -214,6 +214,8 @@ extension StorageVC: UICollectionViewDelegate {
             let detailVC = self.factory.instantiateDetailVC(dreamId: "")
             detailVC.modalTransitionStyle = .coverVertical
             detailVC.modalPresentationStyle = .pageSheet
+            guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return false }
+            rdtabbarController.setTabBarHidden()
             self.present(detailVC, animated: true)
             return true
         }

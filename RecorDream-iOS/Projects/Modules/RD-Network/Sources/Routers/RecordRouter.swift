@@ -16,7 +16,8 @@ enum RecordRouter {
     case modifyRecord(title: String, date: String, content: String?, emotion: Int?, genre: [Int]?, note: String?, voice: String?, recordId: String)
     case searchRecord(keyword: String)
     case fetchStorage(filter: Int)
-    case homeRecord
+    case fetchHomeRecord
+    case fetchDetailRecord(recordId: String)
 }
 
 extension RecordRouter: BaseRouter {
@@ -26,7 +27,7 @@ extension RecordRouter: BaseRouter {
             return .post
         case .modifyRecord:
             return .patch
-        case .fetchStorage, .homeRecord:
+        case .fetchStorage, .fetchHomeRecord, .fetchDetailRecord:
             return .get
         default: return .get
         }
@@ -44,8 +45,10 @@ extension RecordRouter: BaseRouter {
             return "/record/storage/search"
         case .fetchStorage:
             return "/record/storage/list"
-        case .homeRecord:
+        case .fetchHomeRecord:
             return "/record"
+        case .fetchDetailRecord(let recordId):
+            return "/record/\(recordId)"
         default: return ""
         }
     }

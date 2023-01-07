@@ -21,6 +21,8 @@ public final class DreamNoteViewController: UIViewController {
         static let noteLabelTop = 12.f
     }
 
+    private var noteContent: String
+
     // MARK: - UI Components
 
     private let titleLabel: UILabel = {
@@ -49,11 +51,23 @@ public final class DreamNoteViewController: UIViewController {
 
     // MARK: - View Life Cycle
 
+    init(noteContent: String) {
+        self.noteContent = noteContent
+        super.init(nibName: nil, bundle: nil)
+
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
 
         self.setUI()
         self.setLayout()
+        self.initView()
+        self.bindNoteData()
     }
 
     // MARK: - UI & Layout
@@ -62,7 +76,7 @@ public final class DreamNoteViewController: UIViewController {
     }
 
     private func setLayout() {
-        self.view.addSubviews(titleLabel, placeHolder)
+        self.view.addSubviews(titleLabel, placeHolder, noteLabel)
 
         titleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
@@ -71,6 +85,25 @@ public final class DreamNoteViewController: UIViewController {
         placeHolder.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
             $0.leading.equalToSuperview()
+        }
+
+        noteLabel.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
+            $0.leading.equalToSuperview()
+        }
+    }
+
+    private func initView() {
+        self.placeHolder.isHidden = true
+        self.noteLabel.isHidden = true
+    }
+
+    private func bindNoteData() {
+        if noteContent.isEmpty {
+            self.placeHolder.isHidden = false
+        } else {
+            self.noteLabel.isHidden = false
+            self.noteLabel.text = noteContent
         }
     }
 }
