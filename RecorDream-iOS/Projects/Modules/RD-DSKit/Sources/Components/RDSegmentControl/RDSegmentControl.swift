@@ -43,10 +43,9 @@ extension RDStorageSegmentControl {
         self.addSubview(lineView)
         self.backgroundColor = .clear
         self.selectedSegmentIndex = 0
-        self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 0)
-        self.setImage(RDDSKitAsset.Images.icnListOff.image, forSegmentAt: 1)
-        self.selectedSegmentTintColor = RDDSKitAsset.Colors.white01.color
-        self.tintColor = RDDSKitAsset.Colors.white04.color
+        self.setImage(RDDSKitAsset.Images.icnGalleryOn.image, forSegmentAt: 0)
+        self.setImage(RDDSKitAsset.Images.icnListOn.image, forSegmentAt: 1)
+        self.selectedSegmentTintColor = .clear
     }
     public func setupConstraint() {
         self.lineView.snp.makeConstraints { make in
