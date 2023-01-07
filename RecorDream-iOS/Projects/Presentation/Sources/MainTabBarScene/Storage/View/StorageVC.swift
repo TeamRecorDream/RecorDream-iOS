@@ -25,27 +25,28 @@ public class StorageVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
+    private var storageHeader: StorageHeaderCVC?
+    private let fetchedCount = PublishRelay<Int>()
     
     // MARK: - Reactive Stuff
-    private let filterButtonTapped = PublishRelay<Int>()
-    private let fetchedCount = BehaviorRelay<Int>(value: 0)
+    private let emotionTapped = BehaviorRelay<Int>(value: 0)
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
     var dataSource: UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>! = nil
     
     // MARK: - Properties
-    private var filterList: [DreamStorageEntity.FilterList] = []
+    public var currentLayoutType = RDCollectionViewFlowLayout.CollectionDisplay.grid
     
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.setupView()
         self.setupConstraint()
         self.registerView()
         self.setDelegate()
         self.setDataSource()
+        self.bindViews()
         self.bindViewModels()
     }
 }
@@ -63,7 +64,7 @@ extension StorageVC {
             make.height.equalTo(23.adjustedHeight)
         }
         self.dreamStorageCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(logoView.snp.bottom)
+            make.top.equalTo(logoView.snp.bottom).offset(20)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -82,31 +83,29 @@ extension StorageVC {
 extension StorageVC {
     private func setDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource<DreamStorageSection, AnyHashable>(collectionView: dreamStorageCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-            if let model = itemIdentifier as? DreamStorageEntity.RecordList {
-                if model.records.isEmpty {
-                    self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
-                }
-                else {
-                    self.dreamStorageCollectionView.restore()
-                    guard let existCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
-                    
-                    let currentRecord = model.records[indexPath.row]
-                    existCell.setData(emotion: currentRecord.emotion ?? 0, date: currentRecord.date ?? "", title: currentRecord.title ?? "", tag: currentRecord.genre ?? [])
-                    return existCell
-                }
-            }
-            else {
+            switch indexPath.section {
+            case 0:
                 guard let filterCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteEmotionCVC.reuseIdentifier, for: indexPath) as? DreamWriteEmotionCVC else { return UICollectionViewCell() }
-                if let model = itemIdentifier as? DreamStorageEntity.FilterList {
-                    if model.isSelected {
-                        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .right)
-                        collectionView.scrollToItem(at: IndexPath.init(item: 0, section: 0), at: .left, animated: false)
-                        self.filterSnapShot()
-                    }
-                }
+                filterCell.setData(selectedImage: DreamStorageSection.icons[indexPath.row],
+                                   deselectedImage: DreamStorageSection.deselectedIcons[indexPath.row],
+                                   text: DreamStorageSection.titles[indexPath.row])
+                let isSelected = indexPath.row == self.emotionTapped.value
+                filterCell.isSelected = isSelected
                 return filterCell
+            case 1:
+                if let model = itemIdentifier as? DreamStorageEntity.RecordList.Record {
+                    guard let existCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
+                    let currentRecord = model
+                    existCell.setupConstraint(layoutType: self.currentLayoutType)
+                    existCell.setData(emotion: currentRecord.emotion ?? 0,
+                                      date: currentRecord.date ?? "",
+                                      title: currentRecord.title ?? "",
+                                      tag: currentRecord.genre ?? [],
+                                      layoutType: self.currentLayoutType)
+                    return existCell
+                } else { return UICollectionViewCell() }
+            default: return UICollectionViewCell()
             }
-            return UICollectionViewCell()
         })
         
         self.dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
@@ -117,36 +116,65 @@ extension StorageVC {
                 view.title = sectionType.title
                 return view
             case StorageHeaderCVC.className:
-                guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.reuseIdentifier, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
-                view.title = "\(self.fetchedCount.value)개의 기록"
+                self.storageHeader = nil
+                guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: StorageHeaderCVC.className, for: indexPath) as? StorageHeaderCVC else { return UICollectionReusableView() }
+                self.storageHeader = view
+                view.currentType = self.currentLayoutType
+                view.title = "\(self.dataSource.snapshot(for: .records).items.count)개의 기록"
+                view.layoutTypeChanged
+                    .skip(1)
+                    .drive(onNext: { [weak self] in
+                        guard let self = self else { return }
+                        self.changeLayoutType(type: $0)
+                    }).disposed(by: view.disposeBag)
                 return view
             default: return UICollectionReusableView()
             }
         }
     }
-    private func filterSnapShot() {
-        var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
-        snapshot.appendSections([.filters])
-        snapshot.appendItems(self.filterList, toSection: .filters)
-        self.dataSource.apply(snapshot)
-    }
+    
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
-        
         var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
         self.fetchedCount.accept(model.recordsCount)
-        snapshot.appendSections([.records])
-        
-        snapshot.appendItems(model.records, toSection: .records)
+        snapshot.appendSections([.filters, .records])
+        snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
+        if model.recordsCount == 0 {
+            self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
+        } else {
+            self.dreamStorageCollectionView.restore()
+            snapshot.appendItems(model.records, toSection: .records)
+        }
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
+    }
+    
+    private func changeLayoutType(type: RDCollectionViewFlowLayout.CollectionDisplay) {
+        self.currentLayoutType = type
+        self.reapplySnapShot()
+        self.view.setNeedsLayout()
+    }
+    
+    private func reapplySnapShot() {
+        var snapshot = self.dataSource.snapshot()
+        guard let items = snapshot.itemIdentifiers(inSection: .records) as? [DreamStorageEntity.RecordList.Record] else { return }
+        let newItems: [DreamStorageEntity.RecordList.Record] = items.map { item in
+            var changedItem = item
+            changedItem.toggleLayoutHandler()
+            return changedItem
+        }
+        snapshot.deleteSections([.records])
+        snapshot.appendSections([.records])
+        snapshot.appendItems(newItems, toSection: .records)
+        self.dataSource.apply(snapshot)
     }
 }
 
 // MARK: - Bind
 extension StorageVC {
     private func bindViewModels() {
-        let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()), filterButtonTapped: self.filterButtonTapped.asObservable())
+        let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()),
+                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.storageDataFetched
@@ -160,6 +188,15 @@ extension StorageVC {
             .disposed(by: disposeBag)
     }
     
+    private func bindViews() {
+        self.fetchedCount
+            .asDriver(onErrorJustReturn: 0)
+            .drive { [weak self] count in
+                guard let self = self,
+                    let header = self.storageHeader else { return }
+                header.title = "\(count)개의 기록"
+            }.disposed(by: self.disposeBag)
+    }
 }
 
 extension StorageVC: UICollectionViewDelegate {
@@ -169,14 +206,14 @@ extension StorageVC: UICollectionViewDelegate {
             var selectedIndexPath: IndexPath? = nil
             selectedIndexPath = collectionView.indexPathsForSelectedItems?
                 .first { $0.section == indexPath.section }
-            self.filterButtonTapped.accept(indexPath.item + 1)
+            self.emotionTapped.accept(indexPath.item)
             guard let selected = selectedIndexPath else { return true }
             collectionView.deselectItem(at: selected, animated: false)
             return true
         case .records:
             let detailVC = self.factory.instantiateDetailVC(dreamId: "")
             detailVC.modalTransitionStyle = .coverVertical
-            detailVC.modalPresentationStyle = .fullScreen
+            detailVC.modalPresentationStyle = .pageSheet
             guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return false }
             rdtabbarController.setTabBarHidden()
             self.present(detailVC, animated: true)

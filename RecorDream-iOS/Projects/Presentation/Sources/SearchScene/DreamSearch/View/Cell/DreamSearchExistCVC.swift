@@ -58,6 +58,9 @@ final class DreamSearchExistCVC: UICollectionViewCell, UICollectionViewRegistera
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        self.genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    }
 }
 
 // MARK: - Extensions
@@ -96,11 +99,14 @@ extension DreamSearchExistCVC {
         self.emotionImageView.image = self.setEmotionImageView(emotion: emotion).last
         self.titleLabel.text = title
         self.dateLabel.text = date
-        if genre.isEmpty {
-            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .search, genre: "# 아직 설정되지 않았어요"))
+        let hasNoTag = genre.first == 0
+        if hasNoTag {
+            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage,
+                                                                     genre: "# 아직 설정되지 않았어요"))
         } else {
             genre.forEach { genreType in
-                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .search, genre: Section.genreTitles[genreType - 1]))
+                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage,
+                                                                         genre: Section.genreTitles[genreType-1]))
             }
         }
     }

@@ -8,6 +8,8 @@
 
 import Foundation
 
+import RD_DSKit
+
 public enum DreamStorageSection: String, CaseIterable {
     case filters = "나의 감정"
     case records
@@ -21,17 +23,19 @@ public enum DreamStorageSection: String, CaseIterable {
 }
 
 extension DreamStorageSection {
-    public static let titles = ["기쁜", "슬픈", "무서운", "이상한", "민망한", "미설정"]
-    public static let icons = [RDDSKitAsset.Images.feelingXsJoySelected.image,
+    public static let titles = ["전체", "기쁜", "슬픈", "무서운", "이상한", "민망한", "미설정"]
+    public static let icons = [RDDSKitAsset.Images.feelingXsAll.image,
+                               RDDSKitAsset.Images.feelingXsJoySelected.image,
                         RDDSKitAsset.Images.feelingXsSadSelected.image,
                         RDDSKitAsset.Images.feelingXsScarySelected.image,
                         RDDSKitAsset.Images.feelingXsStrangeSelected.image,
                         RDDSKitAsset.Images.feelingXsShySelected.image,
-                        RDDSKitAsset.Images.feelingXsBlank.image]
-    public static let deselectedIcons = [RDDSKitAsset.Images.feelingXsJoy.image,
+                        RDDSKitAsset.Images.feelingXsBlankSelected.image]
+    public static let deselectedIcons = [RDDSKitAsset.Images.feelingXsAll.image,
+                                         RDDSKitAsset.Images.feelingXsJoy.image,
                                   RDDSKitAsset.Images.feelingXsSad.image,
                                   RDDSKitAsset.Images.feelingXsScary.image,
                                   RDDSKitAsset.Images.feelingXsStrange.image,
                                   RDDSKitAsset.Images.feelingXsShy.image,
-                                  RDDSKitAsset.Images.feelingXsBlankUnselected.image]
+                                  RDDSKitAsset.Images.feelingXsBlank.image]
 }

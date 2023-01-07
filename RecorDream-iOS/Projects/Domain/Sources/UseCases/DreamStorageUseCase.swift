@@ -15,16 +15,14 @@ import RxSwift
 public protocol DreamStorageUseCase {
     func execute(requestValue: StorageFetchQuery)
     
-    var fetchSuccess: PublishSubject<DreamStorageEntity.RecordList> { get set }
-    var fetchFail: PublishSubject<Error> { get set }
+    var fetchSuccess: PublishSubject<DreamStorageEntity.RecordList?> { get set }
 }
 
 public final class DefaultDreamStorageUseCase {
     private let repository: DreamStorageRepository
     private let disposeBag = DisposeBag()
     
-    public var fetchSuccess = PublishSubject<DreamStorageEntity.RecordList>()
-    public var fetchFail = PublishSubject<Error>()
+    public var fetchSuccess = PublishSubject<DreamStorageEntity.RecordList?>()
     
     public init(repository: DreamStorageRepository) {
         self.repository = repository
@@ -34,8 +32,12 @@ public final class DefaultDreamStorageUseCase {
 extension DefaultDreamStorageUseCase: DreamStorageUseCase {
     public func execute(requestValue: StorageFetchQuery) {
         self.repository.fetchDreamStorage(query: requestValue)
-            .subscribe(onNext: { [weak self] entity in
-                guard let self = self else { return }
+            .withUnretained(self)
+            .subscribe(onNext: { owner, entity in
+                guard let entity = entity else {
+                    owner.fetchSuccess.onNext(nil)
+                    return
+                }
                 self.fetchSuccess.onNext(entity)
             }).disposed(by: disposeBag)
     }

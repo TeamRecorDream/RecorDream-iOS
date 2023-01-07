@@ -39,9 +39,9 @@ extension DreamStorageEntity {
     public struct RecordList: Hashable {
         let id = UUID()
         public let recordsCount: Int
-        public let records: [Records]
+        public let records: [Record]
         
-        public init(recordsCount: Int, records: [Records]) {
+        public init(recordsCount: Int, records: [Record]) {
             self.recordsCount = recordsCount
             self.records = records
         }
@@ -49,12 +49,14 @@ extension DreamStorageEntity {
 }
 
 extension DreamStorageEntity.RecordList {
-    public struct Records: Hashable {
+    public struct Record: Hashable {
         public let id: String?
         public let emotion: Int?
         public let date: String?
         public let title: String?
         public let genre: [Int]?
+        
+        public var layoutChagneHandler = true
         
         public init(id: String?, emotion: Int?, date: String?, title: String?, genre: [Int]?) {
             self.id = id
@@ -63,5 +65,12 @@ extension DreamStorageEntity.RecordList {
             self.title = title
             self.genre = genre
         }
+    }
+}
+
+extension DreamStorageEntity.RecordList.Record {
+    public
+    mutating func toggleLayoutHandler() {
+        self.layoutChagneHandler.toggle()
     }
 }

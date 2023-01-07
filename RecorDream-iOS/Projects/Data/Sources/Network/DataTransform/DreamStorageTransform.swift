@@ -16,8 +16,8 @@ extension DreamStorageResponse {
     }
 }
 
-extension DreamStorageResponse.Records {
-    func toDomain() -> DreamStorageEntity.RecordList.Records {
+extension DreamStorageResponse.Record {
+    func toDomain() -> DreamStorageEntity.RecordList.Record {
         return .init(id: self.id, emotion: self.emotion, date: self.date, title: self.title, genre: self.genre)
     }
 }

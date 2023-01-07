@@ -11,5 +11,5 @@ import RD_Core
 import RxSwift
 
 public protocol DreamStorageRepository {
-    func fetchDreamStorage(query: StorageFetchQuery) -> Observable<DreamStorageEntity.RecordList>
+    func fetchDreamStorage(query: StorageFetchQuery) -> Observable<DreamStorageEntity.RecordList?>
 }

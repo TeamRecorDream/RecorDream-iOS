@@ -13,7 +13,6 @@ import SnapKit
 public protocol RDSegmentControl {
     func setupView()
     func setupConstraint()
-    func setTarget()
 }
 
 public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
@@ -24,12 +23,11 @@ public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
         return v
     }()
     
-    public convenience override init(items: [Any]?) {
-        self.init(frame: .zero)
+    public override init(items: [Any]?) {
+        super.init(items: items)
         
         self.setupView()
         self.setupConstraint()
-        self.setTarget()
     }
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,15 +38,13 @@ public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
 }
 
 extension RDStorageSegmentControl {
-    public func setTarget() {
-        self.addTarget(self, action: #selector(layoutValueChanged), for: .valueChanged)
-    }
+    
     public func setupView() {
         self.addSubview(lineView)
         self.backgroundColor = .clear
-        self.selectedSegmentIndex = 1
-        self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 1)
-        self.setImage(RDDSKitAsset.Images.icnListOff.image, forSegmentAt: 2)
+        self.selectedSegmentIndex = 0
+        self.setImage(RDDSKitAsset.Images.icnGalleryOff.image, forSegmentAt: 0)
+        self.setImage(RDDSKitAsset.Images.icnListOff.image, forSegmentAt: 1)
         self.selectedSegmentTintColor = RDDSKitAsset.Colors.white01.color
         self.tintColor = RDDSKitAsset.Colors.white04.color
     }
@@ -57,15 +53,6 @@ extension RDStorageSegmentControl {
             make.width.equalTo(1.adjustedWidth)
             make.height.equalTo(10.adjustedHeight)
             make.centerX.centerY.equalToSuperview()
-        }
-    }
-    @objc
-    private func layoutValueChanged(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 1:
-            self.rdCollectionViewFlowLayout.display = .list
-        default:
-            self.rdCollectionViewFlowLayout.display = .grid
         }
     }
 }

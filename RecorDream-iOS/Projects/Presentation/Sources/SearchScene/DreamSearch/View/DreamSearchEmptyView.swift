@@ -21,13 +21,13 @@ extension UICollectionView {
         let emptyLabel: UILabel = {
             let lb = UILabel()
             lb.font = RDDSKitFontFamily.Pretendard.medium.font(size: 16)
-            lb.text = "찾으시는 기록이 없어요."
+            lb.text = message ?? "찾으시는 기록이 없어요."
             lb.textColor = RDDSKitColors.Color(white: 1.0, alpha: 0.4)
             return lb
         }()
         let logoImageView: UIImageView = {
             let iv = UIImageView()
-            iv.image = RDDSKitAsset.Images.rdHomeLogo.image
+            iv.image = image ?? RDDSKitAsset.Images.rdHomeLogo.image
             iv.contentMode = .scaleAspectFit
             iv.tintColor = .white.withAlphaComponent(0.4)
             return iv

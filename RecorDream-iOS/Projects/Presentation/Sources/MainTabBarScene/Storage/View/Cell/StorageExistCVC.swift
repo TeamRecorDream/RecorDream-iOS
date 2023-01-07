@@ -15,9 +15,10 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
     
     // MARK: - Properties
     public static var isFromNib: Bool = false
+    private var emotion = 0
     
     // MARK: - UI Components
-    private let section: RDCollectionViewFlowLayout.CollectionDisplay = .list
+    private var layoutType: RDCollectionViewFlowLayout.CollectionDisplay = .grid
     private var backgroundImageView = UIImageView()
     private var emotionImageView: UIImageView = {
         let iv = UIImageView()
@@ -47,29 +48,41 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         sv.spacing = 4
         return sv
     }()
-
+    
     // MARK: - View Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        
         self.setupView()
-        self.setupConstraint()
     }
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    override func prepareForReuse() {
+        self.genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    }
+    
     // MARK: - Functions
     private func setupView() {
         self.addSubviews(backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView)
         self.backgroundColor = .none
         self.titleLabel.addLabelSpacing(kernValue: -0.22)
     }
-    private func setupConstraint() {
+    private func removeView() {
+        [backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView]
+            .forEach { view in
+                view.removeFromSuperview()
+            }
+    }
+    public func setupConstraint(layoutType: RDCollectionViewFlowLayout.CollectionDisplay) {
+        removeView()
+        setupView()
+        
         self.backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        switch section {
+        switch layoutType {
         case .list:
             self.emotionImageView.snp.makeConstraints {
                 $0.top.equalToSuperview().offset(21)
@@ -82,12 +95,12 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
             }
             self.titleLabel.snp.makeConstraints {
                 $0.top.equalTo(dateLabel.snp.bottom).offset(3)
-                $0.centerX.equalTo(emotionImageView.snp.trailing).offset(24)
+                $0.leading.equalTo(dateLabel)
             }
             self.genreStackView.snp.makeConstraints {
-                $0.height.equalTo(16)
+                $0.height.equalTo(30)
                 $0.top.equalTo(titleLabel.snp.bottom).offset(3)
-                $0.leading.equalToSuperview().offset(102)
+                $0.leading.equalTo(dateLabel)
             }
         case .grid:
             self.emotionImageView.snp.makeConstraints {
@@ -107,41 +120,52 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
                 $0.top.equalTo(titleLabel.snp.bottom).offset(8)
                 $0.centerX.equalToSuperview()
                 $0.height.equalTo(16)
+                $0.bottom.equalToSuperview().inset(22)
             }
         }
     }
 }
 
 extension StorageExistCVC {
-    func setData(emotion: Int, date: String, title: String, tag: [Int]) {
-        self.backgroundImageView.image = self.setEmotionImage(emotion: emotion).first
+    func setData(emotion: Int, date: String, title: String, tag: [Int], layoutType: RDCollectionViewFlowLayout.CollectionDisplay) {
+        switch layoutType {
+        case .grid:
+            self.backgroundImageView.image = self.setEmotionImage(emotion: emotion)[1]
+        case .list:
+            self.backgroundImageView.image = self.setEmotionImage(emotion: emotion).first
+        }
         self.emotionImageView.image = self.setEmotionImage(emotion: emotion).last
         self.dateLabel.text = date
         self.titleLabel.text = title
-        if tag.isEmpty {
-            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .search, genre: "# 아직 설정되지 않았어요"))
+        let hasNoTag = tag.first == 0
+        if hasNoTag {
+            self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage,
+                                                                     genre: "# 아직 설정되지 않았어요"))
         } else {
             tag.forEach { genreType in
-                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage, genre: Section.emotionTitles[genreType]))
+                self.genreStackView.addArrangedSubview(DreamGenreTagView(type: .storage,
+                                                                         genre: Section.genreTitles[genreType-1]))
             }
         }
+        self.emotion = emotion
+        self.layoutSubviews()
     }
     private func setEmotionImage(emotion: Int) -> [UIImage] {
         switch emotion {
         case 1:
-            return [RDDSKitAsset.Images.listYellow.image, RDDSKitAsset.Images.feelingMJoy.image]
+            return [RDDSKitAsset.Images.listYellow.image, RDDSKitAsset.Images.cardSYellow.image ,RDDSKitAsset.Images.feelingMJoy.image]
         case 2:
-            return [RDDSKitAsset.Images.listBlue.image, RDDSKitAsset.Images.feelingMSad.image]
+            return [RDDSKitAsset.Images.listBlue.image, RDDSKitAsset.Images.cardSBlue.image, RDDSKitAsset.Images.feelingMSad.image]
         case 3:
-            return [RDDSKitAsset.Images.listRed.image, RDDSKitAsset.Images.feelingMScary.image]
+            return [RDDSKitAsset.Images.listRed.image, RDDSKitAsset.Images.cardSRed.image, RDDSKitAsset.Images.feelingMScary.image]
         case 4:
-            return [RDDSKitAsset.Images.listPurple.image, RDDSKitAsset.Images.feelingMStrange.image]
+            return [RDDSKitAsset.Images.listPurple.image, RDDSKitAsset.Images.cardSPurple.image, RDDSKitAsset.Images.feelingMStrange.image]
         case 5:
-            return [RDDSKitAsset.Images.listPink.image, RDDSKitAsset.Images.feelingMShy.image]
+            return [RDDSKitAsset.Images.listPink.image, RDDSKitAsset.Images.cardSPink.image, RDDSKitAsset.Images.feelingMShy.image]
         case 6:
-            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
+            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.cardSWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
         default:
-            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.feelingMBlank.image]
+            return [RDDSKitAsset.Images.listWhite.image, RDDSKitAsset.Images.cardSWhite.image, RDDSKitAsset.Images.feelingMBlank.image]
         }
     }
 }

@@ -76,14 +76,11 @@ extension DreamGenreTagView: Presentable {
 
         genreNameLabel.snp.makeConstraints { make in
             switch cardType {
-            case .home:
+            case .home, .search, .storage:
                 make.edges.equalToSuperview().inset(4)
             case .detail:
                 make.top.bottom.equalToSuperview().inset(4)
                 make.leading.trailing.equalToSuperview().inset(6)
-            case .search, .storage:
-                make.centerY.equalToSuperview().inset(3)
-                make.leading.trailing.equalToSuperview().offset(4)
             }
         }
     }

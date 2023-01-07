@@ -22,14 +22,15 @@ public final class DefaultStorageRepository {
 }
 
 extension DefaultStorageRepository: DreamStorageRepository {
-    public func fetchDreamStorage(query: Domain.StorageFetchQuery) -> RxSwift.Observable<Domain.DreamStorageEntity.RecordList> {
+    public func fetchDreamStorage(query: Domain.StorageFetchQuery) -> Observable<DreamStorageEntity.RecordList?> {
         return Observable.create { observer in
             self.recordService.fetchStorage(filter: query.filterType)
                 .subscribe(onNext: { response in
                     guard let entity = response?.toDomain() else { return }
                     observer.onNext(entity)
-                }, onError: { err in
-                    observer.onError(err)
+                }, onError: { _ in
+                    observer.onNext(nil)
+                    observer.onCompleted()
                 }).disposed(by: self.disposeBag)
             return Disposables.create()
         }
