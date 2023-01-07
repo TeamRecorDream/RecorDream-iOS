@@ -197,6 +197,26 @@ extension StorageVC {
                 header.title = "\(count)개의 기록"
             }.disposed(by: self.disposeBag)
     }
+    private func bindViews() {
+        self.logoView.rx.searchButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                let searchVC = owner.factory.instantiateSearchVC()
+                let navigation = UINavigationController(rootViewController: searchVC)
+                navigation.modalTransitionStyle = .coverVertical
+                navigation.modalPresentationStyle = .fullScreen
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                owner.present(navigation, animated: true)
+            }).disposed(by: self.disposeBag)
+        self.logoView.rx.mypageButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                let mypageVC = owner.factory.instantiateMyPageVC()
+                owner.navigationController?.pushViewController(mypageVC, animated: true)
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.setTabBarHidden()
+            }).disposed(by: self.disposeBag)
+    }
 }
 
 extension StorageVC: UICollectionViewDelegate {
