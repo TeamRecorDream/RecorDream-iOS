@@ -85,7 +85,7 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
             make.width.equalTo(55.adjustedWidth)
             make.height.equalTo(24.adjustedHeight)
             make.top.bottom.equalToSuperview().inset(20)
-            make.trailing.equalToSuperview().inset(18)
+            make.trailing.equalToSuperview()
         }
     }
 }

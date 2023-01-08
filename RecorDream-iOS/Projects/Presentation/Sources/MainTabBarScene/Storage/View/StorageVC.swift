@@ -30,6 +30,8 @@ public class StorageVC: UIViewController {
     
     // MARK: - Reactive Stuff
     private let emotionTapped = BehaviorRelay<Int>(value: 0)
+    private var selectedIndex = PublishRelay<Int>()
+    private let dreamId = PublishRelay<String>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -48,6 +50,14 @@ public class StorageVC: UIViewController {
         self.setDataSource()
         self.bindViews()
         self.bindViewModels()
+        self.bindCollectionView()
+    }
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setDataSource()
+        self.bindViews()
+        self.bindViewModels()
+        self.dreamStorageCollectionView.reloadData()
     }
 }
 
@@ -90,6 +100,10 @@ extension StorageVC {
                                    deselectedImage: DreamStorageSection.deselectedIcons[indexPath.row],
                                    text: DreamStorageSection.titles[indexPath.row])
                 let isSelected = indexPath.row == self.emotionTapped.value
+                if indexPath.item == 0 {
+                    filterCell.isSelected = true
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
+                }
                 filterCell.isSelected = isSelected
                 return filterCell
             case 1:
@@ -97,9 +111,13 @@ extension StorageVC {
                     guard let existCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
                     let currentRecord = model
                     existCell.setupConstraint(layoutType: self.currentLayoutType)
+                    var validTitle = currentRecord.title ?? ""
+                    if validTitle.count > 25 {
+                        validTitle = "\(validTitle.prefix(25))..."
+                    }
                     existCell.setData(emotion: currentRecord.emotion ?? 0,
                                       date: currentRecord.date ?? "",
-                                      title: currentRecord.title ?? "",
+                                      title: "\(validTitle)",
                                       tag: currentRecord.genre ?? [],
                                       layoutType: self.currentLayoutType)
                     return existCell
@@ -141,14 +159,15 @@ extension StorageVC {
         snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
         if model.recordsCount == 0 {
             self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
+            self.dreamStorageCollectionView.isScrollEnabled = false
         } else {
             self.dreamStorageCollectionView.restore()
+            self.dreamStorageCollectionView.isScrollEnabled = true
             snapshot.appendItems(model.records, toSection: .records)
         }
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
     }
-    
     private func changeLayoutType(type: RDCollectionViewFlowLayout.CollectionDisplay) {
         self.currentLayoutType = type
         self.reapplySnapShot()
@@ -196,6 +215,46 @@ extension StorageVC {
                     let header = self.storageHeader else { return }
                 header.title = "\(count)개의 기록"
             }.disposed(by: self.disposeBag)
+
+        self.logoView.rx.searchButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                let searchVC = owner.factory.instantiateSearchVC()
+                let navigation = UINavigationController(rootViewController: searchVC)
+                navigation.modalTransitionStyle = .coverVertical
+                navigation.modalPresentationStyle = .fullScreen
+                navigation.isNavigationBarHidden = true
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.setTabBarHidden(false)
+                owner.present(navigation, animated: true)
+            }).disposed(by: self.disposeBag)
+        
+        self.logoView.rx.mypageButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                let mypageVC = owner.factory.instantiateMyPageVC()
+                owner.navigationController?.pushViewController(mypageVC, animated: true)
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.setTabBarHidden()
+            }).disposed(by: self.disposeBag)
+    }
+    private func bindCollectionView() {
+        self.selectedIndex
+            .bind(onNext: { idx in
+                guard let id = self.viewModel.fetchedDreamRecord.records.safeget(index: idx)?.id else { return }
+                self.dreamId.accept(id)
+            }).disposed(by: self.disposeBag)
+        
+        self.dreamId
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { id in
+                let detailVC = self.factory.instantiateDetailVC(dreamId: id)
+                detailVC.modalTransitionStyle = .coverVertical
+                detailVC.modalPresentationStyle = .pageSheet
+                guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.setTabBarHidden()
+                self.present(detailVC, animated: true)
+            }).disposed(by: self.disposeBag)
     }
 }
 
@@ -211,12 +270,7 @@ extension StorageVC: UICollectionViewDelegate {
             collectionView.deselectItem(at: selected, animated: false)
             return true
         case .records:
-            let detailVC = self.factory.instantiateDetailVC(dreamId: "")
-            detailVC.modalTransitionStyle = .coverVertical
-            detailVC.modalPresentationStyle = .pageSheet
-            guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return false }
-            rdtabbarController.setTabBarHidden()
-            self.present(detailVC, animated: true)
+            self.selectedIndex.accept(indexPath.row)
             return true
         }
     }

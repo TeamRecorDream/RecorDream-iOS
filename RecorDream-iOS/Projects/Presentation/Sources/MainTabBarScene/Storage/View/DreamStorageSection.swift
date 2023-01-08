@@ -24,7 +24,7 @@ public enum DreamStorageSection: String, CaseIterable {
 
 extension DreamStorageSection {
     public static let titles = ["전체", "기쁜", "슬픈", "무서운", "이상한", "민망한", "미설정"]
-    public static let icons = [RDDSKitAsset.Images.feelingXsAll.image,
+    public static let icons = [RDDSKitAsset.Images.feelingXsAllSelected.image,
                                RDDSKitAsset.Images.feelingXsJoySelected.image,
                         RDDSKitAsset.Images.feelingXsSadSelected.image,
                         RDDSKitAsset.Images.feelingXsScarySelected.image,

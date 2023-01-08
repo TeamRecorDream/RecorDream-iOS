@@ -37,6 +37,8 @@ public class DreamSearchVC: UIViewController {
     // MARK: - Reactive Properties
     private let searchKeyword = PublishRelay<String>()
     private let fetchedCount = BehaviorRelay<Int>(value: 0)
+    private let selectedIndex = PublishRelay<Int>()
+    private let dreamId = PublishRelay<String>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamSearchViewModel!
@@ -100,11 +102,20 @@ extension DreamSearchVC {
 }
 // MARK: - DataSource
 extension DreamSearchVC: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        self.selectedIndex.accept(indexPath.row)
+        return true
+    }
+    
     private func setDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource<DreamSearchResultType, AnyHashable>(collectionView: dreamSearchCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             if let model = itemIdentifier as? DreamSearchEntity.Record {
                 guard let resultCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamSearchExistCVC.reuseIdentifier, for: indexPath) as? DreamSearchExistCVC else { return UICollectionViewCell() }
-                resultCell.setData(emotion: model.emotion ?? 0, date: model.date ?? "", title: model.title ?? "", genre: model.genre ?? [])
+                var validTitle = model.title ?? ""
+                if validTitle.count > 25 {
+                    validTitle = "\(validTitle.prefix(25))..."
+                }
+                resultCell.setData(emotion: model.emotion ?? 0, date: model.date ?? "", title: "\(validTitle)", genre: model.genre ?? [])
                 return resultCell
             }
             else {
@@ -161,12 +172,18 @@ extension DreamSearchVC {
         
     }
     private func bindCollectionView() {
-        self.dreamSearchCollectionView.rx.itemSelected
-            .withUnretained(self)
-            .subscribe(onNext: { (owner, item) in
-                let detailVC = owner.factory.instantiateDetailVC(dreamId: "")
-                owner.present(detailVC, animated: true)
-            }).disposed(by: disposeBag)
+        self.selectedIndex
+            .bind(onNext: { idx in
+                guard let id = self.viewModel.fetchedDreamRecord.records.safeget(index: idx)?.id else { return }
+                self.dreamId.accept(id)
+            }).disposed(by: self.disposeBag)
+        
+        self.dreamId
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { id in
+                let detailVC = self.factory.instantiateDetailVC(dreamId: id)
+                self.present(detailVC, animated: true)
+            }).disposed(by: self.disposeBag)
     }
     private func bindDismissButton() {
         self.navigationBar.leftButtonTapped
