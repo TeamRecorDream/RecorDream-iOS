@@ -14,12 +14,32 @@ import Foundation
 extension DreamWriteModifyResponse {
     func toDomain() -> DreamWriteEntity {
         return .init(main: .init(titleText: self.title,
-                                 contentText: self.content ?? "무슨 꿈을 꾸셨나요?",
+                                 contentText: self.validContent,
                                  recordTime: 0.0,
                                  date: self.processedDate),
                      emotions: self.emotions,
                      genres: self.genres,
-                     note: .init(noteText: self.note ?? "꿈에 대해 따로 기록할 게 있나요?"))
+                     note: .init(noteText: self.validNote))
+    }
+    
+    var validContent: String {
+        if let content = self.content {
+            return content == ""
+            ? "무슨 꿈을 꾸셨나요?"
+            : content
+        } else {
+            return "무슨 꿈을 꾸셨나요?"
+        }
+    }
+    
+    var validNote: String {
+        if let note = self.note {
+            return note == ""
+            ? "꿈에 대해 따로 기록할 게 있나요?"
+            : note
+        } else {
+            return "꿈에 대해 따로 기록할 게 있나요?"
+        }
     }
     
     var emotions: [DreamWriteEntity.Emotion] {

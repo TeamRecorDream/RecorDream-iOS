@@ -21,13 +21,15 @@ public class DreamWriteTextView: UITextView {
     private let disposeBag = DisposeBag()
     
     private var placeHolderText = "꿈의 제목을 남겨주세요" {
-        didSet { self.text = placeHolderText }
+        willSet { self.text = newValue }
     }
     
     public var initText: String? {
         willSet {
             self.text = newValue
             self.textColor = .white
+            guard newValue == self.placeHolderText else { return }
+            self.textColor = .white.withAlphaComponent(0.4)
         }
     }
     
@@ -39,10 +41,8 @@ public class DreamWriteTextView: UITextView {
         self.bind()
     }
     
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.setUI()
-        self.bind()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -57,7 +57,6 @@ extension DreamWriteTextView {
         self.layer.borderColor = UIColor.white.withAlphaComponent(0.1).cgColor
         self.textContainerInset = UIEdgeInsets(top: 18.0, left: 16.0, bottom: 16.0, right: 16.0)
         self.font = RDDSKitFontFamily.Pretendard.medium.font(size: 14)
-        self.text = placeHolderText
         self.textColor = .white.withAlphaComponent(0.4)
     }
     
@@ -76,15 +75,6 @@ extension DreamWriteTextView {
                 guard let self = self else { return }
                 if self.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     self.text = self.placeHolderText
-                    self.textColor = .white.withAlphaComponent(0.4)
-                }
-            }).disposed(by: disposeBag)
-        
-        self.rx.text
-            .compactMap { $0 }
-            .subscribe(onNext: { [weak self] text in
-                guard let self = self else { return }
-                if text == self.placeHolderText {
                     self.textColor = .white.withAlphaComponent(0.4)
                 }
             }).disposed(by: disposeBag)

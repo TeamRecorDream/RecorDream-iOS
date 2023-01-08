@@ -21,6 +21,8 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     static var isFromNib: Bool = false
     
+    public var disposeBag = DisposeBag()
+    
     var interactionViewTapped = PublishRelay<DreamWriteInteractionView.InteractionType>()
     
     var titleTextChanged: Observable<String> {
@@ -56,6 +58,11 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.disposeBag = DisposeBag()
     }
 }
 
