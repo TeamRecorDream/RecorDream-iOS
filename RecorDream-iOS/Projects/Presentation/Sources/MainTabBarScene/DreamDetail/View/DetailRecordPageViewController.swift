@@ -52,6 +52,11 @@ final class DetailRecordPageViewController: UIView {
         segmentedControl.delegate = self
         pageViewController.delegate = self
         pageViewController.dataSource = self
+        for subView in pageViewController.view.subviews{
+            if subView is UIScrollView {
+                (subView as! UIScrollView).delegate = self
+            }
+        }
     }
 
     private func setLayouts() {
@@ -124,8 +129,6 @@ extension DetailRecordPageViewController: UIPageViewControllerDataSource {
         return contentPages.safeget(index: index + 1)
     }
 
-    // TODO: Animation 느린 부분 개선
-
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard finished,
               completed,
@@ -135,5 +138,23 @@ extension DetailRecordPageViewController: UIPageViewControllerDataSource {
 
         currentPageIndex = targetIndex
         segmentedControl.selectIndex(targetIndex, shouldAnimate: true)
+    }
+}
+
+extension DetailRecordPageViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffset = scrollView.contentOffset
+        let ratio: CGFloat = contentOffset.x / scrollView.frame.width
+        let segmentIndex = segmentedControl.selectedIndex
+        let selectorViewWidth = segmentedControl.selectorView.frame.width
+        
+        // 현재 인덱스에 따라 스크롤 가능한 범위와, selctorView의 현재 위치 비율을 정해줌
+        var (availableRatio, compensatedRatio) = (segmentIndex == 0)
+        ? (1.0...2.0, ratio - 1)
+        : (0.0...1.0, ratio)
+        
+        // 허용 범위를 벗어나면 return
+        guard availableRatio ~= ratio else { return }
+        segmentedControl.setSelectorOrigin(x: selectorViewWidth * compensatedRatio) 
     }
 }
