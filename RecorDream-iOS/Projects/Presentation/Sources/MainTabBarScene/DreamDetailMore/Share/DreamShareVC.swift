@@ -45,7 +45,7 @@ public class DreamShareVC: UIViewController {
     // MARK: - UI Components
 
     private let backgroundView = UIImageView(image: RDDSKitAsset.Images.instaBackground.image)
-    private let instaLogoView = UIImageView(image: RDDSKitAsset.Images.instaLogo.image)
+    private let instaLogoView = UIImageView(image: RDDSKitAsset.Images.instaRogo.image)
 
     private let cardView = UIImageView(image: RDDSKitAsset.Images.instaCardRed.image)
 
