@@ -159,14 +159,15 @@ extension StorageVC {
         snapshot.appendItems([0, 1, 2, 3, 4, 5, 6], toSection: .filters)
         if model.recordsCount == 0 {
             self.dreamStorageCollectionView.setEmptyView(message: "아직 기록된 꿈이 없어요.", image: UIImage())
+            self.dreamStorageCollectionView.isScrollEnabled = false
         } else {
             self.dreamStorageCollectionView.restore()
+            self.dreamStorageCollectionView.isScrollEnabled = true
             snapshot.appendItems(model.records, toSection: .records)
         }
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
     }
-    
     private func changeLayoutType(type: RDCollectionViewFlowLayout.CollectionDisplay) {
         self.currentLayoutType = type
         self.reapplySnapShot()
@@ -222,6 +223,9 @@ extension StorageVC {
                 let navigation = UINavigationController(rootViewController: searchVC)
                 navigation.modalTransitionStyle = .coverVertical
                 navigation.modalPresentationStyle = .fullScreen
+                navigation.isNavigationBarHidden = true
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.setTabBarHidden(false)
                 owner.present(navigation, animated: true)
             }).disposed(by: self.disposeBag)
         
