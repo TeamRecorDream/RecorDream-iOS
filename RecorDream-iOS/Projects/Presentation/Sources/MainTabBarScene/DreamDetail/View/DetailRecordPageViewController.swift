@@ -88,7 +88,7 @@ final class DetailRecordPageViewController: UIView {
 extension DetailRecordPageViewController {
     func setTabContentsItem(contentPages: [UIViewController]) {
         self.contentPages = contentPages
-        movePage(from: 0, to: 0, animated: true)
+        movePage(from: 0, to: 0, animated: false)
     }
 }
 
@@ -100,7 +100,7 @@ extension DetailRecordPageViewController {
         currentIndex < targetIndex ? .forward : .reverse
 
         self.pageViewController
-            .setViewControllers([targetPage], direction: direction, animated: true)
+            .setViewControllers([targetPage], direction: direction, animated: animated)
         { isCompleted in }
     }
 }
