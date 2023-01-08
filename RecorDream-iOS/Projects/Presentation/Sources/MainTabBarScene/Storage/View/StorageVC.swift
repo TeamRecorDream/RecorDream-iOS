@@ -93,6 +93,10 @@ extension StorageVC {
                                    deselectedImage: DreamStorageSection.deselectedIcons[indexPath.row],
                                    text: DreamStorageSection.titles[indexPath.row])
                 let isSelected = indexPath.row == self.emotionTapped.value
+                if indexPath.item == 0 {
+                    filterCell.isSelected = true
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .init())
+                }
                 filterCell.isSelected = isSelected
                 return filterCell
             case 1:
