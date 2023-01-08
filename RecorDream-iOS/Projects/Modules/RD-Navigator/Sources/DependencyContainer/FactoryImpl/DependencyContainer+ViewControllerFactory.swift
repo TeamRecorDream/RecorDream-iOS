@@ -134,4 +134,16 @@ extension DependencyContainer: MainTabBarControllerFactory {
         
         return dreamSearchVC
     }
+
+    public func instantiateDreamShareVC(dreamModel: DreamDetailEntity) -> DreamShareVC {
+        let repository = DefaultDreamShareRepository()
+        let useCase = DefaultDreamShareUseCase(repository: repository)
+        let viewModel = DreamShareViewModel(useCase: useCase)
+        let dreamShareVC = DreamShareVC()
+
+        dreamShareVC.viewModel = viewModel
+        dreamShareVC.factory = self
+
+        return dreamShareVC
+    }
 }

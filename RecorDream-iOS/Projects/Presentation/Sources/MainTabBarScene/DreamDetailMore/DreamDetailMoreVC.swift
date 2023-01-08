@@ -8,6 +8,7 @@
 
 import UIKit
 
+import Domain
 import RD_DSKit
 
 import RxSwift
@@ -191,6 +192,12 @@ extension DreamDetailMoreVC {
 
                 self.modalPresentationStyle = .overFullScreen
                 self.present(dreamModifyVC, animated: true)
+            }).disposed(by: self.disposeBag)
+
+        self.shareButton.rx.tap
+            .asDriver()
+            .drive(onNext: {
+                // TODO : 인스타 연결 로직
             }).disposed(by: self.disposeBag)
     }
   

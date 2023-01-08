@@ -14,7 +14,7 @@ public class DefaultDreamShareRepository {
   
     private let disposeBag = DisposeBag()
 
-    init() {
+    public init() {
     
     }
 }
