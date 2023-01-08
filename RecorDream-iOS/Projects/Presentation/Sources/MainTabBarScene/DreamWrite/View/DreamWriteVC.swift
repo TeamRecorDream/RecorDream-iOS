@@ -196,7 +196,10 @@ extension DreamWriteVC {
         
         output.writeButtonEnabled
             .skip(1)
-            .bind(to: self.saveButton.rx.isEnabled)
+            .withUnretained(self)
+            .bind { owner, isEnabled in
+                owner.saveButton.rx.isEnabled.onNext(isEnabled)
+            }
             .disposed(by: self.disposeBag)
         
         output.dreamWriteModelFetched
@@ -229,7 +232,10 @@ extension DreamWriteVC {
             }).disposed(by: self.disposeBag)
         
         output.loadingStatus
-            .bind(to: self.rx.isLoading)
+            .withUnretained(self)
+            .bind { owner, isEnabled in
+                owner.rx.isLoading.onNext(isEnabled)
+            }
             .disposed(by: self.disposeBag)
     }
     
@@ -262,9 +268,11 @@ extension DreamWriteVC {
 
 extension DreamWriteVC {
     private func setDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(collectionView: dreamWriteCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(collectionView: dreamWriteCollectionView, cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
+            guard let self = self else { return UICollectionViewCell() }
             switch Section.type(indexPath.section) {
             case .main:
+                self.mainCell = nil
                 guard let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamWriteMainCVC.className, for: indexPath) as? DreamWriteMainCVC else { return UICollectionViewCell() }
                 self.mainCell = mainCell
                 if let model = itemIdentifier as? DreamWriteEntity.Main {
@@ -272,13 +280,16 @@ extension DreamWriteVC {
                                      isModifyView: self.viewModelType.isModifyView)
                 }
                 mainCell.titleTextChanged
-                    .bind(to: self.titleTextChanged)
-                    .disposed(by: self.disposeBag)
+                    .subscribe(onNext: { string in
+                        self.titleTextChanged.accept(string)
+                    })
+                    .disposed(by: mainCell.disposeBag)
                 mainCell.contentTextChanged
-                    .bind(to: self.contentTextChanged)
-                    .disposed(by: self.disposeBag)
-                mainCell.interactionViewTapped.subscribe(onNext: { [weak self] viewType in
-                    guard let self = self else { return }
+                    .subscribe(onNext: { string in
+                        self.contentTextChanged.accept(string)
+                    })
+                    .disposed(by: mainCell.disposeBag)
+                mainCell.interactionViewTapped.subscribe(onNext: { viewType in
                     switch viewType {
                     case .date:
                         self.dateInteractionViewTapped()
@@ -319,13 +330,16 @@ extension DreamWriteVC {
                     noteCell.setData(noteText: model.noteText)
                 }
                 noteCell.noteTextChanged
-                    .bind(to: self.noteTextChanged)
-                    .disposed(by: self.disposeBag)
+                    .subscribe(onNext: { string in
+                        self.noteTextChanged.accept(string)
+                    })
+                    .disposed(by: noteCell.disposeBag)
                 return noteCell
             }
         })
         
-        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+        dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+            guard let self = self else { return UICollectionReusableView() }
             switch kind {
             case DreamWriteHeader.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteHeader.className, for: indexPath) as? DreamWriteHeader else { return UICollectionReusableView() }
@@ -333,6 +347,7 @@ extension DreamWriteVC {
                 view.title = sectionType.title
                 return view
             case DreamWriteWarningFooter.className:
+                self.warningFooter = nil
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
                 self.warningFooter = view
                 if let showWarning = self.viewModel.shouldShowWarningForInit {
@@ -348,14 +363,16 @@ extension DreamWriteVC {
     }
     
     private func applySnapshot() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
-        snapshot.appendSections([.main, .emotions, .genres, .note])
-        snapshot.appendItems([1], toSection: .main)
-        snapshot.appendItems([3,4,5,6,7], toSection: .emotions)
-        snapshot.appendItems([8,9,10,11,12,13,14,15,16,17], toSection: .genres)
-        snapshot.appendItems([18], toSection: .note)
-        dataSource.apply(snapshot, animatingDifferences: false)
-        self.view.setNeedsLayout()
+        if !self.viewModelType.isModifyView {
+            var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
+            snapshot.appendSections([.main, .emotions, .genres, .note])
+            snapshot.appendItems([1], toSection: .main)
+            snapshot.appendItems([3,4,5,6,7], toSection: .emotions)
+            snapshot.appendItems([8,9,10,11,12,13,14,15,16,17], toSection: .genres)
+            snapshot.appendItems([18], toSection: .note)
+            dataSource.apply(snapshot, animatingDifferences: false)
+            self.view.setNeedsLayout()
+        }
     }
     
     private func applySnapshot(model: DreamWriteEntity) {

@@ -20,6 +20,8 @@ final class DreamWriteNoteCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     static var isFromNib: Bool = false
     
+    public var disposeBag = DisposeBag()
+    
     var noteTextChanged: Observable<String> {
         return noteTextView.rx.text.orEmpty.asObservable()
     }
@@ -38,6 +40,11 @@ final class DreamWriteNoteCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.disposeBag = DisposeBag()
     }
 }
 
