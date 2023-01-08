@@ -38,8 +38,14 @@ class AlamoInterceptor: RequestInterceptor {
             completion(.doNotRetryWithError(error))
             return
         }
-
-        // TODO: - 토큰 재발급 로직 추가
+        
+        DefaultAuthService.shared.reissuance { reissuanceSuccessed in
+            if reissuanceSuccessed {
+                completion(.retry)
+            } else {
+                completion(.doNotRetry)
+            }
+        }
     }
     
     private func showNetworkErrorAlert(completion: @escaping (()->Void)) {
