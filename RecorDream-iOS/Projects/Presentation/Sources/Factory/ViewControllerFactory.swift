@@ -7,7 +7,9 @@
 
 import Foundation
 
-public typealias ViewControllerFactory = AuthViewControllerFactory  & MainTabBarControllerFactory
+import Domain
+
+public typealias ViewControllerFactory = AuthViewControllerFactory & MainTabBarControllerFactory
 
 // TODO: - Login Flow에 사용될 Factory Protocol, 추후에 구현
 public protocol AuthViewControllerFactory {
@@ -26,4 +28,6 @@ public protocol MainTabBarControllerFactory {
     func instantiateDetailVC(dreamId: String) -> DreamDetailVC
     func instantiateSearchVC() -> DreamSearchVC
     func instantiateDetailMoreVC(dreamId: String) -> DreamDetailMoreVC
+
+    func instantiateDreamShareVC(dreamModel: DreamDetailEntity) -> DreamShareVC
 }

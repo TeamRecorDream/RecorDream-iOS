@@ -128,6 +128,15 @@ public enum RDDSKitAsset {
     public static let rdSplashLogo = RDDSKitImages(name: "rd_splash_logo")
     public static let rdgoroMark = RDDSKitImages(name: "rdgoro_mark")
     public static let splashBackground = RDDSKitImages(name: "splash_background")
+
+    public static let instaLogo = RDDSKitImages(name: "insta_rogo")
+    public static let instaBackground = RDDSKitImages(name: "instaBackground")
+    public static let instaCardBlue = RDDSKitImages(name: "insta_card_blue")
+    public static let instaCardPink = RDDSKitImages(name: "insta_card_pink")
+    public static let instaCardPurple = RDDSKitImages(name: "insta_card_purple")
+    public static let instaCardRed = RDDSKitImages(name: "insta_card_red")
+    public static let instaCardWhite = RDDSKitImages(name: "insta_card_white")
+    public static let instaCardYellow = RDDSKitImages(name: "insta_card_yellow")
   }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
