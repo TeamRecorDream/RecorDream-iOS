@@ -52,6 +52,13 @@ public class StorageVC: UIViewController {
         self.bindViewModels()
         self.bindCollectionView()
     }
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setDataSource()
+        self.bindViews()
+        self.bindViewModels()
+        self.dreamStorageCollectionView.reloadData()
+    }
 }
 
 // MARK: - UI
