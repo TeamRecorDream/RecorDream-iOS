@@ -70,11 +70,11 @@ extension DependencyContainer: MainTabBarControllerFactory {
         return detailVC
     }
 
-    public func instantiateDetailMoreVC() -> Presentation.DreamDetailMoreVC {
+    public func instantiateDetailMoreVC(dreamId: String) -> Presentation.DreamDetailMoreVC {
         let detailMoreVC = DreamDetailMoreVC()
-        let repository = DefaultDreamDetailMoreRepository()
+        let repository = DefaultDreamDetailMoreRepository(recordService: self.recordService)
         let useCase = DefaultDreamDetailMoreUseCase(repository: repository)
-        let viewModel = DreamDetailMoreViewModel(useCase: useCase)
+        let viewModel = DreamDetailMoreViewModel(useCase: useCase, dreamId: dreamId)
 
         detailMoreVC.factory = self
         detailMoreVC.viewModel = viewModel

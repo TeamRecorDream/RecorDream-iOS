@@ -29,6 +29,8 @@ public class HomeVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: HomeViewModel!
     public var factory: ViewControllerFactory!
+
+    private let isDetailDismissed = PublishRelay<Bool>()
     
     private var dreamCardCollectionViewAdapter: DreamCardCollectionViewAdapter?
     
@@ -84,6 +86,7 @@ public class HomeVC: UIViewController {
         super.viewDidLoad()
 
         self.bindViews()
+        self.bindViewModels()
         self.checkShowDreamWrite()
         self.setUI()
         self.setLayout()
@@ -92,8 +95,14 @@ public class HomeVC: UIViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.bindViewModels()
+        self.detailDismissNotification()
         self.resetView()
+    }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - UI & Layout
@@ -161,7 +170,7 @@ extension HomeVC {
     }
     
     private func bindViewModels() {
-        let input = HomeViewModel.Input(viewWillAppear: Observable.just(()))
+        let input = HomeViewModel.Input(viewWillAppear: Observable.merge(self.rx.viewWillAppear, self.isDetailDismissed.asObservable()))
 
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
@@ -208,5 +217,13 @@ extension HomeVC {
                 self.present(vc, animated: true)
             }
         }
+    }
+
+    private func detailDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissDetailVC(_:)), name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+
+    @objc private func didDismissDetailVC(_ notification: Notification) {
+        self.isDetailDismissed.accept(true)
     }
 }

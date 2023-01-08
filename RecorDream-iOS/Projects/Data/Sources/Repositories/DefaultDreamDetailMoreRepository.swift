@@ -7,18 +7,35 @@
 //
 
 import Domain
+import RD_Network
 
 import RxSwift
-
+import Foundation
 public class DefaultDreamDetailMoreRepository {
-  
+
+    private var recordService: RecordService
     private let disposeBag = DisposeBag()
 
-    public init() {
-    
+    public init(recordService: RecordService) {
+        self.recordService = recordService
     }
 }
 
 extension DefaultDreamDetailMoreRepository: DreamDetailMoreRepository {
-  
+    public func deleteRecord(recordId: String) -> Observable<Bool> {
+        return Observable.create { observer in
+            self.recordService.deleteRecord(recordId: recordId)
+                .subscribe(onNext: { deleteSucess in
+                    guard deleteSucess else {
+                        observer.onNext(false)
+                        return
+                    }
+                    observer.onNext(true)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
 }

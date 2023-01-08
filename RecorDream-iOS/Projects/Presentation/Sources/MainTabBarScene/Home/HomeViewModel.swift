@@ -22,7 +22,7 @@ public class HomeViewModel: ViewModelType {
     // MARK: - Inputs
     
     public struct Input {
-        let viewWillAppear: Observable<Void>
+        let viewWillAppear: Observable<Bool>
     }
     
     // MARK: - Outputs

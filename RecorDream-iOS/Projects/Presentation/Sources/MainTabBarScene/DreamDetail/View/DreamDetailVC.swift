@@ -11,6 +11,7 @@ import Domain
 import RD_DSKit
 
 import RxSwift
+import RxRelay
 import SnapKit
 
 public final class DreamDetailVC: UIViewController {
@@ -20,7 +21,9 @@ public final class DreamDetailVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailViewModel!
     public var factory: ViewControllerFactory!
-  
+
+    private let isModifyDismissed = PublishRelay<Bool>()
+    
     // MARK: - UI Components
 
     private enum Metric {
@@ -101,8 +104,21 @@ public final class DreamDetailVC: UIViewController {
         
         self.setUI()
         self.setLayout()
-        self.bindViewModels()
         self.bindViews()
+        self.bindViewModels()
+    }
+
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.modifyDismissNotification()
+    }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        NotificationCenter.default.removeObserver(self)
+        self.notificateDismiss()
     }
 
     // MARK: - UI & Layout
@@ -173,7 +189,7 @@ public final class DreamDetailVC: UIViewController {
 
 extension DreamDetailVC {
     private func bindViewModels() {
-        let input = DreamDetailViewModel.Input(viewWillAppear: Observable.just(()))
+        let input = DreamDetailViewModel.Input(viewDidLoad: Observable.just(()), isModifyDismissed: self.isModifyDismissed.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
 
         output.fetchedDetailData
@@ -228,8 +244,7 @@ extension DreamDetailVC {
         self.headerView.rx.moreButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
-                // TODO: 더 자연스러운 animation
-                let detailMoreVC = owner.factory.instantiateDetailMoreVC()
+                let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamId: self.viewModel.dreamId)
 
                 let navigation = UINavigationController(rootViewController: detailMoreVC)
                 navigation.modalTransitionStyle = .coverVertical
@@ -243,5 +258,17 @@ extension DreamDetailVC {
             .subscribe(onNext: { (owner, _) in
                 owner.dismiss(animated: true)
             }).disposed(by: self.disposeBag)
+    }
+
+    private func notificateDismiss() {
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+
+    private func modifyDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissModifyVC(_:)), name: NSNotification.Name(rawValue: "dismissModify"), object: nil)
+    }
+
+    @objc private func didDismissModifyVC(_ notification: Notification) {
+        self.isModifyDismissed.accept(true)
     }
 }
