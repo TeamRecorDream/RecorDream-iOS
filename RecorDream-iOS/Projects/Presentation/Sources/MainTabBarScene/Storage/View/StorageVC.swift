@@ -55,9 +55,9 @@ public class StorageVC: UIViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setDataSource()
-        self.bindViews()
         self.bindViewModels()
         self.dreamStorageCollectionView.reloadData()
+        self.resetView()
     }
 }
 
@@ -86,6 +86,11 @@ extension StorageVC {
         DreamWriteEmotionCVC.register(target: self.dreamStorageCollectionView)
         StorageHeaderCVC.register(target: self.dreamStorageCollectionView)
         StorageExistCVC.register(target: self.dreamStorageCollectionView)
+    }
+    
+    private func resetView() {
+        guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
+        rdtabbarController.setTabBarHidden(false)
     }
 }
 
@@ -225,7 +230,7 @@ extension StorageVC {
                 navigation.modalPresentationStyle = .fullScreen
                 navigation.isNavigationBarHidden = true
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
-                rdtabbarController.setTabBarHidden(false)
+                rdtabbarController.setTabBarHidden()
                 owner.present(navigation, animated: true)
             }).disposed(by: self.disposeBag)
         
