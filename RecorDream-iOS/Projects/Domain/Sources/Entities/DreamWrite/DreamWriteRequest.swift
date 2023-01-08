@@ -28,8 +28,8 @@ public struct DreamWriteRequest: Codable {
     }
     
     public func makeValidFileds(voiceId: String?) -> Self {
-        let newContent = (content == "무슨 꿈을 꾸셨나요?" || content == "") ? nil : content
-        let newNote = (note == "꿈에 대해 따로 기록할 게 있나요?" || note == "") ? nil : note
+        let newContent = (content == "무슨 꿈을 꾸셨나요?") ? "" : content
+        let newNote = (note == "꿈에 대해 따로 기록할 게 있나요?") ? "" : note
         return .init(title: title,
                      date: date,
                      content: newContent,

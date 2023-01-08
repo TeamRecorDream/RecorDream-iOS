@@ -91,6 +91,7 @@ extension DreamWriteViewModel {
                                                                   genre: genreList,
                                                                   note: note,
                                                                   voice: self.voiceId))
+            self.useCase.titleTextValidate(text: title)
         }).disposed(by: disposeBag)
         
         self.bindOutput(output: output, disposeBag: disposeBag)
@@ -107,10 +108,6 @@ extension DreamWriteViewModel {
         input.voiceRecorded.subscribe(onNext: { data in
             guard let data else { return }
             self.useCase.uploadVoice(voiceData: data)
-        }).disposed(by: disposeBag)
-        
-        input.titleTextChanged.subscribe(onNext: {
-            self.useCase.titleTextValidate(text: $0)
         }).disposed(by: disposeBag)
         
         input.genreListChagned.subscribe(onNext: {
