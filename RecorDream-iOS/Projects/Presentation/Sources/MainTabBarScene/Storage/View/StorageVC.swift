@@ -111,9 +111,13 @@ extension StorageVC {
                     guard let existCell = collectionView.dequeueReusableCell(withReuseIdentifier: StorageExistCVC.reuseIdentifier, for: indexPath) as? StorageExistCVC else { return UICollectionViewCell() }
                     let currentRecord = model
                     existCell.setupConstraint(layoutType: self.currentLayoutType)
+                    var validTitle = currentRecord.title ?? ""
+                    if validTitle.count > 25 {
+                        validTitle = "\(validTitle.prefix(25))..."
+                    }
                     existCell.setData(emotion: currentRecord.emotion ?? 0,
                                       date: currentRecord.date ?? "",
-                                      title: currentRecord.title ?? "",
+                                      title: "\(validTitle)",
                                       tag: currentRecord.genre ?? [],
                                       layoutType: self.currentLayoutType)
                     return existCell
@@ -218,7 +222,6 @@ extension StorageVC {
                 let navigation = UINavigationController(rootViewController: searchVC)
                 navigation.modalTransitionStyle = .coverVertical
                 navigation.modalPresentationStyle = .fullScreen
-                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
                 owner.present(navigation, animated: true)
             }).disposed(by: self.disposeBag)
         

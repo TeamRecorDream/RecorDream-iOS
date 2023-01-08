@@ -111,7 +111,11 @@ extension DreamSearchVC: UICollectionViewDelegate {
         self.dataSource = UICollectionViewDiffableDataSource<DreamSearchResultType, AnyHashable>(collectionView: dreamSearchCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             if let model = itemIdentifier as? DreamSearchEntity.Record {
                 guard let resultCell = collectionView.dequeueReusableCell(withReuseIdentifier: DreamSearchExistCVC.reuseIdentifier, for: indexPath) as? DreamSearchExistCVC else { return UICollectionViewCell() }
-                resultCell.setData(emotion: model.emotion ?? 0, date: model.date ?? "", title: model.title ?? "", genre: model.genre ?? [])
+                var validTitle = model.title ?? ""
+                if validTitle.count > 25 {
+                    validTitle = "\(validTitle.prefix(25))..."
+                }
+                resultCell.setData(emotion: model.emotion ?? 0, date: model.date ?? "", title: "\(validTitle)", genre: model.genre ?? [])
                 return resultCell
             }
             else {
