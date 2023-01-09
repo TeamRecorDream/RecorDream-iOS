@@ -36,15 +36,15 @@ public class HomeVC: UIViewController {
     
     private enum Metric {
         static let logoViewTop = 18.f
-        static let logoViewHeight = 24.f
+        static let logoViewHeight = 24.adjustedH
         
         static let mainLabelTop = 44.f
         static let mainLabelLeading = 22.f
         static let mainLabelSpacing = 8.f
         
         static let dreamCardTop = 64.f
-        static let dreamCardWidth = 264.f
-        static let dreamCardHeight = 392.f
+        static let dreamCardWidth = 264.adjustedWidth
+        static let dreamCardHeight = 392.adjustedH
         
         static let minimumLineSpacing = 16.f
     }
