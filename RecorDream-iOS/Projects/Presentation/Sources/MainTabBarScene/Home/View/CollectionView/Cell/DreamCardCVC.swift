@@ -28,6 +28,10 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         static let genreStackSpacing = 4.f
         static let genreStackHeight = 21.f
         static let noteLabelHeight = 114.f
+
+        static let voiceNoticeViewWidth = 137.adjustedWidth
+        static let voiceTopSpacing = 9.adjustedH
+        static let voiceNoticeViewHeight = 24.adjustedH
     }
     
 
@@ -76,6 +80,7 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         return label
     }()
 
+    private var voiceNoticeView = VoiceNoticeView()
 
     // MARK: - View Life Cycles
 
@@ -179,6 +184,17 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
             return [RDDSKitAsset.Images.cardMPink.image, RDDSKitAsset.Images.feelingLShy.image]
         default:
             return [RDDSKitAsset.Images.cardMWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
+        }
+    }
+
+    private func setOnlyVoiceView() {
+        self.addSubview(voiceNoticeView)
+
+        voiceNoticeView.snp.makeConstraints {
+            $0.top.equalTo(genreStackView.snp.bottom).offset(Metric.contentSpacing)
+            $0.leading.equalToSuperview().inset(Metric.contentLeadingTrailing)
+            $0.height.equalTo(Metric.voiceNoticeViewHeight)
+            $0.width.equalTo(Metric.voiceNoticeViewWidth)
         }
     }
 }
