@@ -24,6 +24,7 @@ public final class DreamStorageViewModel {
     public struct Input {
         let viewDidLoad: Observable<Void>
         let filterButtonTapped: Observable<Int>
+        let viewWillAppear: Observable<Bool>
     }
     public struct Output {
         var storageDataFetched = BehaviorRelay<DreamStorageEntity.RecordList?>(value: nil)
@@ -48,6 +49,11 @@ extension DreamStorageViewModel: ViewModelType {
         
         input.filterButtonTapped.subscribe(onNext: { selectedType in
             self.useCase.execute(requestValue: .init(filterType: selectedType))
+        }).disposed(by: disposeBag)
+        
+        input.viewWillAppear.subscribe(onNext: { _ in
+            self.useCase.execute(requestValue: .init(filterType: 0))
+            output.loadingStatus.accept(true)
         }).disposed(by: disposeBag)
         
         return output

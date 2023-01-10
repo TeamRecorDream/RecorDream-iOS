@@ -54,10 +54,6 @@ public class StorageVC: UIViewController {
     }
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.setDataSource()
-        self.bindViews()
-        self.bindViewModels()
-        self.dreamStorageCollectionView.reloadData()
     }
 }
 
@@ -193,7 +189,7 @@ extension StorageVC {
 extension StorageVC {
     private func bindViewModels() {
         let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()),
-                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable())
+                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable(), viewWillAppear: self.rx.viewWillAppear)
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.storageDataFetched
