@@ -189,6 +189,10 @@ extension HomeVC {
             .bind { (owner, entity) in
                 owner.fetchHomeData(model: entity)
             }.disposed(by: self.disposeBag)
+
+        output.loadingStatus
+            .bind(to: self.rx.isLoading)
+            .disposed(by: self.disposeBag)
     }
     
     private func fetchHomeData(model: HomeEntity) {

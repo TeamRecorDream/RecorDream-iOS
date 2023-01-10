@@ -5,6 +5,8 @@
 //  Created by 김수연 on 2022/12/04.
 //
 
+import Foundation
+
 import Domain
 import RD_Core
 
@@ -28,6 +30,7 @@ public class DreamDetailViewModel: ViewModelType {
     
     public struct Output {
         var fetchedDetailData = BehaviorRelay<DreamDetailEntity?>(value: nil)
+        var loadingStatus = BehaviorRelay<Bool>(value: true)
     }
     
     // MARK: - Coordination
@@ -44,11 +47,13 @@ extension DreamDetailViewModel {
         self.bindOutput(output: output, disposeBag: disposeBag)
 
         input.viewDidLoad.subscribe(onNext: { _ in
+            output.loadingStatus.accept(true)
             self.useCase.fetchDetailRecord(recordId: self.dreamId)
         }).disposed(by: disposeBag)
 
         input.isModifyDismissed.subscribe(onNext: { isDismissed in
             if isDismissed {
+                output.loadingStatus.accept(true)
                 self.useCase.fetchDetailRecord(recordId: self.dreamId)
             }
         }).disposed(by: disposeBag)
@@ -61,6 +66,7 @@ extension DreamDetailViewModel {
 
         detailDreamData.compactMap { $0 }
             .subscribe(onNext: { entity in
+                output.loadingStatus.accept(false)
                 output.fetchedDetailData.accept(entity)
             }).disposed(by: disposeBag)
     }

@@ -198,6 +198,10 @@ extension DreamDetailVC {
             .bind { (owner, entity) in
                 owner.fetchDetailDreamData(model: entity)
             }.disposed(by: self.disposeBag)
+
+        output.loadingStatus
+            .bind(to: self.rx.isLoading)
+            .disposed(by: self.disposeBag)
     }
 
     private func fetchDetailDreamData(model: DreamDetailEntity) {
