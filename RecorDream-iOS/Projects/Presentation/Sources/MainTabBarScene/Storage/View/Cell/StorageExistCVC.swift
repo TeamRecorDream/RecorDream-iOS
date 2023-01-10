@@ -25,20 +25,28 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         iv.contentMode = .scaleAspectFit
         return iv
     }()
+    private var contentsStackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.distribution = .equalSpacing
+        return sv
+    }()
     private var dateLabel: UILabel = {
-        let label = UILabel()
-        label.font = RDDSKitFontFamily.Pretendard.medium.font(size: 10)
-        label.textAlignment = .left
-        label.textColor = RDDSKitColors.Color.white
-        return label
+        let lb = UILabel()
+        lb.font = RDDSKitFontFamily.Pretendard.medium.font(size: 10)
+        lb.sizeToFit()
+        lb.textAlignment = .left
+        lb.textColor = RDDSKitColors.Color.white
+        return lb
     }()
     private var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 11)
-        label.textAlignment = .left
-        label.textColor = RDDSKitColors.Color.white
-        label.numberOfLines = 2
-        return label
+        let lb = UILabel()
+        lb.font = RDDSKitFontFamily.Pretendard.regular.font(size: 11)
+        lb.textAlignment = .left
+        lb.textColor = RDDSKitColors.Color.white
+        lb.sizeToFit()
+        lb.numberOfLines = 2
+        return lb
     }()
     private var genreStackView: UIStackView = {
         let sv = UIStackView()
@@ -60,17 +68,20 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
     }
     
     override func prepareForReuse() {
+        self.contentsStackView.arrangedSubviews.forEach {
+            $0.removeFromSuperview() }
         self.genreStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
     }
     
     // MARK: - Functions
     private func setupView() {
-        self.addSubviews(backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView)
+        self.addSubviews(backgroundImageView, emotionImageView, contentsStackView)
+        self.contentsStackView.addArrangedSubviews(dateLabel, titleLabel, genreStackView)
         self.backgroundColor = .none
         self.titleLabel.addLabelSpacing(kernValue: -0.22)
     }
     private func removeView() {
-        [backgroundImageView, emotionImageView, dateLabel, titleLabel, genreStackView]
+        [backgroundImageView, emotionImageView, contentsStackView]
             .forEach { view in
                 view.removeFromSuperview()
             }
@@ -89,18 +100,9 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
                 $0.leading.equalToSuperview().inset(32)
                 $0.size.equalTo(46)
             }
-            self.dateLabel.snp.makeConstraints {
+            self.contentsStackView.snp.makeConstraints {
                 $0.top.equalToSuperview().offset(12)
                 $0.leading.equalTo(emotionImageView.snp.trailing).offset(24)
-            }
-            self.titleLabel.snp.makeConstraints {
-                $0.top.equalTo(dateLabel.snp.bottom).offset(3)
-                $0.leading.equalTo(dateLabel)
-            }
-            self.genreStackView.snp.makeConstraints {
-                $0.height.equalTo(30)
-                $0.top.equalTo(titleLabel.snp.bottom).offset(3)
-                $0.leading.equalTo(dateLabel)
             }
         case .grid:
             self.emotionImageView.snp.makeConstraints {
@@ -108,19 +110,10 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
                 $0.centerX.equalToSuperview().inset(52)
                 $0.size.equalTo(60)
             }
-            self.dateLabel.snp.makeConstraints {
+            self.contentsStackView.snp.makeConstraints {
+                $0.width.equalTo(130.adjustedWidth)
                 $0.top.equalTo(emotionImageView.snp.bottom).offset(14)
-                $0.centerX.equalToSuperview()
-            }
-            self.titleLabel.snp.makeConstraints {
-                $0.top.equalTo(dateLabel.snp.bottom).offset(8)
-                $0.centerX.equalTo(emotionImageView)
-            }
-            self.genreStackView.snp.makeConstraints {
-                $0.top.equalTo(titleLabel.snp.bottom).offset(8)
-                $0.centerX.equalToSuperview()
-                $0.height.equalTo(16)
-                $0.bottom.equalToSuperview().inset(22)
+                $0.leading.equalToSuperview().offset(17)
             }
         }
     }
@@ -131,8 +124,12 @@ extension StorageExistCVC {
         switch layoutType {
         case .grid:
             self.backgroundImageView.image = self.setEmotionImage(emotion: emotion)[1]
+            self.contentsStackView.alignment = .center
+            self.contentsStackView.spacing = 8
         case .list:
             self.backgroundImageView.image = self.setEmotionImage(emotion: emotion).first
+            self.contentsStackView.alignment = .leading
+            self.contentsStackView.spacing = 3
         }
         self.emotionImageView.image = self.setEmotionImage(emotion: emotion).last
         self.dateLabel.text = date
