@@ -31,7 +31,6 @@ public class StorageVC: UIViewController {
     // MARK: - Reactive Stuff
     private let emotionTapped = BehaviorRelay<Int>(value: 0)
     private var selectedIndex = PublishRelay<Int>()
-    private let dreamId = PublishRelay<String>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -236,19 +235,10 @@ extension StorageVC {
     }
     private func bindCollectionView() {
         self.selectedIndex
-            .bind(onNext: { idx in
+            .bind(onNext: { [weak self] idx in
+                guard let self = self else { return }
                 guard let id = self.viewModel.fetchedDreamRecord.records.safeget(index: idx)?.id else { return }
-                self.dreamId.accept(id)
-            }).disposed(by: self.disposeBag)
-        
-        self.dreamId
-            .asDriver(onErrorJustReturn: "")
-            .drive(onNext: { id in
                 let detailVC = self.factory.instantiateDetailVC(dreamId: id)
-                detailVC.modalTransitionStyle = .coverVertical
-                detailVC.modalPresentationStyle = .pageSheet
-                guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
-                rdtabbarController.setTabBarHidden()
                 self.present(detailVC, animated: true)
             }).disposed(by: self.disposeBag)
     }
