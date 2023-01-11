@@ -66,7 +66,7 @@ extension LoginVC: AuthControllable {
             make.width.equalTo(343.adjustedWidth)
             make.height.equalTo(52.adjustedHeight)
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(614)
+            make.top.equalToSuperview().offset(614.adjusted)
         }
         self.appleLoginButton.snp.makeConstraints { make in
             make.width.height.equalTo(kakaoLoginButton)
