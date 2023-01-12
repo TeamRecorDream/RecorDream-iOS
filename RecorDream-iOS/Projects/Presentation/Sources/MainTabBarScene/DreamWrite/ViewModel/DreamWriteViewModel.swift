@@ -106,8 +106,11 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         input.voiceRecorded.subscribe(onNext: { data in
-            guard let data else { return }
-            self.useCase.uploadVoice(voiceData: data)
+            if let data = data {
+                self.useCase.uploadVoice(voiceData: data)
+            } else {
+                self.voiceId = nil
+            }
         }).disposed(by: disposeBag)
         
         input.genreListChagned.subscribe(onNext: {

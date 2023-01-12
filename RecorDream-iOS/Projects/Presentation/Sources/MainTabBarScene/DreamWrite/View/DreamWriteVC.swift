@@ -112,8 +112,8 @@ extension DreamWriteVC {
     }
     
     private func setLayout() {
-        self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton,
-                              backGroundView, recordView, datePickerView, saveCoverButton)
+        self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton, saveCoverButton,
+                              backGroundView, recordView, datePickerView)
         
         dreamWriteCollectionView.snp.makeConstraints { make in
             make.top.equalTo(naviBar.snp.bottom)
@@ -182,7 +182,7 @@ extension DreamWriteVC {
         }
         sender.cancelsTouchesInView = false
     }
-
+    
     private func notificateDismiss() {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "dismissModify"), object: nil)
     }
@@ -191,6 +191,41 @@ extension DreamWriteVC {
 // MARK: - Bind
 
 extension DreamWriteVC {
+    private func bindViews() {
+        naviBar.leftButtonTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.dismiss(animated: true)
+        }).disposed(by: self.disposeBag)
+        
+        recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
+            guard let self = self else { return }
+            if let (voiceData, totalTime) = dataTimeTuple {
+                self.voiceRecorded.accept(voiceData)
+                self.mainCell?.recordUpdated(record: totalTime)
+            } else {
+                self.voiceRecorded.accept(nil)
+                self.mainCell?.recordUpdated(record: 0)
+            }
+        }).disposed(by: self.disposeBag)
+        
+        recordView.dismiss.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
+            self.dismissVoiceRecordView()
+        }).disposed(by: self.disposeBag)
+        
+        datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
+            guard let self = self else { return }
+            self.dismissDatePickerView()
+            guard let date = dateOutput else { return }
+            self.datePicked.accept(date)
+            self.mainCell?.dateChanged(date: date)
+        }).disposed(by: self.disposeBag)
+        
+        saveCoverButton.rx.tap.subscribe { [weak self] _ in
+            guard let self = self else { return }
+            self.showToast(message: "제목을 입력해주세요")
+        }.disposed(by: self.disposeBag)
+    }
     
     private func bindViewModels() {
         let input = DreamWriteViewModel.Input(viewDidLoad: Observable.just(()),
@@ -229,12 +264,12 @@ extension DreamWriteVC {
         output.writeRequestSuccess
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-
+                
                 switch self.viewModelType {
                 case .modify:
                     self.notificateDismiss()
                     self.dismiss(animated: true)
-
+                    
                     let presentingVC = self.presentingViewController
                     presentingVC?.dismiss(animated: true)
                 case .write:
@@ -248,34 +283,6 @@ extension DreamWriteVC {
                 owner.rx.isLoading.onNext(isEnabled)
             }
             .disposed(by: self.disposeBag)
-    }
-    
-    private func bindViews() {
-        naviBar.leftButtonTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.dismiss(animated: true)
-        }).disposed(by: self.disposeBag)
-        
-        recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
-            guard let self = self else { return }
-            self.dismissVoiceRecordView()
-            guard let (voiceData, totalTime) = dataTimeTuple else { return }
-            self.voiceRecorded.accept(voiceData)
-            self.mainCell?.recordUpdated(record: totalTime)
-        }).disposed(by: self.disposeBag)
-        
-        datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
-            guard let self = self else { return }
-            self.dismissDatePickerView()
-            guard let date = dateOutput else { return }
-            self.datePicked.accept(date)
-            self.mainCell?.dateChanged(date: date)
-        }).disposed(by: self.disposeBag)
-        
-        saveCoverButton.rx.tap.subscribe { [weak self] _ in
-            guard let self = self else { return }
-            self.showToast(message: "제목을 입력해주세요")
-        }.disposed(by: self.disposeBag)
     }
 }
 
