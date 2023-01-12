@@ -143,13 +143,13 @@ extension DreamWriteVC {
         recordView.snp.updateConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(327.adjustedH)
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-327.adjustedH)
         }
         
         datePickerView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(340.adjustedH)
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-340.adjustedH)
         }
     }
 }
@@ -442,7 +442,7 @@ extension DreamWriteVC {
     private func showDatePickerView() {
         datePickerView.transform = CGAffineTransform.identity
         datePickerView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(0)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.view.layoutIfNeeded()
@@ -452,7 +452,7 @@ extension DreamWriteVC {
     private func showVoiceRecordView() {
         recordView.transform = CGAffineTransform.identity
         recordView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 327.adjustedH)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(0)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.view.layoutIfNeeded()
@@ -462,7 +462,7 @@ extension DreamWriteVC {
     private func dismissVoiceRecordView() {
         self.backGroundView.isUserInteractionEnabled = false
         recordView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-327.adjustedH)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.backGroundView.alpha = 0
@@ -473,7 +473,7 @@ extension DreamWriteVC {
     private func dismissDatePickerView() {
         self.backGroundView.isUserInteractionEnabled = false
         datePickerView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-340.adjustedH)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.backGroundView.alpha = 0

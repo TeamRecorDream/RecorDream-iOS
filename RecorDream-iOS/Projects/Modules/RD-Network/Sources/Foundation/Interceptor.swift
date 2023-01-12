@@ -34,11 +34,11 @@ public class AlamoInterceptor: RequestInterceptor {
 //    }
     
     public func retry(_ request: Alamofire.Request, for session: Alamofire.Session, dueTo error: Swift.Error, completion: @escaping (RetryResult) -> Void) {
-        // token 재발급 API가 아니며 && 토큰이 만료된 경우(402)
+        // token 재발급 API가 아니며 && 토큰이 만료된 경우(406)
         guard let pathComponents = request.request?.url?.pathComponents,
               !pathComponents.contains("token"),
               let response = request.task?.response as? HTTPURLResponse,
-              response.statusCode == 402 else {
+              response.statusCode == 406 else {
             completion(.doNotRetryWithError(error))
             return
         }
