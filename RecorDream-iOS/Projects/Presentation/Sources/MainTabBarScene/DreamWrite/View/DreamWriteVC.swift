@@ -262,18 +262,20 @@ extension DreamWriteVC {
             }.disposed(by: self.disposeBag)
         
         output.writeRequestSuccess
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] entity in
                 guard let self = self else { return }
+                let presentingVC = self.presentingViewController
                 
                 switch self.viewModelType {
                 case .modify:
                     self.notificateDismiss()
                     self.dismiss(animated: true)
-                    
-                    let presentingVC = self.presentingViewController
                     presentingVC?.dismiss(animated: true)
                 case .write:
+                    guard let recordId = entity else { return }
+                    let detailVC = self.factory.instantiateDetailVC(dreamId: recordId)
                     self.dismiss(animated: true)
+                    presentingVC?.present(detailVC, animated: true)
                 }
             }).disposed(by: self.disposeBag)
         

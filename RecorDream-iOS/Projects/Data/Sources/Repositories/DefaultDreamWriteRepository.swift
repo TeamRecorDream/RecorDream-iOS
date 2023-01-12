@@ -84,12 +84,16 @@ extension DefaultDreamWriteRepository: DreamWriteRepository {
         }
     }
     
-    public func writeDreamRecord(request: DreamWriteRequest) -> Observable<Void> {
+    public func writeDreamRecord(request: DreamWriteRequest) -> Observable<String> {
         return Observable.create { observer in
             guard let title = request.title else { return Disposables.create() }
             self.recordService.writeDreamRecord(title: title, date: request.date, content: request.content, emotion: request.emotion, genre: request.genre, note: request.note, voice: request.voice)
-                .subscribe(onNext: { _ in
-                    observer.onNext(())
+                .subscribe(onNext: { entity in
+                    guard let recordId = entity?.id else {
+                        observer.onCompleted()
+                        return
+                    }
+                    observer.onNext(recordId)
                 }, onError: { err in
                     observer.onError(err)
                 })

@@ -18,7 +18,7 @@ public protocol DreamWriteUseCase {
     func genreListCautionValidate(genreList: [Int]?)
     func uploadVoice(voiceData: Data)
     
-    var writeSuccess: PublishSubject<Void> { get set }
+    var writeSuccess: PublishSubject<String?> { get set }
     var isWriteEnabled: PublishSubject<Bool> { get set }
     var showCaution: PublishSubject<Bool> { get set }
     var fetchedRecord: PublishSubject<DreamWriteEntity?> { get set }
@@ -30,7 +30,7 @@ public class DefaultDreamWriteUseCase {
     private let repository: DreamWriteRepository
     private let disposeBag = DisposeBag()
     
-    public var writeSuccess = PublishSubject<Void>()
+    public var writeSuccess = PublishSubject<String?>()
     public var isWriteEnabled = PublishSubject<Bool>()
     public var showCaution = PublishSubject<Bool>()
     public var fetchedRecord = PublishSubject<DreamWriteEntity?>()
@@ -73,8 +73,8 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         let validRequest = request.makeValidFileds(voiceId: voiceId)
         self.repository.writeDreamRecord(request: validRequest)
             .withUnretained(self)
-            .subscribe(onNext: { strongSelf, entity in
-            strongSelf.writeSuccess.onNext(())
+            .subscribe(onNext: { strongSelf, recordId in
+            strongSelf.writeSuccess.onNext(recordId)
         }).disposed(by: self.disposeBag)
     }
     
@@ -83,7 +83,7 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         self.repository.modifyDreamRecord(request: validRequest, recordId: recordId)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, entity in
-            strongSelf.writeSuccess.onNext(())
+            strongSelf.writeSuccess.onNext(nil)
         }).disposed(by: self.disposeBag)
     }
     
