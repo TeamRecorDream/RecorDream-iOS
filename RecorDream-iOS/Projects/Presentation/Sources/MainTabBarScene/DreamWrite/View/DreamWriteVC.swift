@@ -67,6 +67,12 @@ public class DreamWriteVC: UIViewController {
     private lazy var saveButton = DreamWriteSaveButton()
         .title("저장하기")
     
+    private let saveCoverButton: UIButton = {
+        let bt = UIButton()
+        bt.backgroundColor = .clear
+        return bt
+    }()
+    
     private let backGroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .black.withAlphaComponent(0.4)
@@ -107,7 +113,7 @@ extension DreamWriteVC {
     
     private func setLayout() {
         self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton,
-                              backGroundView, recordView, datePickerView)
+                              backGroundView, recordView, datePickerView, saveCoverButton)
         
         dreamWriteCollectionView.snp.makeConstraints { make in
             make.top.equalTo(naviBar.snp.bottom)
@@ -124,6 +130,10 @@ extension DreamWriteVC {
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(88)
             make.bottom.equalToSuperview()
+        }
+        
+        saveCoverButton.snp.makeConstraints { make in
+            make.edges.equalTo(saveButton)
         }
         
         backGroundView.snp.makeConstraints { make in
@@ -199,6 +209,7 @@ extension DreamWriteVC {
             .withUnretained(self)
             .bind { owner, isEnabled in
                 owner.saveButton.rx.isEnabled.onNext(isEnabled)
+                owner.saveCoverButton.isEnabled = !isEnabled
             }
             .disposed(by: self.disposeBag)
         
@@ -260,6 +271,11 @@ extension DreamWriteVC {
             self.datePicked.accept(date)
             self.mainCell?.dateChanged(date: date)
         }).disposed(by: self.disposeBag)
+        
+        saveCoverButton.rx.tap.subscribe { [weak self] _ in
+            guard let self = self else { return }
+            self.showToast(message: "제목을 입력해주세요")
+        }.disposed(by: self.disposeBag)
     }
 }
 
