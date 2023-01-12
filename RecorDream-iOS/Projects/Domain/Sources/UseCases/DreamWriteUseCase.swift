@@ -15,12 +15,10 @@ public protocol DreamWriteUseCase {
     func fetchDreamRecord(recordId: String)
     func modifyDreamRecord(request: DreamWriteRequest, voiceId: String?, recordId: String)
     func titleTextValidate(text: String)
-    func genreListCautionValidate(genreList: [Int]?)
     func uploadVoice(voiceData: Data)
     
     var writeSuccess: PublishSubject<String?> { get set }
     var isWriteEnabled: PublishSubject<Bool> { get set }
-    var showCaution: PublishSubject<Bool> { get set }
     var fetchedRecord: PublishSubject<DreamWriteEntity?> { get set }
     var uploadedVoice: PublishSubject<String?> { get set }
 }
@@ -32,7 +30,6 @@ public class DefaultDreamWriteUseCase {
     
     public var writeSuccess = PublishSubject<String?>()
     public var isWriteEnabled = PublishSubject<Bool>()
-    public var showCaution = PublishSubject<Bool>()
     public var fetchedRecord = PublishSubject<DreamWriteEntity?>()
     public var uploadedVoice = PublishSubject<String?>()
     
@@ -48,14 +45,6 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
         self.isWriteEnabled.onNext(existDistinctTitle)
     }
     
-    public func genreListCautionValidate(genreList: [Int]?) {
-        guard let list = genreList else {
-            self.showCaution.onNext(false)
-            return
-        }
-        self.showCaution.onNext(list.count >= 3)
-    }
-    
     public func fetchDreamRecord(recordId: String) {
         self.repository.fetchDreamRecord(recordId: recordId)
             .withUnretained(self)
@@ -65,7 +54,6 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
                     return
                 }
                 strongSelf.fetchedRecord.onNext(entity)
-                strongSelf.genreListCautionValidate(genreList: entity.genreList)
             }).disposed(by: self.disposeBag)
     }
     

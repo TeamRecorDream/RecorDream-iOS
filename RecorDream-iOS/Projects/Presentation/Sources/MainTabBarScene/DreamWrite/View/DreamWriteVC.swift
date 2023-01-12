@@ -255,12 +255,6 @@ extension DreamWriteVC {
                 strongSelf.applySnapshot(model: entity)
             }.disposed(by: self.disposeBag)
         
-        output.showGenreCountCaution
-            .withUnretained(self)
-            .bind { (strongSelf, shouldShow) in
-                strongSelf.warningFooter?.shouldShowCaution = shouldShow
-            }.disposed(by: self.disposeBag)
-        
         output.writeRequestSuccess
             .subscribe(onNext: { [weak self] entity in
                 guard let self = self else { return }
@@ -375,9 +369,6 @@ extension DreamWriteVC {
                 self.warningFooter = nil
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
                 self.warningFooter = view
-                if let showWarning = self.viewModel.shouldShowWarningForInit {
-                    self.warningFooter?.shouldShowCaution = showWarning
-                }
                 return view
             case DreamWriteDividerView.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteDividerView.className, for: indexPath) as? DreamWriteDividerView else { return UICollectionReusableView() }
@@ -409,13 +400,6 @@ extension DreamWriteVC {
         snapshot.appendItems([model.note], toSection: .note)
         dataSource.apply(snapshot, animatingDifferences: false)
         self.view.setNeedsLayout()
-    }
-    
-    private func getSelectedGenresCount() -> Int {
-        guard let currentSnapshot = self.dataSource.snapshot(for: .genres).items as? [DreamWriteEntity.Genre] else { return 0 }
-        return currentSnapshot
-            .filter { $0.isSelected }
-            .count
     }
 }
 
@@ -502,6 +486,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             let selectedList = self.getCurrentGenreList(indexPath: indexPath, insert: true)
             self.genreListChagned.accept(selectedList.count == 0 ? nil : selectedList)
             if selectedList.count >= 4 {
+                self.warningFooter?.showCaution()
                 return false
             } else { return true }
         default: return false

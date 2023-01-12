@@ -16,10 +16,6 @@ public class DreamWriteWarningFooter: UICollectionReusableView, UICollectionReus
     
     public static var isFromNib: Bool = false
     
-    public var shouldShowCaution = false {
-        willSet { self.warningLabel.isHidden = !newValue }
-    }
-    
     // MARK: - UI Components
     
     private let warningLabel: UILabel = {
@@ -55,6 +51,19 @@ extension DreamWriteWarningFooter {
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
             make.bottom.equalToSuperview().inset(9)
+        }
+    }
+}
+
+// MARK: Public Methods
+
+extension DreamWriteWarningFooter {
+    public func showCaution() {
+        if self.warningLabel.isHidden == true {
+            self.warningLabel.isHidden = false
+            DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+                self.warningLabel.isHidden = true
+            }
         }
     }
 }

@@ -34,7 +34,6 @@ public class DreamWriteViewModel: ViewModelType {
     
     public struct Output {
         var writeButtonEnabled = PublishRelay<Bool>()
-        var showGenreCountCaution = BehaviorRelay<Bool>(value: false)
         var writeRequestSuccess = PublishRelay<String?>()
         var dreamWriteModelFetched = BehaviorRelay<DreamWriteEntity?>(value: nil)
         var loadingStatus = PublishRelay<Bool>()
@@ -113,10 +112,6 @@ extension DreamWriteViewModel {
             }
         }).disposed(by: disposeBag)
         
-        input.genreListChagned.subscribe(onNext: {
-            self.useCase.genreListCautionValidate(genreList: $0)
-        }).disposed(by: disposeBag)
-        
         input.saveButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
@@ -153,11 +148,6 @@ extension DreamWriteViewModel {
         let writeEnabled = useCase.isWriteEnabled
         writeEnabled.subscribe(onNext: { status in
             output.writeButtonEnabled.accept(status)
-        }).disposed(by: disposeBag)
-        
-        let showCaution = useCase.showCaution
-        showCaution.subscribe(onNext: { status in
-            output.showGenreCountCaution.accept(status)
         }).disposed(by: disposeBag)
         
         let uploadedVoiceId = useCase.uploadedVoice
