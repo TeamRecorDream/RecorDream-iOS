@@ -30,6 +30,7 @@ public class MyPageEditableView: UIView {
     public var initText = " " {
         willSet {
             self.resultLabel.text = newValue
+            self.editingTextField.text = newValue
         }
     }
     
@@ -100,15 +101,15 @@ extension MyPageEditableView {
     private func bind() {
         Observable.merge(editingTextField.rx.controlEvent(.editingDidEndOnExit).asObservable(), editingTextField.rx.controlEvent(.editingDidEnd).asObservable())
             .withUnretained(self)
-            .subscribe(onNext: { (strongSelf, _) in
-                if let text = strongSelf.editingTextField.text,
+            .subscribe(onNext: { (owner, _) in
+                if let text = owner.editingTextField.text,
                    !text.isEmpty {
-                    strongSelf.resultLabel.text = text
-                    self.endEditingWithText.accept(.endWithProperText(text: text))
+                    owner.resultLabel.text = text
+                    owner.endEditingWithText.accept(.endWithProperText(text: text))
                 } else {
-                    strongSelf.endEditingWithText.accept(.noText)
+                    owner.endEditingWithText.accept(.noText)
                 }
-                strongSelf.rx.isEditing.onNext(false)
+                owner.rx.isEditing.onNext(false)
             }).disposed(by: disposeBag)
         
         editingTextField.rx.text

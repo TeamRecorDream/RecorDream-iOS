@@ -145,7 +145,7 @@ extension MyPageVC {
         }
         
         editButton.snp.makeConstraints { make in
-            make.leading.equalTo(profileImageView.snp.trailing).offset(-5.adjusted)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(12.adjusted)
             make.centerY.equalTo(myPageEditableView.snp.centerY)
         }
         
@@ -192,12 +192,6 @@ extension MyPageVC {
             make.edges.equalToSuperview()
         }
     }
-}
-
-// MARK: - Methods
-
-extension MyPageVC {
-    
 }
 
 // MARK: - Bind
