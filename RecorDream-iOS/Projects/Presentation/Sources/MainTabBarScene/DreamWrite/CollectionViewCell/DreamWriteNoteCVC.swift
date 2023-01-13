@@ -26,6 +26,16 @@ final class DreamWriteNoteCVC: UICollectionViewCell, UICollectionViewRegisterabl
         return noteTextView.sharedText
     }
     
+    var noteTextBeginEndEditing: Observable<Bool> {
+        let observable = Observable.merge(
+            noteTextView.didBeginEditing
+                .map { _ in true },
+            noteTextView.didEndEditing
+                .map { _ in false }
+        )
+        return observable
+    }
+    
     // MARK: - UI Components
     
     private let noteTextView = DreamWriteTextView()

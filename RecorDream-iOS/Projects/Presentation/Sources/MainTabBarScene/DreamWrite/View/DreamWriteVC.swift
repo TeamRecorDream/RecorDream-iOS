@@ -353,6 +353,21 @@ extension DreamWriteVC {
                         self.noteTextChanged.accept(string)
                     })
                     .disposed(by: noteCell.disposeBag)
+                noteCell.noteTextBeginEndEditing
+                    .subscribe(onNext: { isStarted in
+                        let currentOffset = self.dreamWriteCollectionView.contentOffset
+                        let keyboardHeight = 249
+                        if isStarted {
+                            self.dreamWriteCollectionView.setContentOffset(.init(x: currentOffset.x,
+                                                                                 y: 744),
+                                                                           animated: true)
+                        } else {
+                            self.dreamWriteCollectionView.scrollToItem(at: .init(item: 0, section: 3),
+                                                                       at: .bottom,
+                                                                       animated: true)
+                        }
+                    })
+                    .disposed(by: noteCell.disposeBag)
                 return noteCell
             }
         })
