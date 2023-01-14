@@ -11,19 +11,18 @@ import UIKit
 import RD_DSKit
 
 extension StorageVC {
-    func createLayout() -> UICollectionViewLayout {
+    func createFilterLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
             let filterHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(60))
             let filterHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: filterHeaderSize, elementKind: DreamWriteHeader.className, alignment: .top)
-
-            switch DreamStorageSection.type(sectionIndex) {
-            case .filters:
-                return self.createFilterSection(filterHeader)
-            case .records:
-                return self.currentLayoutType == .list
-                ? self.createListRecordsSection()
-                : self.createGridRecordsSection()
-            }
+            return self.createFilterSection(filterHeader)
+        }
+    }
+    func createStorageLayout() -> UICollectionViewLayout {
+        return UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+            return self.currentLayoutType == .list
+            ? self.createListRecordsSection()
+            : self.createGridRecordsSection()
         }
     }
     
