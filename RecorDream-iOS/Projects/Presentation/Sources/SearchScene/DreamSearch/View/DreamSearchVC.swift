@@ -58,16 +58,21 @@ public class DreamSearchVC: UIViewController {
         self.setDataSource()
         self.registerXib()
     }
+    
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 // MARK: - UI
-extension DreamSearchVC {
+extension DreamSearchVC: UITextFieldDelegate {
     public func setupView() {
         self.view.backgroundColor = .black
         self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView)
     }
     
     private func setDelegate() {
+        self.searchTextField.delegate = self
         self.dreamSearchCollectionView.rx
             .setDelegate(self)
             .disposed(by: self.disposeBag)

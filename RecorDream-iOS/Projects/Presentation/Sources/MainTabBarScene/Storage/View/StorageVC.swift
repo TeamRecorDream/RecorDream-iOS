@@ -25,12 +25,19 @@ public class StorageVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
+    private lazy var emptyBackgroundView: UIView = {
+        let v = UIView()
+        v.backgroundColor = .clear
+        v.tintColor = .clear
+        v.isUserInteractionEnabled = false
+        return v
+    }()
     private var storageHeader: StorageHeaderCVC?
-    private let fetchedCount = PublishRelay<Int>()
     
     // MARK: - Reactive Stuff
     private let emotionTapped = BehaviorRelay<Int>(value: 0)
     private var selectedIndex = PublishRelay<Int>()
+    private let fetchedCount = PublishRelay<Int>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -60,7 +67,7 @@ public class StorageVC: UIViewController {
 extension StorageVC {
     private func setupView() {
         self.view.backgroundColor = .clear
-        self.view.addSubviews(logoView, dreamStorageCollectionView)
+        self.view.addSubviews(logoView, dreamStorageCollectionView, emptyBackgroundView)
     }
     private func setupConstraint() {
         self.logoView.snp.makeConstraints { make in
@@ -69,9 +76,13 @@ extension StorageVC {
             make.height.equalTo(23.adjustedHeight)
         }
         self.dreamStorageCollectionView.snp.makeConstraints { make in
+            make.height.equalTo(570.adjustedHeight)
             make.top.equalTo(logoView.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(60)
+        }
+        self.emptyBackgroundView.snp.makeConstraints { make in
+            make.top.equalTo(dreamStorageCollectionView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
     private func setDelegate() {
