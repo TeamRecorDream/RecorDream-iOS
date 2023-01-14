@@ -14,12 +14,6 @@ import RD_DSKit
 import RxSwift
 import RxCocoa
 
-// TODO: - QA
-/*
- 1. 기록 삭제 후 fetch 로직
- 2. 스크롤해도 필터셀은 고정되도록 수정
- */
-
 public class StorageVC: UIViewController {
     // MARK: - UI Components
     private lazy var logoView = DreamLogoView()
