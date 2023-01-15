@@ -31,6 +31,7 @@ public class StorageVC: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.showsHorizontalScrollIndicator = false
         cv.backgroundColor = RDDSKitAsset.Colors.dark.color
+        cv.bounces = false
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         cv.allowsMultipleSelection = true
         return cv
@@ -77,7 +78,7 @@ public class StorageVC: UIViewController {
 // MARK: - UI
 extension StorageVC {
     private func setupView() {
-        self.view.backgroundColor = .clear
+        self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
         self.view.addSubviews(logoView, dreamFilterCollectionView, dreamStorageCollectionView, emptyBackgroundView)
     }
     private func setupConstraint() {

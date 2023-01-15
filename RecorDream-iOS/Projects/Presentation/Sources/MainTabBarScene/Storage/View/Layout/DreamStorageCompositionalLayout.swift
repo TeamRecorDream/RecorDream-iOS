@@ -50,6 +50,7 @@ extension StorageVC {
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(500))
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
         let header = self.createRecordHeader()
+        header.pinToVisibleBounds = true
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 8
         section.boundarySupplementaryItems = [header]
