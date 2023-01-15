@@ -112,7 +112,7 @@ extension RDTabBarController {
         
         let innerShadowLayer = CAShapeLayer()
         innerShadowLayer.frame = btn.bounds
-        innerShadowLayer.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.28, x: 0, y: 0, blur: 13, spread: 0)
+        innerShadowLayer.applyShadow(color: UIColor(rgb: 0xC8CADA), alpha: 0.35, x: 0, y: 0, blur: 13, spread: 0)
         innerShadowLayer.masksToBounds = true
         innerShadowLayer.cornerRadius = 28
         btn.layer.insertSublayer(innerShadowLayer, at: 2)

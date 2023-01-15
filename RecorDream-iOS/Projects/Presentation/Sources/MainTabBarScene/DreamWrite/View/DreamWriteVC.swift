@@ -67,6 +67,12 @@ public class DreamWriteVC: UIViewController {
     private lazy var saveButton = DreamWriteSaveButton()
         .title("저장하기")
     
+    private let saveCoverButton: UIButton = {
+        let bt = UIButton()
+        bt.backgroundColor = .clear
+        return bt
+    }()
+    
     private let backGroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .black.withAlphaComponent(0.4)
@@ -106,7 +112,7 @@ extension DreamWriteVC {
     }
     
     private func setLayout() {
-        self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton,
+        self.view.addSubviews(dreamWriteCollectionView, naviBar, saveButton, saveCoverButton,
                               backGroundView, recordView, datePickerView)
         
         dreamWriteCollectionView.snp.makeConstraints { make in
@@ -126,6 +132,10 @@ extension DreamWriteVC {
             make.bottom.equalToSuperview()
         }
         
+        saveCoverButton.snp.makeConstraints { make in
+            make.edges.equalTo(saveButton)
+        }
+        
         backGroundView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -133,13 +143,13 @@ extension DreamWriteVC {
         recordView.snp.updateConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(327.adjustedH)
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-327.adjustedH)
         }
         
         datePickerView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(340.adjustedH)
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-340.adjustedH)
         }
     }
 }
@@ -172,7 +182,7 @@ extension DreamWriteVC {
         }
         sender.cancelsTouchesInView = false
     }
-
+    
     private func notificateDismiss() {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "dismissModify"), object: nil)
     }
@@ -181,6 +191,41 @@ extension DreamWriteVC {
 // MARK: - Bind
 
 extension DreamWriteVC {
+    private func bindViews() {
+        naviBar.leftButtonTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.dismiss(animated: true)
+        }).disposed(by: self.disposeBag)
+        
+        recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
+            guard let self = self else { return }
+            if let (voiceData, totalTime) = dataTimeTuple {
+                self.voiceRecorded.accept(voiceData)
+                self.mainCell?.recordUpdated(record: totalTime)
+            } else {
+                self.voiceRecorded.accept(nil)
+                self.mainCell?.recordUpdated(record: 0)
+            }
+        }).disposed(by: self.disposeBag)
+        
+        recordView.dismiss.subscribe(onNext: { [weak self] in
+            guard let self = self else { return }
+            self.dismissVoiceRecordView()
+        }).disposed(by: self.disposeBag)
+        
+        datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
+            guard let self = self else { return }
+            self.dismissDatePickerView()
+            guard let date = dateOutput else { return }
+            self.datePicked.accept(date)
+            self.mainCell?.dateChanged(date: date)
+        }).disposed(by: self.disposeBag)
+        
+        saveCoverButton.rx.tap.subscribe { [weak self] _ in
+            guard let self = self else { return }
+            self.showToast(message: "제목을 입력해주세요")
+        }.disposed(by: self.disposeBag)
+    }
     
     private func bindViewModels() {
         let input = DreamWriteViewModel.Input(viewDidLoad: Observable.just(()),
@@ -199,6 +244,7 @@ extension DreamWriteVC {
             .withUnretained(self)
             .bind { owner, isEnabled in
                 owner.saveButton.rx.isEnabled.onNext(isEnabled)
+                owner.saveCoverButton.isEnabled = !isEnabled
             }
             .disposed(by: self.disposeBag)
         
@@ -209,25 +255,21 @@ extension DreamWriteVC {
                 strongSelf.applySnapshot(model: entity)
             }.disposed(by: self.disposeBag)
         
-        output.showGenreCountCaution
-            .withUnretained(self)
-            .bind { (strongSelf, shouldShow) in
-                strongSelf.warningFooter?.shouldShowCaution = shouldShow
-            }.disposed(by: self.disposeBag)
-        
         output.writeRequestSuccess
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] entity in
                 guard let self = self else { return }
-
+                let presentingVC = self.presentingViewController
+                
                 switch self.viewModelType {
                 case .modify:
                     self.notificateDismiss()
                     self.dismiss(animated: true)
-
-                    let presentingVC = self.presentingViewController
                     presentingVC?.dismiss(animated: true)
                 case .write:
+                    guard let recordId = entity else { return }
+                    let detailVC = self.factory.instantiateDetailVC(dreamId: recordId)
                     self.dismiss(animated: true)
+                    presentingVC?.present(detailVC, animated: true)
                 }
             }).disposed(by: self.disposeBag)
         
@@ -237,29 +279,6 @@ extension DreamWriteVC {
                 owner.rx.isLoading.onNext(isEnabled)
             }
             .disposed(by: self.disposeBag)
-    }
-    
-    private func bindViews() {
-        naviBar.leftButtonTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.dismiss(animated: true)
-        }).disposed(by: self.disposeBag)
-        
-        recordView.recordOutput.subscribe(onNext: { [weak self] dataTimeTuple in
-            guard let self = self else { return }
-            self.dismissVoiceRecordView()
-            guard let (voiceData, totalTime) = dataTimeTuple else { return }
-            self.voiceRecorded.accept(voiceData)
-            self.mainCell?.recordUpdated(record: totalTime)
-        }).disposed(by: self.disposeBag)
-        
-        datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
-            guard let self = self else { return }
-            self.dismissDatePickerView()
-            guard let date = dateOutput else { return }
-            self.datePicked.accept(date)
-            self.mainCell?.dateChanged(date: date)
-        }).disposed(by: self.disposeBag)
     }
 }
 
@@ -334,6 +353,21 @@ extension DreamWriteVC {
                         self.noteTextChanged.accept(string)
                     })
                     .disposed(by: noteCell.disposeBag)
+                noteCell.noteTextBeginEndEditing
+                    .subscribe(onNext: { isStarted in
+                        let currentOffset = self.dreamWriteCollectionView.contentOffset
+                        let keyboardHeight = 249
+                        if isStarted {
+                            self.dreamWriteCollectionView.setContentOffset(.init(x: currentOffset.x,
+                                                                                 y: 744),
+                                                                           animated: true)
+                        } else {
+                            self.dreamWriteCollectionView.scrollToItem(at: .init(item: 0, section: 3),
+                                                                       at: .bottom,
+                                                                       animated: true)
+                        }
+                    })
+                    .disposed(by: noteCell.disposeBag)
                 return noteCell
             }
         })
@@ -350,9 +384,6 @@ extension DreamWriteVC {
                 self.warningFooter = nil
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteWarningFooter.className, for: indexPath) as? DreamWriteWarningFooter else { return UICollectionReusableView() }
                 self.warningFooter = view
-                if let showWarning = self.viewModel.shouldShowWarningForInit {
-                    self.warningFooter?.shouldShowCaution = showWarning
-                }
                 return view
             case DreamWriteDividerView.className:
                 guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamWriteDividerView.className, for: indexPath) as? DreamWriteDividerView else { return UICollectionReusableView() }
@@ -385,13 +416,6 @@ extension DreamWriteVC {
         dataSource.apply(snapshot, animatingDifferences: false)
         self.view.setNeedsLayout()
     }
-    
-    private func getSelectedGenresCount() -> Int {
-        guard let currentSnapshot = self.dataSource.snapshot(for: .genres).items as? [DreamWriteEntity.Genre] else { return 0 }
-        return currentSnapshot
-            .filter { $0.isSelected }
-            .count
-    }
 }
 
 // MARK: - BindCellActions
@@ -417,7 +441,7 @@ extension DreamWriteVC {
     private func showDatePickerView() {
         datePickerView.transform = CGAffineTransform.identity
         datePickerView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 340.adjustedH)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(0)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.view.layoutIfNeeded()
@@ -427,7 +451,7 @@ extension DreamWriteVC {
     private func showVoiceRecordView() {
         recordView.transform = CGAffineTransform.identity
         recordView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height - 327.adjustedH)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(0)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.view.layoutIfNeeded()
@@ -437,7 +461,7 @@ extension DreamWriteVC {
     private func dismissVoiceRecordView() {
         self.backGroundView.isUserInteractionEnabled = false
         recordView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-327.adjustedH)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.backGroundView.alpha = 0
@@ -448,7 +472,7 @@ extension DreamWriteVC {
     private func dismissDatePickerView() {
         self.backGroundView.isUserInteractionEnabled = false
         datePickerView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(UIScreen.main.bounds.height)
+            make.bottom.equalTo(view.safeAreaInsets.bottom).inset(-340.adjustedH)
         }
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn) {
             self.backGroundView.alpha = 0
@@ -477,6 +501,7 @@ extension DreamWriteVC: UICollectionViewDelegate {
             let selectedList = self.getCurrentGenreList(indexPath: indexPath, insert: true)
             self.genreListChagned.accept(selectedList.count == 0 ? nil : selectedList)
             if selectedList.count >= 4 {
+                self.warningFooter?.showCaution()
                 return false
             } else { return true }
         default: return false

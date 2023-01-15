@@ -145,7 +145,7 @@ extension MyPageVC {
         }
         
         editButton.snp.makeConstraints { make in
-            make.leading.equalTo(profileImageView.snp.trailing).offset(-5.adjusted)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(12.adjusted)
             make.centerY.equalTo(myPageEditableView.snp.centerY)
         }
         
@@ -194,12 +194,6 @@ extension MyPageVC {
     }
 }
 
-// MARK: - Methods
-
-extension MyPageVC {
-    
-}
-
 // MARK: - Bind
 
 extension MyPageVC {
@@ -207,13 +201,15 @@ extension MyPageVC {
     private func bindViews() {
         self.withdrawalButton.rx.tap
             .asDriver()
-            .drive(onNext: {
+            .drive(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.showWithdrawalWarningAlert()
             })
             .disposed(by: self.disposeBag)
         
         self.timePickerView.rx.cancelButtonTapped
-            .bind {
+            .bind { [weak self] _ in
+                guard let self = self else { return }
                 self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
                 self.dismissTimePickerView()
             }
@@ -221,7 +217,8 @@ extension MyPageVC {
         
         self.timePickerView.rx.saveButtonTapped
             .map { _ in return }
-            .bind(onNext: { _ in
+            .bind(onNext: { [weak self] _ in
+                guard let self = self else { return }
                 self.dismissTimePickerView()
             })
             .disposed(by: self.disposeBag)
@@ -229,7 +226,14 @@ extension MyPageVC {
         self.pushSettingView.rx.pushSwitchIsOn
             .filter { $0 == true }
             .map { _ in return }
-            .bind {
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                self.showTimePickerView()
+            }.disposed(by: self.disposeBag)
+        
+        self.timeSettingView.interactionViewTapped
+            .bind { [weak self] in
+                guard let self = self else { return }
                 self.showTimePickerView()
             }.disposed(by: self.disposeBag)
         

@@ -4,6 +4,7 @@ public extension Project {
     static let baseinfoPlist: [String: InfoPlist.Value] = [
         "CFBundleShortVersionString": "1.0.0",
         "CFBundleVersion": "1",
+        "CFBundleDevelopmentRegion": "ko",
         "CFBundleIdentifier": "com.RecorDream.Release",
         "UILaunchStoryboardName": "LaunchScreen",
         "CFBundleDisplayName": "레코드림",

@@ -12,7 +12,10 @@ import RD_Core
 
 import Alamofire
 
-class AlamoInterceptor: RequestInterceptor {
+public class AlamoInterceptor: RequestInterceptor {
+    
+    public typealias AdapterResult = Swift.Result<URLRequest, Error>
+    
     private var isConnectedToInternet: Bool {
         return NetworkReachabilityManager()!.isReachable
     }
@@ -30,20 +33,29 @@ class AlamoInterceptor: RequestInterceptor {
 //        }
 //    }
     
-    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+    public func retry(_ request: Alamofire.Request, for session: Alamofire.Session, dueTo error: Swift.Error, completion: @escaping (RetryResult) -> Void) {
+        // token 재발급 API가 아니며 && 토큰이 만료된 경우(406)
         guard let pathComponents = request.request?.url?.pathComponents,
               !pathComponents.contains("token"),
               let response = request.task?.response as? HTTPURLResponse,
-              response.statusCode == 401 else {
+              response.statusCode == 406 else {
+            completion(.doNotRetryWithError(error))
+            return
+        }
+        
+        // 유효한 토큰의 경우
+        guard response.statusCode != 403 else {
             completion(.doNotRetryWithError(error))
             return
         }
         
         DefaultAuthService.shared.reissuance { reissuanceSuccessed in
             if reissuanceSuccessed {
+                print("토큰 갱신 성공: ", request.request?.url)
                 completion(.retry)
             } else {
-                completion(.doNotRetry)
+                print("토큰 갱신 실패: ", request.request?.url)
+                completion(.doNotRetryWithError(error))
             }
         }
     }

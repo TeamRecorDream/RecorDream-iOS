@@ -33,12 +33,31 @@ public class DreamWriteTextView: UITextView {
         }
     }
     
+    public var maxLength: Int?
+    
+    public lazy var sharedText: Observable<String>  = {
+        return self.rx.text
+            .orEmpty
+            .asObservable()
+    }()
+    
+    public lazy var didBeginEditing: Observable<Void> = {
+        return self.rx.didBeginEditing
+            .asObservable()
+    }()
+    
+    public lazy var didEndEditing: Observable<Void> = {
+        return self.rx.didEndEditing
+            .asObservable()
+    }()
+    
     // MARK: - Life Cycles
     
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
-      super.init(frame: frame, textContainer: textContainer)
+        super.init(frame: frame, textContainer: textContainer)
         self.setUI()
         self.bind()
+        self.setDelegate()
     }
     
     required init?(coder: NSCoder) {
@@ -46,10 +65,11 @@ public class DreamWriteTextView: UITextView {
     }
 }
 
-    // MARK: - Methods
+// MARK: - Methods
 extension DreamWriteTextView {
     
     private func setUI() {
+        self.showsVerticalScrollIndicator = true
         self.backgroundColor = .white.withAlphaComponent(0.05)
         self.clipsToBounds = true
         self.layer.cornerRadius = 10
@@ -61,7 +81,7 @@ extension DreamWriteTextView {
     }
     
     private func bind() {
-        self.rx.didBeginEditing
+        self.didBeginEditing
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 if self.text == self.placeHolderText {
@@ -70,7 +90,7 @@ extension DreamWriteTextView {
                 }
             }).disposed(by: disposeBag)
         
-        self.rx.didEndEditing
+        self.didEndEditing
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 if self.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -78,6 +98,33 @@ extension DreamWriteTextView {
                     self.textColor = .white.withAlphaComponent(0.4)
                 }
             }).disposed(by: disposeBag)
+        
+        self.sharedText
+            .withUnretained(self)
+            .subscribe { owner, string in
+                guard let max = owner.maxLength else { return }
+                if owner.text!.count > max {
+                    owner.deleteBackward()
+                }
+            }.disposed(by: self.disposeBag)
+    }
+    
+    private func setDelegate() {
+        self.subviews.forEach { view in
+            guard let scrollView = view as? UIScrollView else { return }
+            scrollView.delegate = self
+        }
+    }
+}
+
+// MARK: - Public Methods
+
+extension DreamWriteTextView {
+    @discardableResult
+    public func setMaxLength(_ maxLength: Int) -> Self {
+        self.maxLength = maxLength
+        
+        return self
     }
     
     @discardableResult
@@ -85,5 +132,11 @@ extension DreamWriteTextView {
         self.placeHolderText = text
         
         return self
+    }
+}
+
+extension DreamWriteTextView: UIScrollViewDelegate {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        (scrollView.subviews[(scrollView.subviews.count - 1)].subviews[0]).backgroundColor = UIColor.white
     }
 }

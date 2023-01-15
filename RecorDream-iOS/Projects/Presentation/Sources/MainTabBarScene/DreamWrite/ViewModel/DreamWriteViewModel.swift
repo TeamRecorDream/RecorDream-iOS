@@ -34,8 +34,7 @@ public class DreamWriteViewModel: ViewModelType {
     
     public struct Output {
         var writeButtonEnabled = PublishRelay<Bool>()
-        var showGenreCountCaution = BehaviorRelay<Bool>(value: false)
-        var writeRequestSuccess = PublishRelay<Void>()
+        var writeRequestSuccess = PublishRelay<String?>()
         var dreamWriteModelFetched = BehaviorRelay<DreamWriteEntity?>(value: nil)
         var loadingStatus = PublishRelay<Bool>()
     }
@@ -106,12 +105,11 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         input.voiceRecorded.subscribe(onNext: { data in
-            guard let data else { return }
-            self.useCase.uploadVoice(voiceData: data)
-        }).disposed(by: disposeBag)
-        
-        input.genreListChagned.subscribe(onNext: {
-            self.useCase.genreListCautionValidate(genreList: $0)
+            if let data = data {
+                self.useCase.uploadVoice(voiceData: data)
+            } else {
+                self.voiceId = nil
+            }
         }).disposed(by: disposeBag)
         
         input.saveButtonTapped
@@ -142,19 +140,14 @@ extension DreamWriteViewModel {
         }).disposed(by: disposeBag)
         
         let writeRelay = useCase.writeSuccess
-        writeRelay.subscribe(onNext: { entity in
-            output.writeRequestSuccess.accept(())
+        writeRelay.subscribe(onNext: { recordId in
+            output.writeRequestSuccess.accept(recordId)
             output.loadingStatus.accept(false)
         }).disposed(by: disposeBag)
         
         let writeEnabled = useCase.isWriteEnabled
         writeEnabled.subscribe(onNext: { status in
             output.writeButtonEnabled.accept(status)
-        }).disposed(by: disposeBag)
-        
-        let showCaution = useCase.showCaution
-        showCaution.subscribe(onNext: { status in
-            output.showGenreCountCaution.accept(status)
         }).disposed(by: disposeBag)
         
         let uploadedVoiceId = useCase.uploadedVoice

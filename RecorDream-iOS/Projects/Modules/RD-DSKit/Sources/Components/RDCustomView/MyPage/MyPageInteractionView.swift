@@ -26,6 +26,10 @@ public class MyPageInteractionView: UIView {
     private var enabledColor = UIColor.white
     private var disabledColor = UIColor.white.withAlphaComponent(0.4)
     
+    public var interactionViewTapped = PublishRelay<Void>()
+    
+    public var isEnabled = true
+    
     // MARK: - UI Components
     
     private let titleLabel: UILabel = {
@@ -63,6 +67,7 @@ public class MyPageInteractionView: UIView {
         super.init(frame: frame)
         self.setUI()
         self.setLayout()
+        self.setGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -105,6 +110,18 @@ extension MyPageInteractionView {
 // MARK: - Methods
 
 extension MyPageInteractionView {
+    private func setGesture() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        self.addGestureRecognizer(tap)
+    }
+    
+    @objc
+    private func tapped() {
+        if isEnabled {
+            self.interactionViewTapped.accept(())
+        }
+    }
+    
     @discardableResult
     public func viewType(_ type: InteractionType) -> Self {
         switch type {
@@ -122,6 +139,8 @@ extension MyPageInteractionView {
     }
     
     public func updateEnabledStatus(_ isEnabled: Bool) {
+        self.isEnabled = isEnabled
+        
         titleLabel.textColor = isEnabled ? enabledColor : disabledColor
         
         timeLabel.textColor = isEnabled ? enabledColor : disabledColor

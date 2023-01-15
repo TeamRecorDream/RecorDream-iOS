@@ -30,6 +30,7 @@ public class DreamWriteRecordView: UIView {
     private var recordStatus = RecordStatus.notStarted
     
     public let recordOutput = PublishSubject<(Data, CGFloat)?>()
+    public let dismiss = PublishRelay<Void>()
     
     var audioRecorder: AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
@@ -213,6 +214,7 @@ extension DreamWriteRecordView {
             .drive(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.recordOutput.onNext(nil)
+                self.dismiss.accept(())
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                     self.resetView()
                 }
@@ -233,8 +235,10 @@ extension DreamWriteRecordView {
                 } catch {
                     self.recordOutput.onNext(nil)
                 }
+                self.dismiss.accept(())
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                     self.resetView()
+                    self.isReRecord = true
                 }
             })
             .disposed(by: self.disposeBag)
@@ -273,6 +277,7 @@ extension DreamWriteRecordView {
                     }
                     
                     self.showResetAlert {
+                        self.recordOutput.onNext(nil)
                         self.startRecordWithUI()
                     }
                 } else {
@@ -304,7 +309,10 @@ extension DreamWriteRecordView {
     }
     
     private func tappedReset() {
-        self.showResetAlert(completion: self.resetView)
+        self.showResetAlert { [weak self] in
+            guard let self = self else { return }
+            self.resetView()
+        }
     }
     
     private func showResetAlert(completion: @escaping (()->Void)) {
@@ -338,6 +346,7 @@ extension DreamWriteRecordView {
                 case .ended:
                     if translation.y >= 200 {
                         self.recordOutput.onNext(nil)
+                        self.dismiss.accept(())
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                             self.resetView()
                         }
@@ -353,6 +362,7 @@ extension DreamWriteRecordView {
     }
     
     private func resetView() {
+        self.isReRecord = false
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
         self.recordStatus = RecordStatus.notStarted
         [closeButton, saveButton].forEach { $0.isHidden = true }

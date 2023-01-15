@@ -23,7 +23,17 @@ final class DreamWriteNoteCVC: UICollectionViewCell, UICollectionViewRegisterabl
     public var disposeBag = DisposeBag()
     
     var noteTextChanged: Observable<String> {
-        return noteTextView.rx.text.orEmpty.asObservable()
+        return noteTextView.sharedText
+    }
+    
+    var noteTextBeginEndEditing: Observable<Bool> {
+        let observable = Observable.merge(
+            noteTextView.didBeginEditing
+                .map { _ in true },
+            noteTextView.didEndEditing
+                .map { _ in false }
+        )
+        return observable
     }
     
     // MARK: - UI Components

@@ -26,11 +26,11 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     var interactionViewTapped = PublishRelay<DreamWriteInteractionView.InteractionType>()
     
     var titleTextChanged: Observable<String> {
-        return titleTextView.rx.text.orEmpty.asObservable()
+        return titleTextView.sharedText
     }
     
     var contentTextChanged: Observable<String> {
-        return contentTextView.rx.text.orEmpty.asObservable()
+        return contentTextView.sharedText
     }
     
     // MARK: - UI Components
@@ -43,6 +43,7 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     
     private let titleTextView = DreamWriteTextView()
         .placeHolder("꿈의 제목을 남겨주세요")
+        .setMaxLength(25)
     
     private let contentTextView = DreamWriteTextView()
         .placeHolder("무슨 꿈을 꾸셨나요?")
