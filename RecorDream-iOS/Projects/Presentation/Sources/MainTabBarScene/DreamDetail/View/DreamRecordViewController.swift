@@ -124,6 +124,7 @@ public final class DreamRecordViewController: UIViewController {
         }
 
         self.contentLabel.text = content
+        contentLabel.addLabelSpacing(kernValue: -0.14)
     }
 
     private func setAudioPlayer() {

@@ -36,15 +36,16 @@ public class HomeVC: UIViewController {
     
     private enum Metric {
         static let logoViewTop = 18.f
-        static let logoViewHeight = 24.f
+        static let logoViewHeight = 24.adjustedH
         
         static let mainLabelTop = 44.f
+        static let mainLabelTopIfEmpty = 260.adjustedH
         static let mainLabelLeading = 22.f
         static let mainLabelSpacing = 8.f
         
         static let dreamCardTop = 64.f
-        static let dreamCardWidth = 264.f
-        static let dreamCardHeight = 392.f
+        static let dreamCardWidth = 264.adjustedWidth
+        static let dreamCardHeight = 392.adjustedH
         
         static let minimumLineSpacing = 16.f
     }
@@ -78,6 +79,14 @@ public class HomeVC: UIViewController {
         )
         layout.itemSize = CGSize(width: Metric.dreamCardWidth, height: Metric.dreamCardHeight)
         return collectionView
+    }()
+
+    private lazy var emptyLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = RDDSKitColors.Color.white
+        label.font = RDDSKitFontFamily.Pretendard.extraLight.font(size: 24.adjusted)
+        label.text = "꿈의 기록을 채워주세요."
+        return label
     }()
     
     // MARK: - View Life Cycle
@@ -127,18 +136,17 @@ public class HomeVC: UIViewController {
             $0.top.equalTo(logoView.snp.bottom).offset(Metric.mainLabelTop)
             $0.leading.equalToSuperview().inset(Metric.mainLabelLeading)
         }
-        
+
         desciptionLabel.snp.makeConstraints {
             $0.top.equalTo(welcomeLabel.snp.bottom).offset(Metric.mainLabelSpacing)
             $0.leading.equalTo(welcomeLabel.snp.leading)
         }
-        
+
         dreamCardCollectionView.snp.makeConstraints {
             $0.top.equalTo(desciptionLabel.snp.bottom).offset(Metric.dreamCardTop)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(Metric.dreamCardHeight)
         }
-        
     }
 }
 
@@ -181,14 +189,50 @@ extension HomeVC {
             .bind { (owner, entity) in
                 owner.fetchHomeData(model: entity)
             }.disposed(by: self.disposeBag)
+
+        output.loadingStatus
+            .bind(to: self.rx.isLoading)
+            .disposed(by: self.disposeBag)
     }
     
     private func fetchHomeData(model: HomeEntity) {
         self.welcomeLabel.text = "반가워요, \(model.nickname)님!"
-        self.viewModel.fetchedDreamRecord = model
-        self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
-            collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
-        self.setCollectionViewAdapter()
+
+        if model.records.isEmpty {
+            [self.desciptionLabel, self.dreamCardCollectionView].forEach {
+                $0.isHidden = true
+            }
+
+            self.view.addSubview(emptyLabel)
+
+            welcomeLabel.snp.remakeConstraints {
+                $0.top.equalTo(logoView.snp.bottom).offset(Metric.mainLabelTopIfEmpty)
+                $0.centerX.equalToSuperview()
+            }
+
+            emptyLabel.snp.makeConstraints {
+                $0.top.equalTo(welcomeLabel.snp.bottom).offset(Metric.mainLabelSpacing)
+                $0.centerX.equalTo(welcomeLabel.snp.centerX)
+            }
+
+        } else {
+
+            welcomeLabel.snp.remakeConstraints {
+                $0.top.equalTo(logoView.snp.bottom).offset(Metric.mainLabelTop)
+                $0.leading.equalToSuperview().inset(Metric.mainLabelLeading)
+            }
+
+            [self.desciptionLabel, self.dreamCardCollectionView].forEach {
+                $0.isHidden = false
+            }
+
+            self.emptyLabel.removeFromSuperview()
+
+            self.viewModel.fetchedDreamRecord = model
+            self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
+                collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
+            self.setCollectionViewAdapter()
+        }
     }
     
     private func setCollectionViewAdapter() {

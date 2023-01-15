@@ -18,16 +18,22 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
     static var isFromNib: Bool = false
 
     private enum Metric {
-        static let emotionImageSize = 85.f
+        static let emotionImageWidth = 85.adjustedWidth
+        static let emotionImageHeight = 85.adjustedH
 
-        static let emotionImageTop = 37.f
-        static let dateLabelTop = 18.f
-        static let contentSpacing = 8.f
-        static let contentLeadingTrailing = 22.f
+        static let emotionImageTop = 37.adjustedH
+        static let dateLabelTop = 18.adjustedH
+        static let contentSpacing = 8.adjustedH
+        static let contentLeadingTrailing = 22.adjustedWidth
+        static let dateLabelHeight = 17.f
 
         static let genreStackSpacing = 4.f
-        static let genreStackHeight = 21.f
-        static let noteLabelHeight = 114.f
+        static let genreStackHeight = 21.adjustedH
+        static let noteLabelHeight = 114.adjustedH
+
+        static let voiceNoticeViewWidth = 137.adjustedWidth
+        static let voiceTopSpacing = 9.adjustedH
+        static let voiceNoticeViewHeight = 24.adjustedH
     }
     
 
@@ -76,6 +82,7 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         return label
     }()
 
+    private var voiceNoticeView = VoiceNoticeView()
 
     // MARK: - View Life Cycles
 
@@ -98,8 +105,6 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
 
     private func setUI() {
         self.backgroundColor = .none
-        titleLabel.addLabelSpacing(kernValue: -0.28)
-        noteLabel.addLabelSpacing(kernValue: -0.12)
     }
 
     private func setLayout() {
@@ -112,12 +117,14 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         emotionImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(Metric.emotionImageTop)
             $0.centerX.equalToSuperview()
-            $0.size.equalTo(Metric.emotionImageSize)
+            $0.height.equalTo(Metric.emotionImageHeight)
+            $0.width.equalTo(Metric.emotionImageWidth)
         }
 
         dateLabel.snp.makeConstraints {
             $0.top.equalTo(emotionImageView.snp.bottom).offset(Metric.dateLabelTop)
             $0.centerX.equalToSuperview()
+            $0.height.equalTo(Metric.dateLabelHeight)
         }
 
         titleLabel.snp.makeConstraints {
@@ -136,7 +143,6 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
             $0.leading.trailing.equalToSuperview().inset(Metric.contentLeadingTrailing)
             $0.height.equalTo(Metric.noteLabelHeight)
         }
-
     }
 
     func setData(model: HomeEntity.Record) {
@@ -152,6 +158,8 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
                 genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0))
             }
         }
+        titleLabel.addLabelSpacing(kernValue: -0.28)
+        noteLabel.addLabelSpacing(kernValue: -0.12)
     }
 
     func setAttributesForReuse() {
@@ -179,6 +187,17 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
             return [RDDSKitAsset.Images.cardMPink.image, RDDSKitAsset.Images.feelingLShy.image]
         default:
             return [RDDSKitAsset.Images.cardMWhite.image, RDDSKitAsset.Images.feelingLBlank.image]
+        }
+    }
+
+    private func setOnlyVoiceView() {
+        self.addSubview(voiceNoticeView)
+
+        voiceNoticeView.snp.makeConstraints {
+            $0.top.equalTo(genreStackView.snp.bottom).offset(Metric.contentSpacing)
+            $0.leading.equalToSuperview().inset(Metric.contentLeadingTrailing)
+            $0.height.equalTo(Metric.voiceNoticeViewHeight)
+            $0.width.equalTo(Metric.voiceNoticeViewWidth)
         }
     }
 }

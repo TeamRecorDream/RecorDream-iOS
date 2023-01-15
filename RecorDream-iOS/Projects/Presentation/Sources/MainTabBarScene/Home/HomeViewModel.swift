@@ -29,6 +29,7 @@ public class HomeViewModel: ViewModelType {
     
     public struct Output {
         var fetchedHomeData = BehaviorRelay<HomeEntity?>(value: nil)
+        var loadingStatus = BehaviorRelay<Bool>(value: true)
     }
     
     // MARK: - Coordination
@@ -45,6 +46,7 @@ extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
         self.bindOutput(output: output, disposeBag: disposeBag)
 
         input.viewWillAppear.subscribe(onNext: { _ in
+            output.loadingStatus.accept(true)
             self.useCase.fetchDreamRecord()
         }).disposed(by: disposeBag)
 
@@ -57,6 +59,7 @@ extension HomeViewModel: DreamCardCollectionViewAdapterDataSource {
         homeData
             .compactMap { $0 }
             .subscribe(onNext: { entity in
+                output.loadingStatus.accept(false)
                 output.fetchedHomeData.accept(entity)
 
                 let count = entity.records.count
