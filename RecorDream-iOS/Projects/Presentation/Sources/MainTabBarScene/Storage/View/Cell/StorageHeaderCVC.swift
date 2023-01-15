@@ -73,7 +73,7 @@ final class StorageHeaderCVC: UICollectionReusableView, UICollectionReusableView
     // MARK: - Functions
     private func setupView() {
         self.addSubviews(countLabel, segmentControl)
-        self.backgroundColor = .clear
+        self.backgroundColor = RDDSKitAsset.Colors.dark.color
     }
     private func setupConstraint() {
         self.countLabel.snp.makeConstraints { make in

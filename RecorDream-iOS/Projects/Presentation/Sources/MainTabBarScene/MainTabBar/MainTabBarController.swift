@@ -44,7 +44,6 @@ extension MainTabBarController {
     private func setTabBar() {
         let homeNVC = makeNavigationController(with: homeVC)
         let storageNVC = makeNavigationController(with: storageVC)
-        storageNVC.view.backgroundColor = .cyan
         
         homeNVC.tabBarItem = UITabBarItem(title: "홈",
                                           image: RDDSKitAsset.Images.icnHome.image,
