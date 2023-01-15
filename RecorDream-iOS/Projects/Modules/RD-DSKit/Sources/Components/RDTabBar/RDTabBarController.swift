@@ -69,6 +69,10 @@ extension RDTabBarController {
                 $0.height.equalTo(self.tabBarHeight + self.bottomSafeArea)
             }
         }
+        
+        backgroundView.snp.updateConstraints { make in
+            make.height.equalTo(self.tabBarHeight + self.bottomSafeArea + 1)
+        }
     }
     
     public func setTabBarHidden(_ isHidden: Bool = true) {
@@ -128,7 +132,7 @@ extension RDTabBarController {
         let curveHeight: CGFloat = 37.0
         let path = UIBezierPath()
         let centerWidth = UIScreen.main.bounds.width / 2
-        let tabBarheight = self.tabBarHeight + self.bottomSafeArea
+        let tabBarheight = self.tabBarHeight + self.bottomSafeArea + 1
         
         path.move(to: CGPoint(x: 0, y: 0)) // top left에서 시작하여 그린다
         path.addLine(to: CGPoint(x: (centerWidth - curveHeight * 2), y: 0))
