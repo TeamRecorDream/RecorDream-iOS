@@ -23,6 +23,7 @@ public final class DreamDetailVC: UIViewController {
     public var factory: ViewControllerFactory!
 
     private let isModifyDismissed = PublishRelay<Bool>()
+    let searchedKeyword = PublishRelay<DreamSearchQuery>()
     
     // MARK: - UI Components
 
