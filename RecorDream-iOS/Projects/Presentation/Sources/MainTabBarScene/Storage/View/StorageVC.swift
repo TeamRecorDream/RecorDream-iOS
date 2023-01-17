@@ -309,12 +309,4 @@ extension StorageVC: UICollectionViewDataSource, UICollectionViewDelegate {
             return false
         }
     }
-    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        if collectionView == dreamFilterCollectionView {
-            return true
-        }
-        else {
-            return false
-        }
-    }
 }
