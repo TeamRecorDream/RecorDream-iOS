@@ -238,7 +238,7 @@ extension StorageVC {
                 navigation.modalPresentationStyle = .fullScreen
                 navigation.isNavigationBarHidden = true
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
-                rdtabbarController.setTabBarHidden()
+                rdtabbarController.setTabBarHidden(false)
                 owner.present(navigation, animated: true)
             }).disposed(by: self.disposeBag)
         

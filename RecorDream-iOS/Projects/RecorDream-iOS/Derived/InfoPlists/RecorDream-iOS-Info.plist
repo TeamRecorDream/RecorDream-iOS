@@ -10,7 +10,7 @@
 	<key>Application supports iTunes file sharing</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>ko</string>
 	<key>CFBundleDisplayName</key>
 	<string>레코드림</string>
 	<key>CFBundleExecutable</key>

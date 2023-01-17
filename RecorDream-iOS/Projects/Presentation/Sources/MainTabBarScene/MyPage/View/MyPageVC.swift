@@ -241,6 +241,8 @@ extension MyPageVC {
             .withUnretained(self)
             .bind(onNext: { (owner, _) in
                 owner.navigationController?.popViewController(animated: true)
+                guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
+                rdtabbarController.setTabBarHidden(false)
             })
             .disposed(by: self.disposeBag)
     }
