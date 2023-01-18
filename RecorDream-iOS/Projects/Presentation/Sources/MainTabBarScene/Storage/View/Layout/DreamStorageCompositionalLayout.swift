@@ -38,7 +38,7 @@ extension StorageVC {
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header]
         section.orthogonalScrollingBehavior = .continuous
-        section.contentInsets = .init(top: 20, leading: 16, bottom: 20, trailing: 17)
+        section.contentInsets = .init(top: 20, leading: 0, bottom: 20, trailing: 0)
         return section
     }
     

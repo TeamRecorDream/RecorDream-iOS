@@ -90,7 +90,8 @@ extension StorageVC {
         self.dreamFilterCollectionView.snp.makeConstraints { make in
             make.height.equalTo(93.adjustedHeight)
             make.top.equalTo(logoView.snp.bottom).offset(20)
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(17)
+            make.trailing.equalToSuperview().inset(17)
         }
         self.dreamStorageCollectionView.snp.makeConstraints { make in
             make.height.equalTo(477.adjustedHeight)
