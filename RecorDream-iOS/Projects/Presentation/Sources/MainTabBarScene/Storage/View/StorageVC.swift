@@ -116,7 +116,6 @@ extension StorageVC {
         StorageHeaderCVC.register(target: self.dreamStorageCollectionView)
         StorageExistCVC.register(target: self.dreamStorageCollectionView)
     }
-    
     private func resetView() {
         guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
         rdtabbarController.setTabBarHidden(false)
@@ -174,7 +173,6 @@ extension StorageVC {
             }
         }
     }
-    
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
         var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
@@ -196,7 +194,6 @@ extension StorageVC {
         self.reapplySnapShot()
         self.view.setNeedsLayout()
     }
-    
     private func reapplySnapShot() {
         var snapshot = self.dataSource.snapshot()
         guard let items = snapshot.itemIdentifiers(inSection: .records) as? [DreamStorageEntity.RecordList.Record] else { return }
@@ -229,7 +226,6 @@ extension StorageVC {
             .bind(to: self.rx.isLoading)
             .disposed(by: disposeBag)
     }
-    
     private func bindViews() {
         self.fetchedCount
             .asDriver(onErrorJustReturn: 0)
@@ -300,7 +296,6 @@ extension StorageVC: UICollectionViewDataSource, UICollectionViewDelegate {
             return UICollectionReusableView()
         }
     }
-    
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if collectionView == dreamFilterCollectionView {
             var selectedIndexPath: IndexPath? = nil
