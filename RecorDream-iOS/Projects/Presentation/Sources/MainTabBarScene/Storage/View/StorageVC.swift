@@ -314,4 +314,7 @@ extension StorageVC: UICollectionViewDataSource, UICollectionViewDelegate {
             return false
         }
     }
+    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        return false
+    }
 }
