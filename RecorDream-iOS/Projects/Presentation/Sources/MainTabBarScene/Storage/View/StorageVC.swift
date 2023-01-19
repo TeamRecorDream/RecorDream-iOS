@@ -49,6 +49,7 @@ public class StorageVC: UIViewController {
     private let emotionTapped = BehaviorRelay<Int>(value: 0)
     private var selectedIndex = PublishRelay<Int>()
     private let fetchedCount = PublishRelay<Int>()
+    private let isModified = PublishRelay<Bool>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -66,6 +67,7 @@ public class StorageVC: UIViewController {
         self.registerView()
         self.setDelegate()
         self.setDataSource()
+        self.detailDismissNotification()
         self.bindViews()
         self.bindViewModels()
         self.bindCollectionView()
@@ -118,6 +120,13 @@ extension StorageVC {
     private func resetView() {
         guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
         rdtabbarController.setTabBarHidden(false)
+    }
+    private func detailDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissDetailVC(_:)), name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+    @objc
+    private func didDismissDetailVC(_ notification: Notification) {
+        self.isModified.accept(true)
     }
 }
 
@@ -207,7 +216,7 @@ extension StorageVC {
 extension StorageVC {
     private func bindViewModels() {
         let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()),
-                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable(), viewWillAppear: self.rx.viewWillAppear)
+                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable(), viewWillAppear: Observable.merge(self.rx.viewWillAppear, self.isModified.asObservable()))
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.storageDataFetched
