@@ -187,7 +187,7 @@ extension DreamSearchVC {
             .asDriver(onErrorJustReturn: "")
             .drive(onNext: { id in
                 let detailVC = self.factory.instantiateDetailVC(dreamId: id)
-                detailVC.searchedKeyword.accept(self.viewModel.fetchRequestEntity.value)
+                detailVC.searchedKeyword = self.viewModel.fetchRequestEntity.value.keyword
                 self.present(detailVC, animated: true)
             }).disposed(by: self.disposeBag)
     }
