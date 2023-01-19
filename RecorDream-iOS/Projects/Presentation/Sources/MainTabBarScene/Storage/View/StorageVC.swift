@@ -49,6 +49,7 @@ public class StorageVC: UIViewController {
     private let emotionTapped = BehaviorRelay<Int>(value: 0)
     private var selectedIndex = PublishRelay<Int>()
     private let fetchedCount = PublishRelay<Int>()
+    private let isModified = PublishRelay<Bool>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -66,6 +67,7 @@ public class StorageVC: UIViewController {
         self.registerView()
         self.setDelegate()
         self.setDataSource()
+        self.detailDismissNotification()
         self.bindViews()
         self.bindViewModels()
         self.bindCollectionView()
@@ -90,7 +92,8 @@ extension StorageVC {
         self.dreamFilterCollectionView.snp.makeConstraints { make in
             make.height.equalTo(93.adjustedHeight)
             make.top.equalTo(logoView.snp.bottom).offset(20)
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(17)
+            make.trailing.equalToSuperview().inset(17)
         }
         self.dreamStorageCollectionView.snp.makeConstraints { make in
             make.height.equalTo(477.adjustedHeight)
@@ -113,10 +116,16 @@ extension StorageVC {
         StorageHeaderCVC.register(target: self.dreamStorageCollectionView)
         StorageExistCVC.register(target: self.dreamStorageCollectionView)
     }
-    
     private func resetView() {
         guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
         rdtabbarController.setTabBarHidden(false)
+    }
+    private func detailDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissDetailVC(_:)), name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+    @objc
+    private func didDismissDetailVC(_ notification: Notification) {
+        self.isModified.accept(true)
     }
 }
 
@@ -164,7 +173,6 @@ extension StorageVC {
             }
         }
     }
-    
     private func applySnapshot(model: DreamStorageEntity.RecordList?) {
         guard let model = model else { return }
         var snapshot = NSDiffableDataSourceSnapshot<DreamStorageSection, AnyHashable>()
@@ -186,7 +194,6 @@ extension StorageVC {
         self.reapplySnapShot()
         self.view.setNeedsLayout()
     }
-    
     private func reapplySnapShot() {
         var snapshot = self.dataSource.snapshot()
         guard let items = snapshot.itemIdentifiers(inSection: .records) as? [DreamStorageEntity.RecordList.Record] else { return }
@@ -206,7 +213,7 @@ extension StorageVC {
 extension StorageVC {
     private func bindViewModels() {
         let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()),
-                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable(), viewWillAppear: self.rx.viewWillAppear)
+                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable(), viewWillAppear: Observable.merge(self.rx.viewWillAppear, self.isModified.asObservable()))
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.storageDataFetched
@@ -219,7 +226,6 @@ extension StorageVC {
             .bind(to: self.rx.isLoading)
             .disposed(by: disposeBag)
     }
-    
     private func bindViews() {
         self.fetchedCount
             .asDriver(onErrorJustReturn: 0)
@@ -238,7 +244,7 @@ extension StorageVC {
                 navigation.modalPresentationStyle = .fullScreen
                 navigation.isNavigationBarHidden = true
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
-                rdtabbarController.setTabBarHidden()
+                rdtabbarController.setTabBarHidden(false)
                 owner.present(navigation, animated: true)
             }).disposed(by: self.disposeBag)
         
@@ -290,7 +296,6 @@ extension StorageVC: UICollectionViewDataSource, UICollectionViewDelegate {
             return UICollectionReusableView()
         }
     }
-    
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if collectionView == dreamFilterCollectionView {
             var selectedIndexPath: IndexPath? = nil
@@ -310,11 +315,6 @@ extension StorageVC: UICollectionViewDataSource, UICollectionViewDelegate {
         }
     }
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        if collectionView == dreamFilterCollectionView {
-            return true
-        }
-        else {
-            return false
-        }
+        return false
     }
 }
