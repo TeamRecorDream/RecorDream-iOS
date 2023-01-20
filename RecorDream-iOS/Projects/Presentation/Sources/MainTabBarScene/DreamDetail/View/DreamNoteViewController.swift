@@ -41,6 +41,14 @@ public final class DreamNoteViewController: UIViewController {
         return label
     }()
 
+    private let subScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+
+    private let contentView = UIView()
+
     private let noteLabel: UILabel = {
         let label = UILabel()
         label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
@@ -77,7 +85,10 @@ public final class DreamNoteViewController: UIViewController {
     }
 
     private func setLayout() {
-        self.view.addSubviews(titleLabel, placeHolder, noteLabel)
+        self.view.addSubviews(titleLabel, placeHolder, subScrollView)
+        
+        self.subScrollView.addSubview(contentView)
+        self.contentView.addSubview(noteLabel)
 
         titleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
@@ -88,23 +99,33 @@ public final class DreamNoteViewController: UIViewController {
             $0.leading.equalToSuperview()
         }
 
-        noteLabel.snp.makeConstraints {
+        subScrollView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.bottom.equalToSuperview()
+        }
+
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalTo(subScrollView.snp.width)
+        }
+
+        noteLabel.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
 
     private func initView() {
         self.placeHolder.isHidden = true
-        self.noteLabel.isHidden = true
+        self.subScrollView.isHidden = true
     }
 
     private func bindNoteData() {
         if noteContent.isEmpty {
             self.placeHolder.isHidden = false
         } else {
-            self.noteLabel.isHidden = false
+            self.subScrollView.isHidden = false
             self.noteLabel.text = noteContent
+            self.noteLabel.addLabelSpacing(kernValue: -0.14, lineSpacing: 5.6)
         }
     }
 }
