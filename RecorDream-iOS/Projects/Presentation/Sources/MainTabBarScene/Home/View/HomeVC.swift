@@ -247,6 +247,7 @@ extension HomeVC {
     }
 
     private func resetHomeLayoutIfNotEmpty() {
+        dreamCardCollectionView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
 
         [self.desciptionLabel, self.dreamCardCollectionView].forEach {
             $0.isHidden = false
