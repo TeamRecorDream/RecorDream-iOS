@@ -45,6 +45,7 @@ public final class DreamNoteViewController: UIViewController {
         let label = UILabel()
         label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
         label.textColor = RDDSKitAsset.Colors.white01.color
+        label.numberOfLines = 0
         return label
     }()
 
@@ -89,7 +90,7 @@ public final class DreamNoteViewController: UIViewController {
 
         noteLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
-            $0.leading.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
         }
     }
 
