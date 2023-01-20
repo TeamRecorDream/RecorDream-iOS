@@ -49,6 +49,14 @@ public final class DreamRecordViewController: UIViewController {
         return recordView
     }()
 
+    private let subScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        return scrollView
+    }()
+
+    private let contentView = UIView()
+
     private let contentLabel: UILabel = {
         let label = UILabel()
         label.font = RDDSKitFontFamily.Pretendard.regular.font(size: 14)
@@ -81,7 +89,6 @@ public final class DreamRecordViewController: UIViewController {
     // MARK: - UI & Layout
     private func setUI() {
         self.view.backgroundColor = .none
-        self.contentLabel.addLabelSpacing(kernValue: -0.14, lineSpacing: 5.6)
     }
 
     private func setLayout() {
@@ -89,6 +96,7 @@ public final class DreamRecordViewController: UIViewController {
 
         titleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
+            $0.height.equalTo(20.adjustedH)
         }
 
         // 1. 녹음 x, 내용 x
@@ -109,22 +117,39 @@ public final class DreamRecordViewController: UIViewController {
     }
 
     private func setContentLabel(isExistAudio: Bool) {
-        self.view.addSubview(contentLabel)
+        self.view.addSubview(subScrollView)
+
+        self.subScrollView.addSubview(contentView)
+        self.contentView.addSubview(contentLabel)
 
         if isExistAudio {
-            contentLabel.snp.makeConstraints {
+            subScrollView.snp.makeConstraints {
                 $0.top.equalTo(dreamAudioPlayerView.snp.bottom).offset(Metric.noteLabelTop)
-                $0.leading.trailing.equalToSuperview()
+                $0.leading.trailing.bottom.equalToSuperview()
+            }
+            contentView.snp.makeConstraints {
+                $0.edges.equalToSuperview()
+                $0.width.equalTo(subScrollView.snp.width)
+            }
+            contentLabel.snp.makeConstraints {
+                $0.edges.equalToSuperview()
             }
         } else {
-            contentLabel.snp.makeConstraints {
+            subScrollView.snp.makeConstraints {
                 $0.top.equalTo(titleLabel.snp.bottom).offset(Metric.noteLabelTop)
-                $0.leading.trailing.equalToSuperview()
+                $0.leading.trailing.bottom.equalToSuperview()
+            }
+            contentView.snp.makeConstraints {
+                $0.edges.equalToSuperview()
+                $0.width.equalTo(subScrollView.snp.width)
+            }
+            contentLabel.snp.makeConstraints {
+                $0.edges.equalToSuperview()
             }
         }
 
         self.contentLabel.text = content
-        contentLabel.addLabelSpacing(kernValue: -0.14)
+        self.contentLabel.addLabelSpacing(kernValue: -0.14, lineSpacing: 5.6)
     }
 
     private func setAudioPlayer() {
