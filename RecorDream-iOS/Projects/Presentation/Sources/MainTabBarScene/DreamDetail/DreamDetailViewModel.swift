@@ -46,9 +46,11 @@ extension DreamDetailViewModel {
         let output = Output()
         self.bindOutput(output: output, disposeBag: disposeBag)
 
-        input.viewDidLoad.subscribe(onNext: { _ in
-            output.loadingStatus.accept(true)
-            self.useCase.fetchDetailRecord(recordId: self.dreamId)
+        input.viewDidLoad
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                output.loadingStatus.accept(true)
+                owner.useCase.fetchDetailRecord(recordId: self.dreamId)
         }).disposed(by: disposeBag)
 
         input.isModifyDismissed.subscribe(onNext: { isDismissed in

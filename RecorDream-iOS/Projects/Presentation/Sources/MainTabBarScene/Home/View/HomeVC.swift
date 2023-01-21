@@ -99,6 +99,7 @@ public class HomeVC: UIViewController {
         self.checkShowDreamWrite()
         self.setUI()
         self.setLayout()
+        self.setCollectionViewAdapter()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -199,43 +200,17 @@ extension HomeVC {
         self.welcomeLabel.text = "반가워요, \(model.nickname)님!"
 
         if model.records.isEmpty {
-            [self.desciptionLabel, self.dreamCardCollectionView].forEach {
-                $0.isHidden = true
-            }
-
-            self.view.addSubview(emptyLabel)
-
-            welcomeLabel.snp.remakeConstraints {
-                $0.top.equalTo(logoView.snp.bottom).offset(Metric.mainLabelTopIfEmpty)
-                $0.centerX.equalToSuperview()
-            }
-
-            emptyLabel.snp.makeConstraints {
-                $0.top.equalTo(welcomeLabel.snp.bottom).offset(Metric.mainLabelSpacing)
-                $0.centerX.equalTo(welcomeLabel.snp.centerX)
-            }
-
+            setEmptyView()
         } else {
-
-            welcomeLabel.snp.remakeConstraints {
-                $0.top.equalTo(logoView.snp.bottom).offset(Metric.mainLabelTop)
-                $0.leading.equalToSuperview().inset(Metric.mainLabelLeading)
-            }
-
-            [self.desciptionLabel, self.dreamCardCollectionView].forEach {
-                $0.isHidden = false
-            }
-
-            self.emptyLabel.removeFromSuperview()
-
-            self.viewModel.fetchedDreamRecord = model
-            self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
-                collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
-            self.setCollectionViewAdapter()
+            resetHomeLayoutIfNotEmpty()
+            self.dreamCardCollectionView.reloadData()
         }
     }
     
     private func setCollectionViewAdapter() {
+        self.dreamCardCollectionViewAdapter = DreamCardCollectionViewAdapter(
+            collectionView: self.dreamCardCollectionView, adapterDataSource: self.viewModel)
+
         self.dreamCardCollectionViewAdapter?.selectedIndex
             .compactMap { $0 }
             .withUnretained(self)
@@ -250,6 +225,40 @@ extension HomeVC {
     private func resetView() {
         guard let rdtabbarController = self.tabBarController as? RDTabBarController else { return }
         rdtabbarController.setTabBarHidden(false)
+    }
+
+    private func setEmptyView() {
+        [self.desciptionLabel, self.dreamCardCollectionView].forEach {
+            $0.isHidden = true
+        }
+
+        if !self.view.contains(emptyLabel) {
+            self.view.addSubview(emptyLabel)
+            emptyLabel.snp.makeConstraints {
+                $0.top.equalTo(welcomeLabel.snp.bottom).offset(Metric.mainLabelSpacing)
+                $0.centerX.equalTo(welcomeLabel.snp.centerX)
+            }
+        }
+
+        welcomeLabel.snp.remakeConstraints {
+            $0.top.equalTo(logoView.snp.bottom).offset(Metric.mainLabelTopIfEmpty)
+            $0.centerX.equalToSuperview()
+        }
+    }
+
+    private func resetHomeLayoutIfNotEmpty() {
+        dreamCardCollectionView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+
+        [self.desciptionLabel, self.dreamCardCollectionView].forEach {
+            $0.isHidden = false
+        }
+
+        welcomeLabel.snp.remakeConstraints {
+            $0.top.equalTo(logoView.snp.bottom).offset(Metric.mainLabelTop)
+            $0.leading.equalToSuperview().inset(Metric.mainLabelLeading)
+        }
+
+        self.emptyLabel.removeFromSuperview()
     }
     
     private func checkShowDreamWrite() {

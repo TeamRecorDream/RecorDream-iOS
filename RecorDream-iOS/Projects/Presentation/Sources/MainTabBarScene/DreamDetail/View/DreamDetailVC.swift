@@ -181,7 +181,7 @@ public final class DreamDetailVC: UIViewController {
         pageViewController.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(Metric.pageControllerLeadingTrailing)
             $0.top.equalTo(genreStackView.snp.bottom)
-            $0.bottom.equalTo(logoMark.snp.top).offset(Metric.pageContollerBottom)
+            $0.bottom.equalTo(logoMark.snp.top).offset(-Metric.pageContollerBottom)
         }
     }
 }
@@ -212,12 +212,19 @@ extension DreamDetailVC {
         self.titleLabel.text = model.title
         self.dateLabel.text = model.date
 
-        if genreStackView.subviews.isEmpty {
-            model.genre.forEach {
-                genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0))
-            }
-        }
+        self.setStackView(tag: model.genre)
+
         self.setupTabbarControllersChild(voiceUrl: model.voiceUrl, content: model.content, note: model.note)
+    }
+
+    private func setStackView(tag: [String]) {
+        self.genreStackView.subviews.forEach { (view) in
+            view.removeFromSuperview()
+        }
+
+        tag.forEach {
+            genreStackView.addArrangedSubview(DreamGenreTagView(type: .home, genre: $0))
+        }
     }
 
     private func setEmotionImage(emotion: Int) -> [UIImage] {
