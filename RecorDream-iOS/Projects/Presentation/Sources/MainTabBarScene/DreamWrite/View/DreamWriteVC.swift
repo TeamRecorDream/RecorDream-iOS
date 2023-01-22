@@ -356,10 +356,11 @@ extension DreamWriteVC {
                 noteCell.noteTextBeginEndEditing
                     .subscribe(onNext: { isStarted in
                         let currentOffset = self.dreamWriteCollectionView.contentOffset
-                        let keyboardHeight = 249
+                        let standardTargetHeight: CGFloat = 744.0
+                        let compensatedTargetHeight = standardTargetHeight + 812 - UIScreen.main.bounds.height
                         if isStarted {
                             self.dreamWriteCollectionView.setContentOffset(.init(x: currentOffset.x,
-                                                                                 y: 744),
+                                                                                 y: compensatedTargetHeight),
                                                                            animated: true)
                         } else {
                             self.dreamWriteCollectionView.scrollToItem(at: .init(item: 0, section: 3),
