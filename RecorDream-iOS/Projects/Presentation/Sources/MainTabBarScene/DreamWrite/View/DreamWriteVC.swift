@@ -424,11 +424,13 @@ extension DreamWriteVC {
     private func dateInteractionViewTapped() {
         self.makeTransParentBackground()
         self.showDatePickerView()
+        self.view.endEditing(true)
     }
     
     private func voiceRecordInteractionViewTapped() {
         self.makeTransParentBackground()
         self.showVoiceRecordView()
+        self.view.endEditing(true)
     }
     
     private func makeTransParentBackground() {
