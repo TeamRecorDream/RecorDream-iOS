@@ -345,10 +345,9 @@ extension DreamWriteRecordView {
                     }
                 case .ended:
                     if translation.y >= 200 {
-                        self.recordOutput.onNext(nil)
                         self.dismiss.accept(())
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                            self.resetView()
+                            self.resetView(updateReRecord: false)
                         }
                     } else {
                         UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseIn) {
@@ -361,8 +360,10 @@ extension DreamWriteRecordView {
             }).disposed(by: self.disposeBag)
     }
     
-    private func resetView() {
-        self.isReRecord = false
+    private func resetView(updateReRecord: Bool = true) {
+        if updateReRecord {
+            self.isReRecord = false
+        }
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
         self.recordStatus = RecordStatus.notStarted
         [closeButton, saveButton].forEach { $0.isHidden = true }
