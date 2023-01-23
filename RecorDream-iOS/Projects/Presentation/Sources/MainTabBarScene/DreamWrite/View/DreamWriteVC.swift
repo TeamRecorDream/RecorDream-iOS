@@ -273,6 +273,15 @@ extension DreamWriteVC {
                 }
             }).disposed(by: self.disposeBag)
         
+        output.showNetworkAlert
+            .withUnretained(self)
+            .bind { owner, _ in
+                owner.makeAlert(
+                    title: "네트워크 에러",
+                    message: "네트워크 상태 문제로 녹음을 업로드하지 못했습니다."
+                )
+            }.disposed(by: self.disposeBag)
+        
         output.loadingStatus
             .withUnretained(self)
             .bind { owner, isEnabled in

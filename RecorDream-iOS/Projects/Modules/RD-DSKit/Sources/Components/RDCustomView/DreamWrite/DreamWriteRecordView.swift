@@ -386,10 +386,10 @@ extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
         }
         
         let recorderSetting: [String : Any] = [ AVFormatIDKey : kAudioFormatAppleLossless,
-                                     AVEncoderAudioQualityKey : AVAudioQuality.max.rawValue,
-                                           AVEncoderBitRateKey: 320000,
+                                     AVEncoderAudioQualityKey : AVAudioQuality.high.rawValue,
+                                           AVEncoderBitRateKey: 192000,
                                         AVNumberOfChannelsKey : 2,
-                                              AVSampleRateKey : 44100.0 ]
+                                              AVSampleRateKey : 12000 ]
         do {
             audioRecorder = try AVAudioRecorder(url: audioFileURL, settings: recorderSetting)
             audioRecorder?.delegate = self

@@ -37,6 +37,7 @@ public class DreamWriteViewModel: ViewModelType {
         var writeRequestSuccess = PublishRelay<String?>()
         var dreamWriteModelFetched = BehaviorRelay<DreamWriteEntity?>(value: nil)
         var loadingStatus = PublishRelay<Bool>()
+        var showNetworkAlert = PublishRelay<Void>()
     }
     
     // MARK: - Properties
@@ -106,6 +107,7 @@ extension DreamWriteViewModel {
         
         input.voiceRecorded.subscribe(onNext: { data in
             if let data = data {
+                output.loadingStatus.accept(true)
                 self.useCase.uploadVoice(voiceData: data)
             } else {
                 self.voiceId = nil
@@ -153,6 +155,11 @@ extension DreamWriteViewModel {
         let uploadedVoiceId = useCase.uploadedVoice
         uploadedVoiceId.subscribe(onNext: { voiceId in
             self.voiceId = voiceId
+            output.loadingStatus.accept(false)
+            guard voiceId != nil else {
+                output.showNetworkAlert.accept(())
+                return
+            }
         }).disposed(by: disposeBag)
     }
 }
