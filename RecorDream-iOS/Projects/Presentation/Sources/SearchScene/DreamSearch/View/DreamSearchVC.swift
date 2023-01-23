@@ -48,6 +48,7 @@ public class DreamSearchVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.addTapGestureForCollectionView()
         self.setDelegate()
         self.bindCollectionView()
         self.bindDismissButton()
@@ -60,7 +61,7 @@ public class DreamSearchVC: UIViewController {
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
+        super.touchesBegan(touches, with: event)
     }
 }
 
@@ -103,6 +104,18 @@ extension DreamSearchVC: UITextFieldDelegate {
         dreamSearchCollectionView.register(DreamSearchBottomCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchHeaderCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchExistCVC.self, forCellWithReuseIdentifier: DreamSearchExistCVC.reuseIdentifier)
+    }
+    private func addTapGestureForCollectionView() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideCollectionView))
+        tap.numberOfTapsRequired = 1
+        self.dreamSearchCollectionView.addGestureRecognizer(tap)
+    }
+    @objc
+    private func didTapOutsideCollectionView(_ recognizer: UITapGestureRecognizer) {
+        let tapLocation = recognizer.location(in: self.view)
+        if dreamSearchCollectionView.indexPathForItem(at: tapLocation) == nil {
+            self.view.endEditing(true)
+        }
     }
 }
 // MARK: - DataSource
