@@ -356,7 +356,7 @@ extension DreamWriteVC {
                 noteCell.noteTextBeginEndEditing
                     .subscribe(onNext: { isStarted in
                         let currentOffset = self.dreamWriteCollectionView.contentOffset
-                        let standardTargetHeight: CGFloat = 744.0
+                        let standardTargetHeight: CGFloat = 744.0.adjustedH
                         let compensatedTargetHeight = standardTargetHeight + 812 - UIScreen.main.bounds.height
                         if isStarted {
                             self.dreamWriteCollectionView.setContentOffset(.init(x: currentOffset.x,
