@@ -39,7 +39,9 @@ public extension Project {
         "Supports opening documents in place": true,
         "Application supports iTunes file sharing": true,
         "ITSAppUsesNonExemptEncryption": false,
-        "UIBackgroundModes": ["fetch", "remote-notification"],
+        "UIBackgroundModes": ["fetch",
+                              "remote-notification",
+                              "audio"],
         "CFBundleURLTypes": [
                                 [
                                     "CFBundleTypeRole": "Editor",

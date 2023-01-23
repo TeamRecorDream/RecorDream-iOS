@@ -368,6 +368,8 @@ extension DreamWriteRecordView {
         self.recordStatus = RecordStatus.notStarted
         [closeButton, saveButton].forEach { $0.isHidden = true }
         
+        self.stopPlayer()
+        self.stopRecording()
         self.playAndPauseButton.isHidden = true
         self.playSliderView.resetSliderView()
     }
