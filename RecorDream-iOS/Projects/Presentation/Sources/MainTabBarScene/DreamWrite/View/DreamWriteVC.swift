@@ -26,6 +26,7 @@ public class DreamWriteVC: UIViewController {
     private var viewModelType: DreamWriteViewModel.DreamWriteViewModelType {
         return viewModel.viewModelType
     }
+    private var isDragging: Bool = false
     
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
@@ -372,6 +373,7 @@ extension DreamWriteVC {
                                                                                  y: compensatedTargetHeight),
                                                                            animated: true)
                         } else {
+                            guard !self.isDragging else { return }
                             self.dreamWriteCollectionView.scrollToItem(at: .init(item: 0, section: 3),
                                                                        at: .bottom,
                                                                        animated: true)
@@ -547,5 +549,23 @@ extension DreamWriteVC: UICollectionViewDelegate {
         return selectedSet
             .map { $0.item + 1 }
             .sorted()
+    }
+}
+
+// MARK: UIScrollViewDelegate
+
+extension DreamWriteVC: UIScrollViewDelegate {
+    // 노트 셀 탭 시 collectionview Offset 애니메이션을 위한 처리
+    
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.isDragging = true
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.view.endEditing(true)
+    }
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        self.isDragging = false
     }
 }
