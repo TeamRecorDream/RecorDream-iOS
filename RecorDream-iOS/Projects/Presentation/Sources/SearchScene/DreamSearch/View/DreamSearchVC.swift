@@ -39,6 +39,7 @@ public class DreamSearchVC: UIViewController {
     private let fetchedCount = BehaviorRelay<Int>(value: 0)
     private let selectedIndex = PublishRelay<Int>()
     private let dreamId = PublishRelay<String>()
+    private let isModified = PublishRelay<Bool>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamSearchViewModel!
@@ -48,12 +49,13 @@ public class DreamSearchVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.addTapGestureForCollectionView()
+//        self.addTapGestureForCollectionView()
         self.setDelegate()
         self.bindCollectionView()
         self.bindDismissButton()
         self.bindTextField()
         self.bindViewModels()
+        self.detailDismissNotification()
         self.setupView()
         self.setupConstraint()
         self.setDataSource()
@@ -71,14 +73,12 @@ extension DreamSearchVC: UITextFieldDelegate {
         self.view.backgroundColor = .black
         self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView)
     }
-    
     private func setDelegate() {
         self.searchTextField.delegate = self
         self.dreamSearchCollectionView.rx
             .setDelegate(self)
             .disposed(by: self.disposeBag)
     }
-    
     public func setupConstraint() {
         navigationBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -116,6 +116,13 @@ extension DreamSearchVC: UITextFieldDelegate {
         if dreamSearchCollectionView.indexPathForItem(at: tapLocation) == nil {
             self.view.endEditing(true)
         }
+    }
+    private func detailDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissDetailVC(_:)), name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+    @objc
+    private func didDismissDetailVC(_ notification: Notification) {
+        self.isModified.accept(true)
     }
 }
 // MARK: - DataSource
@@ -173,7 +180,7 @@ extension DreamSearchVC: UICollectionViewDelegate {
 // MARK: - Bind
 extension DreamSearchVC {
     private func bindViewModels() {
-        let input = DreamSearchViewModel.Input(currentSearchQuery: self.searchTextField.shouldLoadResult, returnButtonTapped: self.searchTextField.returnKeyTapped.asObservable())
+        let input = DreamSearchViewModel.Input(currentSearchQuery: self.searchTextField.shouldLoadResult, returnButtonTapped: self.searchTextField.returnKeyTapped.asObservable(), viewWillAppear: self.isModified.asObservable())
         
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
