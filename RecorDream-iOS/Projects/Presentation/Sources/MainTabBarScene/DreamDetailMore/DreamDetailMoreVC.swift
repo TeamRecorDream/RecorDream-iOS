@@ -22,6 +22,7 @@ public class DreamDetailMoreVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailMoreViewModel!
     public var factory: ViewControllerFactory!
+    public var audioURL: URL?
 
     private let deleteAlertOkActionTapped = PublishRelay<Void>()
   
@@ -187,8 +188,12 @@ extension DreamDetailMoreVC {
 
         self.editButton.rx.tap
             .asDriver()
-            .drive(onNext: {
-                let dreamModifyVC = self.factory.instantiateDreamWriteVC(.modify(postId: self.viewModel.dreamId))
+            .drive(onNext: { [weak self] in
+                guard let self = self else { return }
+                let dreamModifyVC = self.factory.instantiateDreamWriteVC(.modify(
+                    postId: self.viewModel.dreamId,
+                    audioURL: self.audioURL)
+                )
 
                 self.modalPresentationStyle = .overFullScreen
                 self.present(dreamModifyVC, animated: true)
