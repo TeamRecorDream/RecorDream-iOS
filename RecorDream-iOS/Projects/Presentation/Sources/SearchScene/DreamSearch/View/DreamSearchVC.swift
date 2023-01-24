@@ -33,7 +33,7 @@ public class DreamSearchVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
-    private lazy var rogoImageView: UIImageView = {
+    private lazy var logoImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = RDDSKitAsset.Images.rdHomeLogo.image
         iv.contentMode = .scaleAspectFit
@@ -74,7 +74,7 @@ public class DreamSearchVC: UIViewController {
 extension DreamSearchVC: UITextFieldDelegate {
     public func setupView() {
         self.view.backgroundColor = .black
-        self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView, rogoImageView)
+        self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView, logoImageView)
     }
     private func setDelegate() {
         self.searchTextField.delegate = self
@@ -104,7 +104,7 @@ extension DreamSearchVC: UITextFieldDelegate {
             make.top.equalTo(searchTextField.snp.bottom)
             make.leading.trailing.equalToSuperview()
         }
-        self.rogoImageView.snp.makeConstraints { make in
+        self.logoImageView.snp.makeConstraints { make in
             make.top.equalTo(dreamSearchCollectionView.snp.bottom)
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(54)
