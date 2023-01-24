@@ -96,7 +96,7 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         switch layoutType {
         case .list:
             self.emotionImageView.snp.makeConstraints {
-                $0.top.equalToSuperview().offset(21)
+                $0.centerY.equalToSuperview()
                 $0.leading.equalToSuperview().inset(32)
                 $0.size.equalTo(46)
             }

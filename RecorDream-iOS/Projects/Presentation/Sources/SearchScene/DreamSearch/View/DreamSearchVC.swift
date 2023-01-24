@@ -33,6 +33,13 @@ public class DreamSearchVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
+    private lazy var rogoImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.image = RDDSKitAsset.Images.rdHomeLogo.image
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = .white.withAlphaComponent(0.4)
+        return iv
+    }()
     
     // MARK: - Reactive Properties
     private let searchKeyword = PublishRelay<String>()
@@ -49,7 +56,7 @@ public class DreamSearchVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.addTapGestureForCollectionView()
+        self.addTapGestureForCollectionView()
         self.setDelegate()
         self.bindCollectionView()
         self.bindDismissButton()
@@ -61,17 +68,13 @@ public class DreamSearchVC: UIViewController {
         self.setDataSource()
         self.registerXib()
     }
-    
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-    }
 }
 
 // MARK: - UI
 extension DreamSearchVC: UITextFieldDelegate {
     public func setupView() {
         self.view.backgroundColor = .black
-        self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView)
+        self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView, rogoImageView)
     }
     private func setDelegate() {
         self.searchTextField.delegate = self
@@ -80,34 +83,40 @@ extension DreamSearchVC: UITextFieldDelegate {
             .disposed(by: self.disposeBag)
     }
     public func setupConstraint() {
-        navigationBar.snp.makeConstraints { make in
+        self.navigationBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(44.adjustedHeight)
         }
-        searchLabel.snp.makeConstraints { make in
+        self.searchLabel.snp.makeConstraints { make in
+            make.height.equalTo(20.adjustedHeight)
             make.top.equalTo(navigationBar.snp.bottom).offset(34)
             make.leading.equalToSuperview().offset(16)
         }
-        searchTextField.snp.makeConstraints { make in
+        self.searchTextField.snp.makeConstraints { make in
             make.height.equalTo(46.adjustedHeight)
             make.width.equalTo(343.adjustedWidth)
             make.centerX.equalToSuperview()
             make.top.equalTo(searchLabel.snp.bottom).offset(16)
         }
-        dreamSearchCollectionView.snp.makeConstraints { make in
+        self.dreamSearchCollectionView.snp.makeConstraints { make in
+            make.height.equalTo(510.adjustedHeight)
             make.top.equalTo(searchTextField.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
+        self.rogoImageView.snp.makeConstraints { make in
+            make.top.equalTo(dreamSearchCollectionView.snp.bottom)
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(54)
         }
     }
     private func registerXib() {
-        dreamSearchCollectionView.register(DreamSearchBottomCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchHeaderCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchExistCVC.self, forCellWithReuseIdentifier: DreamSearchExistCVC.reuseIdentifier)
     }
     private func addTapGestureForCollectionView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideCollectionView))
-        tap.numberOfTapsRequired = 1
+        tap.numberOfTapsRequired = 2
         self.dreamSearchCollectionView.addGestureRecognizer(tap)
     }
     @objc
@@ -155,9 +164,6 @@ extension DreamSearchVC: UICollectionViewDelegate {
                 guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier, for: indexPath) as? DreamSearchHeaderCVC else { return UICollectionReusableView() }
                 header.configureCell(counts: self.fetchedCount.value)
                 return header
-            case UICollectionView.elementKindSectionFooter:
-                guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier, for: indexPath) as? DreamSearchBottomCVC else { return UICollectionReusableView() }
-                return footer
             default:
                 return UICollectionReusableView()
             }

@@ -185,6 +185,7 @@ extension StorageVC {
             self.dreamStorageCollectionView.restore()
             self.dreamStorageCollectionView.isScrollEnabled = true
             snapshot.appendItems(model.records, toSection: .records)
+            self.dreamStorageCollectionView.setNeedsLayout()
         }
         self.dataSource.apply(snapshot)
         self.view.setNeedsLayout()
