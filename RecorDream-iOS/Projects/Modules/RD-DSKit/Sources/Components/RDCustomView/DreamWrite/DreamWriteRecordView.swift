@@ -6,6 +6,7 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
+import AudioToolbox
 import AVFoundation
 import UIKit
 
@@ -291,6 +292,7 @@ extension DreamWriteRecordView {
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
         self.recordStatus = RecordStatus.recording
         
+        AudioServicesPlaySystemSound(1117)
         self.stopPlayer()
         self.startRecording()
     }
@@ -302,6 +304,7 @@ extension DreamWriteRecordView {
         
         self.stopRecording()
         self.isReRecord = true
+        AudioServicesPlaySystemSound(1114)
         
         self.initPlayer()
         self.playSliderView.stopRecordAndHiddenLabel()
