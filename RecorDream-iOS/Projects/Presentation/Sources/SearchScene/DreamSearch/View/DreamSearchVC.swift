@@ -73,7 +73,7 @@ public class DreamSearchVC: UIViewController {
 // MARK: - UI
 extension DreamSearchVC: UITextFieldDelegate {
     public func setupView() {
-        self.view.backgroundColor = .black
+        self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
         self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView, logoImageView)
     }
     private func setDelegate() {
