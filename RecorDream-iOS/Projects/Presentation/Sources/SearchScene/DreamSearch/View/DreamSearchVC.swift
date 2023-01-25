@@ -78,9 +78,6 @@ extension DreamSearchVC: UITextFieldDelegate {
     }
     private func setDelegate() {
         self.searchTextField.delegate = self
-        self.dreamSearchCollectionView.rx
-            .setDelegate(self)
-            .disposed(by: self.disposeBag)
     }
     public func setupConstraint() {
         self.navigationBar.snp.makeConstraints { make in
@@ -116,13 +113,19 @@ extension DreamSearchVC: UITextFieldDelegate {
     }
     private func addTapGestureForCollectionView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideCollectionView))
-        tap.numberOfTapsRequired = 2
+        tap.numberOfTapsRequired = 1
         self.dreamSearchCollectionView.addGestureRecognizer(tap)
     }
     @objc
     private func didTapOutsideCollectionView(_ recognizer: UITapGestureRecognizer) {
-        let tapLocation = recognizer.location(in: self.view)
-        if dreamSearchCollectionView.indexPathForItem(at: tapLocation) == nil {
+        let tapLocation = recognizer.location(in: self.dreamSearchCollectionView)
+        let indexPathForTap = self.dreamSearchCollectionView.indexPathForItem(at: tapLocation)
+        let tappedOutOfItems = indexPathForTap == nil
+        
+        if let row = indexPathForTap?.row {
+            self.selectedIndex.accept(row)
+        }
+        else {
             self.view.endEditing(true)
         }
     }
@@ -135,12 +138,7 @@ extension DreamSearchVC: UITextFieldDelegate {
     }
 }
 // MARK: - DataSource
-extension DreamSearchVC: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        self.selectedIndex.accept(indexPath.row)
-        return true
-    }
-    
+extension DreamSearchVC {
     private func setDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource<DreamSearchResultType, AnyHashable>(collectionView: dreamSearchCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             if let model = itemIdentifier as? DreamSearchEntity.Record {
