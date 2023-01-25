@@ -25,26 +25,13 @@ extension UICollectionView {
             lb.textColor = RDDSKitColors.Color(white: 1.0, alpha: 0.4)
             return lb
         }()
-        let logoImageView: UIImageView = {
-            let iv = UIImageView()
-            iv.image = image ?? RDDSKitAsset.Images.rdHomeLogo.image
-            iv.contentMode = .scaleAspectFit
-            iv.tintColor = .white.withAlphaComponent(0.4)
-            return iv
-        }()
         
         // MARK: - Render
-        [emptyLabel, logoImageView].forEach { emptyView.addSubview($0) }
+        emptyView.addSubview(emptyLabel)
         
         emptyLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(208)
-        }
-        logoImageView.snp.makeConstraints { make in
-            make.width.equalTo(124.adjustedWidth)
-            make.height.equalTo(22.adjustedHeight)
-            make.centerX.equalTo(emptyLabel)
-            make.top.equalTo(emptyLabel.snp.bottom).offset(282)
         }
         self.backgroundView = emptyView
     }
