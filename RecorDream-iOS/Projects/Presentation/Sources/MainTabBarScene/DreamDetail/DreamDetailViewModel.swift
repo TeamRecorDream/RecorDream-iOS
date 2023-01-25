@@ -18,6 +18,7 @@ public class DreamDetailViewModel: ViewModelType {
     private let useCase: DreamDetailUseCase
     private let disposeBag = DisposeBag()
     let dreamId: String
+    var audioURL: URL?
   
     // MARK: - Inputs
     
@@ -67,9 +68,11 @@ extension DreamDetailViewModel {
         let detailDreamData = self.useCase.fetchedDetailData
 
         detailDreamData.compactMap { $0 }
-            .subscribe(onNext: { entity in
+            .withUnretained(self)
+            .subscribe(onNext: { owner, entity in
                 output.loadingStatus.accept(false)
                 output.fetchedDetailData.accept(entity)
+                owner.audioURL = entity.voiceUrl
             }).disposed(by: disposeBag)
     }
 }

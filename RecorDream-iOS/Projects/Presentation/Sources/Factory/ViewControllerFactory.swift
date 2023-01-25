@@ -27,7 +27,7 @@ public protocol MainTabBarControllerFactory {
     
     func instantiateDetailVC(dreamId: String) -> DreamDetailVC
     func instantiateSearchVC() -> DreamSearchVC
-    func instantiateDetailMoreVC(dreamId: String) -> DreamDetailMoreVC
+    func instantiateDetailMoreVC(dreamId: String, audioURL: URL?) -> DreamDetailMoreVC
 
     func instantiateDreamShareVC(dreamModel: DreamDetailEntity) -> DreamShareVC
 }
