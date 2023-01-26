@@ -29,9 +29,8 @@ extension DreamSearchVC {
             layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         let sectionHeader = self.createSectionHeader()
-        let sectionFooter = self.createSectionFooter()
         section.orthogonalScrollingBehavior = .none
-        section.boundarySupplementaryItems = [sectionHeader, sectionFooter]
+        section.boundarySupplementaryItems = [sectionHeader]
         section.contentInsets = .init(
             top: 20, leading: 20, bottom: 0, trailing: 21
         )
@@ -47,16 +46,6 @@ extension DreamSearchVC {
         )
         sectionHeader.contentInsets = .init(top: 20, leading: 0, bottom: 12, trailing: 18)
         return sectionHeader
-    }
-    private func createSectionFooter() -> NSCollectionLayoutBoundarySupplementaryItem {
-        let layoutSectionFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(152.adjustedHeight))
-        let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: layoutSectionFooterSize,
-            elementKind: UICollectionView.elementKindSectionFooter,
-            alignment: .bottom
-        )
-        sectionFooter.contentInsets = .init(top: 0, leading: 0, bottom: 20, trailing: 0)
-        return sectionFooter
     }
 }
 

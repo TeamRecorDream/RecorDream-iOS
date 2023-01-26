@@ -20,19 +20,22 @@ fileprivate enum DateComponent: Int {
     
     // MARK: - Static Properties
     
-    static let todayYear: String = {
-        let formatterYear = DateFormatter()
-        formatterYear.dateFormat = "yyyy"
-        
-        return formatterYear.string(from: Date())
-    }()
+    static var currentDate: [String] {
+        let currentDate = {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            return formatter.string(from: Date())
+                .split(separator: "-")
+                .map { String($0) }
+        }()
+        return currentDate
+    }
     
-    static let todayMonth: String = {
-        let formatterMonth = DateFormatter()
-        formatterMonth.dateFormat = "MM"
-        
-        return formatterMonth.string(from: Date())
-    }()
+    static let todayYear: String = currentDate[0]
+    
+    static let todayMonth: String = currentDate[1]
+    
+    static let todayDay: String = currentDate[2]
     
     static var availableYear: [Int] = []
     
@@ -119,9 +122,9 @@ public class RDDateTimePickerView: UIView {
     
     public var viewType = ViewType.date
     
-    var selectedYear = 2020
-    var selectedMonth = "01"
-    var selectedDay = "01"
+    lazy var selectedYear = DateComponent.todayYear
+    lazy var selectedMonth = DateComponent.todayMonth
+    lazy var selectedDay = DateComponent.todayDay
     
     var selectedMeridium = "AM"
     var selectedHour = 0
@@ -299,6 +302,9 @@ extension RDDateTimePickerView {
         self.titleLabel.text = "날짜 설정"
         timePicker.removeFromSuperview()
         colonLabel.removeFromSuperview()
+        self.datePicker.selectRow(DateComponent.availableYear.count - 1, inComponent: 0, animated: false)
+        self.datePicker.selectRow(Int(DateComponent.todayMonth)! - 1, inComponent: 1, animated: false)
+        self.datePicker.selectRow(Int(DateComponent.todayDay)! - 1, inComponent: 2, animated: false)
     }
     
     private func setDatePickerState() {
@@ -417,9 +423,23 @@ extension RDDateTimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
         switch self.viewType {
         case .date:
             self.dateSelected(row: row, component: component)
-            if (Int(DateComponent.todayYear) == selectedYear && Int(DateComponent.todayMonth)! < Int(selectedMonth)!) {
+            
+            // 같은 해일 경우 월, 일 선택 시 미래의 날짜 선택가능하므로 조정 가능성 있음
+            let sameYear = Int(DateComponent.todayYear) == Int(selectedYear)
+            guard sameYear else { return }
+            // 미래의 달을 선택하면 roll back
+            if Int(DateComponent.todayMonth)! < Int(selectedMonth)! {
                 pickerView.selectRow(Int(DateComponent.todayMonth)!-1, inComponent: 1, animated: true)
                 selectedMonth = DateComponent.todayMonth
+            }
+            
+            // 같은 달일 경우
+            let sameMonth = Int(DateComponent.todayMonth) == Int(selectedMonth)!
+            guard sameMonth else { return }
+            // 미래의 일을 선택하면 roll back
+            if Int(DateComponent.todayDay)! < Int(selectedDay)! {
+                pickerView.selectRow(Int(DateComponent.todayDay)!-1, inComponent: 2, animated: true)
+                selectedDay = DateComponent.todayDay
             }
         case .time:
             self.timeSelected(row: row, component: component)
@@ -442,7 +462,7 @@ extension RDDateTimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
             }()
             selectedMonth = month
         case .year:
-            selectedYear = DateComponent.getYear(row: row)
+            selectedYear = String(DateComponent.getYear(row: row))
         default: return
         }
     }

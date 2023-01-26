@@ -6,6 +6,7 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
+import AudioToolbox
 import AVFoundation
 import UIKit
 
@@ -291,6 +292,7 @@ extension DreamWriteRecordView {
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicStop.image, for: .normal)
         self.recordStatus = RecordStatus.recording
         
+        AudioServicesPlaySystemSound(1117)
         self.stopPlayer()
         self.startRecording()
     }
@@ -302,6 +304,7 @@ extension DreamWriteRecordView {
         
         self.stopRecording()
         self.isReRecord = true
+        AudioServicesPlaySystemSound(1114)
         
         self.initPlayer()
         self.playSliderView.stopRecordAndHiddenLabel()
@@ -345,10 +348,9 @@ extension DreamWriteRecordView {
                     }
                 case .ended:
                     if translation.y >= 200 {
-                        self.recordOutput.onNext(nil)
                         self.dismiss.accept(())
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                            self.resetView()
+                            self.resetView(updateReRecord: false)
                         }
                     } else {
                         UIView.animate(withDuration: 0.15, delay: 0, options: .curveEaseIn) {
@@ -361,12 +363,16 @@ extension DreamWriteRecordView {
             }).disposed(by: self.disposeBag)
     }
     
-    private func resetView() {
-        self.isReRecord = false
+    private func resetView(updateReRecord: Bool = true) {
+        if updateReRecord {
+            self.isReRecord = false
+        }
         self.recordButton.setImage(RDDSKitAsset.Images.icnMicStart.image, for: .normal)
         self.recordStatus = RecordStatus.notStarted
         [closeButton, saveButton].forEach { $0.isHidden = true }
         
+        self.stopPlayer()
+        self.stopRecording()
         self.playAndPauseButton.isHidden = true
         self.playSliderView.resetSliderView()
     }
@@ -385,10 +391,10 @@ extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
         }
         
         let recorderSetting: [String : Any] = [ AVFormatIDKey : kAudioFormatAppleLossless,
-                                     AVEncoderAudioQualityKey : AVAudioQuality.max.rawValue,
-                                           AVEncoderBitRateKey: 320000,
+                                     AVEncoderAudioQualityKey : AVAudioQuality.high.rawValue,
+                                           AVEncoderBitRateKey: 192000,
                                         AVNumberOfChannelsKey : 2,
-                                              AVSampleRateKey : 44100.0 ]
+                                              AVSampleRateKey : 12000 ]
         do {
             audioRecorder = try AVAudioRecorder(url: audioFileURL, settings: recorderSetting)
             audioRecorder?.delegate = self

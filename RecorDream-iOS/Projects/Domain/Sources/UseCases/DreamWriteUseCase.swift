@@ -77,6 +77,7 @@ extension DefaultDreamWriteUseCase: DreamWriteUseCase {
     
     public func uploadVoice(voiceData: Data) {
         self.repository.uploadVoice(voiceData: voiceData)
+            .catchAndReturn(nil)
             .withUnretained(self)
             .subscribe(onNext: { strongSelf, voiceId in
                 strongSelf.uploadedVoice.onNext(voiceId)

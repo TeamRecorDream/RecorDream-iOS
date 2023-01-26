@@ -44,6 +44,7 @@ final class DreamWriteMainCVC: UICollectionViewCell, UICollectionViewRegisterabl
     private let titleTextView = DreamWriteTextView()
         .placeHolder("꿈의 제목을 남겨주세요")
         .setMaxLength(25)
+        .enableEnter(false)
     
     private let contentTextView = DreamWriteTextView()
         .placeHolder("무슨 꿈을 꾸셨나요?")

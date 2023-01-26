@@ -25,6 +25,7 @@ public final class DreamSearchViewModel {
     public struct Input {
         let currentSearchQuery: Observable<String>
         let returnButtonTapped: Observable<Void>
+        let viewWillAppear: Observable<Bool>
     }
     public struct Output {
         var searchResultModelFetched = PublishRelay<DreamSearchEntity>()
@@ -48,6 +49,11 @@ extension DreamSearchViewModel: ViewModelType {
         }).disposed(by: disposeBag)
         
         input.returnButtonTapped.subscribe(onNext: { _ in
+            self.useCase.execute(requestValue: self.fetchRequestEntity.value)
+            output.loadingStatus.accept(true)
+        }).disposed(by: disposeBag)
+        
+        input.viewWillAppear.subscribe(onNext: { _ in
             self.useCase.execute(requestValue: self.fetchRequestEntity.value)
             output.loadingStatus.accept(true)
         }).disposed(by: disposeBag)

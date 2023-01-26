@@ -62,19 +62,19 @@ extension DreamWriteVC {
     }
     
     private func createGenreSection(_ header: NSCollectionLayoutBoundarySupplementaryItem, _ footer: NSCollectionLayoutBoundarySupplementaryItem) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(60), heightDimension: .absolute(30))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(60), heightDimension: .absolute(30.adjusted))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(UIScreen.main.bounds.height * 52 / 812))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .fixed(12)
+        group.interItemSpacing = .fixed(11.adjusted)
         
         let section = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = [header, footer]
         section.orthogonalScrollingBehavior = .none
         section.interGroupSpacing = 12
         header.contentInsets = .init(top: 0, leading: -24, bottom: 0, trailing: 0)
-        section.contentInsets = .init(top: 18, leading: 25, bottom: 9, trailing: 25)
+        section.contentInsets = .init(top: 18, leading: 25.adjusted, bottom: 9, trailing: 25.adjusted)
         footer.contentInsets = .init(top: 0, leading: -1, bottom: 0, trailing: 0)
         return section
     }

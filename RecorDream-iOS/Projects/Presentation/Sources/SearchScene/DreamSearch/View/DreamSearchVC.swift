@@ -33,12 +33,20 @@ public class DreamSearchVC: UIViewController {
         cv.allowsMultipleSelection = true
         return cv
     }()
+    private lazy var logoImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.image = RDDSKitAsset.Images.rdHomeLogo.image
+        iv.contentMode = .scaleAspectFit
+        iv.tintColor = .white.withAlphaComponent(0.4)
+        return iv
+    }()
     
     // MARK: - Reactive Properties
     private let searchKeyword = PublishRelay<String>()
     private let fetchedCount = BehaviorRelay<Int>(value: 0)
     private let selectedIndex = PublishRelay<Int>()
     private let dreamId = PublishRelay<String>()
+    private let isModified = PublishRelay<Bool>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamSearchViewModel!
@@ -48,70 +56,88 @@ public class DreamSearchVC: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.addTapGestureForCollectionView()
         self.setDelegate()
         self.bindCollectionView()
         self.bindDismissButton()
         self.bindTextField()
         self.bindViewModels()
+        self.detailDismissNotification()
         self.setupView()
         self.setupConstraint()
         self.setDataSource()
         self.registerXib()
-    }
-    
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
     }
 }
 
 // MARK: - UI
 extension DreamSearchVC: UITextFieldDelegate {
     public func setupView() {
-        self.view.backgroundColor = .black
-        self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView)
+        self.view.backgroundColor = RDDSKitAsset.Colors.dark.color
+        self.view.addSubviews(navigationBar, searchLabel, searchTextField, dreamSearchCollectionView, logoImageView)
     }
-    
     private func setDelegate() {
         self.searchTextField.delegate = self
-        self.dreamSearchCollectionView.rx
-            .setDelegate(self)
-            .disposed(by: self.disposeBag)
     }
-    
     public func setupConstraint() {
-        navigationBar.snp.makeConstraints { make in
+        self.navigationBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(44.adjustedHeight)
         }
-        searchLabel.snp.makeConstraints { make in
+        self.searchLabel.snp.makeConstraints { make in
+            make.height.equalTo(20.adjustedHeight)
             make.top.equalTo(navigationBar.snp.bottom).offset(34)
             make.leading.equalToSuperview().offset(16)
         }
-        searchTextField.snp.makeConstraints { make in
+        self.searchTextField.snp.makeConstraints { make in
             make.height.equalTo(46.adjustedHeight)
             make.width.equalTo(343.adjustedWidth)
             make.centerX.equalToSuperview()
             make.top.equalTo(searchLabel.snp.bottom).offset(16)
         }
-        dreamSearchCollectionView.snp.makeConstraints { make in
+        self.dreamSearchCollectionView.snp.makeConstraints { make in
+            make.height.equalTo(510.adjustedHeight)
             make.top.equalTo(searchTextField.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
+        self.logoImageView.snp.makeConstraints { make in
+            make.top.equalTo(dreamSearchCollectionView.snp.bottom)
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(54)
         }
     }
     private func registerXib() {
-        dreamSearchCollectionView.register(DreamSearchBottomCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchHeaderCVC.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier)
         dreamSearchCollectionView.register(DreamSearchExistCVC.self, forCellWithReuseIdentifier: DreamSearchExistCVC.reuseIdentifier)
     }
+    private func addTapGestureForCollectionView() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideCollectionView))
+        self.dreamSearchCollectionView.addGestureRecognizer(tap)
+    }
+    @objc
+    private func didTapOutsideCollectionView(_ recognizer: UITapGestureRecognizer) {
+        let tapLocation = recognizer.location(in: self.dreamSearchCollectionView)
+        let indexPathForTap = self.dreamSearchCollectionView.indexPathForItem(at: tapLocation)
+        let tappedOutOfItems = indexPathForTap == nil
+        
+        if let row = indexPathForTap?.row {
+            self.selectedIndex.accept(row)
+        }
+        else {
+            self.view.endEditing(true)
+        }
+    }
+    private func detailDismissNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didDismissDetailVC(_:)), name: NSNotification.Name(rawValue: "dismissDetail"), object: nil)
+    }
+    @objc
+    private func didDismissDetailVC(_ notification: Notification) {
+        self.isModified.accept(true)
+    }
 }
 // MARK: - DataSource
-extension DreamSearchVC: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        self.selectedIndex.accept(indexPath.row)
-        return true
-    }
-    
+extension DreamSearchVC {
     private func setDataSource() {
         self.dataSource = UICollectionViewDiffableDataSource<DreamSearchResultType, AnyHashable>(collectionView: dreamSearchCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             if let model = itemIdentifier as? DreamSearchEntity.Record {
@@ -135,9 +161,6 @@ extension DreamSearchVC: UICollectionViewDelegate {
                 guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchHeaderCVC.reuseIdentifier, for: indexPath) as? DreamSearchHeaderCVC else { return UICollectionReusableView() }
                 header.configureCell(counts: self.fetchedCount.value)
                 return header
-            case UICollectionView.elementKindSectionFooter:
-                guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DreamSearchBottomCVC.reuseIdentifier, for: indexPath) as? DreamSearchBottomCVC else { return UICollectionReusableView() }
-                return footer
             default:
                 return UICollectionReusableView()
             }
@@ -160,7 +183,7 @@ extension DreamSearchVC: UICollectionViewDelegate {
 // MARK: - Bind
 extension DreamSearchVC {
     private func bindViewModels() {
-        let input = DreamSearchViewModel.Input(currentSearchQuery: self.searchTextField.shouldLoadResult, returnButtonTapped: self.searchTextField.returnKeyTapped.asObservable())
+        let input = DreamSearchViewModel.Input(currentSearchQuery: self.searchTextField.shouldLoadResult, returnButtonTapped: self.searchTextField.returnKeyTapped.asObservable(), viewWillAppear: self.isModified.asObservable())
         
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         

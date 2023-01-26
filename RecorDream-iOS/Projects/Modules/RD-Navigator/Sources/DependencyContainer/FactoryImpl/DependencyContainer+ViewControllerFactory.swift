@@ -70,12 +70,13 @@ extension DependencyContainer: MainTabBarControllerFactory {
         return detailVC
     }
 
-    public func instantiateDetailMoreVC(dreamId: String) -> Presentation.DreamDetailMoreVC {
+    public func instantiateDetailMoreVC(dreamId: String, audioURL: URL?) -> Presentation.DreamDetailMoreVC {
         let detailMoreVC = DreamDetailMoreVC()
         let repository = DefaultDreamDetailMoreRepository(recordService: self.recordService)
         let useCase = DefaultDreamDetailMoreUseCase(repository: repository)
         let viewModel = DreamDetailMoreViewModel(useCase: useCase, dreamId: dreamId)
 
+        detailMoreVC.audioURL = audioURL
         detailMoreVC.factory = self
         detailMoreVC.viewModel = viewModel
 
@@ -102,8 +103,8 @@ extension DependencyContainer: MainTabBarControllerFactory {
         switch type {
         case .write:
             viewModel = DreamWriteViewModel(useCase: useCase, viewModelType: .write)
-        case .modify(let postId):
-            viewModel = DreamWriteViewModel(useCase: useCase, viewModelType: .modify(postId: postId))
+        case let .modify(postId, audioURL):
+            viewModel = DreamWriteViewModel(useCase: useCase, viewModelType: .modify(postId: postId, audioURL: audioURL))
         }
         let dreamWriteVC = DreamWriteVC()
         dreamWriteVC.viewModel = viewModel

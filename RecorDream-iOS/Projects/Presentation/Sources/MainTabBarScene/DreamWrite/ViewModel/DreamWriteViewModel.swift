@@ -6,6 +6,7 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
+import AVFoundation
 import Foundation
 
 import Domain
@@ -37,21 +38,30 @@ public class DreamWriteViewModel: ViewModelType {
         var writeRequestSuccess = PublishRelay<String?>()
         var dreamWriteModelFetched = BehaviorRelay<DreamWriteEntity?>(value: nil)
         var loadingStatus = PublishRelay<Bool>()
+        var showNetworkAlert = PublishRelay<Void>()
     }
     
     // MARK: - Properties
     
     private let useCase: DreamWriteUseCase
     private let disposeBag = DisposeBag()
+    private var player: AVAudioPlayer?
     
     public enum DreamWriteViewModelType {
         case write
-        case modify(postId: String)
+        case modify(postId: String, audioURL: URL?)
         
         var isModifyView: Bool {
             switch self {
             case .write: return false
             case .modify: return true
+            }
+        }
+        
+        var audioURL: URL? {
+            switch self {
+            case .write: return nil
+            case .modify(_, let url): return url
             }
         }
     }
@@ -60,8 +70,6 @@ public class DreamWriteViewModel: ViewModelType {
     
     let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: nil, note: nil, voice: nil))
     var voiceId: String? = nil
-    
-    var shouldShowWarningForInit: Bool?
     
     // MARK: - Initializer
     
@@ -96,7 +104,7 @@ extension DreamWriteViewModel {
         self.bindOutput(output: output, disposeBag: disposeBag)
         
         input.viewDidLoad.subscribe(onNext: { _ in
-            if case let .modify(postId) = self.viewModelType {
+            if case let .modify(postId, _) = self.viewModelType {
                 DispatchQueue.main.async {
                     output.loadingStatus.accept(true)
                 }
@@ -106,6 +114,7 @@ extension DreamWriteViewModel {
         
         input.voiceRecorded.subscribe(onNext: { data in
             if let data = data {
+                output.loadingStatus.accept(true)
                 self.useCase.uploadVoice(voiceData: data)
             } else {
                 self.voiceId = nil
@@ -115,29 +124,40 @@ extension DreamWriteViewModel {
         input.saveButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
-            output.loadingStatus.accept(true)
-            switch owner.viewModelType {
-            case .write:
-                owner.useCase.writeDreamRecord(request: owner.writeRequestEntity.value, voiceId: owner.voiceId)
-            case .modify(postId: let postId):
-                owner.useCase.modifyDreamRecord(request: owner.writeRequestEntity.value, voiceId: owner.voiceId, recordId: postId)
-            }
-        }).disposed(by: disposeBag)
+                output.loadingStatus.accept(true)
+                switch owner.viewModelType {
+                case .write:
+                    owner.useCase.writeDreamRecord(request: owner.writeRequestEntity.value, voiceId: owner.voiceId)
+                case let .modify(postId, _):
+                    owner.useCase.modifyDreamRecord(request: owner.writeRequestEntity.value, voiceId: owner.voiceId, recordId: postId)
+                }
+            }).disposed(by: disposeBag)
         
         return output
     }
     
     private func bindOutput(output: Output, disposeBag: DisposeBag) {
         let fetchedModel = useCase.fetchedRecord
-        fetchedModel.subscribe(onNext: { entity in
-            output.loadingStatus.accept(false)
-            guard let entity = entity else {
-                return
-            }
-            self.shouldShowWarningForInit = entity.shouldeShowWarning
-            output.dreamWriteModelFetched.accept(entity)
-            self.writeRequestEntity.accept(entity.toRequest())
-        }).disposed(by: disposeBag)
+        fetchedModel
+            .withUnretained(self)
+            .subscribe(onNext: { owner, entity in
+                output.loadingStatus.accept(false)
+                guard var entity = entity else {
+                    return
+                }
+                
+                do {
+                    guard let url = owner.viewModelType.audioURL else { throw NSError() }
+                    owner.player = try AVAudioPlayer(contentsOf: url)
+                    let duration = owner.player?.duration
+                    entity.changeRecordTime(time: duration ?? 0)
+                } catch {
+                    debugPrint("invalid url input")
+                }
+                
+                output.dreamWriteModelFetched.accept(entity)
+                owner.writeRequestEntity.accept(entity.toRequest())
+            }).disposed(by: disposeBag)
         
         let writeRelay = useCase.writeSuccess
         writeRelay.subscribe(onNext: { recordId in
@@ -153,6 +173,11 @@ extension DreamWriteViewModel {
         let uploadedVoiceId = useCase.uploadedVoice
         uploadedVoiceId.subscribe(onNext: { voiceId in
             self.voiceId = voiceId
+            output.loadingStatus.accept(false)
+            guard voiceId != nil else {
+                output.showNetworkAlert.accept(())
+                return
+            }
         }).disposed(by: disposeBag)
     }
 }

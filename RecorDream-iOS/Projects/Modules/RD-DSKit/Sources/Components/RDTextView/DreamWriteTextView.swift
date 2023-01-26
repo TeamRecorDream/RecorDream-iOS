@@ -35,6 +35,8 @@ public class DreamWriteTextView: UITextView {
     
     public var maxLength: Int?
     
+    public var enterEnabled = true
+    
     public lazy var sharedText: Observable<String>  = {
         return self.rx.text
             .orEmpty
@@ -102,7 +104,25 @@ extension DreamWriteTextView {
         self.sharedText
             .withUnretained(self)
             .subscribe { owner, string in
-                guard let max = owner.maxLength else { return }
+                // 마지막이 개행일 경우 삭제
+                if !owner.enterEnabled, let last = string.last {
+                    let lastString = String(last)
+                    if lastString == "\n" {
+                        owner.deleteBackward()
+                        return
+                    }
+                }
+                
+                // 플레이스홀더와 다른 경우만 처리
+                guard string != owner.placeHolderText else {
+                    return
+                }
+                owner.setAttributedText()
+                
+                // 최대 길이 존재할 경우 삭제
+                guard let max = owner.maxLength else {
+                    return
+                }
                 if owner.text!.count > max {
                     owner.deleteBackward()
                 }
@@ -113,6 +133,30 @@ extension DreamWriteTextView {
         self.subviews.forEach { view in
             guard let scrollView = view as? UIScrollView else { return }
             scrollView.delegate = self
+        }
+    }
+    
+    private func setAttributedText() {
+        if let text = self.text {
+            let attributeString = NSMutableAttributedString(string: text)
+            let style = NSMutableParagraphStyle()
+            style.lineSpacing = 5.6
+            attributeString.addAttribute(
+                NSAttributedString.Key.paragraphStyle,
+                value: style,
+                range: NSMakeRange(0, attributeString.length)
+            )
+            attributeString.addAttribute(
+                NSAttributedString.Key.foregroundColor,
+                value: UIColor.white,
+                range: NSMakeRange(0, attributeString.length)
+            )
+            attributeString.addAttribute(
+                NSAttributedString.Key.font,
+                value: RD_DSKit.RDDSKitFontFamily.Pretendard.medium.font(size: 14),
+                range: NSMakeRange(0, attributeString.length)
+            )
+            self.attributedText = attributeString
         }
     }
 }
@@ -130,6 +174,13 @@ extension DreamWriteTextView {
     @discardableResult
     public func placeHolder(_ text: String) -> Self {
         self.placeHolderText = text
+        
+        return self
+    }
+    
+    @discardableResult
+    public func enableEnter(_ isEnabled: Bool = true) -> Self {
+        self.enterEnabled = isEnabled
         
         return self
     }

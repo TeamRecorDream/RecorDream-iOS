@@ -210,8 +210,10 @@ extension MyPageVC {
         self.timePickerView.rx.cancelButtonTapped
             .bind { [weak self] _ in
                 guard let self = self else { return }
-                self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
                 self.dismissTimePickerView()
+                // 활성화 상태인 경우에는 취소를 눌러도 pushSwitch를 false로 바꾸지 않음
+                guard !self.timeSettingView.isEnabled else { return }
+                self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
             }
             .disposed(by: self.disposeBag)
         
