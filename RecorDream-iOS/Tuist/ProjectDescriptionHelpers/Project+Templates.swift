@@ -171,7 +171,18 @@ extension Scheme {
                 configuration: target,
                 options: .options(coverage: true, codeCoverageTargets: ["\(name)"])
             ),
-            runAction: .runAction(configuration: target),
+            runAction: .runAction(
+                configuration: target,
+                arguments: Arguments(
+                    environment: [:],
+                    launchArguments: [
+                        LaunchArgument(
+                            name: "-FIRDebugEnabled",
+                            isEnabled: true
+                        )
+                    ]
+                )
+            ),
             archiveAction: .archiveAction(configuration: target),
             profileAction: .profileAction(configuration: target),
             analyzeAction: .analyzeAction(configuration: target)
