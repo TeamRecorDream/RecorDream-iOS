@@ -113,7 +113,6 @@ extension DreamSearchVC: UITextFieldDelegate {
     }
     private func addTapGestureForCollectionView() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideCollectionView))
-        tap.numberOfTapsRequired = 1
         self.dreamSearchCollectionView.addGestureRecognizer(tap)
     }
     @objc
