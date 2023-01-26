@@ -19,7 +19,7 @@ public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
     private lazy var rdCollectionViewFlowLayout = RDCollectionViewFlowLayout(display: .grid)
     private let lineView: UIView = {
         let v = UIView()
-        v.backgroundColor = RDDSKitAsset.Colors.dark.color
+        v.backgroundColor = .white
         return v
     }()
     
@@ -40,13 +40,13 @@ public class RDStorageSegmentControl: UISegmentedControl, RDSegmentControl {
 extension RDStorageSegmentControl {
     public func setupView() {
         self.addSubview(lineView)
-        self.backgroundColor = RDDSKitAsset.Colors.white04.color
+        self.backgroundColor = RDDSKitAsset.Colors.dark.color
         self.borderColor = .clear
         self.selectedSegmentIndex = 0
         self.setImage(RDDSKitAsset.Images.icnGalleryOn.image, forSegmentAt: 0)
         self.setImage(RDDSKitAsset.Images.icnListOn.image, forSegmentAt: 1)
-        self.selectedSegmentTintColor = RDDSKitAsset.Colors.white04.color
-        self.tintColor = RDDSKitAsset.Colors.white04.color
+        self.selectedSegmentTintColor = RDDSKitAsset.Colors.dark.color
+        self.tintColor = RDDSKitAsset.Colors.dark.color
     }
     public func setupConstraint() {
         self.lineView.snp.makeConstraints { make in
