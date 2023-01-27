@@ -38,6 +38,7 @@ public class DefaultUserDefaultManager: UserDefaultManager {
         self.remove(key: .accessToken)
         self.remove(key: .refreshToken)
         self.remove(key: .nickname)
+        self.remove(key: .userId)
     }
 }
 

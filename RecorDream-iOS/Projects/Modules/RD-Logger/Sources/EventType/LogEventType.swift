@@ -16,87 +16,163 @@ public protocol LogEventType {
 }
 
 public enum FirebaseEventType {
-    // 1. 앱 최초 실행
-    case appFirstOpen // 앱 최초 실행
+    // 1. 회원가입/로그인
     
-    // 2. 로그인
-    case signin(source: LoginSource) // 애플로그인, 카카오로그인
     
-    // 3. 탭 전환
-    case clickTab(source: TabSource) // 홈 및 보관함 전환
-    case clickPlus // 플러스 버튼
+    // 2. 탭
+    case clickTabBarPlus // 기록하기 플러스 버튼
+    case clickTabBar(TabSource) // 탭 전환
     
-    // 4. 보관함
-    case clickCard // 보관함 카드 탭
+    // 3. 홈
     
-    // 5. 작성하기
-    case closeWriteView // 작성하기 뷰 닫기
-    case completeWrite // 작성하기 완료
+    // 4. 기록하기 && 6. 수정하기 && 10. 푸시알림 -> 작성하기
+    case clickDate(WriteSource)
+    case clickDateSave(WriteSource)
+    case clickDateCancel(WriteSource)
+    case clickVoice(WriteSource)
+    case clickWriteVoiceRecord
+    case clickWriteVoiceStop
+    case clickWriteVoiceStopX
+    case clickWriteVoiceStopReRecord
+    case clickWriteVoiceStopSave
+    case clickTitle(WriteSource)
+    case clickContent(WriteSource)
+    case clickEmotion(WriteSource, emotion: String)
+    case clickGenre(WriteSource, genre: String)
+    case clickNote(WriteSource)
+    case clickSave(WriteSource)
+    case clickExit(WriteSource)
     
-    // 6. 수정하기
-    case closeModifyView // 작성하기 뷰 닫기
+    // 5. 기록 상세보기
     
-    // 7. 상세보기
-    case closeDetailView // 상세보기 뷰 닫기
+    // 7. 보관함
     
     // 8. 검색하기
     
     // 9. 마이페이지
     
-    // 10. 회원 유입 및 이탈
-    case enterForeGround // 앱을 백그라운드로 전환한 경우
-    case enterFromBackGround // 백그라운드에서 다시 앱으로 돌아오는 경우
-    case logout // 로그아웃
-    case withdrawal // 회원탈퇴
+    // 10. 푸시알림
+    case clickPushNotice
 }
 
 // MARK: - EventName
 
 extension FirebaseEventType: LogEventType {
+    
+    /// EventName을 만들어줍니다
+    /// - Returns: '액션_뷰_타겟오브젝트'의 형식의 String을 구성합니다.
     public func name() -> String {
-        switch self {
-        case .appFirstOpen:
-            return "firebase_first_open"
-        case .signin(source: let source):
-            return "signin_click"
-        case .clickTab(source: let source):
-            return "click_Tab"
-        case .clickPlus:
-            return "click_Plus"
-        case .clickCard:
-            return "click_HomeCard"
-        case .closeWriteView:
-            return "close_WriteView"
-        case .completeWrite:
-            return "complete_Write"
-        case .closeModifyView:
-            return "close_ModifyView"
-        case .closeDetailView:
-            return "close_DetailView"
-        case .enterForeGround:
-            return "enter_foreground"
-        case .enterFromBackGround:
-            return "enter_From_BackGround"
-        case .logout:
-            return "user_logout"
-        case .withdrawal:
-            return "user_withdrawal"
+        if let target = target {
+            return [action, viewSource, target].joined(separator: "_")
+        } else {
+            return [action, viewSource].joined(separator: "_")
         }
+    }
+    
+    var nameString: String {
+        return String(describing: self)
+    }
+}
+
+// MARK: - NameGetter
+
+public extension FirebaseEventType {
+    
+    /// 현재 action은 "클릭"만 존재, 추후 확장 가능성 있음
+    var action: String {
+        let isClickAction = nameString.contains("click")
+        return isClickAction ? "클릭" : ""
+    }
+    
+    /// writeSource는 따로 파라미터를 받아서 return하고, 나머지의 경우 enum의 변수명 앞글자로 ViewSource를 구분
+    var viewSource: String {
+        if let writeSource = self.writeSource {
+            return writeSource
+        }
+        for view in ViewSource.allCases {
+            if self.nameString.contains(view.nameString) {
+                return view.rawValue
+            }
+        }
+        return "NoScreen"
+    }
+    
+    private var writeSource: String? {
+        switch self {
+        case let .clickDate(writeSource),
+            let .clickDateSave(writeSource),
+            let .clickDateCancel(writeSource),
+            let .clickVoice(writeSource),
+            let .clickTitle(writeSource),
+            let .clickContent(writeSource),
+            let .clickEmotion(writeSource, _),
+            let .clickGenre(writeSource, _),
+            let .clickNote(writeSource),
+            let .clickSave(writeSource),
+            let .clickExit(writeSource):
+            return writeSource.rawValue
+        default: return nil
+        }
+    }
+    
+    /// action의 대상이 되는 target
+    /// 버튼, 배너, 토글 등
+    var target: String? {
+        var object: String? = nil
+        switch self {
+        case .clickTabBarPlus:
+            object = "기록하기"
+        case .clickDate(_):
+            object = "날짜배너"
+        case .clickDateSave(_):
+            object = "날짜배너_저장"
+        case .clickDateCancel(_):
+            object = "날짜배너_취소"
+        case .clickVoice(_):
+            object = "녹음배너"
+        case .clickWriteVoiceRecord:
+            object = "녹음배너_녹음"
+        case .clickWriteVoiceStop:
+            object = "녹음배너_중지"
+        case .clickWriteVoiceStopX:
+            object = "녹음배너_중지_취소하기"
+        case .clickWriteVoiceStopReRecord:
+            object = "녹음배너_중지_다시하기"
+        case .clickWriteVoiceStopSave:
+            object = "녹음배너_중지_저장하기"
+        case .clickTitle(_):
+            object = "제목배너"
+        case .clickContent(_):
+            object = "본문배너"
+        case .clickEmotion(_, _):
+            object = "감정아이콘"
+        case .clickGenre(_, _):
+            object = "장르선택"
+        case .clickNote(_):
+            object = "노트배너"
+        case .clickSave(_):
+            object = "저장하기"
+        case .clickExit(_):
+            object = "나가기"
+        default:
+            break
+        }
+        return object
     }
 }
 
 // MARK: - Parameters
 
 public extension FirebaseEventType {    
-    public func parameters() -> [String : Any]? {
+    func parameters() -> [String : Any]? {
         var params: [String: Any] = [:]
         switch self {
-        case .signin(let loginSource):
-            params["loginSource"] = loginSource.rawValue
-            
-        case .clickTab(let tabSource):
+        case .clickTabBar(let tabSource):
             params["tabSource"] = tabSource.rawValue
-            
+        case let .clickEmotion(_, emotion):
+            params["emotion"] = emotion
+        case let .clickGenre(_, genre):
+            params["genre"] = genre
         default: break
         }
         return params
@@ -104,24 +180,36 @@ public extension FirebaseEventType {
 }
 
 public extension FirebaseEventType {
-    public enum LoginSource: String {
+    enum LoginSource: String {
         case kakao
         case apple
     }
     
-    public enum TabSource: String {
-        case home
-        case storage
+    enum TabSource: String {
+        case home = "홈"
+        case storage = "보관함"
     }
     
-    public enum ViewSource: String {
-        case login
-        case home
-        case storage
-        case detail
-        case write
-        case modify
-        case search
-        case mypage
+    enum ViewSource: String, CaseIterable {
+        case SignIn = "로그인"
+        case TabBar = "탭"
+        case Home = "홈"
+        case Storage = "보관함"
+        case HomeDetail = "기록 상세보기"
+        case Write = "기록하기"
+        case Modify = "수정하기"
+        case Search = "검색하기"
+        case Mypage = "마이페이지"
+        case PushNotice = "푸시알림"
+        
+        var nameString: String {
+            return String(describing: self)
+        }
+    }
+    
+    enum WriteSource: String {
+        case write = "작성하기"
+        case modify = "수정하기"
+        case pushNotice = "푸시알림"
     }
 }
