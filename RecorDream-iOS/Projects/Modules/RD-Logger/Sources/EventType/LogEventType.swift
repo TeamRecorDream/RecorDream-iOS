@@ -17,7 +17,7 @@ public protocol LogEventType {
 
 public enum FirebaseEventType {
     // 1. 회원가입/로그인
-    
+    case clickSignIn(LoginSource) // 로그인
     
     // 2. 탭
     case clickTabBarPlus // 기록하기 플러스 버튼
@@ -167,7 +167,9 @@ public extension FirebaseEventType {
     func parameters() -> [String : Any]? {
         var params: [String: Any] = [:]
         switch self {
-        case .clickTabBar(let tabSource):
+        case let .clickSignIn(loginSource):
+            params["loginSource"] = loginSource.rawValue
+        case let .clickTabBar(tabSource):
             params["tabSource"] = tabSource.rawValue
         case let .clickEmotion(_, emotion):
             params["emotion"] = emotion
@@ -181,8 +183,8 @@ public extension FirebaseEventType {
 
 public extension FirebaseEventType {
     enum LoginSource: String {
-        case kakao
-        case apple
+        case kakao = "kakao"
+        case apple = "apple"
     }
     
     enum TabSource: String {

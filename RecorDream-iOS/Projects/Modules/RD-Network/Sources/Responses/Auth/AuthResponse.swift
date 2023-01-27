@@ -9,6 +9,7 @@
 import Foundation
 
 public struct AuthResponse: Codable {
+    public let userId: String
     public let duplicated: Bool
     public let accessToken: String
     public let refreshToken: String
@@ -16,6 +17,6 @@ public struct AuthResponse: Codable {
     
     enum CodingKeys: String, CodingKey {
         case duplicated = "isAlreadyUser"
-        case accessToken, refreshToken, nickname
+        case accessToken, refreshToken, nickname, userId
     }
 }

@@ -9,6 +9,7 @@
 import Foundation
 
 import RD_Core
+import RD_Logger
 
 import RxSwift
 
@@ -39,12 +40,18 @@ extension DefaultAuthUseCase: AuthUseCase {
                 guard let self = self else { return }
                 guard let entity = entity else {
                     return }
-                UserDefaults.standard.set(entity.accessToken, forKey: UserDefaultKey.accessToken.rawValue)
-                UserDefaults.standard.set(entity.refreshToken, forKey: UserDefaultKey.refreshToken.rawValue)
-                UserDefaults.standard.set(entity.nickname, forKey: UserDefaultKey.nickname.rawValue)
+                self.analytics()
                 self.authSuccess.onNext(entity)
             }, onError: { err in
                 self.authFail.onNext(err)
             }).disposed(by: disposeBag)
+    }
+    
+    private func analytics() {
+        let platForm = DefaultUserDefaultManager.isKakaoUser
+        ? FirebaseEventType.LoginSource.kakao
+        : FirebaseEventType.LoginSource.apple
+        AnalyticsManager.setFirebaseUserProperty()
+        AnalyticsManager.log(event: .clickSignIn(platForm))
     }
 }
