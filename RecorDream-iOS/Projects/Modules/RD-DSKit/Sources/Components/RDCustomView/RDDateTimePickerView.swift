@@ -307,10 +307,6 @@ extension RDDateTimePickerView {
         self.datePicker.selectRow(Int(DateComponent.todayDay)! - 1, inComponent: 2, animated: false)
     }
     
-    private func setDatePickerState() {
-        
-    }
-    
     private func setTimePicker() {
         self.titleLabel.text = "시간 설정"
         datePicker.removeFromSuperview()
@@ -363,6 +359,31 @@ extension RDDateTimePickerView {
                 }
             }).disposed(by: self.disposeBag)
         return self
+    }
+}
+
+// MARK: Public Methods
+
+extension RDDateTimePickerView {
+    public func setSelectedTime(isAM: Bool, hour: Int, minute: Int) {
+        self.timePicker.selectRow(
+            isAM ? 0 : 1,
+            inComponent: 0,
+            animated: false
+        )
+        self.timePicker.selectRow(
+            hour,
+            inComponent: 1,
+            animated: false
+        )
+        self.timePicker.selectRow(
+            minute,
+            inComponent: 2,
+            animated: false
+        )
+        self.selectedMeridium = isAM ? "AM" : "PM"
+        self.selectedHour = hour
+        self.selectedMinute = minute
     }
 }
 

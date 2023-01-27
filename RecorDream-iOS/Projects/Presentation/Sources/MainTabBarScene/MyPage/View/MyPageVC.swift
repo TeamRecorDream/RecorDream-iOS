@@ -318,6 +318,19 @@ extension MyPageVC {
         
         timeSettingView.rx.pushTimeSelected
             .onNext(model.pushTime)
+        
+        guard let time = model.pushTime else { return }
+        let meridium = time.split(separator: " ").first
+        let hourTime = time.split(separator: " ").last
+        let isAM = meridium?.first == "A"
+        let (hour, minute) = {
+            let hourAndTime = hourTime?
+                .split(separator: ":")
+                .compactMap { Int($0) }
+            return (hourAndTime?.first,
+                    hourAndTime?.last)
+        }()
+        self.timePickerView.setSelectedTime(isAM: isAM, hour: (hour ?? 0), minute: (minute ?? 0))
     }
     
     private func showUsernameWarningAlert() {
