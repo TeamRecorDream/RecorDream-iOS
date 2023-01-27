@@ -9,6 +9,8 @@
 import UIKit
 
 import RD_DSKit
+import RD_Logger
+import FirebaseAnalytics
 
 import RxSwift
 import RxRelay
@@ -73,6 +75,7 @@ extension MainTabBarController {
             let dreamWriteVC = self.factory.instantiateDreamWriteVC(.write)
             dreamWriteVC.modalPresentationStyle = .fullScreen
             self.present(dreamWriteVC, animated: true)
+            AnalyticsManager.log(event: .clickTabBarPlus)
         }
     }
     

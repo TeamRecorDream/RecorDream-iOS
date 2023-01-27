@@ -13,7 +13,10 @@ public enum UserDefaultKey: String {
     case refreshToken = "key.refreshToken"
     case nickname = "key.nickname"
     case shouldShowWrite = "key.shouldShowWrite"
+    
+    // Analytics
     case userId = "userId"
+    case fromPushNotice = "fromPushNotice"
 }
 
 public extension UserDefaultKey {

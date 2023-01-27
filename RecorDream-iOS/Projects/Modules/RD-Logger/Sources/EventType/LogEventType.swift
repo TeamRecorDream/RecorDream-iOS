@@ -30,11 +30,11 @@ public enum FirebaseEventType {
     case clickDateSave(WriteSource)
     case clickDateCancel(WriteSource)
     case clickVoice(WriteSource)
-    case clickWriteVoiceRecord
-    case clickWriteVoiceStop
-    case clickWriteVoiceStopX
-    case clickWriteVoiceStopReRecord
-    case clickWriteVoiceStopSave
+    case clickVoiceRecord(WriteSource)
+    case clickVoiceStop(WriteSource)
+    case clickVoiceStopX(WriteSource)
+    case clickVoiceStopReRecord(WriteSource)
+    case clickVoiceStopSave(WriteSource)
     case clickTitle(WriteSource)
     case clickContent(WriteSource)
     case clickEmotion(WriteSource, emotion: String)
@@ -109,7 +109,12 @@ public extension FirebaseEventType {
             let .clickGenre(writeSource, _),
             let .clickNote(writeSource),
             let .clickSave(writeSource),
-            let .clickExit(writeSource):
+            let .clickExit(writeSource),
+            let .clickVoiceRecord(writeSource),
+            let .clickVoiceStop(writeSource),
+            let .clickVoiceStopX(writeSource),
+            let .clickVoiceStopReRecord(writeSource),
+            let .clickVoiceStopSave(writeSource):
             return writeSource.rawValue
         default: return nil
         }
@@ -130,15 +135,15 @@ public extension FirebaseEventType {
             object = "날짜배너_취소"
         case .clickVoice(_):
             object = "녹음배너"
-        case .clickWriteVoiceRecord:
+        case .clickVoiceRecord:
             object = "녹음배너_녹음"
-        case .clickWriteVoiceStop:
+        case .clickVoiceStop:
             object = "녹음배너_중지"
-        case .clickWriteVoiceStopX:
+        case .clickVoiceStopX:
             object = "녹음배너_중지_취소하기"
-        case .clickWriteVoiceStopReRecord:
+        case .clickVoiceStopReRecord:
             object = "녹음배너_중지_다시하기"
-        case .clickWriteVoiceStopSave:
+        case .clickVoiceStopSave:
             object = "녹음배너_중지_저장하기"
         case .clickTitle(_):
             object = "제목배너"

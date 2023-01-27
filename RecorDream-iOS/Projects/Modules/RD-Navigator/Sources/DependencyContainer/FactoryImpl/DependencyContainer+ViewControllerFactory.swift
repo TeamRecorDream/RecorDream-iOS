@@ -113,6 +113,25 @@ extension DependencyContainer: MainTabBarControllerFactory {
         return dreamWriteVC
     }
     
+    public func instantiateDreamWriteVCFromPush(_ type: DreamWriteViewModel.DreamWriteViewModelType) -> DreamWriteVC {
+        let repository = DefaultDreamWriteRepository(recordService: self.recordService,
+                                                     voiceService: self.voiceService)
+        let useCase = DefaultDreamWriteUseCase(repository: repository)
+        var viewModel: DreamWriteViewModel
+        switch type {
+        case .write:
+            viewModel = DreamWriteViewModel(useCase: useCase, viewModelType: .write)
+        case let .modify(postId, audioURL):
+            viewModel = DreamWriteViewModel(useCase: useCase, viewModelType: .modify(postId: postId, audioURL: audioURL))
+        }
+        let dreamWriteVC = DreamWriteVC()
+        viewModel.fromPushNotice = true
+        dreamWriteVC.viewModel = viewModel
+        dreamWriteVC.factory = self
+        
+        return dreamWriteVC
+    }
+    
     public func instantiateMyPageVC() -> MyPageVC {
         let repository = DefaultMyPageRepository(authService: self.authService,
                                                  userService: self.userService)

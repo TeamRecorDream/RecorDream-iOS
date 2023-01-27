@@ -112,12 +112,6 @@ extension AppDelegate: MessagingDelegate {
     func configureFirebase() {
         FirebaseApp.configure()
         
-        #if DEBUG
-        var newArguments = ProcessInfo.processInfo.arguments
-        newArguments.append("-FIRDebugEnabled")
-        ProcessInfo.processInfo.setValue(newArguments, forKey: "arguments")
-        #endif
-        
         self.configureFirebaseMessaging()
     }
     

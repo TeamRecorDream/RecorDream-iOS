@@ -8,6 +8,7 @@
 
 import UIKit
 import RD_Core
+import RD_Logger
 
 import SnapKit
 
@@ -139,6 +140,11 @@ open class RDTabBar: UIView {
         if let customTabBarItem = sender.view as? RDTabBarItem,
            let index = self.stackView.arrangedSubviews.firstIndex(of: customTabBarItem) {
             self.select(at: index)
+            if index == 0 {
+                AnalyticsManager.log(event: .clickTabBar(.home))
+            } else {
+                AnalyticsManager.log(event: .clickTabBar(.storage))
+            }
         }
     }
     

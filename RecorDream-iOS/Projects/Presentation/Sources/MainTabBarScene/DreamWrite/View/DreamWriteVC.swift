@@ -11,6 +11,7 @@ import UIKit
 import Domain
 import RD_Core
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -195,6 +196,7 @@ extension DreamWriteVC {
     private func bindViews() {
         naviBar.leftButtonTapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
+            AnalyticsManager.log(event: .clickExit(self.writeSource))
             self.dismiss(animated: true)
         }).disposed(by: self.disposeBag)
         
@@ -217,7 +219,11 @@ extension DreamWriteVC {
         datePickerView.dateTimeOutput.subscribe(onNext: { [weak self] dateOutput in
             guard let self = self else { return }
             self.dismissDatePickerView()
-            guard let date = dateOutput else { return }
+            guard let date = dateOutput else {
+                AnalyticsManager.log(event: .clickDateCancel(self.writeSource))
+                return
+            }
+            AnalyticsManager.log(event: .clickDateSave(self.writeSource))
             self.datePicked.accept(date)
             self.mainCell?.dateChanged(date: date)
         }).disposed(by: self.disposeBag)
@@ -321,6 +327,7 @@ extension DreamWriteVC {
                 mainCell.interactionViewTapped.subscribe(onNext: { viewType in
                     switch viewType {
                     case .date:
+                        AnalyticsManager.log(event: .clickDate(self.writeSource))
                         self.dateInteractionViewTapped()
                     case .voiceRecord(let isEnabled, let voiceExist):
                         switch (isEnabled, voiceExist) {
@@ -331,6 +338,7 @@ extension DreamWriteVC {
                         case (false, false):
                             self.showToast(message: "수정하기에서는 녹음할 수 없어요")
                         }
+                        AnalyticsManager.log(event: .clickVoice(self.writeSource))
                     }
                 }).disposed(by: self.disposeBag)
                 return mainCell
@@ -567,5 +575,13 @@ extension DreamWriteVC: UIScrollViewDelegate {
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.isDragging = false
+    }
+}
+
+// MARK: Analytics
+
+extension DreamWriteVC {
+    var writeSource: FirebaseEventType.WriteSource {
+        self.viewModel.writeSource
     }
 }

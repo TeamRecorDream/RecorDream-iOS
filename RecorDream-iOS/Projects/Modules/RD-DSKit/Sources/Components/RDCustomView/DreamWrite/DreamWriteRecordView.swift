@@ -11,6 +11,7 @@ import AVFoundation
 import UIKit
 
 import RD_Core
+import RD_Logger
 
 import SnapKit
 import RxSwift
@@ -187,10 +188,13 @@ extension DreamWriteRecordView {
                 switch self.recordStatus {
                 case .notStarted:
                     self.tappedStart()
+                    AnalyticsManager.log(event: .clickVoiceRecord(self.writeSource))
                 case .recording:
                     self.tappedStop()
+                    AnalyticsManager.log(event: .clickVoiceStop(self.writeSource))
                 case .completed:
                     self.tappedReset()
+                    AnalyticsManager.log(event: .clickVoiceStopReRecord(self.writeSource))
                 }
             })
             .disposed(by: self.disposeBag)
@@ -216,6 +220,7 @@ extension DreamWriteRecordView {
                 guard let self = self else { return }
                 self.recordOutput.onNext(nil)
                 self.dismiss.accept(())
+                AnalyticsManager.log(event: .clickVoiceStopX(self.writeSource))
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                     self.resetView()
                 }
@@ -236,6 +241,7 @@ extension DreamWriteRecordView {
                 } catch {
                     self.recordOutput.onNext(nil)
                 }
+                AnalyticsManager.log(event: .clickVoiceStopSave(self.writeSource))
                 self.dismiss.accept(())
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                     self.resetView()
@@ -485,5 +491,13 @@ extension DreamWriteRecordView: AVAudioRecorderDelegate, AVAudioPlayerDelegate {
         } else {
             recorder.pause()
         }
+    }
+}
+
+extension DreamWriteRecordView {
+    var writeSource: FirebaseEventType.WriteSource {
+        DefaultUserDefaultManager.fromPushNotice ?? false
+        ? .pushNotice
+        : .write
     }
 }

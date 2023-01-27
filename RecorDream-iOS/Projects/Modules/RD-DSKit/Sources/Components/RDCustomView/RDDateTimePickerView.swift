@@ -319,7 +319,8 @@ extension RDDateTimePickerView {
     private func bindViews() {
         cancelButton.rx.tap
             .asDriver()
-            .drive(onNext: {
+            .drive(onNext: { [weak self] in
+                guard let self = self else { return }
                 self.dateTimeOutput.onNext(nil)
             }).disposed(by: self.disposeBag)
         

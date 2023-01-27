@@ -59,3 +59,11 @@ public extension DefaultUserDefaultManager {
         return bool(key: .shouldShowWrite)
     }
 }
+
+// MARK: Analytics
+
+public extension DefaultUserDefaultManager {
+    static var fromPushNotice: Bool? {
+        return bool(key: .fromPushNotice)
+    }
+}
