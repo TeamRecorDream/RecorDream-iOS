@@ -314,6 +314,7 @@ extension DreamWriteVC {
                     mainCell.setData(model: model,
                                      isModifyView: self.viewModelType.isModifyView)
                 }
+                mainCell.bindViews(source: self.writeSource)
                 mainCell.titleTextChanged
                     .subscribe(onNext: { string in
                         self.titleTextChanged.accept(string)
@@ -366,6 +367,7 @@ extension DreamWriteVC {
                 if let model = itemIdentifier as? DreamWriteEntity.Note {
                     noteCell.setData(noteText: model.noteText)
                 }
+                noteCell.bindViews(source: self.writeSource)
                 noteCell.noteTextChanged
                     .subscribe(onNext: { string in
                         self.noteTextChanged.accept(string)

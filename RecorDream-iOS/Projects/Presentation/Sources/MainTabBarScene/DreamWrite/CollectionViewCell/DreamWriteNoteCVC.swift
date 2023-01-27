@@ -10,6 +10,7 @@ import UIKit
 
 import RD_Core
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -76,5 +77,13 @@ extension DreamWriteNoteCVC {
     
     public func setData(noteText: String) {
         self.noteTextView.initText = noteText
+    }
+    
+    public func bindViews(source: FirebaseEventType.WriteSource) {
+        noteTextView.didBeginEditing
+            .subscribe(onNext: { _ in
+                AnalyticsManager.log(event: .clickNote(source))
+            })
+            .disposed(by: self.disposeBag)
     }
 }

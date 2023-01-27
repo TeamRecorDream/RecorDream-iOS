@@ -11,6 +11,7 @@ import UIKit
 import Domain
 import RD_Core
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -102,6 +103,20 @@ extension DreamWriteMainCVC {
             make.height.equalTo(360)
             make.bottom.equalToSuperview().inset(30)
         }
+    }
+    
+    public func bindViews(source: FirebaseEventType.WriteSource) {
+        titleTextView.didBeginEditing
+            .subscribe(onNext: { _ in
+                AnalyticsManager.log(event: .clickTitle(source))
+            })
+            .disposed(by: self.disposeBag)
+        
+        contentTextView.didBeginEditing
+            .subscribe(onNext: { _ in
+                AnalyticsManager.log(event: .clickContent(source))
+            })
+            .disposed(by: self.disposeBag)
     }
 }
 
