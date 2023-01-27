@@ -52,6 +52,18 @@ public enum FirebaseEventType {
     // 8. 검색하기
     
     // 9. 마이페이지
+    case clickMypageNicknameEdit
+    case clickMypagePushToggle(isOn: Bool)
+    case clickMypagePushSave
+    case clickMypagePushCancel
+    case clickMypageTimeSetting
+    case clickMypageTimeSettingSave
+    case clickMypageTimeSettingCancel
+    case clickMypageLogout
+    case clickMypageWithdrawal
+    case clickMypageWithdrawalPerform
+    case clickMypageWithdrawalCancel
+    case clickMypageExit
     
     // 10. 푸시알림
     case clickPushNotice
@@ -129,8 +141,10 @@ public extension FirebaseEventType {
     var target: String? {
         var object: String? = nil
         switch self {
+        // 2. 탭
         case .clickTabBarPlus:
             object = "기록하기"
+        // 4. 작성하기 && 6.기록하기 && 10. 푸시알림
         case .clickDate(_):
             object = "날짜배너"
         case .clickDateSave(_):
@@ -167,6 +181,31 @@ public extension FirebaseEventType {
             object = "저장하기"
         case .clickExit(_):
             object = "나가기"
+        // 9. 마이페이지
+        case .clickMypageNicknameEdit:
+            object = "닉네임수정"
+        case .clickMypagePushToggle:
+            object = "푸시토글"
+        case .clickMypagePushSave:
+            object = "푸시On_저장"
+        case .clickMypagePushCancel:
+            object = "푸시On_취소"
+        case .clickMypageTimeSetting:
+            object = "시간설정배너"
+        case .clickMypageTimeSettingSave:
+            object = "시간설정배너_저장"
+        case .clickMypageTimeSettingCancel:
+            object = "시간설정배너_취소"
+        case .clickMypageLogout:
+            object = "로그아웃"
+        case .clickMypageWithdrawal:
+            object = "탈퇴하기"
+        case .clickMypageWithdrawalPerform:
+            object = "탈퇴하기_탈퇴"
+        case .clickMypageWithdrawalCancel:
+            object = "탈퇴하기_취소"
+        case .clickMypageExit:
+            object = "뒤로가기"
         default:
             break
         }
@@ -188,6 +227,8 @@ public extension FirebaseEventType {
             params["emotion"] = emotion
         case let .clickGenre(_, genre):
             params["genre"] = genre
+        case let .clickMypagePushToggle(isOn):
+            params["isOn"] = isOn
         default: break
         }
         return params

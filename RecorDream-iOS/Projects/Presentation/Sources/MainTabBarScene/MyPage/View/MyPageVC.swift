@@ -11,6 +11,7 @@ import UIKit
 import Domain
 import RD_Core
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -204,6 +205,7 @@ extension MyPageVC {
             .drive(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.showWithdrawalWarningAlert()
+                AnalyticsManager.log(event: .clickMypageWithdrawal)
             })
             .disposed(by: self.disposeBag)
         
@@ -211,6 +213,7 @@ extension MyPageVC {
             .bind { [weak self] _ in
                 guard let self = self else { return }
                 self.dismissTimePickerView()
+                AnalyticsManager.log(event: .clickMypageTimeSettingCancel)
                 // 활성화 상태인 경우에는 취소를 눌러도 pushSwitch를 false로 바꾸지 않음
                 guard !self.timeSettingView.isEnabled else { return }
                 self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
@@ -222,6 +225,7 @@ extension MyPageVC {
             .bind(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.dismissTimePickerView()
+                AnalyticsManager.log(event: .clickMypageTimeSettingSave)
             })
             .disposed(by: self.disposeBag)
         
@@ -231,12 +235,14 @@ extension MyPageVC {
             .bind { [weak self] _ in
                 guard let self = self else { return }
                 self.showTimePickerView()
+                AnalyticsManager.log(event: .clickMypagePushToggle(isOn: true))
             }.disposed(by: self.disposeBag)
         
         self.timeSettingView.interactionViewTapped
             .bind { [weak self] in
                 guard let self = self else { return }
                 self.showTimePickerView()
+                AnalyticsManager.log(event: .clickMypageTimeSetting)
             }.disposed(by: self.disposeBag)
         
         self.naviBar.leftButtonTapped
@@ -245,6 +251,7 @@ extension MyPageVC {
                 owner.navigationController?.popViewController(animated: true)
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
                 rdtabbarController.setTabBarHidden(false)
+                AnalyticsManager.log(event: .clickMypageExit)
             })
             .disposed(by: self.disposeBag)
     }
@@ -279,7 +286,8 @@ extension MyPageVC {
             .disposed(by: self.disposeBag)
         
         output.selectedPushTime
-            .bind { selectedTime in
+            .bind { [weak self] selectedTime in
+                guard let self = self else { return }
                 self.timeSettingView.rx.pushTimeSelected.onNext(selectedTime)
                 guard selectedTime != nil else {
                     self.pushSettingView.rx.pushSwitchIsOnBindable.onNext(false)
@@ -319,12 +327,15 @@ extension MyPageVC {
     }
     
     private func showWithdrawalWarningAlert() {
-        self.makeAlertWithCancelDestructive(title: "탈퇴하기",
+        self.makeAlertWithCancelDestructiveWithAction(title: "탈퇴하기",
                                             message: "탈퇴시 저장된 기록은 복구되지 않습니다.\n 정말로 탈퇴하시겠습니까?",
                                             okActionTitle: "탈퇴",
                                             okAction:  { _ in
             self.withdrawalActionTapped.accept(())
-        })
+            AnalyticsManager.log(event: .clickMypageWithdrawalPerform)
+        }) { _ in
+            AnalyticsManager.log(event: .clickMypageWithdrawalCancel)
+        }
     }
     
     private func showTimePickerView() {

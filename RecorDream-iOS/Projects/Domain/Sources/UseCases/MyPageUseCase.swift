@@ -6,6 +6,8 @@
 //  Copyright © 2022 RecorDream. All rights reserved.
 //
 
+import RD_Logger
+
 import RxSwift
 import RxRelay
 
@@ -128,6 +130,9 @@ extension DefaultMyPageUseCase {
             .withUnretained(self)
             .subscribe(onNext: { owner, logoutSuccess in
                 owner.logoutOrWithDrawalSuccess.onNext(logoutSuccess)
+                if logoutSuccess {
+                    AnalyticsManager.log(event: .clickMypageLogout)
+                }
             }).disposed(by: self.disposeBag)
     }
     
