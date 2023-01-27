@@ -35,6 +35,8 @@ public enum FirebaseEventType {
     case clickVoiceStopX(WriteSource)
     case clickVoiceStopReRecord(WriteSource)
     case clickVoiceStopSave(WriteSource)
+    case clickVoiceStopPlay(WriteSource)
+    case clickVoiceStopPause(WriteSource)
     case clickTitle(WriteSource)
     case clickContent(WriteSource)
     case clickEmotion(WriteSource, emotion: String)
@@ -114,7 +116,9 @@ public extension FirebaseEventType {
             let .clickVoiceStop(writeSource),
             let .clickVoiceStopX(writeSource),
             let .clickVoiceStopReRecord(writeSource),
-            let .clickVoiceStopSave(writeSource):
+            let .clickVoiceStopSave(writeSource),
+            let .clickVoiceStopPlay(writeSource),
+            let .clickVoiceStopPause(writeSource):
             return writeSource.rawValue
         default: return nil
         }
@@ -145,6 +149,10 @@ public extension FirebaseEventType {
             object = "녹음배너_중지_다시하기"
         case .clickVoiceStopSave:
             object = "녹음배너_중지_저장하기"
+        case .clickVoiceStopPlay:
+            object = "녹음배너_중지_재생하기"
+        case .clickVoiceStopPause:
+            object = "녹음배너_중지_재생하기_일시정지"
         case .clickTitle(_):
             object = "제목배너"
         case .clickContent(_):

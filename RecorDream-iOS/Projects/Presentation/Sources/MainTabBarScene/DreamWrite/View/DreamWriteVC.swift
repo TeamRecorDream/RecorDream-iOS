@@ -530,6 +530,32 @@ extension DreamWriteVC: UICollectionViewDelegate {
         }
     }
     
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch Section.type(indexPath.section) {
+        case .emotions:
+            let emotions = Section.emotionTitles
+            AnalyticsManager.log(
+                event: .clickEmotion(
+                    self.writeSource,
+                    emotion: emotions[indexPath.item]
+                )
+            )
+        case .genres:
+            let genres = Section.genreTitles
+                .map {
+                    let startIndex = $0.index(after: $0.startIndex)
+                    return String($0.suffix(from: startIndex))
+                }
+            AnalyticsManager.log(
+                event: .clickGenre(
+                    self.writeSource,
+                    genre: genres[indexPath.item]
+                )
+            )
+        default: break
+        }
+    }
+    
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         switch Section.type(indexPath.section) {
         case .emotions, .genres:

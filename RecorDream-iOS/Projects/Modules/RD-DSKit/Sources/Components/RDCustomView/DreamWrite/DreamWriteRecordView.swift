@@ -207,9 +207,11 @@ extension DreamWriteRecordView {
                 if player.isPlaying {
                     self.playAndPauseButton.setImage(RDDSKitAsset.Images.icnStart.image, for: .normal)
                     self.pausePlayer()
+                    AnalyticsManager.log(event: .clickVoiceStopPause(self.writeSource))
                 } else {
                     self.playAndPauseButton.setImage(RDDSKitAsset.Images.icnStop.image, for: .normal)
                     self.startPlayer()
+                    AnalyticsManager.log(event: .clickVoiceStopPlay(self.writeSource))
                 }
             })
             .disposed(by: self.disposeBag)
