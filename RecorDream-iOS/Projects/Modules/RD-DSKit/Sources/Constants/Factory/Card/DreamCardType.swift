@@ -8,8 +8,6 @@
 
 import UIKit
 
-import RD_DSKit
-
 public enum DreamCardType {
     case joy
     case sad

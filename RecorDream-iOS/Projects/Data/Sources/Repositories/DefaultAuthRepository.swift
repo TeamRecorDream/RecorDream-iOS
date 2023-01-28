@@ -30,6 +30,10 @@ extension DefaultAuthRepository: AuthRepository {
             self.authService.login(kakaoToken: request.kakaoToken, appleToken: request.appleToken, fcmToken: request.fcmToken)
                 .subscribe(onNext: { response in
                     guard let response = response else { return }
+                    DefaultUserDefaultManager.set(value: response.userId, keyPath: .userId)
+                    DefaultUserDefaultManager.set(value: response.accessToken, keyPath: .accessToken)
+                    DefaultUserDefaultManager.set(value: response.refreshToken, keyPath: .refreshToken)
+                    DefaultUserDefaultManager.set(value: response.nickname, keyPath: .nickname)
                     observer.onNext(.init(duplicated: response.duplicated, accessToken: response.accessToken, refreshToken: response.refreshToken, nickname: response.nickname))
                 }, onError: { err in
                     observer.onError(err)

@@ -10,6 +10,7 @@ import UIKit
 
 import Domain
 import RD_Core
+import RD_Logger
 import RD_Network
 
 import RxSwift
@@ -56,6 +57,7 @@ extension SplashVC {
         self.checkLoginEnable { loginEnabled in
             switch loginEnabled {
             case true:
+                AnalyticsManager.setFirebaseUserProperty()
                 self.presentMainTabBar()
             case false:
                 self.presentLoginVC()
@@ -77,8 +79,8 @@ extension SplashVC {
     }
     
     private func checkLoginEnable(completion: @escaping ((Bool) -> Void)) {
-        if UserDefaults.standard.string(forKey: UserDefaultKey.userToken.rawValue) != nil &&
-            UserDefaults.standard.string(forKey: UserDefaultKey.accessToken.rawValue) != nil {
+        if DefaultUserDefaultManager.string(key: .userToken) != nil &&
+            DefaultUserDefaultManager.string(key: .accessToken) != nil {
             DefaultAuthService.shared.reissuance()
                 .subscribe(onNext: { response in
                     guard let response = response else {

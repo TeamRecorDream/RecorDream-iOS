@@ -38,6 +38,7 @@ public class DefaultUserDefaultManager: UserDefaultManager {
         self.remove(key: .accessToken)
         self.remove(key: .refreshToken)
         self.remove(key: .nickname)
+        self.remove(key: .userId)
     }
 }
 
@@ -56,5 +57,13 @@ public extension DefaultUserDefaultManager {
     
     static var shouldShowWrite: Bool? {
         return bool(key: .shouldShowWrite)
+    }
+}
+
+// MARK: Analytics
+
+public extension DefaultUserDefaultManager {
+    static var fromPushNotice: Bool? {
+        return bool(key: .fromPushNotice)
     }
 }

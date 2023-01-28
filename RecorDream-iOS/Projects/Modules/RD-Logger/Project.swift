@@ -9,9 +9,11 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.makeModule(
-    name: "RD-Analytics",
+    name: "RD-Logger",
     product: .staticFramework,
     dependencies: [
-        .Project.RDCore
+        .Project.RDThridPartyLib,
+        .SPM.FirebaseAnalytics,
+        .SPM.FirebaseCrashlytics
     ]
 )

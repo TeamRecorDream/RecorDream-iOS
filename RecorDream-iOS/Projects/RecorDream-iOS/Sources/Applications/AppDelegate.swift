@@ -111,6 +111,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 extension AppDelegate: MessagingDelegate {
     func configureFirebase() {
         FirebaseApp.configure()
+        
         self.configureFirebaseMessaging()
     }
     

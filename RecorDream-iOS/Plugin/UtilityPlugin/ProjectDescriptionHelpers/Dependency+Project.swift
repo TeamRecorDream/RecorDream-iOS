@@ -25,7 +25,5 @@ public extension TargetDependency.Project {
     static let RDNetwork = TargetDependency.project(target: "RD-Network", path: .relativeToRoot("Projects/Modules/RD-Network"))
     static let RDDSKit = TargetDependency.project(target: "RD-DSKit", path: .relativeToRoot("Projects/Modules/RD-DSKit"))
     static let RDThridPartyLib = TargetDependency.project(target: "ThirdPartyLib", path: .relativeToRoot("Projects/Modules/ThirdPartyLib"))
-    static let RDUtilKit = TargetDependency.project(target: "RD-UtilKit", path: .relativeToRoot("Projects/Modules/RD-UtilKit"))
-    static let RDUser = TargetDependency.project(target: "RD-User", path: .relativeToRoot("Projects/Modules/RD-User"))
-    static let RDAnalytics = TargetDependency.project(target: "RD-Analytics", path: .relativeToRoot("Projects/Modules/RD-Analytics"))
+    static let RDLogger = TargetDependency.project(target: "RD-Logger", path: .relativeToRoot("Projects/Modules/RD-Logger"))
 }

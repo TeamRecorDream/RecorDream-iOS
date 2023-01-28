@@ -11,6 +11,7 @@ import Foundation
 
 import Domain
 import RD_Core
+import RD_Logger
 
 import RxSwift
 import RxRelay
@@ -67,6 +68,7 @@ public class DreamWriteViewModel: ViewModelType {
     }
     
     public var viewModelType = DreamWriteViewModelType.write
+    public var fromPushNotice = false
     
     let writeRequestEntity = BehaviorRelay<DreamWriteRequest>(value: .init(title: nil, date: "", content: nil, emotion: nil, genre: nil, note: nil, voice: nil))
     var voiceId: String? = nil
@@ -103,12 +105,15 @@ extension DreamWriteViewModel {
         
         self.bindOutput(output: output, disposeBag: disposeBag)
         
-        input.viewDidLoad.subscribe(onNext: { _ in
+        input.viewDidLoad.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
             if case let .modify(postId, _) = self.viewModelType {
                 DispatchQueue.main.async {
                     output.loadingStatus.accept(true)
                 }
                 self.useCase.fetchDreamRecord(recordId: postId)
+            } else {
+                DefaultUserDefaultManager.set(value: self.fromPushNotice, keyPath: .fromPushNotice)
             }
         }).disposed(by: disposeBag)
         
@@ -131,6 +136,7 @@ extension DreamWriteViewModel {
                 case let .modify(postId, _):
                     owner.useCase.modifyDreamRecord(request: owner.writeRequestEntity.value, voiceId: owner.voiceId, recordId: postId)
                 }
+                AnalyticsManager.log(event: .clickSave(owner.writeSource))
             }).disposed(by: disposeBag)
         
         return output
@@ -179,5 +185,17 @@ extension DreamWriteViewModel {
                 return
             }
         }).disposed(by: disposeBag)
+    }
+}
+
+// MARK: - Analytics
+
+extension DreamWriteViewModel {
+    var writeSource: FirebaseEventType.WriteSource {
+        switch (fromPushNotice, viewModelType.isModifyView) {
+        case (true, _): return .pushNotice
+        case (false, true): return .modify
+        case (false, false): return .write
+        }
     }
 }

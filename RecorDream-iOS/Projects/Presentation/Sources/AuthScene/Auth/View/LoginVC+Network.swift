@@ -59,6 +59,7 @@ extension LoginVC: ASAuthorizationControllerDelegate, ASAuthorizationControllerP
             kakaoToken: kakaoToken,
             appleToken: nil,
             fcmToken: UserDefaults.standard.string(forKey: UserDefaultKey.userToken.rawValue)!)
+        DefaultUserDefaultManager.set(value: "kakao", keyPath: .platform)
         self.loginRequestSuccess.onNext(authRequestEntity)
     }
     public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
@@ -84,6 +85,7 @@ extension LoginVC: ASAuthorizationControllerDelegate, ASAuthorizationControllerP
     }
     
     public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-      self.loginRequestFail.onNext(.apple)
+        DefaultUserDefaultManager.set(value: "apple", keyPath: .platform)
+        self.loginRequestFail.onNext(.apple)
     }
 }

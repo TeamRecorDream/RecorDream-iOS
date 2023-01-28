@@ -9,6 +9,7 @@
 import UIKit
 
 import RD_Core
+import RD_Logger
 
 import Presentation
 
@@ -19,17 +20,20 @@ extension DependencyContainer: PushNoticeCoordinatable {
             topVC = UIApplication.getMostTopViewController()
         }
         
-        if topVC is DreamWriteVC {
+        if let dreamWriteVC = topVC as? DreamWriteVC {
+            dreamWriteVC.viewModel.fromPushNotice = true
+            AnalyticsManager.log(event: .clickPushNotice)
             return
         }
         
         let navigation = topVC as? UINavigationController
         let tabBarController = navigation?.viewControllers.first
         if topVC is HomeVC || topVC is StorageVC || tabBarController is MainTabBarController {
-            let dreamWriteVC = self.instantiateDreamWriteVC(.write)
+            let dreamWriteVC = self.instantiateDreamWriteVCFromPush(.write)
             dreamWriteVC.modalPresentationStyle = .fullScreen
             UIApplication.getMostTopViewController()?.present(dreamWriteVC,
                            animated: true)
+            AnalyticsManager.log(event: .clickPushNotice)
             return
         }
         
