@@ -9,6 +9,7 @@
 import Domain
 import RD_Core
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -56,46 +57,67 @@ extension MyPageViewModel {
         
         self.bindOutput(output: output, disposeBag: disposeBag)
         
-        input.viewDidLoad.subscribe(onNext: { _ in
-            self.useCase.fetchMyPageData()
-        }).disposed(by: disposeBag)
-        
-        input.editButtonTapped.subscribe(onNext: { _ in
-            self.useCase.validateUsernameEdit()
-        }).disposed(by: disposeBag)
-        
-        input.myPageReturnOutput.subscribe(onNext: { editOutput in
-            switch editOutput {
-            case .noText:
-                self.useCase.restartUsernameEditAfterAlert()
-            case .endWithProperText(let text):
+        input.viewDidLoad
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
                 output.loadingStatus.accept(true)
-                self.useCase.requestUsernameEdit(username: text)
-            }
-        }).disposed(by: disposeBag)
+                owner.useCase.fetchMyPageData()
+            }).disposed(by: disposeBag)
         
-        input.usernameAlertDismissed.subscribe { _ in
-            self.useCase.startUsernameEdit()
-        }.disposed(by: disposeBag)
+        input.editButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                owner.useCase.validateUsernameEdit()
+            }).disposed(by: disposeBag)
+        
+        input.myPageReturnOutput
+            .withUnretained(self)
+            .subscribe(onNext: { owner, editOutput in
+                switch editOutput {
+                case .noText:
+                    owner.useCase.restartUsernameEditAfterAlert()
+                case .endWithProperText(let text):
+                    output.loadingStatus.accept(true)
+                    owner.useCase.requestUsernameEdit(username: text)
+                }
+            }).disposed(by: disposeBag)
+        
+        input.usernameAlertDismissed
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                owner.useCase.startUsernameEdit()
+            }).disposed(by: disposeBag)
         
         input.pushSwitchChagned
             .skip(1)
             .filter { $0 == false }
-            .subscribe(onNext: { _ in
-                self.useCase.disablePushNotice()
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, _) in
+                output.loadingStatus.accept(true)
+                owner.useCase.disablePushNotice()
+                AnalyticsManager.log(event: .clickMypagePushToggle(isOn: false))
             }).disposed(by: disposeBag)
         
-        input.pushTimePicked.subscribe(onNext: { selectedTime in
-            self.useCase.enablePushNotice(time: selectedTime)
-        }).disposed(by: disposeBag)
+        input.pushTimePicked
+            .withUnretained(self)
+            .subscribe(onNext: { owner, selectedTime in
+                output.loadingStatus.accept(true)
+                owner.useCase.enablePushNotice(time: selectedTime)
+            }).disposed(by: disposeBag)
         
-        input.logoutButtonTapped.subscribe(onNext: { _ in
-            self.useCase.userLogout()
-        }).disposed(by: disposeBag)
+        input.logoutButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                output.loadingStatus.accept(true)
+                owner.useCase.userLogout()
+            }).disposed(by: disposeBag)
         
-        input.withdrawalButtonTapped.subscribe(onNext: { _ in
-            self.useCase.userWithdrawal()
-        }).disposed(by: disposeBag)
+        input.withdrawalButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                output.loadingStatus.accept(true)
+                owner.useCase.userWithdrawal()
+            }).disposed(by: disposeBag)
         
         return output
     }
@@ -105,6 +127,7 @@ extension MyPageViewModel {
         myPageData
             .compactMap { $0 }
             .subscribe(onNext: { entity in
+                output.loadingStatus.accept(false)
                 output.myPageDataFetched.accept(entity)
             }).disposed(by: disposeBag)
         

@@ -314,6 +314,7 @@ extension DreamWriteVC {
                     mainCell.setData(model: model,
                                      isModifyView: self.viewModelType.isModifyView)
                 }
+                mainCell.bindViews(source: self.writeSource)
                 mainCell.titleTextChanged
                     .subscribe(onNext: { string in
                         self.titleTextChanged.accept(string)
@@ -366,6 +367,7 @@ extension DreamWriteVC {
                 if let model = itemIdentifier as? DreamWriteEntity.Note {
                     noteCell.setData(noteText: model.noteText)
                 }
+                noteCell.bindViews(source: self.writeSource)
                 noteCell.noteTextChanged
                     .subscribe(onNext: { string in
                         self.noteTextChanged.accept(string)
@@ -527,6 +529,32 @@ extension DreamWriteVC: UICollectionViewDelegate {
                 return false
             } else { return true }
         default: return false
+        }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch Section.type(indexPath.section) {
+        case .emotions:
+            let emotions = Section.emotionTitles
+            AnalyticsManager.log(
+                event: .clickEmotion(
+                    self.writeSource,
+                    emotion: emotions[indexPath.item]
+                )
+            )
+        case .genres:
+            let genres = Section.genreTitles
+                .map {
+                    let startIndex = $0.index(after: $0.startIndex)
+                    return String($0.suffix(from: startIndex))
+                }
+            AnalyticsManager.log(
+                event: .clickGenre(
+                    self.writeSource,
+                    genre: genres[indexPath.item]
+                )
+            )
+        default: break
         }
     }
     

@@ -9,6 +9,7 @@
 import UIKit
 
 import RD_Core
+import RD_Logger
 
 import SnapKit
 import RxSwift
@@ -119,6 +120,11 @@ extension MyPageEditableView {
             }
             .bind(to: editingTextField.rx.text)
             .disposed(by: disposeBag)
+        
+        editingTextField.rx.controlEvent(.editingDidBegin)
+            .subscribe(onNext: { _ in
+                AnalyticsManager.log(event: .clickMypageNicknameEdit)
+            }).disposed(by: disposeBag)
     }
     
     public func updateEditingStatus(_ isEditing: Bool) {
