@@ -189,6 +189,24 @@ public extension FirebaseEventType {
             object = "저장하기"
         case .clickExit(_):
             object = "나가기"
+        // 6. 보관함
+        case .clickStorageSearch:
+            object = "클릭_보관함_검색버튼"
+        case .clickStorageMypage:
+            object = "클릭_보관함_마이페이지버튼"
+        case .clickStorageEmotion(_):
+            object = "클릭_보관함_감정아이콘"
+        case .clickStorageViewType(_):
+            object = "클릭_보관함_보기방식"
+        case .clickStorageDreamCard:
+            object = "클릭_보관함_꿈기록카드"
+        // 7. 검색
+        case .clickSearchSearchBar:
+            object = "클릭_검색하기_검색창"
+        case .clickSearchDreamCard:
+            object = "클릭_검색하기_꿈기록카드"
+        case .clickSearchExit:
+            object = "클릭_검색하기_뒤로가기버튼"
         // 9. 마이페이지
         case .clickMypageNicknameEdit:
             object = "닉네임수정"
