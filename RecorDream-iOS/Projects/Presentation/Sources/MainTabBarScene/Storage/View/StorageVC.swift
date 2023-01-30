@@ -10,6 +10,7 @@ import UIKit
 
 import Domain
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -165,6 +166,7 @@ extension StorageVC {
                     .drive(onNext: { [weak self] in
                         guard let self = self else { return }
                         self.changeLayoutType(type: $0)
+                        AnalyticsManager.log(event: .clickStorageViewType(type: $0.rawValue))
                     }).disposed(by: view.disposeBag)
                 return view
             }
@@ -239,6 +241,7 @@ extension StorageVC {
         self.logoView.rx.searchButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
+                AnalyticsManager.log(event: .clickStorageSearch)
                 let searchVC = owner.factory.instantiateSearchVC()
                 let navigation = UINavigationController(rootViewController: searchVC)
                 navigation.modalTransitionStyle = .coverVertical
@@ -252,6 +255,7 @@ extension StorageVC {
         self.logoView.rx.mypageButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
+                AnalyticsManager.log(event: .clickStorageMypage)
                 let mypageVC = owner.factory.instantiateMyPageVC()
                 owner.navigationController?.pushViewController(mypageVC, animated: true)
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
@@ -261,6 +265,7 @@ extension StorageVC {
     private func bindCollectionView() {
         self.selectedIndex
             .bind(onNext: { [weak self] idx in
+                AnalyticsManager.log(event: .clickSearchDreamCard)
                 guard let self = self else { return }
                 guard let id = self.viewModel.fetchedDreamRecord.records.safeget(index: idx)?.id else { return }
                 let detailVC = self.factory.instantiateDetailVC(dreamId: id)
@@ -317,5 +322,11 @@ extension StorageVC: UICollectionViewDataSource, UICollectionViewDelegate {
     }
     public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         return false
+    }
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView == dreamFilterCollectionView {
+            let emotions = DreamStorageSection.titles
+            AnalyticsManager.log(event: .clickStorageEmotion(emotion: emotions[indexPath.item]))
+        }
     }
 }

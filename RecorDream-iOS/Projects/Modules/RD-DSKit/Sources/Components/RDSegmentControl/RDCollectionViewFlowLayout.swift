@@ -10,7 +10,7 @@ import UIKit
 
 public class RDCollectionViewFlowLayout: UICollectionViewFlowLayout {
     // MARK: - Properties
-    public enum CollectionDisplay {
+    public enum CollectionDisplay: String {
         case grid
         case list
     }
