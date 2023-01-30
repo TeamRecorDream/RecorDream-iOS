@@ -48,8 +48,16 @@ public enum FirebaseEventType {
     // 5. 기록 상세보기
     
     // 7. 보관함
+    case clickStorageSearch
+    case clickStorageMypage
+    case clickStorageEmotion(emotion: String)
+    case clickStorageViewType(type: String)
+    case clickStorageDreamCard
     
     // 8. 검색하기
+    case clickSearchSearchBar
+    case clickSearchDreamCard
+    case clickSearchExit
     
     // 9. 마이페이지
     case clickMypageNicknameEdit
@@ -181,6 +189,24 @@ public extension FirebaseEventType {
             object = "저장하기"
         case .clickExit(_):
             object = "나가기"
+        // 6. 보관함
+        case .clickStorageSearch:
+            object = "검색버튼"
+        case .clickStorageMypage:
+            object = "마이페이지버튼"
+        case .clickStorageEmotion(_):
+            object = "감정아이콘"
+        case .clickStorageViewType(_):
+            object = "보기방식"
+        case .clickStorageDreamCard:
+            object = "꿈기록카드"
+        // 7. 검색
+        case .clickSearchSearchBar:
+            object = "검색창"
+        case .clickSearchDreamCard:
+            object = "꿈기록카드"
+        case .clickSearchExit:
+            object = "뒤로가기버튼"
         // 9. 마이페이지
         case .clickMypageNicknameEdit:
             object = "닉네임수정"
@@ -229,6 +255,10 @@ public extension FirebaseEventType {
             params["genre"] = genre
         case let .clickMypagePushToggle(isOn):
             params["isOn"] = isOn
+        case let .clickStorageEmotion(emotion):
+            params["emotion"] = emotion
+        case let .clickStorageViewType(type):
+            params["type"] = type
         default: break
         }
         return params
