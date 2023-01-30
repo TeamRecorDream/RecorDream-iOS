@@ -237,6 +237,8 @@ public extension FirebaseEventType {
             params["genre"] = genre
         case let .clickMypagePushToggle(isOn):
             params["isOn"] = isOn
+        case let .clickStorageEmotion(emotion):
+            params["emotion"] = emotion
         case let .clickStorageViewType(type):
             params["type"] = type
         default: break
