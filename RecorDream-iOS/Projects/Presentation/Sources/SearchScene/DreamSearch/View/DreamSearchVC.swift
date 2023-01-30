@@ -10,6 +10,7 @@ import UIKit
 
 import Domain
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -119,7 +120,6 @@ extension DreamSearchVC: UITextFieldDelegate {
     private func didTapOutsideCollectionView(_ recognizer: UITapGestureRecognizer) {
         let tapLocation = recognizer.location(in: self.dreamSearchCollectionView)
         let indexPathForTap = self.dreamSearchCollectionView.indexPathForItem(at: tapLocation)
-        let tappedOutOfItems = indexPathForTap == nil
         
         if let row = indexPathForTap?.row {
             self.selectedIndex.accept(row)
@@ -134,6 +134,9 @@ extension DreamSearchVC: UITextFieldDelegate {
     @objc
     private func didDismissDetailVC(_ notification: Notification) {
         self.isModified.accept(true)
+    }
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        AnalyticsManager.log(event: .clickSearchSearchBar)
     }
 }
 // MARK: - DataSource
@@ -202,6 +205,7 @@ extension DreamSearchVC {
     private func bindCollectionView() {
         self.selectedIndex
             .bind(onNext: { idx in
+                AnalyticsManager.log(event: .clickSearchDreamCard)
                 guard let id = self.viewModel.fetchedDreamRecord.records.safeget(index: idx)?.id else { return }
                 self.dreamId.accept(id)
             }).disposed(by: self.disposeBag)
@@ -218,6 +222,7 @@ extension DreamSearchVC {
         self.navigationBar.leftButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { owner in
+                AnalyticsManager.log(event: .clickSearchExit)
                 self.dismiss(animated: true)
             }).disposed(by: disposeBag)
     }
