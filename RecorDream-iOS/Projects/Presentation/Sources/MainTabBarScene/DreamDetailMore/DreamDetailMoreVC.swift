@@ -96,6 +96,8 @@ public class DreamDetailMoreVC: UIViewController {
         button.makeRounded(radius: 15)
         return button
     }()
+
+    private var shareView = DreamShareView()
   
     // MARK: - View Life Cycle
     
@@ -159,6 +161,13 @@ public class DreamDetailMoreVC: UIViewController {
             $0.leading.trailing.equalToSuperview()
             $0.top.equalTo(secondSeparateLine.snp.bottom)
         }
+
+        self.view.addSubview(shareView)
+        shareView.snp.makeConstraints { make in
+            make.width.equalTo(self.view.bounds.width)
+            make.height.equalTo(self.view.bounds.height)
+        }
+        shareView.isHidden = true
     }
 }
 
@@ -190,8 +199,8 @@ extension DreamDetailMoreVC {
             .drive(onNext: { [weak self] in
                 guard let self = self else { return }
                 let dreamModifyVC = self.factory.instantiateDreamWriteVC(.modify(
-                    postId: self.viewModel.dreamId,
-                    audioURL: self.audioURL)
+                    postId: self.viewModel.dreamDetailData.recordId,
+                    audioURL: self.viewModel.dreamDetailData.voiceUrl)
                 )
 
                 self.modalPresentationStyle = .overFullScreen
@@ -201,7 +210,7 @@ extension DreamDetailMoreVC {
         self.shareButton.rx.tap
             .asDriver()
             .drive(onNext: {
-                // TODO : 인스타 연결 로직
+                self.shareToInstagramStories()
             }).disposed(by: self.disposeBag)
     }
   
@@ -219,4 +228,43 @@ extension DreamDetailMoreVC {
             }.disposed(by: self.disposeBag)
     }
 
+    private func shareToInstagramStories() {
+        let detailData = self.viewModel.dreamDetailData
+        self.shareView.setData(emotion: detailData.emotion, date: detailData.date, title: detailData.title, content: detailData.content, genre: detailData.genre)
+
+        if let storyShareURL = URL(string: "instagram-stories://share") {
+            if UIApplication.shared.canOpenURL(storyShareURL) {
+                // shareView의 bounds 크기 만큼의 renderer 선언
+                shareView.isHidden = false
+                let renderer = UIGraphicsImageRenderer(size: shareView.bounds.size)
+                // shareView에 대해서 hierarchy를 뷰 크기만큼 그림.
+                // renderImage : shareView를 그린 UIImage 저장
+                let renderImage = renderer.image { _ in
+                    shareView.drawHierarchy(in: shareView.bounds, afterScreenUpdates: true)
+                }
+
+                // 해당 이미지전송을 위해 pngData로 변환
+                guard let imageData = renderImage.pngData() else { return }
+                print("paste")
+
+                let pasteboardItems: [String: Any] = [
+                    "com.instagram.sharedSticker.backgroundImage": imageData]
+
+                let pasteboardOptions = [
+                    UIPasteboard.OptionsKey.expirationDate : Date().addingTimeInterval(300)
+                ]
+
+                UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
+                UIApplication.shared.open(storyShareURL, options: [:], completionHandler: nil)
+                shareView.isHidden = true
+            }
+            
+        } else {
+            let alert = UIAlertController(title: "알림", message: "인스타그램이 필요합니다", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "확인", style: .default, handler: nil)
+
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 }
