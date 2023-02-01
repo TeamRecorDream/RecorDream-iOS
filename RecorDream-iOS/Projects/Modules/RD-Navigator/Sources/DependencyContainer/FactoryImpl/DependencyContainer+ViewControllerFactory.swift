@@ -70,13 +70,12 @@ extension DependencyContainer: MainTabBarControllerFactory {
         return detailVC
     }
 
-    public func instantiateDetailMoreVC(dreamId: String, audioURL: URL?) -> Presentation.DreamDetailMoreVC {
+    public func instantiateDetailMoreVC(dreamDetailData: DreamDetailEntity) -> Presentation.DreamDetailMoreVC {
         let detailMoreVC = DreamDetailMoreVC()
         let repository = DefaultDreamDetailMoreRepository(recordService: self.recordService)
         let useCase = DefaultDreamDetailMoreUseCase(repository: repository)
-        let viewModel = DreamDetailMoreViewModel(useCase: useCase, dreamId: dreamId)
+        let viewModel = DreamDetailMoreViewModel(useCase: useCase, dreamDetailData: dreamDetailData)
 
-        detailMoreVC.audioURL = audioURL
         detailMoreVC.factory = self
         detailMoreVC.viewModel = viewModel
 
@@ -153,17 +152,5 @@ extension DependencyContainer: MainTabBarControllerFactory {
         dreamSearchVC.factory = self
         
         return dreamSearchVC
-    }
-
-    public func instantiateDreamShareVC(dreamModel: DreamDetailEntity) -> DreamShareVC {
-        let repository = DefaultDreamShareRepository()
-        let useCase = DefaultDreamShareUseCase(repository: repository)
-        let viewModel = DreamShareViewModel(useCase: useCase)
-        let dreamShareVC = DreamShareVC()
-
-        dreamShareVC.viewModel = viewModel
-        dreamShareVC.factory = self
-
-        return dreamShareVC
     }
 }

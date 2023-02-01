@@ -256,7 +256,7 @@ extension DreamDetailVC {
         self.headerView.rx.moreButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
-                let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamId: self.viewModel.dreamId, audioURL: self.viewModel.audioURL)
+                let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamDetailData: self.viewModel.detailDreamData)
 
                 let navigation = UINavigationController(rootViewController: detailMoreVC)
                 navigation.modalTransitionStyle = .coverVertical

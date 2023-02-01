@@ -22,7 +22,6 @@ public class DreamDetailMoreVC: UIViewController {
     private let disposeBag = DisposeBag()
     public var viewModel: DreamDetailMoreViewModel!
     public var factory: ViewControllerFactory!
-    public var audioURL: URL?
 
     private let deleteAlertOkActionTapped = PublishRelay<Void>()
   
