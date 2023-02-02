@@ -16,7 +16,7 @@ public class DreamDetailMoreViewModel: ViewModelType {
 
     private let useCase: DreamDetailMoreUseCase
     private let disposeBag = DisposeBag()
-    let dreamId: String
+    let dreamDetailData: DreamDetailEntity
   
     // MARK: - Inputs
     
@@ -32,9 +32,9 @@ public class DreamDetailMoreViewModel: ViewModelType {
     
     // MARK: - Coordination
   
-    public init(useCase: DreamDetailMoreUseCase, dreamId: String) {
+    public init(useCase: DreamDetailMoreUseCase, dreamDetailData: DreamDetailEntity) {
         self.useCase = useCase
-        self.dreamId = dreamId
+        self.dreamDetailData = dreamDetailData
     }
 }
 
@@ -44,7 +44,7 @@ extension DreamDetailMoreViewModel {
         self.bindOutput(output: output, disposeBag: disposeBag)
 
         input.deleteButtonTapped.subscribe(onNext: { _ in
-            self.useCase.deleteRecord(recordId: self.dreamId)
+            self.useCase.deleteRecord(recordId: self.dreamDetailData.recordId)
         }).disposed(by: disposeBag)
     
         return output
