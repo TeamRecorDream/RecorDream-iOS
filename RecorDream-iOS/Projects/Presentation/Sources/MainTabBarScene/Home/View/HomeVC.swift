@@ -10,6 +10,7 @@ import UIKit
 import Domain
 import RD_DSKit
 import RD_Core
+import RD_Logger
 
 import RxSwift
 import RxCocoa
@@ -158,6 +159,7 @@ extension HomeVC {
         self.logoView.rx.mypageButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
+                AnalyticsManager.log(event: .clickHomeMypage)
                 let myPageVC = owner.factory.instantiateMyPageVC()
                 owner.navigationController?.pushViewController(myPageVC, animated: true)
                 guard let rdtabbarController = owner.tabBarController as? RDTabBarController else { return }
@@ -167,6 +169,7 @@ extension HomeVC {
         self.logoView.rx.searchButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
+                AnalyticsManager.log(event: .clickHomeSearch)
                 let searchVC = owner.factory.instantiateSearchVC()
                 let navigation = UINavigationController(rootViewController: searchVC)
                 navigation.modalTransitionStyle = .coverVertical
@@ -216,7 +219,7 @@ extension HomeVC {
             .withUnretained(self)
             .bind { (owner, index) in
                 guard let records = owner.viewModel.fetchedDreamRecord.records.safeget(index: index) else { return }
-
+                AnalyticsManager.log(event: .clickHomeDreamCard)
                 let detail = owner.factory.instantiateDetailVC(dreamId: records.recordId)
                 owner.present(detail, animated: true)
             }.disposed(by: self.disposeBag)
