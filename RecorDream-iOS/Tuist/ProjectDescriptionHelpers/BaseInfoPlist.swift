@@ -8,7 +8,7 @@ public extension Project {
         "CFBundleIdentifier": "com.RecorDream.Release",
         "UILaunchStoryboardName": "LaunchScreen",
         "CFBundleDisplayName": "레코드림",
-        "LSApplicationQueriesSchemes": ["kakaokompassauth", "kakaolink"],
+        "LSApplicationQueriesSchemes": ["kakaokompassauth", "kakaolink","instagram-stories"],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,
             "UISceneConfigurations": [

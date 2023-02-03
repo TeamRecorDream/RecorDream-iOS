@@ -19,7 +19,8 @@ public class DreamDetailViewModel: ViewModelType {
     private let disposeBag = DisposeBag()
     let dreamId: String
     var audioURL: URL?
-  
+    var detailDreamData: DreamDetailEntity = DreamDetailEntity(recordId: "", date: "", title: "", content: "", emotion: 0, genre: [], note: "", voiceUrl: nil)
+
     // MARK: - Inputs
     
     public struct Input {
@@ -73,6 +74,7 @@ extension DreamDetailViewModel {
                 output.loadingStatus.accept(false)
                 output.fetchedDetailData.accept(entity)
                 owner.audioURL = entity.voiceUrl
+                owner.detailDreamData = entity
             }).disposed(by: disposeBag)
     }
 }

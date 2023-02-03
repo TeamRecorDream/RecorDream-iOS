@@ -258,9 +258,7 @@ extension DreamDetailVC {
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
                 AnalyticsManager.log(event: .clickDetailMore)
-                
-                let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamId: self.viewModel.dreamId, audioURL: self.viewModel.audioURL)
-
+                let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamDetailData: self.viewModel.detailDreamData)
                 let navigation = UINavigationController(rootViewController: detailMoreVC)
                 navigation.modalTransitionStyle = .coverVertical
                 navigation.modalPresentationStyle = .overFullScreen
