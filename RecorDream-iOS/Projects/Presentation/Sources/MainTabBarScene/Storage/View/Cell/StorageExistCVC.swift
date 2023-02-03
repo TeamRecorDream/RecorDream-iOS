@@ -45,6 +45,7 @@ final class StorageExistCVC: UICollectionViewCell, UICollectionViewRegisterable 
         lb.textAlignment = .left
         lb.textColor = RDDSKitColors.Color.white
         lb.sizeToFit()
+        lb.lineBreakMode = .byWordWrapping
         lb.numberOfLines = 2
         return lb
     }()
