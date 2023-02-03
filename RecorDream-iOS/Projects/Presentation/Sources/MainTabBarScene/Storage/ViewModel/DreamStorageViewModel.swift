@@ -61,6 +61,7 @@ extension DreamStorageViewModel: ViewModelType {
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
                 owner.useCase.execute(requestValue: .init(filterType: 0))
+                owner.previousFetchQuery = .init(filterType: 0)
                 output.loadingStatus.accept(true)
             }).disposed(by: disposeBag)
         
