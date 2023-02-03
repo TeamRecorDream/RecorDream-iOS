@@ -59,8 +59,6 @@ public enum FirebaseEventType {
     case clickDetailMoreShareUpload
     case clickDetailMoreModify
     case clickDetailMoreDelete
-    case clickDetailMoreDeletePerform
-    case clickDetailMoreDeleteCancle
     
     // 7. 보관함
     case clickStorageSearch
@@ -231,10 +229,6 @@ public extension FirebaseEventType {
             object = "더보기_수정하기"
         case .clickDetailMoreDelete:
             object = "더보기_삭제하기"
-        case .clickDetailMoreDeletePerform:
-            object = "더보기_삭제하기_삭제하기"
-        case .clickDetailMoreDeleteCancle:
-            object = "더보기_삭제하기_취소하기"
         // 6. 보관함
         case .clickStorageSearch:
             object = "검색버튼"

@@ -172,7 +172,6 @@ extension DreamDetailMoreVC {
         self.bottomCancleButton.rx.tap
             .asDriver()
             .drive(onNext: {
-                AnalyticsManager.log(event: .clickDetailMoreDeleteCancle)
                 self.dismiss(animated: false)
             })
             .disposed(by: self.disposeBag)
@@ -184,6 +183,7 @@ extension DreamDetailMoreVC {
                                                     message: "꿈 기록을 삭제하시겠습니까?",
                                                     okActionTitle: "삭제",
                                                     okAction:  { _ in
+                    AnalyticsManager.log(event: .clickDetailMoreDelete)
                     self.deleteAlertOkActionTapped.accept(())
                 })
             }).disposed(by: self.disposeBag)
