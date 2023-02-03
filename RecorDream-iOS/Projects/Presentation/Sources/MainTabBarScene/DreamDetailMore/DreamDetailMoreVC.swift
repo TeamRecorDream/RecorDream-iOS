@@ -10,6 +10,7 @@ import UIKit
 
 import Domain
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxRelay
@@ -171,6 +172,7 @@ extension DreamDetailMoreVC {
         self.bottomCancleButton.rx.tap
             .asDriver()
             .drive(onNext: {
+                AnalyticsManager.log(event: .clickDetailMoreDeleteCancle)
                 self.dismiss(animated: false)
             })
             .disposed(by: self.disposeBag)
@@ -189,12 +191,12 @@ extension DreamDetailMoreVC {
         self.editButton.rx.tap
             .asDriver()
             .drive(onNext: { [weak self] in
+                AnalyticsManager.log(event: .clickDetailMoreModify)
                 guard let self = self else { return }
                 let dreamModifyVC = self.factory.instantiateDreamWriteVC(.modify(
                     postId: self.viewModel.dreamId,
                     audioURL: self.audioURL)
                 )
-
                 self.modalPresentationStyle = .overFullScreen
                 self.present(dreamModifyVC, animated: true)
             }).disposed(by: self.disposeBag)

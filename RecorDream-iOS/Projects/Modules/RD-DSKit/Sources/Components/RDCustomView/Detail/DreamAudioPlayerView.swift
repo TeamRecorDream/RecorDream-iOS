@@ -9,6 +9,8 @@
 import AVFoundation
 import UIKit
 
+import RD_Logger
+
 import SnapKit
 import RxSwift
 import RxCocoa
@@ -119,6 +121,7 @@ public final class DreamAudioPlayerView: UIView {
 
 extension DreamAudioPlayerView {
     private func initPlay() {
+        AnalyticsManager.log(event: .clickDetailVoiceDrawback)
         guard let audioFile = self.audioFile else { return }
 
         do {
@@ -167,9 +170,11 @@ extension DreamAudioPlayerView {
                       let player = self.audioPlayer else { return }
                 self.setTimer()
                 if player.isPlaying {
+                    AnalyticsManager.log(event: .clickDetailVoiceStart)
                     self.setPlayStatus(false)
                     player.pause()
                 } else {
+                    AnalyticsManager.log(event: .clickDetailVoicePause)
                     self.setPlayStatus(true)
                     player.play()
                 }
