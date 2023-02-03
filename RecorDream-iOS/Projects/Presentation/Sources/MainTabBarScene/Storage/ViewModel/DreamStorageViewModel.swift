@@ -15,7 +15,7 @@ import RxCocoa
 
 public final class DreamStorageViewModel {
     // MARK: - Properties
-    let fetchRequestEntity = BehaviorRelay<StorageFetchQuery>(value: .init(filterType: 0))
+    var previousFetchQuery = StorageFetchQuery.init(filterType: 0)
     var fetchedDreamRecord = DreamStorageEntity.RecordList(recordsCount: 0, records: [])
     private let useCase: DreamStorageUseCase
     private let disposeBag = DisposeBag()
@@ -25,6 +25,7 @@ public final class DreamStorageViewModel {
         let viewDidLoad: Observable<Void>
         let filterButtonTapped: Observable<Int>
         let viewWillAppear: Observable<Bool>
+        let dismissDetail: Observable<Void>
     }
     public struct Output {
         var storageDataFetched = BehaviorRelay<DreamStorageEntity.RecordList?>(value: nil)
@@ -42,19 +43,34 @@ extension DreamStorageViewModel: ViewModelType {
         let output = Output()
         self.bindOutput(output: output, disposeBag: disposeBag)
         
-        input.viewDidLoad.subscribe(onNext: { _ in
-            self.useCase.execute(requestValue: .init(filterType: 0))
-            output.loadingStatus.accept(true)
-        }).disposed(by: disposeBag)
+        input.viewDidLoad
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                owner.useCase.execute(requestValue: .init(filterType: 0))
+                output.loadingStatus.accept(true)
+            }).disposed(by: disposeBag)
         
-        input.filterButtonTapped.subscribe(onNext: { selectedType in
-            self.useCase.execute(requestValue: .init(filterType: selectedType))
-        }).disposed(by: disposeBag)
+        input.filterButtonTapped
+            .withUnretained(self)
+            .subscribe(onNext: { owner, selectedType in
+                owner.useCase.execute(requestValue: .init(filterType: selectedType))
+                owner.previousFetchQuery = .init(filterType: selectedType)
+            }).disposed(by: disposeBag)
         
-        input.viewWillAppear.subscribe(onNext: { _ in
-            self.useCase.execute(requestValue: .init(filterType: 0))
-            output.loadingStatus.accept(true)
-        }).disposed(by: disposeBag)
+        input.viewWillAppear
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                owner.useCase.execute(requestValue: .init(filterType: 0))
+                owner.previousFetchQuery = .init(filterType: 0)
+                output.loadingStatus.accept(true)
+            }).disposed(by: disposeBag)
+        
+        input.dismissDetail
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                owner.useCase.execute(requestValue: owner.previousFetchQuery)
+                output.loadingStatus.accept(true)
+            }).disposed(by: disposeBag)
         
         return output
     }

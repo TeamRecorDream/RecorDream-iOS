@@ -42,9 +42,9 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>instagram-stories</string>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
+		<string>instagram-stories</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

@@ -23,8 +23,6 @@ public class StorageVC: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.showsHorizontalScrollIndicator = false
         cv.backgroundColor = RDDSKitAsset.Colors.dark.color
-        cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        cv.allowsMultipleSelection = true
         return cv
     }()
     private lazy var dreamStorageCollectionView: UICollectionView = {
@@ -33,8 +31,6 @@ public class StorageVC: UIViewController {
         cv.showsHorizontalScrollIndicator = false
         cv.backgroundColor = RDDSKitAsset.Colors.dark.color
         cv.bounces = false
-        cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        cv.allowsMultipleSelection = true
         return cv
     }()
     private lazy var emptyBackgroundView: UIView = {
@@ -50,7 +46,7 @@ public class StorageVC: UIViewController {
     private let emotionTapped = BehaviorRelay<Int>(value: 0)
     private var selectedIndex = PublishRelay<Int>()
     private let fetchedCount = PublishRelay<Int>()
-    private let isModified = PublishRelay<Bool>()
+    private let isModified = PublishRelay<Void>()
     private var disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
     public var viewModel: DreamStorageViewModel!
@@ -126,7 +122,7 @@ extension StorageVC {
     }
     @objc
     private func didDismissDetailVC(_ notification: Notification) {
-        self.isModified.accept(true)
+        self.isModified.accept(())
     }
 }
 
@@ -215,8 +211,18 @@ extension StorageVC {
 // MARK: - Bind
 extension StorageVC {
     private func bindViewModels() {
+        let viewWillAppear = self.rx.viewWillAppear
+            .do { [weak self] _ in
+                guard let self = self else { return }
+                self.dreamFilterCollectionView.selectItem(
+                    at: .init(row: 0, section: 0),
+                    animated: false,
+                    scrollPosition: .top)
+            }
+        
         let input = DreamStorageViewModel.Input(viewDidLoad: Observable.just(()),
-                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable(), viewWillAppear: Observable.merge(self.rx.viewWillAppear, self.isModified.asObservable()))
+                                                filterButtonTapped: self.emotionTapped.skip(1).asObservable(), viewWillAppear: viewWillAppear,
+                                                dismissDetail: self.isModified.asObservable())
         let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
         
         output.storageDataFetched
@@ -319,9 +325,6 @@ extension StorageVC: UICollectionViewDataSource, UICollectionViewDelegate {
         else {
             return false
         }
-    }
-    public func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return false
     }
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == dreamFilterCollectionView {
