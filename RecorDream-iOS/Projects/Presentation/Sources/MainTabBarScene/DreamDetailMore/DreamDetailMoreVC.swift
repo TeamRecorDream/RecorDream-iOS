@@ -212,6 +212,7 @@ extension DreamDetailMoreVC {
         self.shareButton.rx.tap
             .asDriver()
             .drive(onNext: {
+                AnalyticsManager.log(event: .clickDetailMoreShare)
                 self.shareToInstagramStories()
             }).disposed(by: self.disposeBag)
     }
@@ -259,6 +260,7 @@ extension DreamDetailMoreVC {
                 UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
                 UIApplication.shared.open(storyShareURL, options: [:], completionHandler: nil)
                 shareView.isHidden = true
+                AnalyticsManager.log(event: .clickDetailMoreShareUpload)
             } else {
                 let alert = UIAlertController(title: "알림", message: "인스타그램이 필요합니다", preferredStyle: .alert)
                 let ok = UIAlertAction(title: "확인", style: .default, handler: nil)
