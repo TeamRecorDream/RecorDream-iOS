@@ -16,7 +16,7 @@ public final class VoiceNoticeView: UIView {
 
     // MARK: - UI Components
 
-    private let micImage = UIImageView(image: RDDSKitAsset.Images.icnMic.image)
+    private let micImage = UIImageView(image: RDDSKitAsset.Images.icnMicS.image)
 
     private let onlyVoiceExistLabel: UILabel = {
         let label = UILabel()
@@ -60,7 +60,7 @@ public final class VoiceNoticeView: UIView {
         }
 
         onlyVoiceExistLabel.snp.makeConstraints {
-            $0.leading.equalTo(micImage.snp.trailing).inset(Metric.contentSpacing)
+            $0.leading.equalTo(micImage.snp.trailing).offset(Metric.contentSpacing)
             $0.top.bottom.equalToSuperview().inset(Metric.voiceLabelTopBottom)
         }
     }

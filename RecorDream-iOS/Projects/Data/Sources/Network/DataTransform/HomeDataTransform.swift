@@ -19,7 +19,7 @@ extension HomeDreamResponse {
 
 extension HomeDreamResponse.Records {
     func toDomain() -> HomeEntity.Record {
-        return .init(recordId: self.id, emotion: self.emotion, date: self.date, title: self.title, genres: self.genre.map { HomeEntity.toGenreString(num: $0) }, content: self.content ?? "기록된 내용이 없어요.")
+        return .init(recordId: self.id, emotion: self.emotion, date: self.date, title: self.title, genres: self.genre.map { HomeEntity.toGenreString(num: $0) }, content: self.content ?? "기록된 내용이 없어요.", isExistVoice: self.isExistVoice)
     }
 }
 

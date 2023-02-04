@@ -21,10 +21,11 @@ extension HomeDreamResponse {
         public let title: String
         public let genre: [Int]
         public let content: String?
+        public let isExistVoice: Bool
 
         private enum CodingKeys: String, CodingKey {
             case id = "_id"
-            case emotion, date, title, genre, content
+            case emotion, date, title, genre, content, isExistVoice
         }
     }
 }

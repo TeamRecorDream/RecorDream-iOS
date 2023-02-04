@@ -160,6 +160,10 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         }
         titleLabel.addLabelSpacing(kernValue: -0.28)
         noteLabel.addLabelSpacing(kernValue: -0.12)
+
+        if model.isExistVoice && model.content.isEmpty {
+            self.setOnlyVoiceView()
+        }
     }
 
     func setAttributesForReuse() {
@@ -171,6 +175,7 @@ final class DreamCardCVC: UICollectionViewCell, UICollectionViewRegisterable {
         self.genreStackView.subviews.forEach { (view) in
             view.removeFromSuperview()
         }
+        self.voiceNoticeView.removeFromSuperview()
     }
 
     private func setEmotionImage(emotion: Int) -> [UIImage] {
