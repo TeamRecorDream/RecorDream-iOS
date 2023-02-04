@@ -25,14 +25,16 @@ public extension HomeEntity {
         public let title: String
         public let genres: [String]
         public let content: String
+        public let isExistVoice: Bool
 
-        public init(recordId: String, emotion: Int, date: String, title: String, genres: [String], content: String) {
+        public init(recordId: String, emotion: Int, date: String, title: String, genres: [String], content: String, isExistVoice: Bool) {
             self.recordId = recordId
             self.emotion = emotion
             self.date = date
             self.title = title
             self.genres = genres
             self.content = content
+            self.isExistVoice = isExistVoice
         }
     }
 }
