@@ -9,6 +9,7 @@ import UIKit
 
 import Domain
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxRelay
@@ -256,8 +257,8 @@ extension DreamDetailVC {
         self.headerView.rx.moreButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
+                AnalyticsManager.log(event: .clickDetailMore)
                 let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamDetailData: self.viewModel.detailDreamData)
-
                 let navigation = UINavigationController(rootViewController: detailMoreVC)
                 navigation.modalTransitionStyle = .coverVertical
                 navigation.modalPresentationStyle = .overFullScreen
@@ -268,6 +269,7 @@ extension DreamDetailVC {
         self.headerView.rx.closeButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
+                AnalyticsManager.log(event: .clickDetailExit)
                 owner.dismiss(animated: true)
             }).disposed(by: self.disposeBag)
     }

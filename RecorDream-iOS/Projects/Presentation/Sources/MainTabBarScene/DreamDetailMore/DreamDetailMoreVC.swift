@@ -10,6 +10,7 @@ import UIKit
 
 import Domain
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 import RxRelay
@@ -190,6 +191,7 @@ extension DreamDetailMoreVC {
                                                     message: "꿈 기록을 삭제하시겠습니까?",
                                                     okActionTitle: "삭제",
                                                     okAction:  { _ in
+                    AnalyticsManager.log(event: .clickDetailMoreDelete)
                     self.deleteAlertOkActionTapped.accept(())
                 })
             }).disposed(by: self.disposeBag)
@@ -197,12 +199,12 @@ extension DreamDetailMoreVC {
         self.editButton.rx.tap
             .asDriver()
             .drive(onNext: { [weak self] in
+                AnalyticsManager.log(event: .clickDetailMoreModify)
                 guard let self = self else { return }
                 let dreamModifyVC = self.factory.instantiateDreamWriteVC(.modify(
                     postId: self.viewModel.dreamDetailData.recordId,
                     audioURL: self.viewModel.dreamDetailData.voiceUrl)
                 )
-
                 self.modalPresentationStyle = .overFullScreen
                 self.present(dreamModifyVC, animated: true)
             }).disposed(by: self.disposeBag)

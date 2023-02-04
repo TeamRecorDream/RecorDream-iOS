@@ -24,6 +24,9 @@ public enum FirebaseEventType {
     case clickTabBar(TabSource) // 탭 전환
     
     // 3. 홈
+    case clickHomeSearch
+    case clickHomeMypage
+    case clickHomeDreamCard
     
     // 4. 기록하기 && 6. 수정하기 && 10. 푸시알림 -> 작성하기
     case clickDate(WriteSource)
@@ -46,6 +49,16 @@ public enum FirebaseEventType {
     case clickExit(WriteSource)
     
     // 5. 기록 상세보기
+    case clickDetailSwipe(tapSource: String)
+    case clickDetailVoiceStart
+    case clickDetailVoicePause
+    case clickDetailVoiceDrawback
+    case clickDetailExit
+    case clickDetailMore
+    case clickDetailMoreShare
+    case clickDetailMoreShareUpload
+    case clickDetailMoreModify
+    case clickDetailMoreDelete
     
     // 7. 보관함
     case clickStorageSearch
@@ -152,6 +165,13 @@ public extension FirebaseEventType {
         // 2. 탭
         case .clickTabBarPlus:
             object = "기록하기"
+        // 3. 홈
+        case .clickHomeSearch:
+            object = "검색버튼"
+        case .clickHomeMypage:
+            object = "마이페이지버튼"
+        case .clickHomeDreamCard:
+            object = "꿈기록카드"
         // 4. 작성하기 && 6.기록하기 && 10. 푸시알림
         case .clickDate(_):
             object = "날짜배너"
@@ -189,6 +209,26 @@ public extension FirebaseEventType {
             object = "저장하기"
         case .clickExit(_):
             object = "나가기"
+        case .clickDetailSwipe(_):
+            object = "스와이프"
+        case .clickDetailVoiceStart:
+            object = "음성_재생"
+        case .clickDetailVoicePause:
+            object = "음성_일시중지"
+        case .clickDetailVoiceDrawback:
+            object = "음성_되돌리기"
+        case .clickDetailExit:
+            object = "나가기"
+        case .clickDetailMore:
+            object = "더보기"
+        case .clickDetailMoreShare:
+            object = "더보기_공유버튼"
+        case .clickDetailMoreShareUpload:
+            object = "더보기_공유버튼_업로드하기"
+        case .clickDetailMoreModify:
+            object = "더보기_수정하기"
+        case .clickDetailMoreDelete:
+            object = "더보기_삭제하기"
         // 6. 보관함
         case .clickStorageSearch:
             object = "검색버튼"
@@ -259,6 +299,8 @@ public extension FirebaseEventType {
             params["emotion"] = emotion
         case let .clickStorageViewType(type):
             params["type"] = type
+        case let .clickDetailSwipe(tapSource):
+            params["tapSource"] = tapSource
         default: break
         }
         return params

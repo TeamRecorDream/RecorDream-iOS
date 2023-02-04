@@ -9,6 +9,7 @@
 import UIKit
 
 import RD_DSKit
+import RD_Logger
 
 import RxSwift
 
@@ -109,6 +110,13 @@ extension DetailRecordPageViewController: SegmentedControlDelegate {
     func segmentControl(_ segmentControl: RDSegmentedControl, didChangedOn index: Int) {
         movePage(from: currentPageIndex, to: index, animated: true)
         currentPageIndex = index
+        
+        if index == 0 {
+            AnalyticsManager.log(event: .clickDetailSwipe(tapSource: "나의 꿈 기록"))
+        }
+        else {
+            AnalyticsManager.log(event: .clickDetailSwipe(tapSource: "노트"))
+        }
     }
 }
 
