@@ -86,6 +86,10 @@ public final class DreamRecordViewController: UIViewController {
         self.setLayout()
     }
 
+    public override func viewWillDisappear(_ animated: Bool) {
+        self.stopAudio()
+    }
+
     // MARK: - UI & Layout
     private func setUI() {
         self.view.backgroundColor = .none
@@ -175,5 +179,9 @@ public final class DreamRecordViewController: UIViewController {
                 $0.leading.trailing.equalToSuperview()
             }
         }
+    }
+
+    private func stopAudio() {
+        self.dreamAudioPlayerView.isPauseAudio.accept(true)
     }
 }
