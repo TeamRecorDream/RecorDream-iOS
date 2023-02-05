@@ -18,7 +18,12 @@ import Data
 extension DependencyContainer: AuthViewControllerFactory {
     public func instantiateSpalshVC() -> Presentation.SplashVC {
         let splashVC = SplashVC()
+        let repository = DefaultAuthRepository(authService: self.authService)
+        let usecase = DefaultAuthUseCase(repository: repository)
+        let viewModel = SplashViewModel(useCase: usecase)
+        
         splashVC.factory = self
+        splashVC.viewModel = viewModel
         return splashVC
     }
     

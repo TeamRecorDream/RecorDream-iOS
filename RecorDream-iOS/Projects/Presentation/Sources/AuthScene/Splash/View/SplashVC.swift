@@ -20,6 +20,9 @@ public final class SplashVC: UIViewController {
     private let authView = AuthView()
     private let disposeBag = DisposeBag()
     public var factory: ViewControllerFactory!
+    public var viewModel: SplashViewModel!
+    
+    private let versionCheckTrigger = PublishSubject<Void>()
     
     // MARK: - View Life Cycle
     public override func viewDidLoad() {
@@ -27,6 +30,7 @@ public final class SplashVC: UIViewController {
         
         self.setupView()
         self.setupConstraint()
+        self.bindViewModels()
     }
 }
 
@@ -38,7 +42,7 @@ extension SplashVC: AuthControllable {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
             UIView.animate(withDuration: 0.8, delay: 1) {
                 self.modalTransitionStyle = .partialCurl
-                self.setupViewState()
+                self.versionCheckTrigger.onNext(())
             }
         }
     }
@@ -49,6 +53,31 @@ extension SplashVC: AuthControllable {
             make.height.equalToSuperview()
             make.centerX.centerY.equalToSuperview()
         }
+    }
+    
+    func bindViewModels() {
+        let input = SplashViewModel.Input(viewDidLoad: Observable.just(()))
+        let output = self.viewModel.transform(from: input, disposeBag: self.disposeBag)
+        
+        let delayedVersionCheckResult = Observable.combineLatest(
+            output.versionChecked,
+            versionCheckTrigger.asObservable()
+        ).map { $0.0 }
+        
+        delayedVersionCheckResult
+            .withUnretained(self)
+            .subscribe { owner, result in
+                switch result {
+                case .noNeedToUpdate:
+                    owner.setupViewState()
+                case .recommendUpdate:
+                    print("권장")
+                case .forceUpdate:
+                    print("강제")
+                case .networkError:
+                    print("네트워크")
+                }
+            }.disposed(by: self.disposeBag)
     }
 }
 
