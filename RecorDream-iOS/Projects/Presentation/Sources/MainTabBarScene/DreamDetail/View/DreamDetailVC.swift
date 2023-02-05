@@ -250,7 +250,7 @@ extension DreamDetailVC {
 
 extension DreamDetailVC {
     private func setupTabbarControllersChild(voiceUrl: URL?, content: String, note: String) {
-        pageViewController.setTabContentsItem(contentPages: [DreamRecordViewController(voiceUrl: voiceUrl, content: content), DreamNoteViewController(noteContent: note)])
+        pageViewController.setTabContentsItem(contentPages: [DreamRecordViewController(voiceUrl: voiceUrl, content: content, searchKeyword: searchedKeyword), DreamNoteViewController(noteContent: note)])
     }
 
     private func bindViews() {

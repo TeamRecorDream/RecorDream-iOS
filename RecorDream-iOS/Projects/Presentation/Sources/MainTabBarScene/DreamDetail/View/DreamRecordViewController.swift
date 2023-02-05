@@ -25,6 +25,7 @@ public final class DreamRecordViewController: UIViewController {
 
     private var voiceUrl: URL?
     private var content: String
+    private let searchKeyword: String?
 
     // MARK: - UI Components
 
@@ -68,9 +69,10 @@ public final class DreamRecordViewController: UIViewController {
 
     // MARK: - View Life Cycle
 
-    init(voiceUrl: URL?, content: String) {
+    init(voiceUrl: URL?, content: String, searchKeyword: String?) {
         self.voiceUrl = voiceUrl
         self.content = content
+        self.searchKeyword = searchKeyword
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -88,13 +90,20 @@ public final class DreamRecordViewController: UIViewController {
 
     public override func viewWillDisappear(_ animated: Bool) {
         if voiceUrl != nil {
-        self.stopAudio()
-    }
+            self.stopAudio()
+        }
     }
 
     // MARK: - UI & Layout
     private func setUI() {
         self.view.backgroundColor = .none
+
+        if let searchKeyword = self.searchKeyword {
+            self.highlightSearchKeyword(keyword: searchKeyword)
+        } else {
+            self.contentLabel.text = content
+            self.contentLabel.addLabelSpacing(kernValue: -0.14, lineSpacing: 5.6)
+        }
     }
 
     private func setLayout() {
@@ -153,9 +162,6 @@ public final class DreamRecordViewController: UIViewController {
                 $0.edges.equalToSuperview()
             }
         }
-
-        self.contentLabel.text = content
-        self.contentLabel.addLabelSpacing(kernValue: -0.14, lineSpacing: 5.6)
     }
 
     private func setAudioPlayer() {
@@ -185,5 +191,19 @@ public final class DreamRecordViewController: UIViewController {
 
     private func stopAudio() {
         self.dreamAudioPlayerView.isPauseAudio.accept(true)
+    }
+
+    private func highlightSearchKeyword(keyword: String) {
+        let boldFont = RDDSKitFontFamily.Pretendard.bold.font(size: 14)
+        let attributedString = NSMutableAttributedString(string: content)
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 5.6
+        paragraphStyle.lineBreakMode = .byTruncatingTail
+
+        attributedString.addAttribute(.font, value: boldFont, range: (content as NSString).range(of: keyword))
+        attributedString.addAttributes([.kern: -0.14, .paragraphStyle: paragraphStyle], range: NSMakeRange(0, attributedString.length))
+
+        self.contentLabel.attributedText = attributedString
     }
 }
