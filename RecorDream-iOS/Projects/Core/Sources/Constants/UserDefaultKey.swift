@@ -7,11 +7,18 @@
 //
 
 public enum UserDefaultKey: String {
+    // Version
+    case checkedAppVersion = "checkedAppVersion"
+    
+    // Auth-User
     case platform = "key.platform"
     case userToken = "key.userToken"
     case accessToken = "key.accessToken"
     case refreshToken = "key.refreshToken"
     case nickname = "key.nickname"
+    
+    // Coordinator
+    
     case shouldShowWrite = "key.shouldShowWrite"
     
     // Analytics

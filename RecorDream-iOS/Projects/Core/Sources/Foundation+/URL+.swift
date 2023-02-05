@@ -11,3 +11,10 @@ public extension URL {
         }
     }
 }
+
+public extension URL {
+    struct ExternalURL {
+        // TODO: - URL 필요
+        public static let appstore = URL(string: "https://itunes.apple.com/kr/app")
+    }
+}

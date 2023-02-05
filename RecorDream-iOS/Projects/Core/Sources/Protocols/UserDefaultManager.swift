@@ -58,6 +58,10 @@ public extension DefaultUserDefaultManager {
     static var shouldShowWrite: Bool? {
         return bool(key: .shouldShowWrite)
     }
+    
+    static var checkedAppVersion: String? {
+        return string(key: .checkedAppVersion)
+    }
 }
 
 // MARK: Analytics
