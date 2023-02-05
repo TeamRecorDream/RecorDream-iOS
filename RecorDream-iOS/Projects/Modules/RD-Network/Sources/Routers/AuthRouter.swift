@@ -14,23 +14,29 @@ enum AuthRouter {
     case login(kakaoToken: String?, appleToken: String?, fcmToken: String)
     case logout(fcmToken: String)
     case reissuance
+    case version
 }
 
 extension AuthRouter: BaseRouter {
     
     var header: HeaderType {
         switch self {
+        case .version:
+            return .default
         case .reissuance:
             return .reissuance
         default: return .withToken
         }
     }
+    
     var method: HTTPMethod {
         switch self {
         case .login, .reissuance:
             return .post
         case .logout:
             return .patch
+        default:
+            return .get
         }
     }
     
@@ -42,6 +48,8 @@ extension AuthRouter: BaseRouter {
             return "/auth/logout"
         case .reissuance:
             return "/auth/token"
+        case .version:
+            return "/version"
         }
     }
     

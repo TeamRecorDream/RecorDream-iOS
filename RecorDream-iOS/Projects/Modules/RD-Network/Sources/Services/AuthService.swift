@@ -16,6 +16,7 @@ public protocol AuthService {
     func login(kakaoToken: String?, appleToken: String?, fcmToken: String) -> Observable<AuthResponse?>
     func logout(fcmToken: String) -> Observable<Bool>
     func reissuance() -> Observable<GeneralResponse<ReissuanceResponse>?>
+    func checkVersion() -> Observable<VersionResponse?>
 }
 
 public class DefaultAuthService: BaseService {
@@ -25,6 +26,10 @@ public class DefaultAuthService: BaseService {
 }
 
 extension DefaultAuthService: AuthService {
+    public func checkVersion() -> Observable<VersionResponse?> {
+        requestObjectInRx(AuthRouter.version)
+    }
+    
     public func reissuance() -> Observable<GeneralResponse<ReissuanceResponse>?> {
         requestObjectInRxWithGeneral(AuthRouter.reissuance)
     }
