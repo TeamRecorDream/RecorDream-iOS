@@ -20,7 +20,7 @@ public final class SplashViewModel {
     
     // MARK: - Inputs
     public struct Input {
-        let viewDidLoad: Observable<Void>
+        let checkVersion: Observable<Void>
     }
     
     // MARK: - Outputs
@@ -40,7 +40,7 @@ extension SplashViewModel: ViewModelType {
         let output = Output()
         self.bindOutput(output: output, disposeBag: disposeBag)
         
-        input.viewDidLoad
+        input.checkVersion
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
                 owner.useCase.checkVersion()

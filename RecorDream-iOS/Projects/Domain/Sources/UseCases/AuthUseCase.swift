@@ -24,7 +24,7 @@ public protocol AuthUseCase {
 
 public enum VersionCheckResult {
     case networkError
-    case recommendUpdate
+    case recommendUpdate(version: String)
     case forceUpdate
     case noNeedToUpdate
 }
@@ -65,24 +65,24 @@ extension DefaultAuthUseCase: AuthUseCase {
         // 알림을 확인했던 최신 권장 업데이트 버전
         let checkedNoticeVersion = self.repository.checkedRecommendVersion
         
-        // 클라이언트 버전이 강제 업데이트 버전보다 낮은 경우
+        // 클라이언트 버전과 강제 업데이트 요구 버전을 비교
         let needForceUpdate = currentAppVersion.compare(
             versionEntity.needForceUpdateVersion,
             options: .numeric
         ) == .orderedAscending
         
         guard !needForceUpdate else {
-            // 강제 업데이트
+            // 강제 업데이트 버전보다 낮기 때문에 강제 업데이트
             return .forceUpdate
         }
         
-        // 클라이언트 버전이 강제 업데이트 버전보다는 높지만 최신 버전보다는 낮은 경우
-        let isNotLatestVersion = currentAppVersion.compare(
-            versionEntity.latestAppVersion,
+        // 클라이언트 버전을 최신 버전과 비교
+        let isLatestVersion = versionEntity.latestAppVersion.compare(
+            currentAppVersion,
             options: .numeric
         ) == .orderedAscending
         
-        guard !isNotLatestVersion else {
+        guard !isLatestVersion else {
             // 최신 버전이기 때문에 업데이트 불필요
             return .noNeedToUpdate
         }
@@ -95,7 +95,7 @@ extension DefaultAuthUseCase: AuthUseCase {
         ) == .orderedAscending
         
         return notChckedUpdateVersion
-        ? .recommendUpdate
+        ? .recommendUpdate(version: versionEntity.latestAppVersion)
         : .noNeedToUpdate
     }
     
