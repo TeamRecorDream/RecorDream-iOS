@@ -39,7 +39,7 @@ public final class DreamAudioPlayerView: UIView {
 
     private let disposeBag = DisposeBag()
 
-    public var audioPlayer: AVAudioPlayer!
+    private var audioPlayer: AVAudioPlayer!
     private var audioTimer: Timer!
     private var audioFile: URL?
     private let timePlayerSelector: Selector = #selector(updatePlayTime)
