@@ -46,6 +46,8 @@ public final class DreamAudioPlayerView: UIView {
 
     private var playStatus = playStatus.notStart
 
+    public let isPauseAudio = PublishRelay<Bool>()
+
     private lazy var playAndPauseButton: UIButton = {
         let button = UIButton()
         button.setImage(RDDSKitAsset.Images.icnStart.image, for: .normal)
@@ -80,6 +82,7 @@ public final class DreamAudioPlayerView: UIView {
         self.setUI()
         self.setLayout()
         self.bind()
+        self.setAudioSession()
         self.initPlay()
     }
 
@@ -128,8 +131,8 @@ extension DreamAudioPlayerView {
             audioPlayer = try AVAudioPlayer(contentsOf: audioFile)
 
             audioPlayer.delegate = self
-            audioPlayer.prepareToPlay()
             audioPlayer.volume = 1.0
+            audioPlayer.prepareToPlay()
             audioPlayTimeLabel.text = convertNSTimeInterval2String(audioPlayer.duration)
 
         } catch let error as NSError {
@@ -180,10 +183,28 @@ extension DreamAudioPlayerView {
                 }
             })
             .disposed(by: self.disposeBag)
+
+        isPauseAudio
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, isPauseAudio) in
+                if isPauseAudio {
+                    owner.setPlayStatus(false)
+                    owner.audioPlayer.pause()
+                }
+            }).disposed(by: self.disposeBag)
     }
 }
 
 extension DreamAudioPlayerView: AVAudioPlayerDelegate {
+    private func setAudioSession() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playback, mode: .default)
+        } catch {
+            print("audioSession error: \(error.localizedDescription)")
+        }
+    }
+
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         audioTimer.invalidate()
 
