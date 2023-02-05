@@ -87,7 +87,9 @@ public final class DreamRecordViewController: UIViewController {
     }
 
     public override func viewWillDisappear(_ animated: Bool) {
+        if voiceUrl != nil {
         self.stopAudio()
+    }
     }
 
     // MARK: - UI & Layout
