@@ -19,6 +19,10 @@ public final class DefaultAuthRepository {
     private let authService: AuthService
     private let disposeBag = DisposeBag()
     
+    public var checkedRecommendVersion: String {
+        return DefaultUserDefaultManager.checkedAppVersion ?? "1.0.0"
+    }
+    
     public init(authService: AuthService) {
         self.authService = authService
     }
@@ -65,6 +69,23 @@ extension DefaultAuthRepository: AuthRepository {
                     DefaultUserDefaultManager.set(value: token.accessToken, keyPath: .accessToken)
                     DefaultUserDefaultManager.set(value: token.refreshToken, keyPath: .refreshToken)
                     observer.onNext(true)
+                }, onError: { err in
+                    observer.onError(err)
+                })
+                .disposed(by: self.disposeBag)
+            return Disposables.create()
+        }
+    }
+    
+    public func checkVersion() -> Observable<VersionCheckEntity?> {
+        return Observable.create { observer in
+            self.authService.checkVersion()
+                .subscribe(onNext: { response in
+                    guard let response = response else {
+                        observer.onNext(nil)
+                        return
+                    }
+                    observer.onNext(response.toDomain())
                 }, onError: { err in
                     observer.onError(err)
                 })

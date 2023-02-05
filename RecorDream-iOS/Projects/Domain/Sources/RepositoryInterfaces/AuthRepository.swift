@@ -11,4 +11,6 @@ import RxSwift
 public protocol AuthRepository {
     func requestAuth(request: AuthRequest) -> Observable<AuthEntity?>
     func requestReissuance() -> Observable<Bool>
+    func checkVersion() -> Observable<VersionCheckEntity?>
+    var checkedRecommendVersion: String { get }
 }
