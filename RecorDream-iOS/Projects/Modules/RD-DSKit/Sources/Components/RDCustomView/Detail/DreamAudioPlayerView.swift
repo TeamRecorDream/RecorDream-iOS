@@ -124,7 +124,7 @@ public final class DreamAudioPlayerView: UIView {
 
 extension DreamAudioPlayerView {
     private func initPlay() {
-        AnalyticsManager.log(event: .clickDetailVoiceDrawback)
+        AnalyticsManager.log(event: .clickHomeDetailVoiceDrawback)
         guard let audioFile = self.audioFile else { return }
 
         do {
@@ -173,11 +173,11 @@ extension DreamAudioPlayerView {
                       let player = self.audioPlayer else { return }
                 self.setTimer()
                 if player.isPlaying {
-                    AnalyticsManager.log(event: .clickDetailVoiceStart)
+                    AnalyticsManager.log(event: .clickHomeDetailVoiceStart)
                     self.setPlayStatus(false)
                     player.pause()
                 } else {
-                    AnalyticsManager.log(event: .clickDetailVoicePause)
+                    AnalyticsManager.log(event: .clickHomeDetailVoicePause)
                     self.setPlayStatus(true)
                     player.play()
                 }

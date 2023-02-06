@@ -191,7 +191,7 @@ extension DreamDetailMoreVC {
                                                     message: "꿈 기록을 삭제하시겠습니까?",
                                                     okActionTitle: "삭제",
                                                     okAction:  { _ in
-                    AnalyticsManager.log(event: .clickDetailMoreDelete)
+                    AnalyticsManager.log(event: .clickHomeDetailMoreDelete)
                     self.deleteAlertOkActionTapped.accept(())
                 })
             }).disposed(by: self.disposeBag)
@@ -199,7 +199,7 @@ extension DreamDetailMoreVC {
         self.editButton.rx.tap
             .asDriver()
             .drive(onNext: { [weak self] in
-                AnalyticsManager.log(event: .clickDetailMoreModify)
+                AnalyticsManager.log(event: .clickHomeDetailMoreModify)
                 guard let self = self else { return }
                 let dreamModifyVC = self.factory.instantiateDreamWriteVC(.modify(
                     postId: self.viewModel.dreamDetailData.recordId,
@@ -212,7 +212,7 @@ extension DreamDetailMoreVC {
         self.shareButton.rx.tap
             .asDriver()
             .drive(onNext: {
-                AnalyticsManager.log(event: .clickDetailMoreShare)
+                AnalyticsManager.log(event: .clickHomeDetailMoreShare)
                 self.shareToInstagramStories()
             }).disposed(by: self.disposeBag)
     }
@@ -260,7 +260,7 @@ extension DreamDetailMoreVC {
                 UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
                 UIApplication.shared.open(storyShareURL, options: [:], completionHandler: nil)
                 shareView.isHidden = true
-                AnalyticsManager.log(event: .clickDetailMoreShareUpload)
+                AnalyticsManager.log(event: .clickHomeDetailMoreShareUpload)
             } else {
                 let alert = UIAlertController(title: "알림", message: "인스타그램이 필요합니다", preferredStyle: .alert)
                 let ok = UIAlertAction(title: "확인", style: .default, handler: nil)

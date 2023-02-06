@@ -112,10 +112,10 @@ extension DetailRecordPageViewController: SegmentedControlDelegate {
         currentPageIndex = index
         
         if index == 0 {
-            AnalyticsManager.log(event: .clickDetailSwipe(tapSource: "나의 꿈 기록"))
+            AnalyticsManager.log(event: .clickHomeDetailSwipe(tapSource: "나의 꿈 기록"))
         }
         else {
-            AnalyticsManager.log(event: .clickDetailSwipe(tapSource: "노트"))
+            AnalyticsManager.log(event: .clickHomeDetailSwipe(tapSource: "노트"))
         }
     }
 }

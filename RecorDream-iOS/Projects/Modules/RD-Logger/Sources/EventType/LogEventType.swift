@@ -49,16 +49,16 @@ public enum FirebaseEventType {
     case clickExit(WriteSource)
     
     // 5. 기록 상세보기
-    case clickDetailSwipe(tapSource: String)
-    case clickDetailVoiceStart
-    case clickDetailVoicePause
-    case clickDetailVoiceDrawback
-    case clickDetailExit
-    case clickDetailMore
-    case clickDetailMoreShare
-    case clickDetailMoreShareUpload
-    case clickDetailMoreModify
-    case clickDetailMoreDelete
+    case clickHomeDetailSwipe(tapSource: String)
+    case clickHomeDetailVoiceStart
+    case clickHomeDetailVoicePause
+    case clickHomeDetailVoiceDrawback
+    case clickHomeDetailExit
+    case clickHomeDetailMore
+    case clickHomeDetailMoreShare
+    case clickHomeDetailMoreShareUpload
+    case clickHomeDetailMoreModify
+    case clickHomeDetailMoreDelete
     
     // 7. 보관함
     case clickStorageSearch
@@ -209,25 +209,25 @@ public extension FirebaseEventType {
             object = "저장하기"
         case .clickExit(_):
             object = "나가기"
-        case .clickDetailSwipe(_):
+        case .clickHomeDetailSwipe(_):
             object = "스와이프"
-        case .clickDetailVoiceStart:
+        case .clickHomeDetailVoiceStart:
             object = "음성_재생"
-        case .clickDetailVoicePause:
+        case .clickHomeDetailVoicePause:
             object = "음성_일시중지"
-        case .clickDetailVoiceDrawback:
+        case .clickHomeDetailVoiceDrawback:
             object = "음성_되돌리기"
-        case .clickDetailExit:
+        case .clickHomeDetailExit:
             object = "나가기"
-        case .clickDetailMore:
+        case .clickHomeDetailMore:
             object = "더보기"
-        case .clickDetailMoreShare:
+        case .clickHomeDetailMoreShare:
             object = "더보기_공유버튼"
-        case .clickDetailMoreShareUpload:
+        case .clickHomeDetailMoreShareUpload:
             object = "더보기_공유버튼_업로드하기"
-        case .clickDetailMoreModify:
+        case .clickHomeDetailMoreModify:
             object = "더보기_수정하기"
-        case .clickDetailMoreDelete:
+        case .clickHomeDetailMoreDelete:
             object = "더보기_삭제하기"
         // 6. 보관함
         case .clickStorageSearch:
@@ -299,7 +299,7 @@ public extension FirebaseEventType {
             params["emotion"] = emotion
         case let .clickStorageViewType(type):
             params["type"] = type
-        case let .clickDetailSwipe(tapSource):
+        case let .clickHomeDetailSwipe(tapSource):
             params["tapSource"] = tapSource
         default: break
         }
