@@ -257,7 +257,7 @@ extension DreamDetailVC {
         self.headerView.rx.moreButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
-                AnalyticsManager.log(event: .clickDetailMore)
+                AnalyticsManager.log(event: .clickHomeDetailMore)
                 let detailMoreVC = owner.factory.instantiateDetailMoreVC(dreamDetailData: self.viewModel.detailDreamData)
                 let navigation = UINavigationController(rootViewController: detailMoreVC)
                 navigation.modalTransitionStyle = .coverVertical
@@ -269,7 +269,7 @@ extension DreamDetailVC {
         self.headerView.rx.closeButtonTapped
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
-                AnalyticsManager.log(event: .clickDetailExit)
+                AnalyticsManager.log(event: .clickHomeDetailExit)
                 owner.dismiss(animated: true)
             }).disposed(by: self.disposeBag)
     }
