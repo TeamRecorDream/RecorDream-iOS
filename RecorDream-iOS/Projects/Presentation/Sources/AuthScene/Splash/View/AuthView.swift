@@ -18,13 +18,13 @@ final class AuthView: UIView {
     private let backgroundImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = RDDSKitAsset.Images.splashBackground.image
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
         return iv
     }()
     private let logoImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = RDDSKitAsset.Images.rdSplashLogo.image
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
         return iv
     }()
 
