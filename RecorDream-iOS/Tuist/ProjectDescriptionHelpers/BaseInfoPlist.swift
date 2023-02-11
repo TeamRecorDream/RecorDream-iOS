@@ -2,12 +2,12 @@ import ProjectDescription
 
 public extension Project {
     static let baseinfoPlist: [String: InfoPlist.Value] = [
-        "CFBundleShortVersionString": "1.0.0",
+        "CFBundleShortVersionString": "1.0.3",
         "CFBundleVersion": "1",
         "CFBundleDevelopmentRegion": "ko",
         "CFBundleIdentifier": "com.RecorDream.Release",
         "UILaunchStoryboardName": "LaunchScreen",
-        "CFBundleDisplayName": "레코드림",
+        "CFBundleDisplayName": "RecorDream",
         "LSApplicationQueriesSchemes": ["kakaokompassauth", "kakaolink","instagram-stories"],
         "UIApplicationSceneManifest": [
             "UIApplicationSupportsMultipleScenes": false,

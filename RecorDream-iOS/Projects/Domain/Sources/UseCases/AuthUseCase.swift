@@ -76,11 +76,11 @@ extension DefaultAuthUseCase: AuthUseCase {
             return .forceUpdate
         }
         
-        // 클라이언트 버전을 최신 버전과 비교
+        // 클라이언트 버전을 최신 버전과 비교: 현재 앱 버전이 최신 버전보다 크거나 같은 경우
         let isLatestVersion = versionEntity.latestAppVersion.compare(
             currentAppVersion,
             options: .numeric
-        ) == .orderedAscending
+        ) != .orderedDescending
         
         guard !isLatestVersion else {
             // 최신 버전이기 때문에 업데이트 불필요
