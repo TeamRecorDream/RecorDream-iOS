@@ -12,7 +12,7 @@ import RD_Core
 
 enum AuthRouter {
     case login(kakaoToken: String?, appleToken: String?, fcmToken: String)
-    case logout(fcmToken: String)
+    case logout
     case reissuance
     case version
 }
@@ -31,10 +31,8 @@ extension AuthRouter: BaseRouter {
     
     var method: HTTPMethod {
         switch self {
-        case .login, .reissuance:
+        case .login, .reissuance, .logout:
             return .post
-        case .logout:
-            return .patch
         default:
             return .get
         }
@@ -59,11 +57,6 @@ extension AuthRouter: BaseRouter {
             let body: [String: Any] = [
                 "kakaoToken": kakaoToken,
                 "appleToken": appleToken,
-                "fcmToken": fcmToken
-            ]
-            return .requestBody(body)
-        case .logout(let fcmToken):
-            let body: [String: Any] = [
                 "fcmToken": fcmToken
             ]
             return .requestBody(body)
