@@ -60,8 +60,7 @@ extension DefaultMyPageRepository: MyPageRepository {
     
     public func userLogout() -> Observable<Bool> {
         return Observable.create { observer in
-            guard let fcmToken = DefaultUserDefaultManager.string(key: UserDefaultKey.userToken) else { return Disposables.create() }
-            self.authService.logout(fcmToken: fcmToken)
+            self.authService.logout()
                 .subscribe(onNext: { logoutSuccess in
                     guard logoutSuccess else {
                         observer.onNext(false)

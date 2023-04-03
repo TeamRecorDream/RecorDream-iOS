@@ -14,7 +14,7 @@ import RxSwift
 
 public protocol AuthService {
     func login(kakaoToken: String?, appleToken: String?, fcmToken: String) -> Observable<AuthResponse?>
-    func logout(fcmToken: String) -> Observable<Bool>
+    func logout() -> Observable<Bool>
     func reissuance() -> Observable<GeneralResponse<ReissuanceResponse>?>
     func checkVersion() -> Observable<VersionResponse?>
 }
@@ -65,7 +65,7 @@ extension DefaultAuthService: AuthService {
         requestObjectInRx(AuthRouter.login(kakaoToken: kakaoToken, appleToken: appleToken, fcmToken: fcmToken))
     }
     
-    public func logout(fcmToken: String) -> Observable<Bool> {
-        requestObjectInRxWithEmptyResponse(AuthRouter.logout(fcmToken: fcmToken))
+    public func logout() -> Observable<Bool> {
+        requestObjectInRxWithEmptyResponse(AuthRouter.logout)
     }
 }
